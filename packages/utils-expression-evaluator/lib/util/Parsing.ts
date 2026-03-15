@@ -7,9 +7,18 @@ import type {
   ITimeZoneRepresentation,
   IYearMonthDurationRepresentation,
 } from '@comunica/types';
+import type { Literal } from '@comunica/utils-expression-evaluator';
+import * as turf from '@turf/turf';
+import * as WK from 'betterknown';
+import type * as GJ from 'geojson';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {KmlToGeojson } from 'kml-to-geojson';
+import {ISerializable} from "../expressions";
 import { simplifyDurationRepresentation } from './DateTimeHelpers';
 import { ParseError } from './Errors';
 import { maximumDayInMonthFor } from './SpecAlgos';
+
+
 
 /**
  * Parses float datatypes (double, float).
@@ -178,4 +187,24 @@ export function parseDayTimeDuration(durationStr: string): Partial<IDayTimeDurat
     throw new ParseError(durationStr, 'dayTimeDuration');
   }
   return res;
+}
+
+export function parseGeometry(geomlit: Literal<ISerializable>): GJ.Geometry {
+  try {
+    switch (geomlit.dataType) {
+      case 'http://www.opengis.net/ont/geosparql#wktLiteral':
+        // eslint-disable-next-line ts/ban-ts-comment
+        // @ts-expect-error
+        return turf.getGeom(WK.wktToGeoJSON(geomlit.str()));
+      case 'http://www.opengis.net/ont/geosparql#gmlLiteral':
+        break;
+      case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
+        return KmlToGeojson.prototype.parse(geomlit.str()).geojson.features[0].geometry;
+      case 'http://www.opengis.net/ont/geosparql#geoJSONLiteral':
+        return turf.getGeom(JSON.parse(geomlit.str()));
+    }
+  } catch {
+    throw new ParseError(`Geometry literal with type ${geomlit.dataType} could not be parsed.\nContent: ${geomlit.str()}`, 'geometry');
+  }
+  return turf.getGeom({ type: 'Point', coordinates: []});
 }

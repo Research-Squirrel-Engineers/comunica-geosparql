@@ -5,6 +5,12 @@ import type {
   ITimeRepresentation,
   ITimeZoneRepresentation,
 } from '@comunica/types';
+import * as WK from 'betterknown';
+import * as GJ from 'geojson';
+import * as turf from '@turf/turf';
+import {date} from "../../test/util/helpers";
+import {StringLiteral} from "../expressions";
+import tokml from "@jlandrum/tokml";
 
 function numSerializer(num: number, min = 2): string {
   return num.toLocaleString(undefined, { minimumIntegerDigits: min, useGrouping: false });
@@ -31,6 +37,19 @@ function serializeTimeZone(tz: Partial<ITimeZoneRepresentation>): string {
 export function serializeDate(date: IDateRepresentation): string {
   // https://www.w3.org/TR/xmlschema-2/#date-lexical-representation
   return `${numSerializer(date.year, 4)}-${numSerializer(date.month)}-${numSerializer(date.day)}${serializeTimeZone(date)}`;
+}
+
+
+export function serializeGeometry(thegeom: GJ.Geometry | GJ.Polygon | GJ.Point, literaltype: string): StringLiteral {
+  switch (literaltype) {
+    case 'http://www.opengis.net/ont/geosparql#wktLiteral':
+      return new StringLiteral(WK.geoJSONToWkt(thegeom), 'http://www.opengis.net/ont/geosparql#wktLiteral');
+    case 'http://www.opengis.net/ont/geosparql#geoJSONLiteral':
+      return new StringLiteral(JSON.stringify(thegeom), 'http://www.opengis.net/ont/geosparql#geoJSONLiteral');
+    case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
+      return new StringLiteral(tokml(thegeom), 'http://www.opengis.net/ont/geosparql#kmlLiteral');
+  }
+  return new StringLiteral('');
 }
 
 export function serializeTime(time: ITimeRepresentation): string {

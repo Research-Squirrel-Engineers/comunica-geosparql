@@ -38,6 +38,8 @@ export {
   TypeURL,
   TypeAlias,
   SparqlOperator,
+  GeoSparqlOperator,
+  GeoSparqlExtOperator,
   NamedOperator,
   GeneralOperator,
   KnownOperator,

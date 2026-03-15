@@ -13,12 +13,14 @@ import type {
   VariableExpression,
 } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
-import type { ISerializable, Literal, Quad } from '../expressions';
+import type * as GJ from 'geojson';
+import {BooleanLiteral, ISerializable, Literal, Quad} from '../expressions';
 import * as E from '../expressions';
 import { NonLexicalLiteral } from '../expressions';
 import * as C from '../util/Consts';
 import { TypeURL } from '../util/Consts';
 import * as Err from '../util/Errors';
+import { parseGeometry } from '../util/Parsing';
 import type {
   ArgumentType,
 } from './OverloadTree';
@@ -387,6 +389,21 @@ addInvalidHandling = true,
       const result = test(expressionEvaluator)(left.typedValue, right.typedValue);
       return bool(result);
     });
+  }
+
+  public geometryTest(
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this
+      .set(
+        [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ],
+        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => {
+          const result = test(expressionEvaluator)(parseGeometry(left), parseGeometry(right));
+          return result;
+        },
+        addInvalidHandling,
+      );
   }
 
   public stringTest(
