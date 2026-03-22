@@ -1,5 +1,7 @@
 <html>
 <head>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 <script>
     geof={
         "http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
@@ -21,6 +23,56 @@
 <h3>Comunica GeoSPARQL Test</h3>
 <select id="functions">
 </select>
+    <textarea id="queryinput" rows=16 cols=45>
+</textarea><br/>
+<select id="dataset">
+<option value="testdata2.ttl" selected="selected">GeoSPARQL Test Dataset</option>
+</select>
+<br/>
+<b>Note: </b> Query variables ending in "_geom" are rendered in the map view.
+<br/>
+<b>Note2: </b> Egenhofer relation functions beginning with ST can take both raster and vector data as input.
+<br/>
+<button id="sendQueryButton" onClick="sendQuery()">Query</button>
+</div>
+   
+    <div class="col-sm-7" id="mapid">
+
+      
+<script>
+var mymap = L.map('mapid',{fullscreenControl: true,fullscreenControlOptions: {position: 'topleft'}}).setView([51.505, -0.09], 13);
+	//var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+	var layer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	});
+	var wmsLayer = L.tileLayer.wms('https://sgx.geodatenzentrum.de/wms_topplus_web_open', {
+layers: 'web',
+format: 'image/png',
+ transparent: true,
+attribution: '&copy; Bundesamt f&uuml;r Kartographie und Geod&auml;sie 2017, <a href="http://sg.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf">Datenquellen</a>'
+});
+	var baseMaps = {
+    "BKG": wmsLayer,
+        "OSM": layer
+	};
+	baseMaps["OSM"].addTo(mymap);
+	L.control.scale({
+	position: 'bottomright',
+	imperial: false
+}).addTo(mymap);
+var layercontrol=L.control.layers(baseMaps,overlayMaps).addTo(mymap);
+</script>
+    </div>
+  </div>
+
+
+QueryResult:
+<span id="number"></span>
+ <div class="row">
+  <div class="col-sm-12" id="queryresult" class="table-wrapper-scroll-y">
+<table align="center" id="queryres" class="tablesorter" border="1">
+</table>
+</div></div></div>
 <script>
 options=""
 for(fun in geof){
