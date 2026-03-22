@@ -1,0 +1,32 @@
+<html>
+<head>
+<script>
+    geof={
+        "http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
+        "http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
+        "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
+        "http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
+        "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
+        "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
+        "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
+        "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
+        "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
+        "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
+    }
+    
+</script>
+<script src="comunica-geosparql.js"></script>
+</head>
+<body>
+<h3>Comunica GeoSPARQL Test</h3>
+<select id="functions">
+</select>
+<script>
+options=""
+for(fun in geof){
+    options+="<option value=\""+fun+"\">"+geof[fun]+"</option>"
+}
+document.getElementById("functions").innerHTML=options
+</script>
+</body>
+</html>
