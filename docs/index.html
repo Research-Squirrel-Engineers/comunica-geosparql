@@ -10,6 +10,7 @@
    crossorigin=""></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+	<script src="comunica-geosparql.js"></script>
 <script>
     geof={
         "http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
@@ -40,7 +41,7 @@ var overlayMaps={}
 	var sources=[]
 async function execQuery(query){
 
-new Comunica().QueryEngine().queryBindings(`
+new Comunica.QueryEngine().queryBindings(`
 PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -59,7 +60,6 @@ WHERE {
 }
 execQuery("")
 </script>
-<script src="comunica-geosparql.js"></script>
 	  <style>
   #mapid { height: 500px;}
   </style>
