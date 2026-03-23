@@ -43,16 +43,21 @@ const QueryEngine = require('@comunica/query-sparql').QueryEngine;
 
 const myEngine = new QueryEngine();
 const bindingsStream = await myEngine.queryBindings(`
-  SELECT ?s ?p ?o WHERE {
-    ?s ?p <http://dbpedia.org/resource/Belgium>.
-    ?s ?p ?o
-  } LIMIT 100`, {
-  sources: ['https://fragments.dbpedia.org/2015/en'],
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <"""+str(GEO)+""">
+PREFIX geof: <"""+str(GEOF)+""">
+SELECT ?maxX
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:maxX(?literal) AS ?maxX)
+}`, {
+  sources: ['https://situx.github.io/comunica-geosparql/testdata.ttl'],
 });
 const bindings = await bindingsStream.toArray();
 
 console.log(bindings);
 }
+execQuery("")
 </script>
 <script src="comunica-geosparql.js"></script>
 	  <style>
