@@ -39,10 +39,8 @@
 var overlayMaps={}
 	var sources=[]
 async function execQuery(query){
-const QueryEngine = require('@comunica/query-sparql').QueryEngine;
 
-const myEngine = new QueryEngine();
-const bindingsStream = await myEngine.queryBindings(`
+new Comunica.QueryEngine().queryBindings(`
 PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -52,10 +50,12 @@ WHERE {
   BIND(geof:maxX(?literal) AS ?maxX)
 }`, {
   sources: ['https://situx.github.io/comunica-geosparql/testdata.ttl'],
+}).then(function (bindingsStream) {
+  bindingsStream.on('data', function (data) {
+    // Each variable binding is an RDFJS term
+    console.log(data);
+  });
 });
-const bindings = await bindingsStream.toArray();
-
-console.log(bindings);
 }
 execQuery("")
 </script>
