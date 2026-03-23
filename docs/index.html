@@ -44,8 +44,8 @@ const QueryEngine = require('@comunica/query-sparql').QueryEngine;
 const myEngine = new QueryEngine();
 const bindingsStream = await myEngine.queryBindings(`
 PREFIX my: <http://example.org/ApplicationSchema#>
-PREFIX geo: <"""+str(GEO)+""">
-PREFIX geof: <"""+str(GEOF)+""">
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?maxX
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
