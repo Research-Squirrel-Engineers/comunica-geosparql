@@ -38,7 +38,7 @@
 
 var overlayMaps={}
 	var sources=[]
-function execQuery(query){
+async function execQuery(query){
 const QueryEngine = require('@comunica/query-sparql').QueryEngine;
 
 const myEngine = new QueryEngine();
