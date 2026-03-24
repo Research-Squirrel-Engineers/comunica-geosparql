@@ -11,11 +11,14 @@
    crossorigin=""></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script>
 	<script src="comunica-geosparql.js"></script>
 <script>
     geof={
         "http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
-		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
+		    "http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
+        "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
         "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
         "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
@@ -25,7 +28,18 @@
         "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
     }
-	geofqueries={"http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
+	geofqueries={
+    "http://www.opengis.net/def/function/geosparql/buffer":`            PREFIX my: <http://example.org/ApplicationSchema#>
+            PREFIX geo: <"""+str(GEO)+""">
+            PREFIX geof: <"""+str(GEOF)+""">
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            SELECT ?buffer
+            WHERE {
+              my:A geo:hasDefaultGeometry ?aGeom .
+              ?aGeom %%literalrel1%% ?aLiteral .
+              BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
+            }`,
+    "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?literal ?maxX
@@ -91,19 +105,71 @@ WHERE {
 
 var overlayMaps={}
 	var sources=[]
-async function execQuery(){
-console.log(document.getElementById('functions').value)
-thequery=geofqueries[document.getElementById('functions').value]
-console.log(thequery)
-document.getElementById("queryinput").value=thequery
-new Comunica.QueryEngine().queryBindings(thequery, {
-  sources: ['https://situx.github.io/comunica-geosparql/testdata.ttl'],
-}).then(function (bindingsStream) {
-  bindingsStream.on('data', function (data) {
-    // Each variable binding is an RDFJS term
-    console.log(data);
-  });
-});
+
+function showQuery(){
+  if(document.getElementById("functions").value in geofqueries){
+    yasgui.getTab().yasqe.setValue(geofqueries[document.getElementById("functions").value])
+  }
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const prefixes=`
+SELECT * WHERE {
+  ?sub ?pred ?obj .
+} LIMIT 10`
+ const endpoint = "{{site.url}}{{site.baseurl_root}}/nfdi4objects.ttl".replace("net//","net/")
+ const thequery = urlParams.get('query');
+ const yasgui = new Yasgui(document.getElementById("yasgui"),{"pluginOrder": ["response", "table"],"yasqe":{"showQueryButton": false},"requestConfig": { "endpoint": endpoint},  "copyEndpointOnNewTab": false});
+ if(typeof(thequery)!=='undefined' && thequery!=null){
+	yasgui.getTab().yasqe.setValue(thequery)
+ }else{
+	yasgui.getTab().yasqe.setValue(prefixes)
+ }
+ baseurl="{{site.url}}{{site.baseurl_root}}".replace("net//","net/")
+ yasgui.getTab().yasr.on("drawn",function(event){
+	$('.iri').each(function(i,obj){
+	    console.log(obj)
+		if($(this).attr("href").includes(baseurl)){
+			$(this).attr("href",$(this).attr("href").replace(baseurl,""))
+		}
+	})
+ })
+ const myEngine=new Comunica.QueryEngine()
+ document.getElementsByClassName('yasqe_buttons')[0].appendChild(document.getElementById('query'));
+
+async function queryFile(){
+  yasres={"head":{"vars":[]},"results":{"bindings":[]}}
+  config={"sources":[endpoint]}
+  const result=await myEngine.queryBindings(yasgui.getTab().yasqe.getValue(), config)
+  const data=await result.toArray()	
+  vararray=[]
+  ttypemap={"NamedNode":"uri","Literal":"literal"}
+  for(bind of data){
+	curbindings={}
+	for(entry of bind["entries"]["_root"]["entries"]){
+		if(!(vararray.includes(entry[0]))){
+			vararray.push(entry[0])
+		}
+		curbindings[entry[0]]={"type":ttypemap[entry[1]["termType"]],"value":entry[1]["value"]}	
+		if("datatype" in entry[1]){
+			curbindings[entry[0]]["datatype"]=entry[1]["datatype"]["value"]
+		}
+		if("language" in entry[1] && entry[1]["language"]!=""){
+			curbindings[entry[0]]["language"]=entry[1]["language"]
+		}
+			
+	}
+	yasres["results"]["bindings"].push(curbindings)
+  }
+  yasres["head"]["vars"]=vararray
+	yasgui.getTab().yasr.setResponse({
+	  data: yasres,
+	  contentType: "application/sparql-results+json",
+	  status: 200,
+	  executionTime: 1000 // ms
+	  // error to show
+	})  		
+
 }
 </script>
 	  <style>
@@ -121,8 +187,11 @@ new Comunica.QueryEngine().queryBindings(thequery, {
 </head>
 <body>
 <h3>Comunica GeoSPARQL Test</h3>
-<select id="functions" onchange="execQuery()">
+<select id="functions" onchange="showQuery()">
 </select>
+<div id="yasgui">
+<button id="query" onclick="queryFile()" class="yasqe_queryButton query_valid"><div class="svgImg queryIcon"><svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" height="81.9" width="72.9" version="1.1" y="0px" x="0px" viewBox="0 0 72.900002 81.900002" aria-hidden="true"><path id="queryIcon" d="m69.6 35.2-60.3-34.3c-2.2-1.2-4.4-1.2-6.4 0s-2.9 3.4-2.9 5.6v68.8c0 2.2 1.2 4.4 2.9 5.6 1 0.5 2.2 1 3.4 1s2.2-0.5 2.9-1l60.3-34.3c2.2-1.2 3.4-3.4 3.4-5.6s-1.1-4.3-3.3-5.8z"></path><path id="loadingIcon" d="m61.184 36.167-48.73-27.719c-1.7779-0.96976-3.5558-0.96976-5.172 0-1.6163 0.96976-2.3436 2.7476-2.3436 4.5255v55.599c0 1.7779 0.96976 3.5558 2.3436 4.5255 0.80813 0.40407 1.7779 0.80813 2.7476 0.80813 0.96975 0 1.7779-0.40406 2.3436-0.80813l48.73-27.719c1.7779-0.96976 2.7476-2.7476 2.7476-4.5255s-0.88894-3.475-2.6668-4.6872z" fill="none"></path></svg></div></button>
+ </div>
     <textarea id="queryinput" rows=16 cols=45>
 </textarea><br/>
 <select id="dataset">
@@ -163,23 +232,13 @@ attribution: '&copy; Bundesamt f&uuml;r Kartographie und Geod&auml;sie 2017, <a 
 var layercontrol=L.control.layers(baseMaps,overlayMaps).addTo(mymap);
 </script>
     </div>
-  </div>
-
-
-QueryResult:
-<span id="number"></span>
- <div class="row">
-  <div class="col-sm-12" id="queryresult" class="table-wrapper-scroll-y">
-<table align="center" id="queryres" class="tablesorter" border="1">
-</table>
-</div></div></div>
 <script>
 options=""
 for(fun in geof){
     options+="<option value=\""+fun+"\">"+geof[fun]+"</option>"
 }
 document.getElementById("functions").innerHTML=options
-execQuery()
+
 </script>
 </body>
 </html>
