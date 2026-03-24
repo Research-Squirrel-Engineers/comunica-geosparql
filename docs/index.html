@@ -52,6 +52,7 @@ async function execQuery(){
 console.log(document.getElementById('functions').value)
 thequery=geofqueries[document.getElementById('functions').value]
 console.log(thequery)
+document.getElementById("queryinput").value=thequery
 new Comunica.QueryEngine().queryBindings(thequery, {
   sources: ['https://situx.github.io/comunica-geosparql/testdata.ttl'],
 }).then(function (bindingsStream) {
