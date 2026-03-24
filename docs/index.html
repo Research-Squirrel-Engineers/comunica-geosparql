@@ -30,6 +30,7 @@
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
 		"http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
         "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
+		"http://www.opengis.net/def/function/geosparql/envelope":"geof:envelope",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
         "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
         "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
@@ -84,6 +85,14 @@ SELECT ?chull
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:convexHull(?literal) AS ?chull)
+}`,
+"http://www.opengis.net/def/function/geosparql/envelope":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?envelope
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:envelope(?literal) AS ?envelope)
 }`,
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
