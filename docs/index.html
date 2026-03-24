@@ -203,7 +203,7 @@ async function queryFile(){
 <h2>Comunica GeoSPARQL Test</h2>
 <div class="row">
 
-  <div id="yasgui" class="col-6">
+  <div id="yasgui" class="col-8">
 Sample Queries: <select id="functions" onchange="showQuery()">
 </select><br/>
 <button id="query" onclick="queryFile()" class="yasqe_queryButton query_valid">
@@ -212,7 +212,7 @@ Sample Queries: <select id="functions" onchange="showQuery()">
   </div>
 </button>
  </div>
-<div class="col-6" id="mapid">        
+<div class="col-4" id="mapid">        
 <script>
 var mymap = L.map('mapid',{fullscreenControl: true,fullscreenControlOptions: {position: 'topleft'}}).setView([51.505, -0.09], 13);
 	var layer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
