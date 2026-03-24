@@ -171,9 +171,9 @@ async function queryFile(){
 </head>
 <body>
 <h3>Comunica GeoSPARQL Test</h3>
-<select id="functions" onchange="showQuery()">
-</select>
-<div class="main">
+Sample Queries: <select id="functions" onchange="showQuery()">
+</select><br/>
+<div class="container">
 <div id="yasgui" class="col-sm-5">
 <button id="query" onclick="queryFile()" class="yasqe_queryButton query_valid">
   <div class="svgImg queryIcon">
@@ -181,14 +181,9 @@ async function queryFile(){
   </div>
 </button>
  </div>
-<select id="dataset">
-<option value="testdata2.ttl" selected="selected">GeoSPARQL Test Dataset</option>
-</select>
-</div>
 <div class="col-sm-7" id="mapid">        
 <script>
 var mymap = L.map('mapid',{fullscreenControl: true,fullscreenControlOptions: {position: 'topleft'}}).setView([51.505, -0.09], 13);
-	//var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 	var layer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	});
@@ -209,6 +204,7 @@ attribution: '&copy; Bundesamt f&uuml;r Kartographie und Geod&auml;sie 2017, <a 
 }).addTo(mymap);
 var layercontrol=L.control.layers(baseMaps,overlayMaps).addTo(mymap);
 </script>
+</div>
 </div>
 <script>
 options=""
