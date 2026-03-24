@@ -29,17 +29,17 @@
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
     }
 	geofqueries={
-    "http://www.opengis.net/def/function/geosparql/buffer":`            PREFIX my: <http://example.org/ApplicationSchema#>
-            PREFIX geo: <"""+str(GEO)+""">
-            PREFIX geof: <"""+str(GEOF)+""">
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            SELECT ?buffer
-            WHERE {
-              my:A geo:hasDefaultGeometry ?aGeom .
-              ?aGeom %%literalrel1%% ?aLiteral .
-              BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
-            }`,
-    "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/buffer":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <"""+str(GEO)+""">
+PREFIX geof: <"""+str(GEOF)+""">
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?buffer
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom %%literalrel1%% ?aLiteral .
+  BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
+}`,
+"http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?literal ?maxX
@@ -62,8 +62,7 @@ SELECT ?literal ?maxZ
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:maxZ(?literal) AS ?maxZ)
-}`
-,
+}`,
 "http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -71,8 +70,7 @@ SELECT ?literal ?minX
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:minX(?literal) AS ?minX)
-}`
-,
+}`,
 "http://www.opengis.net/def/function/geosparql/minY":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -80,8 +78,7 @@ SELECT ?literal ?minY
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:minY(?literal) AS ?minY)
-}`
-				,
+}`,
 "http://www.opengis.net/def/function/geosparql/minY":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
