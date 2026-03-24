@@ -22,11 +22,13 @@
 	<script src="comunica-browser.js"></script>
 <script>
     geof={
-        "http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
-		    "http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
+		"http://www.opengis.net/def/function/geosparql/GeoJSON":"geof:asGeoJSON",
+        "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
+		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
         "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
+		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
         "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
         "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
         "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
@@ -35,6 +37,26 @@
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
     }
 	geofqueries={
+"http://www.opengis.net/def/function/geosparql/asGeoJSON":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <"""+str(GEO)+""">
+PREFIX geof: <"""+str(GEOF)+""">
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?asGeoJSON
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asGeoJSON(?aLiteral) as ?asGeoJSON)
+}`,
+"http://www.opengis.net/def/function/geosparql/asWKT":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <"""+str(GEO)+""">
+PREFIX geof: <"""+str(GEOF)+""">
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?asWKT
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asWKT(?aLiteral) as ?asWKT)
+}`,
 "http://www.opengis.net/def/function/geosparql/buffer":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <"""+str(GEO)+""">
 PREFIX geof: <"""+str(GEOF)+""">
@@ -42,7 +64,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?buffer
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
 }`,
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -119,9 +141,14 @@ function showQuery(){
  const endpoint = "https://situx.github.io/comunica-geosparql/testdata.ttl"
 const urlParams = new URLSearchParams(window.location.search);
 const prefixes=`
-SELECT * WHERE {
-  ?sub ?pred ?obj .
-} LIMIT 10`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?maxX
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:maxX(?literal) AS ?maxX)
+}`
 
  const myEngine=new Comunica.QueryEngine()
 async function queryFile(){
