@@ -48,7 +48,7 @@ WHERE {
 var overlayMaps={}
 	var sources=[]
 async function execQuery(){
-thequery=geofqueries[geodocument.getElementById('functions').value]
+thequery=geofqueries[document.getElementById('functions').value]
 console.log(thequery)
 new Comunica.QueryEngine().queryBindings(thequery, {
   sources: ['https://situx.github.io/comunica-geosparql/testdata.ttl'],
