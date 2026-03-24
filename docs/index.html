@@ -32,6 +32,49 @@ SELECT ?literal ?maxX
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:maxX(?literal) AS ?maxX)
+}`,
+"http://www.opengis.net/def/function/geosparql/maxY":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?maxY
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:maxY(?literal) AS ?maxY)
+}`,
+"http://www.opengis.net/def/function/geosparql/maxZ":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?maxZ
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:maxZ(?literal) AS ?maxZ)
+}`
+,
+"http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?minX
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:minX(?literal) AS ?minX)
+}`
+,
+"http://www.opengis.net/def/function/geosparql/minY":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?minY
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:minY(?literal) AS ?minY)
+}`
+				,
+"http://www.opengis.net/def/function/geosparql/minY":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?minZ
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:minZ(?literal) AS ?minZ)
 }`}
     var prefixList="PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nPREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX xml: <http://www.w3.org/XML/1998/namespace>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xerl: <http://www.xerleben.de/schema/2.0_1#>\nPREFIX xplan5: <http://www.xplanung.de/xplangml/5/0#>\nPREFIX semgis: <http://www.semgis.de/geodata#> "
 
