@@ -95,7 +95,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?boundary
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:boundary(?aLiteral) as ?boundary)
 }`,
 "http://www.opengis.net/def/function/geosparql/centroid":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -133,9 +133,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?distance
 WHERE {
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel1%% ?cLiteral .
+  ?cGeom geo:asWKT ?cLiteral .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel2%% ?fLiteral .
+  ?fGeom geo:asWKT ?fLiteral .
   BIND (geof:distance(?cLiteral, ?fLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
 }`,
 "http://www.opengis.net/def/function/geosparql/envelope":`PREFIX my: <http://example.org/ApplicationSchema#>
