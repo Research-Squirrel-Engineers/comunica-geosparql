@@ -225,7 +225,7 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?reverse
 WHERE {
-  my:AExactGeom %%literalrel1%% ?literal .
+  my:AExactGeom geo:asWKT ?literal .
   BIND(geof:reverse(?literal) AS ?reverse)
 }`,
 "http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
