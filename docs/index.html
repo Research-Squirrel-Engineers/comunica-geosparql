@@ -88,6 +88,16 @@ WHERE {
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
 }`,
+"http://www.opengis.net/def/function/geosparql/boundary":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?boundary
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom %%literalrel1%% ?aLiteral .
+  BIND (geof:boundary(?aLiteral) as ?boundary)
+}`,
 "http://www.opengis.net/def/function/geosparql/centroid":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -103,6 +113,30 @@ SELECT ?chull
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:convexHull(?literal) AS ?chull)
+}`,
+"http://www.opengis.net/def/function/geosparql/difference":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?difference
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:difference(?aLiteral, ?dLiteral) as ?difference)
+}`,
+"http://www.opengis.net/def/function/geosparql/distance":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?distance
+WHERE {
+  my:C geo:hasDefaultGeometry ?cGeom .
+  ?cGeom %%literalrel1%% ?cLiteral .
+  my:F geo:hasDefaultGeometry ?fGeom .
+  ?fGeom %%literalrel2%% ?fLiteral .
+  BIND (geof:distance(?cLiteral, ?fLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
 }`,
 "http://www.opengis.net/def/function/geosparql/envelope":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -264,6 +298,29 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:sfWithin(?bLiteral, ?aLiteral) as ?sfWithin)
+}`,
+"http://www.opengis.net/def/function/geosparql/symDifference":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?sdifference
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:symDifference(?aLiteral, ?dLiteral) as ?sdifference)
+}`,
+"http://www.opengis.net/def/function/geosparql/union":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+SELECT ?union
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:union(?aLiteral, ?dLiteral) as ?union)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/X":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
