@@ -158,7 +158,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
 SELECT ?isTriangle ?isNoTriangle {
-	<http://example.org/ApplicationSchema#AExactGeom> %%literalrel1%% ?a_wkt .
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isTriangle(?a_wkt) AS ?isNoTriangle)
 	BIND(geof:isTriangle("POLYGON ((0 0,0 1,1 1,0 0))"^^geo:wktLiteral) AS ?isTriangle)
 }`,
@@ -166,9 +166,9 @@ SELECT ?isTriangle ?isNoTriangle {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
 SELECT ?isValid ?isNotValid {
-	<http://example.org/ApplicationSchema#AExactGeom> %%literalrel1%% ?a_wkt .
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isValid(?a_wkt) AS ?isValid)
-			<http://example.org/ApplicationSchema#OExactGeom> %%literalrel1%% ?o_wkt .
+			<http://example.org/ApplicationSchema#OExactGeom> geo:asWKT ?o_wkt .
 	BIND(geof:isValid("POLYGON((0 0, 10 10, 0 10, 10 0, 0 0))"^^geo:wktLiteral) AS ?isNotValid)
 }`,
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
