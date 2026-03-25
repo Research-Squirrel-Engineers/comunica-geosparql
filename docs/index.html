@@ -161,7 +161,7 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:minZ(?literal) AS ?minZ)
 }`,
-"http://www.opengis.net/def/function/geosparql/X":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/X":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 SELECT ?literal ?X
@@ -169,7 +169,7 @@ WHERE {
   my:APointGeom geo:asWKT ?literal .
   BIND(geof:X(?literal) AS ?X)
 }`,
-"http://www.opengis.net/def/function/geosparql/Y":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/Y":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 SELECT ?literal ?Y
@@ -177,7 +177,7 @@ WHERE {
   my:APointGeom geo:asWKT ?literal .
   BIND(geof:Y(?literal) AS ?Y)
 }`,
-"http://www.opengis.net/def/function/geosparql/Z":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/Z":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 SELECT ?literal ?Z
