@@ -45,6 +45,13 @@
         "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
         "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
 		"http://www.opengis.net/def/function/geosparql/ext/reverse":"geofext:reverse",
+		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
+		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
+		"http://www.opengis.net/def/function/geosparql/sfDisjoint":"geof:sfDisjoint",
+		"http://www.opengis.net/def/function/geosparql/sfEquals":"geof:sfEquals",
+		"http://www.opengis.net/def/function/geosparql/sfIntersects":"geof:sfIntersects",
+		"http://www.opengis.net/def/function/geosparql/sfTouches":"geof:sfTouches",
+		"http://www.opengis.net/def/function/geosparql/sfWithin":"geof:sfWithin",
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
 		"http://www.opengis.net/def/function/geosparql/ext/X":"geofext:X",
 		"http://www.opengis.net/def/function/geosparql/ext/Y":"geofext:Y",
@@ -153,13 +160,110 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:minY(?literal) AS ?minY)
 }`,
-"http://www.opengis.net/def/function/geosparql/minY":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/minZ":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?literal ?minZ
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:minZ(?literal) AS ?minZ)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfContains) as ?contains)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:F geo:hasDefaultGeometry ?fGeom .
+  ?fGeom geo:asWKT ?fLiteral .
+  BIND (geof:sfContains(?aLiteral, ?fLiteral) as ?sfContains)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfCrosses":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfCrosses) as ?crosses)
+WHERE {
+  my:E geo:hasDefaultGeometry ?eGeom .
+  ?eGeom geo:asWKT ?eLiteral .
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:sfCrosses(?eLiteral, ?aLiteral) as ?sfCrosses)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfDisjoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfDisjoint) as ?disjoint)
+WHERE {
+  my:C geo:hasDefaultGeometry ?cGeom .
+  ?cGeom %%literalrel1%% ?cLiteral .
+  my:F geo:hasDefaultGeometry ?fGeom .
+  ?fGeom %%literalrel2%% ?fLiteral .
+  BIND (geof:sfDisjoint(?cLiteral, ?fLiteral) as ?sfDisjoint)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfIntersects":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfIntersects) as ?intersects)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:sfIntersects(?aLiteral, ?dLiteral) as ?sfIntersects)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfEquals":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfEquals) as ?equal) (xsd:boolean(?sfEquals2) as ?notequal)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:B geo:hasDefaultGeometry ?bGeom .
+  ?bGeom geo:asWKT ?bLiteral .
+  BIND (geof:sfEquals(?aLiteral, ?aLiteral) as ?sfEquals)
+  BIND (geof:sfEquals(?aLiteral, ?bLiteral) as ?sfEquals2)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfOverlaps":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfOverlaps) as ?overlaps)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:sfOverlaps(?aLiteral, ?dLiteral) as ?sfOverlaps)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfTouches":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfTouches) as ?touches)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:C geo:hasDefaultGeometry ?cGeom .
+  ?cGeom geo:asWKT ?cLiteral .
+  BIND (geof:sfTouches(?aLiteral, ?cLiteral) as ?sfTouches)
+}`,
+"http://www.opengis.net/def/function/geosparql/sfWithin":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?sfWithin) as ?within)
+WHERE {
+  my:B geo:hasDefaultGeometry ?bGeom .
+  ?bGeom geo:asWKT ?bLiteral .
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:sfWithin(?bLiteral, ?aLiteral) as ?sfWithin)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/X":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
