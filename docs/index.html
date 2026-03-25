@@ -199,9 +199,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?sfDisjoint) as ?disjoint)
 WHERE {
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel1%% ?cLiteral .
+  ?cGeom geo:asWKT ?cLiteral .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel2%% ?fLiteral .
+  ?fGeom geo:asWKT ?fLiteral .
   BIND (geof:sfDisjoint(?cLiteral, ?fLiteral) as ?sfDisjoint)
 }`,
 "http://www.opengis.net/def/function/geosparql/sfIntersects":`PREFIX my: <http://example.org/ApplicationSchema#>
