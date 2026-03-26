@@ -32,10 +32,12 @@
         "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
 		"http://www.opengis.net/def/function/geosparql/envelope":"geof:envelope",
 		"http://www.opengis.net/def/function/geosparql/geometryType":"geof:geometryType",
+		"http://www.opengis.net/def/function/geosparql/is3D":"geof:is3D",
 		"http://www.opengis.net/def/function/geosparql/isClosed":"geof:isClosed",
 		"http://www.opengis.net/def/function/geosparql/isCollection":"geof:isCollection",
 		"http://www.opengis.net/def/function/geosparql/ext/isCW":"geofext:isCW",
 		"http://www.opengis.net/def/function/geosparql/isEmpty":"geof:isEmpty",
+		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
 		"http://www.opengis.net/def/function/geosparql/ext/isValid":"geofext:isValid",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
@@ -153,6 +155,33 @@ SELECT ?gtype
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:geometryType(?literel) AS ?gtype)
+}`,
+"http://www.opengis.net/def/function/geosparql/is3D":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
+SELECT ?isN3D ?isK3D {
+	<http://example.org/ApplicationSchema#NExactGeom> geo:asWKT ?n_wkt .
+	BIND(geof:is3D(?n_wkt) AS ?isN3D)
+	<http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
+	BIND(geof:is3D(?k_wkt) AS ?isK3D)
+}`,
+"http://www.opengis.net/def/function/geosparql/isEmpty":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
+SELECT (xsd:boolean(?isIEmptyr) as ?isIEmpty) (xsd:boolean(?isKEmptyr) as ?isKEmpty) {
+	<http://example.org/ApplicationSchema#IExactGeom> geo:asWKT ?i_wkt .
+	BIND(geof:isEmpty(?i_wkt) AS ?isIEmptyr)
+	 <http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
+	BIND(geof:isEmpty(?k_wkt) AS ?isKEmptyr)
+}`,
+"http://www.opengis.net/def/function/geosparql/isSimple":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
+SELECT ?isASimple ?isOSimple {
+	<http://example.org/ApplicationSchema#AExactGeom> %%literalrel1%% ?a_wkt .
+	BIND(geof:isSimple(?a_wkt) AS ?isASimple)
+	<http://example.org/ApplicationSchema#OExactGeom> %%literalrel1%% ?o_wkt .
+	BIND(geof:isSimple(?o_wkt) AS ?isOSimple)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/isTriangle":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
