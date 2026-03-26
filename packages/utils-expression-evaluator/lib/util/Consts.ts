@@ -92,8 +92,22 @@ export type GeneralOperator = KnownOperator | string;
 export type KnownOperator = SparqlOperator | GeoSparqlOperator | NamedOperator;
 
 export enum GeoSparqlExtOperator {
+  ASOBJ = 'http://www.opengis.net/def/function/geosparql/ext/asOBJ',
+  ASPLY = 'http://www.opengis.net/def/function/geosparql/ext/asPLY',
+  ASWKB = 'http://www.opengis.net/def/function/geosparql/ext/asWKB',
+  ASXYZ = 'http://www.opengis.net/def/function/geosparql/ext/asXYZ',
   AZIMUTH = 'http://www.opengis.net/def/function/geosparql/ext/azimuth',
+  CLOSESTPOINT = 'http://www.opengis.net/def/function/geosparql/ext/closestPoint',
+  COMPACTNESSRATIO = 'http://www.opengis.net/def/function/geosparql/ext/compactnessRatio',
+  ENDPOINT = 'http://www.opengis.net/def/function/geosparql/ext/endPoint',
+  ISCW = 'http://www.opengis.net/def/function/geosparql/ext/isCW',
+  ISCCW = 'http://www.opengis.net/def/function/geosparql/ext/isCCW',
+  ISTRIANGLE = 'http://www.opengis.net/def/function/geosparql/ext/isTriangle',
+  ISVALID = 'http://www.opengis.net/def/function/geosparql/ext/isValid',
   ISVALIDTRAJECTORY = 'http://www.opengis.net/def/function/geosparql/ext/isValidTrajectory',
+  REMOVEREPEATEDPOINTS = 'http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints',
+  REVERSE = 'http://www.opengis.net/def/function/geosparql/ext/reverse',
+  SIMPLIFY = 'http://www.opengis.net/def/function/geosparql/ext/simplify',
   X = 'http://www.opengis.net/def/function/geosparql/ext/X',
   Y = 'http://www.opengis.net/def/function/geosparql/ext/Y',
   Z = 'http://www.opengis.net/def/function/geosparql/ext/Z',

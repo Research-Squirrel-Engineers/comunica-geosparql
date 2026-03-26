@@ -14,16 +14,15 @@ import type {
 } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
 import type * as GJ from 'geojson';
-import {BooleanLiteral, ISerializable, Literal, Quad} from '../expressions';
+import type { BooleanLiteral, ISerializable, Literal, Quad, StringLiteral } from '../expressions';
 import * as E from '../expressions';
 import { NonLexicalLiteral } from '../expressions';
 import * as C from '../util/Consts';
 import { TypeURL } from '../util/Consts';
+import { convertGeometry, epsgdefs } from '../util/EPSGDefs';
 import * as Err from '../util/Errors';
 import { parseGeometry } from '../util/Parsing';
-import type {
-  ArgumentType,
-} from './OverloadTree';
+import type { ArgumentType } from './OverloadTree';
 import { OverloadTree } from './OverloadTree';
 
 type Term = TermExpression;
@@ -397,13 +396,42 @@ addInvalidHandling = true,
   ): Builder {
     return this
       .set(
-        [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ],
-        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => {
-          const result = test(expressionEvaluator)(parseGeometry(left), parseGeometry(right));
-          return result;
-        },
+        [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ], // eslint-disable-next-line max-len
+        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => test(expressionEvaluator)(parseGeometry(left)[0], parseGeometry(right)[0]),
         addInvalidHandling,
       );
+  }
+
+  public geometryFunc(
+    // eslint-disable-next-line max-len
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, leftdt: string, right: GJ.Geometry, rightdt: string) => StringLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this
+      .set(
+        [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ],
+        // eslint-disable-next-line max-len
+        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => test(expressionEvaluator)(parseGeometry(left)[0], left.dataType, parseGeometry(right)[0], right.dataType),
+        addInvalidHandling,
+      );
+  }
+
+  public normalizeGeometries(geomtup: [GJ.Geometry, string], tosrs = ''): [GJ.Geometry, string] {
+    if (geomtup[1] === tosrs) {
+      return geomtup;
+    }
+    return [ convertGeometry(geomtup[0], geomtup[1], tosrs), tosrs ];
+  }
+
+  public transformGeometry(thegeom: StringLiteral, source: string, dest: string): GJ.Geometry {
+    const geom = parseGeometry(thegeom)[0];
+    if (source in epsgdefs) {
+      source = <string>epsgdefs[source];
+    }
+    if (dest in epsgdefs) {
+      dest = <string>epsgdefs[dest];
+    }
+    return convertGeometry(geom, source, dest, '');
   }
 
   public stringTest(

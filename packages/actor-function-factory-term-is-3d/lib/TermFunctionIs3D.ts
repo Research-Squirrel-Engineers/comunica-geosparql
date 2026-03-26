@@ -18,7 +18,7 @@ export class TermFunctionIs3D extends TermFunctionBase {
       operator: GeoSparqlOperator.IS3D,
       overloads: declare(GeoSparqlOperator.IS3D).onLiteral1(
         () => (term) => {
-          const thegeom = parseGeometry(term);
+          const thegeom = parseGeometry(term)[0];
           if (thegeom.type === 'Point') {
             return bool(turf.getCoord(thegeom).length === 3);
           }

@@ -17,7 +17,7 @@ export class TermFunctionX extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlExtOperator.X,
       overloads: declare(GeoSparqlExtOperator.X).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term);
+        const thegeom = parseGeometry(term)[0];
         if (thegeom.type === 'Point') {
           return double(turf.getCoord(thegeom)[0]);
         }

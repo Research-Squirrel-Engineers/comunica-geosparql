@@ -15,7 +15,7 @@ export class TermFunctionAsKML extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.ASKML,
-      overloads: declare(GeoSparqlOperator.ASKML).onLiteral1(() => term => serializeGeometry(parseGeometry(term), 'http://www.opengis.net/ont/geosparql#kmlLiteral')).collect(),
+      overloads: declare(GeoSparqlOperator.ASKML).onLiteral1(() => term => serializeGeometry(parseGeometry(term)[0], 'http://www.opengis.net/ont/geosparql#kmlLiteral')).collect(),
     });
   }
 }

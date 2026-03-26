@@ -11,9 +11,7 @@ import type { Literal } from '@comunica/utils-expression-evaluator';
 import * as turf from '@turf/turf';
 import * as WK from 'betterknown';
 import type * as GJ from 'geojson';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import {KmlToGeojson } from 'kml-to-geojson';
-import {ISerializable} from "../expressions";
+import type { ISerializable } from '../expressions';
 import { simplifyDurationRepresentation } from './DateTimeHelpers';
 import { ParseError } from './Errors';
 import { maximumDayInMonthFor } from './SpecAlgos';
@@ -189,22 +187,23 @@ export function parseDayTimeDuration(durationStr: string): Partial<IDayTimeDurat
   return res;
 }
 
-export function parseGeometry(geomlit: Literal<ISerializable>): GJ.Geometry {
+export function parseGeometry(geomlit: Literal<ISerializable>): [GJ.Geometry, string] {
+  let thestr = geomlit.str().replaceAll(/^\s+|\s+$/gu, '');
+  let crsuri = '<http://www.opengis.net/def/crs/OGC/1.3/CRS84>';
   try {
-    switch (geomlit.dataType) {
-      case 'http://www.opengis.net/ont/geosparql#wktLiteral':
-        // eslint-disable-next-line ts/ban-ts-comment
-        // @ts-expect-error
-        return turf.getGeom(WK.wktToGeoJSON(geomlit.str()));
-      case 'http://www.opengis.net/ont/geosparql#gmlLiteral':
-        break;
-      case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
-        return KmlToGeojson.prototype.parse(geomlit.str()).geojson.features[0].geometry;
-      case 'http://www.opengis.net/ont/geosparql#geoJSONLiteral':
-        return turf.getGeom(JSON.parse(geomlit.str()));
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#wktLiteral') {
+      if (thestr.startsWith('<')) {
+        const spl = thestr.split('>');
+        crsuri = spl[0];
+        thestr = spl[1].trim();
+      }
+      return [ turf.getGeom(<GJ.Geometry>WK.wktToGeoJSON(thestr)), crsuri ];
+    }
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#geoJSONLiteral') {
+      return [ turf.getGeom(JSON.parse(thestr)), crsuri ];
     }
   } catch {
     throw new ParseError(`Geometry literal with type ${geomlit.dataType} could not be parsed.\nContent: ${geomlit.str()}`, 'geometry');
   }
-  return turf.getGeom({ type: 'Point', coordinates: []});
+  return [ turf.getGeom({ type: 'Point', coordinates: []}), crsuri ];
 }

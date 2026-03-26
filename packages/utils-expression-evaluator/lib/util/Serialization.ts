@@ -5,12 +5,10 @@ import type {
   ITimeRepresentation,
   ITimeZoneRepresentation,
 } from '@comunica/types';
+import tokml from '@jlandrum/tokml';
 import * as WK from 'betterknown';
-import * as GJ from 'geojson';
-import * as turf from '@turf/turf';
-import {date} from "../../test/util/helpers";
-import {StringLiteral} from "../expressions";
-import tokml from "@jlandrum/tokml";
+import type * as GJ from 'geojson';
+import {StringLiteral} from '../expressions';
 
 function numSerializer(num: number, min = 2): string {
   return num.toLocaleString(undefined, { minimumIntegerDigits: min, useGrouping: false });

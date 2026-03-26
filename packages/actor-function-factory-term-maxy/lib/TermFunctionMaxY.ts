@@ -17,7 +17,7 @@ export class TermFunctionMaxY extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.MAXY,
       overloads: declare(GeoSparqlOperator.MAXY).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term);
+        const thegeom = parseGeometry(term)[0];
         let maxY = Number.MIN_VALUE;
         turf.coordEach(thegeom, (
           currentCoord,

@@ -46,10 +46,10 @@
     "rdf-data-factory": "^2.0.0",
     "rdf-string": "^2.0.1",
     "betterknown": "^1.2.0",
+    "proj4": "^2.20.4",
     "gml2geojson": "^0.0.7",
     "@mapbox/togeojson": "^0.16.2",
     "@turf/turf": "^7.3.4",
-    "kml-to-geojson": "^1.0.13",
     "@jlandrum/tokml": "^0.6.1-ts2"
   }
 }

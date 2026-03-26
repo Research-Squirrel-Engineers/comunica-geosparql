@@ -12,7 +12,7 @@ import { GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
 import { TermFunctionIsClosed } from './TermFunctionIsClosed';
 
 /**
- * A comunica TermFunctionMinY Function Factory Actor.
+ * A comunica TermFunctionIsClosed Function Factory Actor.
  */
 export class ActorFunctionFactoryTermIsClosed extends ActorFunctionFactoryDedicated {
   public constructor(args: IActorFunctionFactoryArgs) {

@@ -14,7 +14,7 @@ export class TermFunctionEnvelope extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.ENVELOPE,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.ENVELOPE).onLiteral1(() => term => serializeGeometry(turf.envelope(parseGeometry(term)).geometry, term.dataType)).collect(),
+      overloads: declare(GeoSparqlOperator.ENVELOPE).onLiteral1(() => term => serializeGeometry(turf.envelope(parseGeometry(term)[0]).geometry, term.dataType)).collect(),
     });
   }
 }

@@ -1,8 +1,7 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {
-    declare,
-    double,
-    GeoSparqlOperator,
+  declare,
+  GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
 import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
@@ -18,7 +17,7 @@ export class TermFunctionConvexHull extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.CONVEXHULL,
       overloads: declare(GeoSparqlOperator.CONVEXHULL).onLiteral1(() => (term) => {
-        const chull = turf.convex(parseGeometry(term))?.geometry;
+        const chull = turf.convex(parseGeometry(term)[0])?.geometry;
         if (chull !== undefined) {
           return serializeGeometry(chull, term.dataType);
         }

@@ -2,7 +2,6 @@ import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {
   declare,
   GeoSparqlOperator,
-  StringLiteral,
 } from '@comunica/utils-expression-evaluator';
 
 import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
@@ -16,7 +15,7 @@ export class TermFunctionAsGML extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.ASGML,
-      overloads: declare(GeoSparqlOperator.ASGML).onLiteral1(() => term => serializeGeometry(parseGeometry(term), 'http://www.opengis.net/ont/geosparql#gmlLiteral')).collect(),
+      overloads: declare(GeoSparqlOperator.ASGML).onLiteral1(() => term => serializeGeometry(parseGeometry(term)[0], 'http://www.opengis.net/ont/geosparql#gmlLiteral')).collect(),
     });
   }
 }

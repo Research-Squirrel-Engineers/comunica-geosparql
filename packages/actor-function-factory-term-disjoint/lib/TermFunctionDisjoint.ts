@@ -4,7 +4,7 @@ import {bool, declare, GeoSparqlOperator} from '@comunica/utils-expression-evalu
 import * as turf from '@turf/turf';
 
 /**
- * http://www.opengis.net/def/function/geosparql/azimuth
+ * http://www.opengis.net/def/function/geosparql/sfDisjoint
  */
 export class TermFunctionDisjoint extends TermFunctionBase {
   public constructor() {

@@ -12,7 +12,7 @@ import { GeoSparqlExtOperator } from '@comunica/utils-expression-evaluator';
 import { TermFunctionY } from './TermFunctionY';
 
 /**
- * A comunica TermFunctionMinZ Function Factory Actor.
+ * A comunica TermFunctionY Function Factory Actor.
  */
 export class ActorFunctionFactoryTermY extends ActorFunctionFactoryDedicated {
   public constructor(args: IActorFunctionFactoryArgs) {
