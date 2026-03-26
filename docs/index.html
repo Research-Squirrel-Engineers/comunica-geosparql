@@ -178,9 +178,9 @@ SELECT (xsd:boolean(?isIEmptyr) as ?isIEmpty) (xsd:boolean(?isKEmptyr) as ?isKEm
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
 SELECT ?isASimple ?isOSimple {
-	<http://example.org/ApplicationSchema#AExactGeom> %%literalrel1%% ?a_wkt .
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isSimple(?a_wkt) AS ?isASimple)
-	<http://example.org/ApplicationSchema#OExactGeom> %%literalrel1%% ?o_wkt .
+	<http://example.org/ApplicationSchema#OExactGeom> geo:asWKT ?o_wkt .
 	BIND(geof:isSimple(?o_wkt) AS ?isOSimple)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/isTriangle":`PREFIX my: <http://example.org/ApplicationSchema#>
