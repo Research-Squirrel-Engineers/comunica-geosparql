@@ -159,6 +159,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehContains":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehContains) as ?contains)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
@@ -170,6 +171,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehCovers":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehCovers) as ?covers)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
@@ -181,6 +183,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehCoveredBy":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehCoveredBy) as ?coveredBy)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
@@ -192,6 +195,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehDisjoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehDisjoint) as ?disjoint) (xsd:boolean(?ehDisjoint2) as ?disjoint2)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
@@ -204,6 +208,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehEquals":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehEquals) as ?equals) (xsd:boolean(?ehEquals2) as ?equals2)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
@@ -216,6 +221,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehInside":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?insidee) as ?inside)
 WHERE {
   my:F geo:hasDefaultGeometry ?fGeom .
@@ -227,6 +233,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehMeet":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehMeet) as ?meet)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
@@ -238,6 +245,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/ehOverlap":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehOverlap) as ?overlap)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
