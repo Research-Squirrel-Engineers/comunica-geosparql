@@ -175,9 +175,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehCovers) as ?covers)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom %%literalrel2%% ?bLiteral .
+  ?bGeom geo:asWKT ?bLiteral .
   BIND (geof:ehCovers(?aLiteral, ?bLiteral) as ?ehCovers)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehCoveredBy":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -187,9 +187,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehCoveredBy) as ?coveredBy)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom %%literalrel1%% ?bLiteral .
+  ?bGeom geo:asWKT ?bLiteral .
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel2%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:ehCoveredBy(?bLiteral, ?aLiteral) as ?ehCoveredBy)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehDisjoint":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -199,9 +199,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehDisjoint) as ?disjoint) (xsd:boolean(?ehDisjoint2) as ?disjoint2)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom %%literalrel1%% ?bLiteral .
+  ?bGeom geo:asWKT ?bLiteral .
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel2%% ?cLiteral .
+  ?cGeom geo:asWKT ?cLiteral .
   BIND (geof:ehDisjoint(?bLiteral, ?bLiteral) as ?ehDisjoint)
   BIND (geof:ehDisjoint(?bLiteral, ?cLiteral) as ?ehDisjoint2)
 }`,
@@ -225,9 +225,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?insidee) as ?inside)
 WHERE {
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel1%% ?fLiteral .
+  ?fGeom geo:asWKT ?fLiteral .
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel2%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:ehInside(?fLiteral, ?aLiteral) as ?insidee)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehMeet":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -237,9 +237,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehMeet) as ?meet)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel2%% ?cLiteral .
+  ?cGeom geo:asWKT ?cLiteral .
   BIND (geof:ehMeet(?aLiteral, ?cLiteral) as ?ehMeet)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehOverlap":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -249,9 +249,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?ehOverlap) as ?overlap)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   my:D geo:hasDefaultGeometry ?dGeom .
-  ?dGeom %%literalrel2%% ?dLiteral .
+  ?dGeom geo:asWKT ?dLiteral .
   BIND (geof:ehOverlap(?aLiteral, ?dLiteral) as ?ehOverlap)
 }`,
 "http://www.opengis.net/def/function/geosparql/envelope":`PREFIX my: <http://example.org/ApplicationSchema#>
@@ -457,9 +457,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?rcc8tppir) as ?rcc8tppi)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom %%literalrel1%% ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom %%literalrel2%% ?bLiteral .
+  ?bGeom geo:asWKT ?bLiteral .
   BIND (geof:rcc8tppi(?aLiteral, ?bLiteral) as ?rcc8tppir)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/reverse":`PREFIX my: <http://example.org/ApplicationSchema#>
