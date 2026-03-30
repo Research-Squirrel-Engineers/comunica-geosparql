@@ -281,7 +281,8 @@ SELECT ?isN3D ?isK3D {
 }`,
 "http://www.opengis.net/def/function/geosparql/isEmpty":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?isIEmptyr) as ?isIEmpty) (xsd:boolean(?isKEmptyr) as ?isKEmpty) {
 	<http://example.org/ApplicationSchema#IExactGeom> geo:asWKT ?i_wkt .
 	BIND(geof:isEmpty(?i_wkt) AS ?isIEmptyr)
@@ -299,7 +300,8 @@ SELECT ?isASimple ?isOSimple {
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/isTriangle":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?isTriangle ?isNoTriangle {
 	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isTriangle(?a_wkt) AS ?isNoTriangle)
@@ -307,7 +309,8 @@ SELECT ?isTriangle ?isNoTriangle {
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/isValid":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?isValid ?isNotValid {
 	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isValid(?a_wkt) AS ?isValid)
