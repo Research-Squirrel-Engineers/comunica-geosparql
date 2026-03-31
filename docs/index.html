@@ -23,6 +23,7 @@
 <script>
     geof={
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
+		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
@@ -91,6 +92,16 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asGeoJSON(?aLiteral) as ?asGeoJSON)
+}`,
+"http://www.opengis.net/def/function/geosparql/asKML":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?asKML
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asKML(?aLiteral) as ?asKML)
 }`,
 "http://www.opengis.net/def/function/geosparql/asWKT":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
