@@ -38,7 +38,7 @@
 		"http://www.opengis.net/def/function/geosparql/ehInside":"geof:ehInside",
 		"http://www.opengis.net/def/function/geosparql/ehMeet":"geof:ehMeet",
 		"http://www.opengis.net/def/function/geosparql/ehOverlap":"geof:ehOverlap",
-		"http://www.opengis.net/def/function/geosparql/endPoint":"geof:endPoint",
+		"http://www.opengis.net/def/function/geosparql/ext/endPoint":"geofext:endPoint",
 		"http://www.opengis.net/def/function/geosparql/envelope":"geof:envelope",
 		"http://www.opengis.net/def/function/geosparql/geometryType":"geof:geometryType",
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
@@ -75,7 +75,7 @@
 		"http://www.opengis.net/def/function/geosparql/sfIntersects":"geof:sfIntersects",
 		"http://www.opengis.net/def/function/geosparql/sfTouches":"geof:sfTouches",
 		"http://www.opengis.net/def/function/geosparql/sfWithin":"geof:sfWithin",
-		"http://www.opengis.net/def/function/geosparql/startPoint":"geof:startPoint",
+		"http://www.opengis.net/def/function/geosparql/ext/startPoint":"geofext:startPoint",
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
 		"http://www.opengis.net/def/function/geosparql/ext/X":"geofext:X",
 		"http://www.opengis.net/def/function/geosparql/ext/Y":"geofext:Y",
@@ -162,9 +162,9 @@ WHERE {
   ?fGeom geo:asWKT ?fLiteral .
   BIND (geof:distance(?cLiteral, ?fLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
 }`,
-"http://www.opengis.net/def/function/geosparql/endPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/endPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?endPoint
 WHERE {
@@ -631,7 +631,7 @@ WHERE {
 }`,
 "http://www.opengis.net/def/function/geosparql/startPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?startPoint
 WHERE {
