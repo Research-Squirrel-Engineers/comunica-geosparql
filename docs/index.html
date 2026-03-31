@@ -49,6 +49,7 @@
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
 		"http://www.opengis.net/def/function/geosparql/ext/isValid":"geofext:isValid",
 		"http://www.opengis.net/def/function/geosparql/ext/longestLine":"geofext:longestLine",
+		"http://www.opengis.net/def/function/geosparql/maxDistance":"geof:maxDistance",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
         "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
         "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
@@ -331,6 +332,18 @@ WHERE {
   ?dGeom geo:asWKT ?dLiteral .
   BIND (geof:longestLine(?aLiteral, ?dLiteral) as ?longestLine)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/maxDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?maxDistance
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:maxDistance(?aLiteral, ?dLiteral) as ?maxDistance)
+}`,		            
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
