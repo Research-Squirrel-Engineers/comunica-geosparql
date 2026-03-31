@@ -159,6 +159,15 @@ WHERE {
   ?fGeom geo:asWKT ?fLiteral .
   BIND (geof:distance(?cLiteral, ?fLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/endPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?endPoint
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:endPoint(?literal) AS ?endPoint)
+}`,
 "http://www.opengis.net/def/function/geosparql/ehContains":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -507,7 +516,7 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
 SELECT ?sline
 WHERE {
-  my:AExactGeom %%literalrel1%% ?literal .
+  my:AExactGeom geo:asWKT ?literal .
   my:OExactGeom %%literalrel2%% ?literal2 .
   BIND(geof:shortestLine(?literal,?literal2) AS ?sline)
 }`,
@@ -607,6 +616,15 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:sfWithin(?bLiteral, ?aLiteral) as ?sfWithin)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/startPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?startPoint
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:startPoint(?literal) AS ?startPoint)
 }`,
 "http://www.opengis.net/def/function/geosparql/symDifference":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
