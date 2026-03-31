@@ -48,6 +48,7 @@
 		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
 		"http://www.opengis.net/def/function/geosparql/ext/isValid":"geofext:isValid",
+		"http://www.opengis.net/def/function/geosparql/ext/longestLine":"geofext:longestLine",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
         "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
         "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
@@ -63,6 +64,7 @@
 		"http://www.opengis.net/def/function/geosparql/rcc8po":"geof:rcc8po",
 		"http://www.opengis.net/def/function/geosparql/rcc8tpp":"geof:rcc8tpp",
 		"http://www.opengis.net/def/function/geosparql/rcc8tppi":"geof:rcc8tppi",
+		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
 		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
 		"http://www.opengis.net/def/function/geosparql/sfDisjoint":"geof:sfDisjoint",
@@ -317,6 +319,18 @@ SELECT ?isValid ?isNotValid {
 			<http://example.org/ApplicationSchema#OExactGeom> geo:asWKT ?o_wkt .
 	BIND(geof:isValid("POLYGON((0 0, 10 10, 0 10, 10 0, 0 0))"^^geo:wktLiteral) AS ?isNotValid)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/longestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+SELECT ?longestLine
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:longestLine(?aLiteral, ?dLiteral) as ?longestLine)
+}`,
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -473,6 +487,16 @@ SELECT ?reverse
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:reverse(?literal) AS ?reverse)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+SELECT ?sline
+WHERE {
+  my:AExactGeom %%literalrel1%% ?literal .
+  my:OExactGeom %%literalrel2%% ?literal2 .
+  BIND(geof:shortestLine(?literal,?literal2) AS ?sline)
 }`,
 "http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
