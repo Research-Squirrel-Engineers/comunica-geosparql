@@ -382,13 +382,13 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?rcc8ec) as ?rcc8ec)
+SELECT (xsd:boolean(?rcc8ecc) as ?rcc8ec)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   my:C geo:hasDefaultGeometry ?cGeom .
   ?cGeom geo:asWKT ?cLiteral .
-  BIND (geof:rcc8ec(?aLiteral, ?cLiteral) as ?rcc8ec)
+  BIND (geof:rcc8ec(?aLiteral, ?cLiteral) as ?rcc8ecc)
 }`,
 "http://www.opengis.net/def/function/geosparql/rcc8eq":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
