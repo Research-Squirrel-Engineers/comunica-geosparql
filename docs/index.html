@@ -283,7 +283,7 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?gtype
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
-  BIND(geof:geometryType(?literel) AS ?gtype)
+  BIND(geof:geometryType(?literal) AS ?gtype)
 }`,
 "http://www.opengis.net/def/function/geosparql/getSRID":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
