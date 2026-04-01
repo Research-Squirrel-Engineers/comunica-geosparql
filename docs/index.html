@@ -22,6 +22,7 @@
 	<script src="comunica-browser.js"></script>
 <script>
     geof={
+		"http://www.opengis.net/def/function/geosparql/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
@@ -83,6 +84,16 @@
 		"http://www.opengis.net/def/function/geosparql/ext/Z":"geofext:Z"
     }
 	geofqueries={
+"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?asGeoCode
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asGeoCode(?aLiteral,"http://opengis.net/ont/geocode/OpenLocationCode") as ?asGeoCode)
+}`,
 "http://www.opengis.net/def/function/geosparql/asGeoJSON":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
