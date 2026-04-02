@@ -22,6 +22,8 @@
 	<script src="comunica-browser.js"></script>
 <script>
     geof={
+		"http://www.opengis.net/def/function/geosparql/above":"geofext:above",
+		"http://www.opengis.net/def/function/geosparql/area":"geof:area",
 		"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
@@ -30,6 +32,7 @@
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
+		"http://www.opengis.net/def/function/geosparql/coordinateDimension":"geof:coordinateDimension",
 		"http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
         "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
 		"http://www.opengis.net/def/function/geosparql/ehContains":"geof:ehContains",
@@ -87,6 +90,16 @@
 		"http://www.opengis.net/def/function/geosparql/ext/Z":"geofext:Z"
     }
 	geofqueries={
+"http://www.opengis.net/def/function/geosparql/area":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?area
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:area(?aLiteral,"http://qudt.org/vocab/unit/AC"^^xsd:anyURI) as ?area)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/asGeoCode":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -162,6 +175,15 @@ SELECT ?chull
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:convexHull(?literal) AS ?chull)
+}`,
+"http://www.opengis.net/def/function/geosparql/coordinateDimension":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?coordinateDimension
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:coordinateDimension(?literal) AS ?coordinateDimension)
 }`,
 "http://www.opengis.net/def/function/geosparql/difference":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
