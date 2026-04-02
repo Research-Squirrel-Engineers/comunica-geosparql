@@ -562,7 +562,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?sline
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
-  my:OExactGeom %%literalrel2%% ?literal2 .
+  my:OExactGeom geo:asWKT ?literal2 .
   BIND(geof:shortestLine(?literal,?literal2) AS ?sline)
 }`,
 "http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
