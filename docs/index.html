@@ -69,6 +69,7 @@
 		"http://www.opengis.net/def/function/geosparql/rcc8po":"geof:rcc8po",
 		"http://www.opengis.net/def/function/geosparql/rcc8tpp":"geof:rcc8tpp",
 		"http://www.opengis.net/def/function/geosparql/rcc8tppi":"geof:rcc8tppi",
+		"http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":"geofext:removeRepeatedPoints",
 		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
 		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
@@ -536,6 +537,14 @@ WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
   ?bGeom geo:asWKT ?bLiteral .
   BIND (geof:rcc8tppi(?aLiteral, ?bLiteral) as ?rcc8tppir)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?rep
+WHERE {
+  BIND(geof:removeRepeatedPoints("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral) AS ?rep)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/reverse":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
