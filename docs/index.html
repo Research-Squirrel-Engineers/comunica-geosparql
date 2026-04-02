@@ -782,7 +782,7 @@ function showQuery(){
 }
 
 
- const endpoint = "https://situx.github.io/comunica-geosparql/testdata.ttl"
+const endpoint = "https://situx.github.io/comunica-geosparql/testdata.ttl"
 const urlParams = new URLSearchParams(window.location.search);
 const prefixes=`
 PREFIX my: <http://example.org/ApplicationSchema#>
@@ -896,7 +896,17 @@ const GeoPlugin = window.YasguiGeoTg && (window.YasguiGeoTg.default || window.Ya
 // Register the plugin with YASR before creating Yasgui
 Yasgui.Yasr.registerPlugin('geo', GeoPlugin);
 
-const yasgui = new Yasgui(document.getElementById("yasgui"),{"pluginOrder": ["table","response","geo"],"defaultPlugin":"geo","yasqe":{"showQueryButton": false},"requestConfig": { "endpoint": endpoint},  "copyEndpointOnNewTab": false});
+	      const yasgui = new Yasgui(document.getElementById('yasgui'), {
+        requestConfig: { endpoint: 'https://dbpedia.org/sparql' },
+        yasr: { pluginOrder: ['table','response','geo'], defaultPlugin: 'geo' },
+      });
+
+const yasgui = new Yasgui(document.getElementById("yasgui"),{
+	"yasr":{"pluginOrder": ["table","response","geo"],"defaultPlugin":"geo"},
+	"yasqe":{"showQueryButton": false},
+	"requestConfig": { "endpoint": endpoint},  
+	"copyEndpointOnNewTab": false}
+);
  if(typeof(thequery)!=='undefined' && thequery!=null){
 	yasgui.getTab().yasqe.setValue(thequery)
  }else{
