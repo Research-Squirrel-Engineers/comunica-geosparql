@@ -27167,7 +27167,7 @@ var YasguiGeoTg = (() => {
   var parseWKT = async (wkt) => {
     wkt = wkt.replaceAll(/^\s+|\s+$/gu, "");
     if (wkt.startsWith("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>")) {
-      return R(wkt);
+      return R(wkt.replaceAll("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>", ""), { proj: lib_default });
     }
     if (wkt.startsWith("<http://www.opengis.net/def/crs/EPSG/0/4326>")) {
       return R(wkt, { proj: lib_default });
