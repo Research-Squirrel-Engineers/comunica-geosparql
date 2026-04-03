@@ -79,7 +79,6 @@
 		"http://www.opengis.net/def/function/geosparql/rcc8tppi":"geof:rcc8tppi",
 		"http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":"geofext:removeRepeatedPoints",
 		"http://www.opengis.net/def/function/geosparql/ext/rightOf":"geofext:rightOf",
-		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
 		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
 		"http://www.opengis.net/def/function/geosparql/sfDisjoint":"geof:sfDisjoint",
@@ -87,6 +86,8 @@
 		"http://www.opengis.net/def/function/geosparql/sfIntersects":"geof:sfIntersects",
 		"http://www.opengis.net/def/function/geosparql/sfTouches":"geof:sfTouches",
 		"http://www.opengis.net/def/function/geosparql/sfWithin":"geof:sfWithin",
+		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
+		"http://www.opengis.net/def/function/geosparql/ext/simplify":"geofext:simplify",
         "http://www.opengis.net/def/function/geosparql/spatialDimension":"geof:spatialDimension",
 		"http://www.opengis.net/def/function/geosparql/ext/startPoint":"geofext:startPoint",
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
@@ -850,6 +851,16 @@ var overlayMaps={}
 function showQuery(){
   if(document.getElementById("functions").value in geofqueries){
     yasgui.getTab().yasqe.setValue(geofqueries[document.getElementById("functions").value])
+  }else{
+	yasgui.getTab().yasqe.setValue("No sample query available for function "+document.getElementById("functions").value)
+	yasres={"head":{"vars":[]},"results":{"bindings":[]}}
+	yasgui.getTab().yasr.setResponse({
+	  data: yasres,
+	  contentType: "application/sparql-results+json",
+	  status: 200,
+	  executionTime: 1000 // ms
+	  // error to show
+	})  	
   }
 }
 
