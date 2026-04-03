@@ -637,7 +637,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?rightt) as ?right) (xsd:boolean(?nrightt) as ?notright)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?aLiteral .
   BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
   BIND (geof:rightOf(?aLiteral, ?dLiteral) as ?nrightt)
   BIND (geof:rightOf(?dLiteral, ?aLiteral) as ?rightt)
