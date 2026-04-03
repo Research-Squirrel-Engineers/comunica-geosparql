@@ -200,6 +200,15 @@ WHERE {
   ?dGeom geo:asWKT ?dLiteral .
   BIND (geof:difference(?aLiteral, ?dLiteral) as ?difference)
 }`,
+"http://www.opengis.net/def/function/geosparql/dimension":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?coordinateDimension
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:dimension(?literal) AS ?coordinateDimension)
+}`,
 "http://www.opengis.net/def/function/geosparql/distance":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -686,6 +695,15 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:sfWithin(?bLiteral, ?aLiteral) as ?sfWithin)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/spatialDimension":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?spatialDimension
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:spatialDimension(?literal) AS ?spatialDimension)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/startPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
