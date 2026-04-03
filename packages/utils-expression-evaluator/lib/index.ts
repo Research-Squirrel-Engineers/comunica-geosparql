@@ -14,6 +14,7 @@ export {
   decimal,
   float,
   expressionToVar,
+  rangeOverlaps,
   Builder,
 } from './functions/Helpers';
 export {

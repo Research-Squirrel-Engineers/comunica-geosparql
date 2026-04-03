@@ -2,7 +2,6 @@ import * as turf from '@turf/turf';
 import type * as GJ from 'geojson';
 import * as proj4 from 'proj4';
 
-
 export const epsgdefs: {[id:string]:string} = {
   'EPSG:2000': '+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +units=m +no_defs',
   'EPSG:2001': '+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +units=m +no_defs',
@@ -4759,8 +4758,6 @@ export const epsgdefs: {[id:string]:string} = {
   'EPSG:32761': '+proj=stere +lat_0=-90 +lat_ts=-90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs',
   'EPSG:32766': '+proj=tmerc +lat_0=0 +lon_0=36 +k=0.9996 +x_0=500000 +y_0=10000000 +datum=WGS84 +units=m +no_defs',
 };
-
-const _wgs84dest = new proj4.Proj('EPSG:4326');
 
 export function convertGeoJSON(geojson: any, from: string, to: string, styles: string): GJ.Geometry {
   if ('features' in geojson) {

@@ -28,6 +28,12 @@ export enum TypeURL {
   RDF_LANG_STRING = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
   RDF_DIR_LANG_STRING = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#dirLangString',
 
+  DGGS_LITERAL = 'http://www.opengis.net/ont/geosparql#dggsLiteral',
+  GEOJSON_LITERAL = 'http://www.opengis.net/ont/geosparql#geoJSONLiteral',
+  GML_LITERAL = 'http://www.opengis.net/ont/geosparql#gmlLiteral',
+  KML_LITERAL = 'http://www.opengis.net/ont/geosparql#kmlLiteral',
+  WKT_LITERAL = 'http://www.opengis.net/ont/geosparql#wktLiteral',
+
   XSD_BOOLEAN = 'http://www.w3.org/2001/XMLSchema#boolean',
 
   XSD_DATE_TIME = 'http://www.w3.org/2001/XMLSchema#dateTime',
@@ -92,26 +98,61 @@ export type GeneralOperator = KnownOperator | string;
 export type KnownOperator = SparqlOperator | GeoSparqlOperator | NamedOperator;
 
 export enum GeoSparqlExtOperator {
+  ABOVE = 'http://www.opengis.net/def/function/geosparql/ext/above',
+  ASGEOCODE = 'http://www.opengis.net/def/function/geosparql/ext/asGeoCode',
   ASOBJ = 'http://www.opengis.net/def/function/geosparql/ext/asOBJ',
   ASPLY = 'http://www.opengis.net/def/function/geosparql/ext/asPLY',
+  ASSVG = 'http://www.opengis.net/def/function/geosparql/ext/asSVG',
   ASWKB = 'http://www.opengis.net/def/function/geosparql/ext/asWKB',
   ASXYZ = 'http://www.opengis.net/def/function/geosparql/ext/asXYZ',
   AZIMUTH = 'http://www.opengis.net/def/function/geosparql/ext/azimuth',
+  BELOW = 'http://www.opengis.net/def/function/geosparql/ext/below',
   CLOSESTPOINT = 'http://www.opengis.net/def/function/geosparql/ext/closestPoint',
   COMPACTNESSRATIO = 'http://www.opengis.net/def/function/geosparql/ext/compactnessRatio',
+  FARTHESTCOORDINATE = 'http://www.opengis.net/def/function/geosparql/ext/farthestCoordinate',
   ENDPOINT = 'http://www.opengis.net/def/function/geosparql/ext/endPoint',
+  FORCE2D = 'http://www.opengis.net/def/function/geosparql/ext/force2D',
+  FORCE3D = 'http://www.opengis.net/def/function/geosparql/ext/force3D',
+  FRECHETDISTANCE = 'http://www.opengis.net/def/function/geosparql/ext/frechetDistance',
   ISCW = 'http://www.opengis.net/def/function/geosparql/ext/isCW',
   ISCCW = 'http://www.opengis.net/def/function/geosparql/ext/isCCW',
+  ISRECTANGLE = 'http://www.opengis.net/def/function/geosparql/ext/isRectangle',
   ISTRIANGLE = 'http://www.opengis.net/def/function/geosparql/ext/isTriangle',
   ISVALID = 'http://www.opengis.net/def/function/geosparql/ext/isValid',
   ISVALIDTRAJECTORY = 'http://www.opengis.net/def/function/geosparql/ext/isValidTrajectory',
+  LEFTOF = 'http://www.opengis.net/def/function/geosparql/ext/leftOf',
+  LONGESTLINE = 'http://www.opengis.net/def/function/geosparql/ext/longestLine',
+  MAXDISTANCE = 'http://www.opengis.net/def/function/geosparql/ext/maxDistance',
+  NUMGEOMETRIES = 'http://www.opengis.net/def/function/geosparql/ext/numGeometries',
+  NUMINTERIORRING = 'http://www.opengis.net/def/function/geosparql/ext/numInteriorRing',
+  OFFSETCURVE = 'http://www.opengis.net/def/function/geosparql/ext/offsetCurve',
+  POINTN = 'http://www.opengis.net/def/function/geosparql/ext/pointN',
+  POINTONSURFACE = 'http://www.opengis.net/def/function/geosparql/ext/pointOnSurface',
   REMOVEREPEATEDPOINTS = 'http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints',
   REVERSE = 'http://www.opengis.net/def/function/geosparql/ext/reverse',
+  RIGHTOF = 'http://www.opengis.net/def/function/geosparql/ext/rightOf',
+  ROTATE = 'http://www.opengis.net/def/function/geosparql/ext/rotate',
+  SCALE = 'http://www.opengis.net/def/function/geosparql/ext/scale',
+  STARTPOINT = 'http://www.opengis.net/def/function/geosparql/ext/startPoint',
+  SHORTESTLINE = 'http://www.opengis.net/def/function/geosparql/ext/shortestLine',
   SIMPLIFY = 'http://www.opengis.net/def/function/geosparql/ext/simplify',
+  SKEW = 'http://www.opengis.net/def/function/geosparql/ext/skew',
+  TRANSLATE = 'http://www.opengis.net/def/function/geosparql/ext/translate',
+  TRANSFORMCRS84 = 'http://www.opengis.net/def/function/geosparql/ext/transformCRS84',
+  WITHINDISTANCE = 'http://www.opengis.net/def/function/geosparql/ext/withinDistance',
   X = 'http://www.opengis.net/def/function/geosparql/ext/X',
   Y = 'http://www.opengis.net/def/function/geosparql/ext/Y',
   Z = 'http://www.opengis.net/def/function/geosparql/ext/Z',
 }
+
+export const supported_Geocodes = [
+  'http://opengis.net/ont/geocode/OpenLocationCode',
+  'http://opengis.net/ont/geocode/GeoURI',
+];
+
+export const _supported_DGGS = [
+  'http://opengis.net/ont/geocode/OpenLocationCode',
+];
 
 export enum GeoSparqlOperator {
   AREA = 'http://www.opengis.net/def/function/geosparql/area',
@@ -127,6 +168,7 @@ export enum GeoSparqlOperator {
   COORDINATEDIMENSION = 'http://www.opengis.net/def/function/geosparql/coordinateDimension',
   DIFFERENCE = 'http://www.opengis.net/def/function/geosparql/difference',
   DISTANCE = 'http://www.opengis.net/def/function/geosparql/distance',
+  DIMENSION = 'http://www.opengis.net/def/function/geosparql/dimension',
   EHCONTAINS = 'http://www.opengis.net/def/function/geosparql/ehContains',
   EHCOVEREDBY = 'http://www.opengis.net/def/function/geosparql/ehCoveredBy',
   EHCOVERS = 'http://www.opengis.net/def/function/geosparql/ehCovers',
@@ -144,6 +186,7 @@ export enum GeoSparqlOperator {
   ISMEASURED = 'http://www.opengis.net/def/function/geosparql/isMeasured',
   ISSIMPLE = 'http://www.opengis.net/def/function/geosparql/isSimple',
   ISCLOSED = 'http://www.opengis.net/def/function/geosparql/isClosed',
+  LENGTH = 'http://www.opengis.net/def/function/geosparql/length',
   MAXX = 'http://www.opengis.net/def/function/geosparql/maxX',
   MAXY = 'http://www.opengis.net/def/function/geosparql/maxY',
   MAXZ = 'http://www.opengis.net/def/function/geosparql/maxZ',

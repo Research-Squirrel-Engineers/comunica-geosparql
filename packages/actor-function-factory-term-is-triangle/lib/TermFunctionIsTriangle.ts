@@ -21,7 +21,7 @@ export class TermFunctionIsTriangle extends TermFunctionBase {
           const thegeom = parseGeometry(term)[0];
           if (thegeom.type === 'Polygon') {
             const thecoords = turf.getCoords(thegeom);
-            return bool(thecoords.length === 4 && thecoords[0] === thecoords.at(-1));
+            return bool(thecoords.length === 4 && thecoords.at(0) === thecoords.at(-1));
           }
           return bool(false);
         },

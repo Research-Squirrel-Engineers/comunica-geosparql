@@ -5,7 +5,6 @@ import {
   GeoSparqlOperator, StringLiteral,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
@@ -14,11 +13,25 @@ import * as turf from '@turf/turf';
 export class TermFunctionDistance extends TermFunctionBase {
   public constructor() {
     super({
-      arity: 1,
+      arity: 2,
       operator: GeoSparqlOperator.DISTANCE,
-      overloads: declare(GeoSparqlOperator.DISTANCE).geometryFunc(() => (left, leftType,right, rightType) => {
+      overloads: declare(GeoSparqlOperator.DISTANCE).geometryFunc(() => (left, _leftType, right, _rightType) => {
+        if (left.type === 'Point' && right.type === 'Point') {
+          return new StringLiteral(turf.distance(left, right).toString(), 'http://www.w3.org/2001/XMLSchema#double');
+        }
+        if (left.type === 'Point' && right.type === 'LineString') {
+          return new StringLiteral(turf.pointToLineDistance(left, right).toString(), 'http://www.w3.org/2001/XMLSchema#double');
+        }
+        if (right.type === 'Point' && left.type === 'LineString') {
+          return new StringLiteral(turf.pointToLineDistance(right, left).toString(), 'http://www.w3.org/2001/XMLSchema#double');
+        }
+        if (left.type === 'Point' && right.type === 'Polygon') {
+          return new StringLiteral(turf.pointToPolygonDistance(left, right).toString(), 'http://www.w3.org/2001/XMLSchema#double');
+        }
+        if (right.type === 'Point' && left.type === 'Polygon') {
+          return new StringLiteral(turf.pointToPolygonDistance(right, left).toString(), 'http://www.w3.org/2001/XMLSchema#double');
+        }
         return new StringLiteral('1', 'http://www.w3.org/2001/XMLSchema#double');
-        //return double(turf.distance(left,right])));
       }).collect(),
     });
   }

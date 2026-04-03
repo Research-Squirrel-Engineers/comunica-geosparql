@@ -48,6 +48,8 @@
     "betterknown": "^1.2.0",
     "proj4": "^2.20.4",
     "gml2geojson": "^0.0.7",
+    "@npm9912/s-gml": "^1.7.1",
+    "@erikmichelson/open-location-code-ts": "^1.20250411.0",
     "@mapbox/togeojson": "^0.16.2",
     "@turf/turf": "^7.3.4",
     "@jlandrum/tokml": "^0.6.1-ts2"

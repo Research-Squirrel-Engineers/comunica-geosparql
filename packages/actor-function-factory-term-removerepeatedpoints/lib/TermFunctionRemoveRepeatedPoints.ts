@@ -17,7 +17,7 @@ export class TermFunctionRemoveRepeatedPoints extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlExtOperator.REMOVEREPEATEDPOINTS,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlExtOperator.REMOVEREPEATEDPOINTS).onLiteral1(() => (term) => serializeGeometry(turf.cleanCoords(parseGeometry(term)), term.dataType)).collect(),
+      overloads: declare(GeoSparqlExtOperator.REMOVEREPEATEDPOINTS).onLiteral1(() => term => serializeGeometry(turf.cleanCoords(parseGeometry(term)[0]), term.dataType)).collect(),
     });
   }
 }

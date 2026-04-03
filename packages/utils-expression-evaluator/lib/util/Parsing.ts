@@ -8,15 +8,16 @@ import type {
   IYearMonthDurationRepresentation,
 } from '@comunica/types';
 import type { Literal } from '@comunica/utils-expression-evaluator';
+import { decode } from '@erikmichelson/open-location-code-ts';
+import { GmlParser } from '@npm9912/s-gml';
 import * as turf from '@turf/turf';
 import * as WK from 'betterknown';
 import type * as GJ from 'geojson';
 import type { ISerializable } from '../expressions';
+import { supported_Geocodes } from './Consts';
 import { simplifyDurationRepresentation } from './DateTimeHelpers';
 import { ParseError } from './Errors';
 import { maximumDayInMonthFor } from './SpecAlgos';
-
-
 
 /**
  * Parses float datatypes (double, float).
@@ -194,12 +195,35 @@ export function parseGeometry(geomlit: Literal<ISerializable>): [GJ.Geometry, st
     if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#wktLiteral') {
       if (thestr.startsWith('<')) {
         const spl = thestr.split('>');
-        crsuri = spl[0];
+        crsuri = spl[0].slice(1);
         thestr = spl[1].trim();
       }
       return [ turf.getGeom(<GJ.Geometry>WK.wktToGeoJSON(thestr)), crsuri ];
     }
+    /*if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#gmlLiteral') {
+      const parser = new GmlParser();
+      const geojson = parser.parse(thestr);
+      return [ <GJ.Geometry>geojson, '' ];
+    }*/
     if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#geoJSONLiteral') {
+      return [ turf.getGeom(JSON.parse(thestr)), crsuri ];
+    }
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#geoCodeLiteral') {
+      if (thestr.startsWith('<')) {
+        const spl = thestr.split('>');
+        crsuri = spl[0].slice(1);
+        thestr = spl[1].trim();
+      }
+      if (crsuri in supported_Geocodes) {
+        if (crsuri === 'http://opengis.net/ont/geocode/OpenLocationCode') {
+          const decoded = decode(thestr);
+          return [ turf.geometry('Point', [ decoded.latitudeCenter, decoded.longitudeCenter ]), crsuri ];
+        }
+        if (crsuri === 'http://opengis.net/ont/geocode/GeoURI') {
+          const decoded = thestr.replaceAll('geo:', '').split(',');
+          return [ turf.geometry('Point', [ decoded[0], decoded[1] ]), crsuri ];
+        }
+      }
       return [ turf.getGeom(JSON.parse(thestr)), crsuri ];
     }
   } catch {

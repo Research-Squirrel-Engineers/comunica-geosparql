@@ -1,13 +1,12 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import { declare, GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
+import {declare, double, GeoSparqlOperator} from '@comunica/utils-expression-evaluator';
 
 import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
-import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 
 
 /**
- * http://www.opengis.net/def/function/geosparql/centroid
+ * http://www.opengis.net/def/function/geosparql/metricarea
  */
 export class TermFunctionMetricArea extends TermFunctionBase {
   public constructor() {
@@ -15,7 +14,7 @@ export class TermFunctionMetricArea extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.CENTROID,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.CENTROID).onLiteral1(() => term => serializeGeometry(turf.centroid(parseGeometry(term)[0]).geometry, term.dataType)).collect(),
+      overloads: declare(GeoSparqlOperator.CENTROID).onLiteral1(() => term => double(turf.area(parseGeometry(term)[0]))).collect(),
     });
   }
 }

@@ -24,6 +24,7 @@ import * as Err from '../util/Errors';
 import { parseGeometry } from '../util/Parsing';
 import type { ArgumentType } from './OverloadTree';
 import { OverloadTree } from './OverloadTree';
+import {serializeGeometry} from "../util/Serialization";
 
 type Term = TermExpression;
 
@@ -48,6 +49,7 @@ export class Builder {
     this.collected = true;
     return this.overloadTree;
   }
+
 
   private static wrapInvalidLexicalProtected(func: ImplementationFunction): ImplementationFunction {
     return (expressionEvaluator: IInternalEvaluator) => (args: TermExpression[]) => {
@@ -97,6 +99,7 @@ export class Builder {
     this.overloadTree.addOverload(argTypes, addInvalidHandling ? Builder.wrapInvalidLexicalProtected(func) : func);
     return this;
   }
+
 
   public copy({ from, to }: { from: ArgumentType[]; to: ArgumentType[] }): Builder {
     const impl = this.overloadTree.getImplementationExact(from);
@@ -215,6 +218,17 @@ addInvalidHandling = true,
     return this.set(
       [ 'literal' ],
       expressionEvaluator => ([ term ]: [E.Literal<T>]) => op(expressionEvaluator)(term),
+      addInvalidHandling,
+    );
+  }
+
+  public onLiteral2<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) => (lit1: E.Literal<T>, lit2: E.Literal<T>) => Term,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal', 'literal' ],
+      expressionEvaluator => ([ term1, term2 ]: E.Literal<T>[]) => op(expressionEvaluator)(term1, term2),
       addInvalidHandling,
     );
   }
@@ -390,14 +404,17 @@ addInvalidHandling = true,
     });
   }
 
-  public geometryTest(
-    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => BooleanLiteral,
+  public geometryTest<T extends ISerializable>(
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => boolean,
       addInvalidHandling = true,
   ): Builder {
     return this
       .set(
-        [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ], // eslint-disable-next-line max-len
-        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => test(expressionEvaluator)(parseGeometry(left)[0], parseGeometry(right)[0]),
+        [ C.TypeURL.WKT_LITERAL, C.TypeURL.WKT_LITERAL ],
+        expressionEvaluator => ([ left, right ]: E.Literal<T>[]) => {
+          const result = test(expressionEvaluator)(parseGeometry(left)[0], parseGeometry(right)[0]);
+          return bool(result);
+        },
         addInvalidHandling,
       );
   }
@@ -423,16 +440,6 @@ addInvalidHandling = true,
     return [ convertGeometry(geomtup[0], geomtup[1], tosrs), tosrs ];
   }
 
-  public transformGeometry(thegeom: StringLiteral, source: string, dest: string): GJ.Geometry {
-    const geom = parseGeometry(thegeom)[0];
-    if (source in epsgdefs) {
-      source = <string>epsgdefs[source];
-    }
-    if (dest in epsgdefs) {
-      dest = <string>epsgdefs[dest];
-    }
-    return convertGeometry(geom, source, dest, '');
-  }
 
   public stringTest(
     test: (expressionEvaluator: IInternalEvaluator) => (left: string, right: string) => boolean,
@@ -482,6 +489,13 @@ addInvalidHandling = true,
   }
 }
 
+export function rangeOverlaps(Astart: number, Afinish: number, Bstart: number, Bfinish: number): boolean {
+  if (Bstart < Astart) {
+    return Bfinish > Astart;
+  }
+  return Bstart < Afinish;
+}
+
 // ----------------------------------------------------------------------------
 // Literal Construction helpers
 // ----------------------------------------------------------------------------
@@ -520,6 +534,43 @@ export function dirLangString(str: string, lang: string, direction: 'ltr' | 'rtl
 
 export function dateTime(date: IDateTimeRepresentation, str: string): E.DateTimeLiteral {
   return new E.DateTimeLiteral(date, str);
+}
+
+export function wkt(geom: GJ.Geometry): E.WKTLiteral {
+  return new E.WKTLiteral(geom);
+}
+
+export function geometry(geom: GJ.Geometry, literaltype: string): E.StringLiteral {
+  return serializeGeometry(geom, literaltype);
+}
+
+export function transformGeometry(geom: GJ.Geometry, source: string, dest: string): GJ.Geometry {
+  if (source.startsWith('http')) {
+    source = `EPSG:${source.replaceAll('http://www.opengis.net/def/crs/EPSG/0/', '')}`;
+  }
+  if (dest.startsWith('http')) {
+    dest = `EPSG:${dest.replaceAll('http://www.opengis.net/def/crs/EPSG/0/', '')}`;
+  }
+  if (source in epsgdefs) {
+    source = <string>epsgdefs[source];
+  }
+  if (dest in epsgdefs) {
+    dest = <string>epsgdefs[dest];
+  }
+  if (source === dest) {
+    return geom;
+  }
+  return convertGeometry(geom, source, dest, '');
+}
+
+export function transformGeometryLiteral(thegeom: Literal<ISerializable>, dest: string): GJ.Geometry {
+  const thegeomtup = parseGeometry(thegeom);
+  return transformGeometry(thegeomtup[0], thegeomtup[1], dest);
+}
+
+export function transformGeometryLiteralCRS84(thegeom: Literal<ISerializable>): GJ.Geometry {
+  const thegeomtup = parseGeometry(thegeom);
+  return transformGeometry(thegeomtup[0], thegeomtup[1], 'http://www.opengis.net/def/crs/OGC/1.3/CRS84');
 }
 
 export function expressionToVar(

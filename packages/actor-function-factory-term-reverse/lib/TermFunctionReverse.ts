@@ -1,10 +1,10 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import {declare, GeoSparqlExtOperator, StringLiteral} from '@comunica/utils-expression-evaluator';
+import { declare, GeoSparqlExtOperator } from '@comunica/utils-expression-evaluator';
 
 import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
-
+import type * as GJ from 'geojson';
 
 /**
  * http://www.opengis.net/def/function/geosparql/reverse
@@ -14,10 +14,12 @@ export class TermFunctionReverse extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.REVERSE,
-      // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlExtOperator.REVERSE).onLiteral1(() => term => {
-        return new StringLiteral('false');
-        //serializeGeometry(turf.rewind(parseGeometry(term)), term.dataType)
+      overloads: declare(GeoSparqlExtOperator.REVERSE).onLiteral1(() => (term) => {
+        const thegeom = parseGeometry(term)[0];
+        if (thegeom.type === 'Point') {
+          return serializeGeometry(thegeom, term.dataType);
+        }
+        return serializeGeometry(<GJ.Geometry>turf.rewind(thegeom), term.dataType);
       }).collect(),
     });
   }

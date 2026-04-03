@@ -5,10 +5,14 @@ import type {
   ITimeRepresentation,
   ITimeZoneRepresentation,
 } from '@comunica/types';
+import {
+  encode,
+} from '@erikmichelson/open-location-code-ts';
 import tokml from '@jlandrum/tokml';
+import * as turf from '@turf/turf';
 import * as WK from 'betterknown';
 import type * as GJ from 'geojson';
-import {StringLiteral} from '../expressions';
+import { StringLiteral } from '../expressions';
 
 function numSerializer(num: number, min = 2): string {
   return num.toLocaleString(undefined, { minimumIntegerDigits: min, useGrouping: false });
@@ -37,8 +41,8 @@ export function serializeDate(date: IDateRepresentation): string {
   return `${numSerializer(date.year, 4)}-${numSerializer(date.month)}-${numSerializer(date.day)}${serializeTimeZone(date)}`;
 }
 
-
 export function serializeGeometry(thegeom: GJ.Geometry | GJ.Polygon | GJ.Point, literaltype: string): StringLiteral {
+  const centcoords = turf.centroid(thegeom).geometry.coordinates;
   switch (literaltype) {
     case 'http://www.opengis.net/ont/geosparql#wktLiteral':
       return new StringLiteral(WK.geoJSONToWkt(thegeom), 'http://www.opengis.net/ont/geosparql#wktLiteral');
@@ -46,6 +50,10 @@ export function serializeGeometry(thegeom: GJ.Geometry | GJ.Polygon | GJ.Point, 
       return new StringLiteral(JSON.stringify(thegeom), 'http://www.opengis.net/ont/geosparql#geoJSONLiteral');
     case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
       return new StringLiteral(tokml(thegeom), 'http://www.opengis.net/ont/geosparql#kmlLiteral');
+    case 'http://opengis.net/ont/geocode/OpenLocationCode':
+      return new StringLiteral(`<http://opengis.net/ont/geocode/OpenLocationCode> ${encode(centcoords[0], centcoords[1]).toString()}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
+    case 'http://opengis.net/ont/geocode/GeoURI':
+      return new StringLiteral(`<http://opengis.net/ont/geocode/GeoURI> geo:${centcoords[0]},${centcoords[1]}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
   }
   return new StringLiteral('');
 }
