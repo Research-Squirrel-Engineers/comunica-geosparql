@@ -25,12 +25,13 @@
 	<script src="comunica-browser.js"></script>
 <script>
     geof={
-		"http://www.opengis.net/def/function/geosparql/above":"geofext:above",
+		"http://www.opengis.net/def/function/geosparql/ext/above":"geofext:above",
 		"http://www.opengis.net/def/function/geosparql/area":"geof:area",
 		"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
+		"http://www.opengis.net/def/function/geosparql/ext/below":"geofext:below",
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
@@ -58,6 +59,7 @@
 		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
 		"http://www.opengis.net/def/function/geosparql/ext/isValid":"geofext:isValid",
+		"http://www.opengis.net/def/function/geosparql/ext/leftOf":"geofext:leftOf",
 		"http://www.opengis.net/def/function/geosparql/ext/longestLine":"geofext:longestLine",
 		"http://www.opengis.net/def/function/geosparql/ext/maxDistance":"geofext:maxDistance",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
@@ -76,6 +78,7 @@
 		"http://www.opengis.net/def/function/geosparql/rcc8tpp":"geof:rcc8tpp",
 		"http://www.opengis.net/def/function/geosparql/rcc8tppi":"geof:rcc8tppi",
 		"http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":"geofext:removeRepeatedPoints",
+		"http://www.opengis.net/def/function/geosparql/ext/rightOf":"geofext:rightOf",
 		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
 		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
@@ -94,6 +97,18 @@
 		"http://www.opengis.net/def/function/geosparql/ext/Z":"geofext:Z"
     }
 	geofqueries={
+"http://www.opengis.net/def/function/geosparql/ext/above":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?abovee) as ?above) (xsd:boolean(?nabovee) as ?notabove)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?dLiteral)
+  BIND (geof:above(?aLiteral, ?dLiteral) as ?nabovee)
+  BIND (geof:above(?dLiteral, ?aLiteral) as ?abovee)
+}`,
 "http://www.opengis.net/def/function/geosparql/area":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -143,6 +158,18 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asWKT(?aLiteral) as ?asWKT)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/below":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?beloww) as ?below) (xsd:boolean(?nbeloww) as ?notbelow)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom %%literalrel1%% ?aLiteral .
+  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?dLiteral)
+  BIND (geof:below(?aLiteral, ?dLiteral) as ?nbeloww)
+  BIND (geof:below(?dLiteral, ?aLiteral) as ?beloww)
 }`,
 "http://www.opengis.net/def/function/geosparql/buffer":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -401,6 +428,18 @@ SELECT ?isValid ?isNotValid {
 			<http://example.org/ApplicationSchema#OExactGeom> geo:asWKT ?o_wkt .
 	BIND(geof:isValid("POLYGON((0 0, 10 10, 0 10, 10 0, 0 0))"^^geo:wktLiteral) AS ?isNotValid)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/leftOf":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?leftt) as ?left) (xsd:boolean(?nleftt) as ?notleft)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
+  BIND (geof:leftOf(?aLiteral, ?dLiteral) as ?leftt)
+  BIND (geof:leftOf(?dLiteral, ?aLiteral) as ?nleftt)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/longestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -589,6 +628,18 @@ SELECT ?reverse
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:reverse(?literal) AS ?reverse)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/rightOf":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?rightt) as ?right) (xsd:boolean(?nrightt) as ?notright)
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom asWKT ?aLiteral .
+  BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
+  BIND (geof:rightOf(?aLiteral, ?dLiteral) as ?nrightt)
+  BIND (geof:rightOf(?dLiteral, ?aLiteral) as ?rightt)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
