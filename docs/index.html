@@ -3,21 +3,14 @@
 	    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Comunica GeoSPARQL Test</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-   crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-   crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 <link href="https://cdn.jsdelivr.net/npm/@zazuko/yasgui@4.6.1/build/yasgui.min.css" rel="stylesheet">
 <link href="yasguigeo.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script
-  src="https://code.jquery.com/jquery-3.7.1.min.js"
-  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@zazuko/yasgui@4.6.1/build/yasgui.min.js"></script>
 <script src="yasguigeo.js"></script>	
 
@@ -263,63 +256,66 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?ehContains) as ?contains)
+SELECT ?geom1 ?geom2 (xsd:boolean(?ehContains) as ?contains) (xsd:boolean(?ehNotContains) as ?NotContains)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom geo:asWKT ?fLiteral .
-  BIND (geof:ehContains(?aLiteral, ?fLiteral) as ?ehContains)
+  ?fGeom geo:asWKT ?geom2 .
+  BIND (geof:ehContains(?geom1, ?geom2) as ?ehContains)
+  BIND (geof:ehContains(?geom2, ?geom1) as ?ehNotContains)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehCovers":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?ehCovers) as ?covers)
+SELECT ?geom1 ?geom2 (xsd:boolean(?ehCovers) as ?covers) (xsd:boolean(?ehNotCovers) as ?NotCovers)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom geo:asWKT ?bLiteral .
-  BIND (geof:ehCovers(?aLiteral, ?bLiteral) as ?ehCovers)
+  ?bGeom geo:asWKT ?geom2 .
+  BIND (geof:ehCovers(?geom1, ?geom2) as ?ehCovers)
+  BIND (geof:ehCovers(?geom2, ?geom1) as ?ehNotCovers)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehCoveredBy":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?ehCoveredBy) as ?coveredBy)
+SELECT ?geom1 ?geom2 (xsd:boolean(?ehCoveredBy) as ?coveredBy) (xsd:boolean(?ehNotCoveredBy) as ?NotCoveredBy)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom geo:asWKT ?bLiteral .
+  ?bGeom geo:asWKT ?geom1 .
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
-  BIND (geof:ehCoveredBy(?bLiteral, ?aLiteral) as ?ehCoveredBy)
+  ?aGeom geo:asWKT ?geom2 .
+  BIND (geof:ehCoveredBy(?geom1, ?geom2) as ?ehCoveredBy)
+  BIND (geof:ehCoveredBy(?geom2, ?geom1) as ?ehNotCoveredBy)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehDisjoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?ehDisjoint) as ?disjoint) (xsd:boolean(?ehDisjoint2) as ?disjoint2)
+SELECT ?geom1 ?geom2 (xsd:boolean(?ehNotDisjoint) as ?NotDisjoint) (xsd:boolean(?ehDisjoint) as ?disjoint)
 WHERE {
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom geo:asWKT ?bLiteral .
+  ?bGeom geo:asWKT ?geom1 .
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom geo:asWKT ?cLiteral .
-  BIND (geof:ehDisjoint(?bLiteral, ?bLiteral) as ?ehDisjoint)
-  BIND (geof:ehDisjoint(?bLiteral, ?cLiteral) as ?ehDisjoint2)
+  ?cGeom geo:asWKT ?geom2 .
+  BIND (geof:ehDisjoint(?geom1, ?geom1) as ?ehNotDisjoint)
+  BIND (geof:ehDisjoint(?geom1, ?geom2) as ?ehDisjoint)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehEquals":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?ehEquals) as ?equals) (xsd:boolean(?ehEquals2) as ?equals2)
+SELECT ?geom1 ?geom2 (xsd:boolean(?ehEquals) as ?equals) (xsd:boolean(?ehNotEquals) as ?NotEquals)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom geo:asWKT ?bLiteral .
-  BIND (geof:ehEquals(?aLiteral, ?aLiteral) as ?ehEquals)
-  BIND (geof:ehEquals(?aLiteral, ?bLiteral) as ?ehEquals2)
+  ?bGeom geo:asWKT ?geom2 .
+  BIND (geof:ehEquals(?geom1, ?geom1) as ?ehEquals)
+  BIND (geof:ehEquals(?geom1, ?geom2) as ?ehNotEquals)
 }`,
 "http://www.opengis.net/def/function/geosparql/ehInside":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
