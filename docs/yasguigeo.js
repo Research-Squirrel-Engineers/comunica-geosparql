@@ -1016,7 +1016,7 @@ var YasguiGeoTg = (() => {
             return new LatLng(this.lat, this.lng, this.alt);
           }
         };
-        function toLatLng(a2, b2, c2) {
+        function toLatLng(a2, b2, c3) {
           if (a2 instanceof LatLng) {
             return a2;
           }
@@ -1038,7 +1038,7 @@ var YasguiGeoTg = (() => {
           if (b2 === void 0) {
             return null;
           }
-          return new LatLng(a2, b2, c2);
+          return new LatLng(a2, b2, c3);
         }
         var CRS = {
           // @method latLngToPoint(latlng: LatLng, zoom: Number): Point
@@ -1133,8 +1133,8 @@ var YasguiGeoTg = (() => {
           R: 6371e3,
           // distance between two geographical points using spherical law of cosines approximation
           distance: function(latlng1, latlng2) {
-            var rad = Math.PI / 180, lat1 = latlng1.lat * rad, lat2 = latlng2.lat * rad, sinDLat = Math.sin((latlng2.lat - latlng1.lat) * rad / 2), sinDLon = Math.sin((latlng2.lng - latlng1.lng) * rad / 2), a2 = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon, c2 = 2 * Math.atan2(Math.sqrt(a2), Math.sqrt(1 - a2));
-            return this.R * c2;
+            var rad = Math.PI / 180, lat1 = latlng1.lat * rad, lat2 = latlng2.lat * rad, sinDLat = Math.sin((latlng2.lat - latlng1.lat) * rad / 2), sinDLon = Math.sin((latlng2.lng - latlng1.lng) * rad / 2), a2 = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon, c3 = 2 * Math.atan2(Math.sqrt(a2), Math.sqrt(1 - a2));
+            return this.R * c3;
           }
         });
         var earthRadius = 6378137;
@@ -1160,7 +1160,7 @@ var YasguiGeoTg = (() => {
             return new Bounds([-d3, -d3], [d3, d3]);
           }()
         };
-        function Transformation(a2, b2, c2, d3) {
+        function Transformation(a2, b2, c3, d3) {
           if (isArray(a2)) {
             this._a = a2[0];
             this._b = a2[1];
@@ -1170,7 +1170,7 @@ var YasguiGeoTg = (() => {
           }
           this._a = a2;
           this._b = b2;
-          this._c = c2;
+          this._c = c3;
           this._d = d3;
         }
         Transformation.prototype = {
@@ -1198,8 +1198,8 @@ var YasguiGeoTg = (() => {
             );
           }
         };
-        function toTransformation(a2, b2, c2, d3) {
-          return new Transformation(a2, b2, c2, d3);
+        function toTransformation(a2, b2, c3, d3) {
+          return new Transformation(a2, b2, c3, d3);
         }
         var EPSG3857 = extend({}, Earth, {
           code: "EPSG:3857",
@@ -1216,12 +1216,12 @@ var YasguiGeoTg = (() => {
           return document.createElementNS("http://www.w3.org/2000/svg", name);
         }
         function pointsToPath(rings, closed) {
-          var str = "", i, j, len, len2, points, p2;
+          var str = "", i, j, len, len2, points, p;
           for (i = 0, len = rings.length; i < len; i++) {
             points = rings[i];
             for (j = 0, len2 = points.length; j < len2; j++) {
-              p2 = points[j];
-              str += (j ? "L" : "M") + p2.x + " " + p2.y;
+              p = points[j];
+              str += (j ? "L" : "M") + p.x + " " + p.y;
             }
             str += closed ? Browser.svg ? "z" : "x" : "";
           }
@@ -2233,7 +2233,7 @@ var YasguiGeoTg = (() => {
             function w(s2) {
               return w0 * (cosh(r0) / cosh(r0 + rho * s2));
             }
-            function u2(s2) {
+            function u3(s2) {
               return w0 * (cosh(r0) * tanh(r0 + rho * s2) - sinh(r0)) / rho2;
             }
             function easeOut(t) {
@@ -2245,7 +2245,7 @@ var YasguiGeoTg = (() => {
               if (t <= 1) {
                 this._flyToFrame = requestAnimFrame(frame, this);
                 this._move(
-                  this.unproject(from.add(to.subtract(from).multiplyBy(u2(s2) / u1)), startZoom),
+                  this.unproject(from.add(to.subtract(from).multiplyBy(u3(s2) / u1)), startZoom),
                   this.getScaleZoom(w0 / w(s2), startZoom),
                   { flyTo: true }
                 );
@@ -2443,12 +2443,12 @@ var YasguiGeoTg = (() => {
             if (!this._container._leaflet_id) {
               return;
             }
-            var c2 = error.code, message = error.message || (c2 === 1 ? "permission denied" : c2 === 2 ? "position unavailable" : "timeout");
+            var c3 = error.code, message = error.message || (c3 === 1 ? "permission denied" : c3 === 2 ? "position unavailable" : "timeout");
             if (this._locateOptions.setView && !this._loaded) {
               this.fitWorld();
             }
             this.fire("locationerror", {
-              code: c2,
+              code: c3,
               message: "Geolocation error: " + message + "."
             });
           },
@@ -3120,8 +3120,8 @@ var YasguiGeoTg = (() => {
             delete this._proxy;
           },
           _animMoveEnd: function() {
-            var c2 = this.getCenter(), z = this.getZoom();
-            setTransform(this._proxy, this.project(c2, z), this.getZoomScale(z, 1));
+            var c3 = this.getCenter(), z = this.getZoom();
+            setTransform(this._proxy, this.project(c3, z), this.getZoomScale(z, 1));
           },
           _catchTransitionEnd: function(e) {
             if (this._animatingZoom && e.propertyName.indexOf("transform") >= 0) {
@@ -4062,7 +4062,7 @@ var YasguiGeoTg = (() => {
           }
         });
         function clipPolygon(points, bounds, round) {
-          var clippedPoints, edges = [1, 4, 2, 8], i, j, k, a2, b2, len, edge2, p2;
+          var clippedPoints, edges = [1, 4, 2, 8], i, j, k, a2, b2, len, edge2, p;
           for (i = 0, len = points.length; i < len; i++) {
             points[i]._code = _getBitCode(points[i], bounds);
           }
@@ -4074,15 +4074,15 @@ var YasguiGeoTg = (() => {
               b2 = points[j];
               if (!(a2._code & edge2)) {
                 if (b2._code & edge2) {
-                  p2 = _getEdgeIntersection(b2, a2, edge2, bounds, round);
-                  p2._code = _getBitCode(p2, bounds);
-                  clippedPoints.push(p2);
+                  p = _getEdgeIntersection(b2, a2, edge2, bounds, round);
+                  p._code = _getBitCode(p, bounds);
+                  clippedPoints.push(p);
                 }
                 clippedPoints.push(a2);
               } else if (!(b2._code & edge2)) {
-                p2 = _getEdgeIntersection(b2, a2, edge2, bounds, round);
-                p2._code = _getBitCode(p2, bounds);
-                clippedPoints.push(p2);
+                p = _getEdgeIntersection(b2, a2, edge2, bounds, round);
+                p._code = _getBitCode(p, bounds);
+                clippedPoints.push(p);
               }
             }
             points = clippedPoints;
@@ -4154,11 +4154,11 @@ var YasguiGeoTg = (() => {
           points = _simplifyDP(points, sqTolerance);
           return points;
         }
-        function pointToSegmentDistance(p2, p1, p22) {
-          return Math.sqrt(_sqClosestPointOnSegment(p2, p1, p22, true));
+        function pointToSegmentDistance(p, p1, p2) {
+          return Math.sqrt(_sqClosestPointOnSegment(p, p1, p2, true));
         }
-        function closestPointOnSegment(p2, p1, p22) {
-          return _sqClosestPointOnSegment(p2, p1, p22);
+        function closestPointOnSegment(p, p1, p2) {
+          return _sqClosestPointOnSegment(p, p1, p2);
         }
         function _simplifyDP(points, sqTolerance) {
           var len = points.length, ArrayConstructor = typeof Uint8Array !== "undefined" ? Uint8Array : Array, markers = new ArrayConstructor(len);
@@ -4202,7 +4202,7 @@ var YasguiGeoTg = (() => {
         }
         var _lastCode;
         function clipSegment(a2, b2, bounds, useLastCode, round) {
-          var codeA = useLastCode ? _lastCode : _getBitCode(a2, bounds), codeB = _getBitCode(b2, bounds), codeOut, p2, newCode;
+          var codeA = useLastCode ? _lastCode : _getBitCode(a2, bounds), codeB = _getBitCode(b2, bounds), codeOut, p, newCode;
           _lastCode = codeB;
           while (true) {
             if (!(codeA | codeB)) {
@@ -4212,13 +4212,13 @@ var YasguiGeoTg = (() => {
               return false;
             }
             codeOut = codeA || codeB;
-            p2 = _getEdgeIntersection(a2, b2, codeOut, bounds, round);
-            newCode = _getBitCode(p2, bounds);
+            p = _getEdgeIntersection(a2, b2, codeOut, bounds, round);
+            newCode = _getBitCode(p, bounds);
             if (codeOut === codeA) {
-              a2 = p2;
+              a2 = p;
               codeA = newCode;
             } else {
-              b2 = p2;
+              b2 = p;
               codeB = newCode;
             }
           }
@@ -4240,16 +4240,16 @@ var YasguiGeoTg = (() => {
           }
           return new Point2(x3, y3, round);
         }
-        function _getBitCode(p2, bounds) {
+        function _getBitCode(p, bounds) {
           var code = 0;
-          if (p2.x < bounds.min.x) {
+          if (p.x < bounds.min.x) {
             code |= 1;
-          } else if (p2.x > bounds.max.x) {
+          } else if (p.x > bounds.max.x) {
             code |= 2;
           }
-          if (p2.y < bounds.min.y) {
+          if (p.y < bounds.min.y) {
             code |= 4;
-          } else if (p2.y > bounds.max.y) {
+          } else if (p.y > bounds.max.y) {
             code |= 8;
           }
           return code;
@@ -4258,20 +4258,20 @@ var YasguiGeoTg = (() => {
           var dx = p2.x - p1.x, dy = p2.y - p1.y;
           return dx * dx + dy * dy;
         }
-        function _sqClosestPointOnSegment(p2, p1, p22, sqDist) {
-          var x3 = p1.x, y3 = p1.y, dx = p22.x - x3, dy = p22.y - y3, dot = dx * dx + dy * dy, t;
+        function _sqClosestPointOnSegment(p, p1, p2, sqDist) {
+          var x3 = p1.x, y3 = p1.y, dx = p2.x - x3, dy = p2.y - y3, dot = dx * dx + dy * dy, t;
           if (dot > 0) {
-            t = ((p2.x - x3) * dx + (p2.y - y3) * dy) / dot;
+            t = ((p.x - x3) * dx + (p.y - y3) * dy) / dot;
             if (t > 1) {
-              x3 = p22.x;
-              y3 = p22.y;
+              x3 = p2.x;
+              y3 = p2.y;
             } else if (t > 0) {
               x3 += dx * t;
               y3 += dy * t;
             }
           }
-          dx = p2.x - x3;
-          dy = p2.y - y3;
+          dx = p.x - x3;
+          dy = p.y - y3;
           return sqDist ? dx * dx + dy * dy : new Point2(x3, y3);
         }
         function isFlat(latlngs) {
@@ -5414,8 +5414,8 @@ var YasguiGeoTg = (() => {
             this._updateBounds();
           },
           _updateBounds: function() {
-            var r = this._radius, r2 = this._radiusY || r, w = this._clickTolerance(), p2 = [r + w, r2 + w];
-            this._pxBounds = new Bounds(this._point.subtract(p2), this._point.add(p2));
+            var r = this._radius, r2 = this._radiusY || r, w = this._clickTolerance(), p = [r + w, r2 + w];
+            this._pxBounds = new Bounds(this._point.subtract(p), this._point.add(p));
           },
           _update: function() {
             if (this._map) {
@@ -5429,8 +5429,8 @@ var YasguiGeoTg = (() => {
             return this._radius && !this._renderer._bounds.intersects(this._pxBounds);
           },
           // Needed by the `Canvas` renderer for interactivity
-          _containsPoint: function(p2) {
-            return p2.distanceTo(this._point) <= this._radius + this._clickTolerance();
+          _containsPoint: function(p) {
+            return p.distanceTo(this._point) <= this._radius + this._clickTolerance();
           }
         });
         function circleMarker(latlng, options) {
@@ -5472,13 +5472,13 @@ var YasguiGeoTg = (() => {
           _project: function() {
             var lng = this._latlng.lng, lat = this._latlng.lat, map = this._map, crs = map.options.crs;
             if (crs.distance === Earth.distance) {
-              var d3 = Math.PI / 180, latR = this._mRadius / Earth.R / d3, top = map.project([lat + latR, lng]), bottom = map.project([lat - latR, lng]), p2 = top.add(bottom).divideBy(2), lat2 = map.unproject(p2).lat, lngR = Math.acos((Math.cos(latR * d3) - Math.sin(lat * d3) * Math.sin(lat2 * d3)) / (Math.cos(lat * d3) * Math.cos(lat2 * d3))) / d3;
+              var d3 = Math.PI / 180, latR = this._mRadius / Earth.R / d3, top = map.project([lat + latR, lng]), bottom = map.project([lat - latR, lng]), p = top.add(bottom).divideBy(2), lat2 = map.unproject(p).lat, lngR = Math.acos((Math.cos(latR * d3) - Math.sin(lat * d3) * Math.sin(lat2 * d3)) / (Math.cos(lat * d3) * Math.cos(lat2 * d3))) / d3;
               if (isNaN(lngR) || lngR === 0) {
                 lngR = latR / Math.cos(Math.PI / 180 * lat);
               }
-              this._point = p2.subtract(map.getPixelOrigin());
-              this._radius = isNaN(lngR) ? 0 : p2.x - map.project([lat2, lng - lngR]).x;
-              this._radiusY = p2.y - top.y;
+              this._point = p.subtract(map.getPixelOrigin());
+              this._radius = isNaN(lngR) ? 0 : p.x - map.project([lat2, lng - lngR]).x;
+              this._radiusY = p.y - top.y;
             } else {
               var latlng2 = crs.unproject(crs.project(this._latlng).subtract([this._mRadius, 0]));
               this._point = map.latLngToLayerPoint(this._latlng);
@@ -5524,17 +5524,17 @@ var YasguiGeoTg = (() => {
           },
           // @method closestLayerPoint(p: Point): Point
           // Returns the point closest to `p` on the Polyline.
-          closestLayerPoint: function(p2) {
-            var minDistance = Infinity, minPoint = null, closest = _sqClosestPointOnSegment, p1, p22;
+          closestLayerPoint: function(p) {
+            var minDistance = Infinity, minPoint = null, closest = _sqClosestPointOnSegment, p1, p2;
             for (var j = 0, jLen = this._parts.length; j < jLen; j++) {
               var points = this._parts[j];
               for (var i = 1, len = points.length; i < len; i++) {
                 p1 = points[i - 1];
-                p22 = points[i];
-                var sqDist = closest(p2, p1, p22, true);
+                p2 = points[i];
+                var sqDist = closest(p, p1, p2, true);
                 if (sqDist < minDistance) {
                   minDistance = sqDist;
-                  minPoint = closest(p2, p1, p22);
+                  minPoint = closest(p, p1, p2);
                 }
               }
             }
@@ -5597,13 +5597,13 @@ var YasguiGeoTg = (() => {
             }
           },
           _updateBounds: function() {
-            var w = this._clickTolerance(), p2 = new Point2(w, w);
+            var w = this._clickTolerance(), p = new Point2(w, w);
             if (!this._rawPxBounds) {
               return;
             }
             this._pxBounds = new Bounds([
-              this._rawPxBounds.min.subtract(p2),
-              this._rawPxBounds.max.add(p2)
+              this._rawPxBounds.min.subtract(p),
+              this._rawPxBounds.max.add(p)
             ]);
           },
           // recursively turns latlngs into a set of rings with projected coordinates
@@ -5669,9 +5669,9 @@ var YasguiGeoTg = (() => {
             this._renderer._updatePoly(this);
           },
           // Needed by the `Canvas` renderer for interactivity
-          _containsPoint: function(p2, closed) {
+          _containsPoint: function(p, closed) {
             var i, j, k, len, len2, part, w = this._clickTolerance();
-            if (!this._pxBounds || !this._pxBounds.contains(p2)) {
+            if (!this._pxBounds || !this._pxBounds.contains(p)) {
               return false;
             }
             for (i = 0, len = this._parts.length; i < len; i++) {
@@ -5680,7 +5680,7 @@ var YasguiGeoTg = (() => {
                 if (!closed && j === 0) {
                   continue;
                 }
-                if (pointToSegmentDistance(p2, part[k], part[j]) <= w) {
+                if (pointToSegmentDistance(p, part[k], part[j]) <= w) {
                   return true;
                 }
               }
@@ -5724,8 +5724,8 @@ var YasguiGeoTg = (() => {
             return isFlat(this._latlngs[0]) ? this._latlngs[0] : this._latlngs[0][0];
           },
           _clipPoints: function() {
-            var bounds = this._renderer._bounds, w = this.options.weight, p2 = new Point2(w, w);
-            bounds = new Bounds(bounds.min.subtract(p2), bounds.max.add(p2));
+            var bounds = this._renderer._bounds, w = this.options.weight, p = new Point2(w, w);
+            bounds = new Bounds(bounds.min.subtract(p), bounds.max.add(p));
             this._parts = [];
             if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
               return;
@@ -5745,22 +5745,22 @@ var YasguiGeoTg = (() => {
             this._renderer._updatePoly(this, true);
           },
           // Needed by the `Canvas` renderer for interactivity
-          _containsPoint: function(p2) {
-            var inside = false, part, p1, p22, i, j, k, len, len2;
-            if (!this._pxBounds || !this._pxBounds.contains(p2)) {
+          _containsPoint: function(p) {
+            var inside = false, part, p1, p2, i, j, k, len, len2;
+            if (!this._pxBounds || !this._pxBounds.contains(p)) {
               return false;
             }
             for (i = 0, len = this._parts.length; i < len; i++) {
               part = this._parts[i];
               for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
                 p1 = part[j];
-                p22 = part[k];
-                if (p1.y > p2.y !== p22.y > p2.y && p2.x < (p22.x - p1.x) * (p2.y - p1.y) / (p22.y - p1.y) + p1.x) {
+                p2 = part[k];
+                if (p1.y > p.y !== p2.y > p.y && p.x < (p2.x - p1.x) * (p.y - p1.y) / (p2.y - p1.y) + p1.x) {
                   inside = !inside;
                 }
               }
             }
-            return inside || Polyline.prototype._containsPoint.call(this, p2, true);
+            return inside || Polyline.prototype._containsPoint.call(this, p, true);
           }
         });
         function polygon(latlngs, options) {
@@ -7706,8 +7706,8 @@ var YasguiGeoTg = (() => {
               throw new Error("Attempted to load an infinite number of tiles");
             }
             for (var key in this._tiles) {
-              var c2 = this._tiles[key].coords;
-              if (c2.z !== this._tileZoom || !noPruneRange.contains(new Point2(c2.x, c2.y))) {
+              var c3 = this._tiles[key].coords;
+              if (c3.z !== this._tileZoom || !noPruneRange.contains(new Point2(c3.x, c3.y))) {
                 this._tiles[key].current = false;
               }
             }
@@ -8227,8 +8227,8 @@ var YasguiGeoTg = (() => {
             }
           },
           _update: function() {
-            var p2 = this.options.padding, size = this._map.getSize(), min = this._map.containerPointToLayerPoint(size.multiplyBy(-p2)).round();
-            this._bounds = new Bounds(min, min.add(size.multiplyBy(1 + p2 * 2)).round());
+            var p = this.options.padding, size = this._map.getSize(), min = this._map.containerPointToLayerPoint(size.multiplyBy(-p)).round();
+            this._bounds = new Bounds(min, min.add(size.multiplyBy(1 + p * 2)).round());
             this._center = this._map.getCenter();
             this._zoom = this._map.getZoom();
           }
@@ -8424,15 +8424,15 @@ var YasguiGeoTg = (() => {
             if (!this._drawing) {
               return;
             }
-            var i, j, len2, p2, parts = layer._parts, len = parts.length, ctx = this._ctx;
+            var i, j, len2, p, parts = layer._parts, len = parts.length, ctx = this._ctx;
             if (!len) {
               return;
             }
             ctx.beginPath();
             for (i = 0; i < len; i++) {
               for (j = 0, len2 = parts[i].length; j < len2; j++) {
-                p2 = parts[i][j];
-                ctx[j ? "lineTo" : "moveTo"](p2.x, p2.y);
+                p = parts[i][j];
+                ctx[j ? "lineTo" : "moveTo"](p.x, p.y);
               }
               if (closed) {
                 ctx.closePath();
@@ -8444,13 +8444,13 @@ var YasguiGeoTg = (() => {
             if (!this._drawing || layer._empty()) {
               return;
             }
-            var p2 = layer._point, ctx = this._ctx, r = Math.max(Math.round(layer._radius), 1), s2 = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
+            var p = layer._point, ctx = this._ctx, r = Math.max(Math.round(layer._radius), 1), s2 = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
             if (s2 !== 1) {
               ctx.save();
               ctx.scale(1, s2);
             }
             ctx.beginPath();
-            ctx.arc(p2.x, p2.y / s2, r, 0, Math.PI * 2, false);
+            ctx.arc(p.x, p.y / s2, r, 0, Math.PI * 2, false);
             if (s2 !== 1) {
               ctx.restore();
             }
@@ -8664,8 +8664,8 @@ var YasguiGeoTg = (() => {
             }
           },
           _updateCircle: function(layer) {
-            var p2 = layer._point.round(), r = Math.round(layer._radius), r2 = Math.round(layer._radiusY || r);
-            this._setPath(layer, layer._empty() ? "M0 0" : "AL " + p2.x + "," + p2.y + " " + r + "," + r2 + " 0," + 65535 * 360);
+            var p = layer._point.round(), r = Math.round(layer._radius), r2 = Math.round(layer._radiusY || r);
+            this._setPath(layer, layer._empty() ? "M0 0" : "AL " + p.x + "," + p.y + " " + r + "," + r2 + " 0," + 65535 * 360);
           },
           _setPath: function(layer, path) {
             layer._path.v = path;
@@ -8771,8 +8771,8 @@ var YasguiGeoTg = (() => {
             this._setPath(layer, pointsToPath(layer._parts, closed));
           },
           _updateCircle: function(layer) {
-            var p2 = layer._point, r = Math.max(Math.round(layer._radius), 1), r2 = Math.max(Math.round(layer._radiusY), 1) || r, arc = "a" + r + "," + r2 + " 0 1,0 ";
-            var d3 = layer._empty() ? "M0 0" : "M" + (p2.x - r) + "," + p2.y + arc + r * 2 + ",0 " + arc + -r * 2 + ",0 ";
+            var p = layer._point, r = Math.max(Math.round(layer._radius), 1), r2 = Math.max(Math.round(layer._radiusY), 1) || r, arc = "a" + r + "," + r2 + " 0 1,0 ";
+            var d3 = layer._empty() ? "M0 0" : "M" + (p.x - r) + "," + p.y + arc + r * 2 + ",0 " + arc + -r * 2 + ",0 ";
             this._setPath(layer, d3);
           },
           _setPath: function(layer, path) {
@@ -9945,8 +9945,8 @@ var YasguiGeoTg = (() => {
           if (root2.raws.indent) return root2.raws.indent;
           let value;
           root2.walk((i) => {
-            let p2 = i.parent;
-            if (p2 && p2 !== root2 && p2.parent && p2.parent === root2) {
+            let p = i.parent;
+            if (p && p !== root2 && p.parent && p.parent === root2) {
               if (typeof i.raws.before !== "undefined") {
                 let parts = i.raws.before.split("\n");
                 value = parts[parts.length - 1];
@@ -11616,9 +11616,9 @@ var YasguiGeoTg = (() => {
               column += str.length;
             }
             if (node && type !== "start") {
-              let p2 = node.parent || { raws: {} };
+              let p = node.parent || { raws: {} };
               let childless = node.type === "decl" || node.type === "atrule" && !node.nodes;
-              if (!childless || node !== p2.last || p2.raws.semicolon) {
+              if (!childless || node !== p.last || p.raws.semicolon) {
                 if (node.source && node.source.end) {
                   mapping.source = this.sourcePath(node);
                   mapping.original.line = node.source.end.line;
@@ -13504,11 +13504,11 @@ var YasguiGeoTg = (() => {
       return v.trim();
     }).filter(function(a2) {
       return a2;
-    }).reduce(function(p2, a2) {
+    }).reduce(function(p, a2) {
       var split = a2.split("=");
       split.push(true);
-      p2[split[0].toLowerCase()] = split[1];
-      return p2;
+      p[split[0].toLowerCase()] = split[1];
+      return p;
     }, {});
     var paramName, paramVal, paramOutname;
     var params2 = {
@@ -14907,9 +14907,9 @@ var YasguiGeoTg = (() => {
       }
     }
   }
-  function forward(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward(p) {
+    var lon = p.x;
+    var lat = p.y;
     if (lat * R2D > 90 && lat * R2D < -90 && lon * R2D > 180 && lon * R2D < -180) {
       return null;
     }
@@ -14926,14 +14926,14 @@ var YasguiGeoTg = (() => {
         x3 = this.x0 + this.a * this.k0 * adjust_lon_default(lon - this.long0, this.over);
         y3 = this.y0 - this.a * this.k0 * Math.log(ts);
       }
-      p2.x = x3;
-      p2.y = y3;
-      return p2;
+      p.x = x3;
+      p.y = y3;
+      return p;
     }
   }
-  function inverse(p2) {
-    var x3 = p2.x - this.x0;
-    var y3 = p2.y - this.y0;
+  function inverse(p) {
+    var x3 = p.x - this.x0;
+    var y3 = p.y - this.y0;
     var lon, lat;
     if (this.sphere) {
       lat = HALF_PI - 2 * Math.atan(Math.exp(-y3 / (this.a * this.k0)));
@@ -14945,9 +14945,9 @@ var YasguiGeoTg = (() => {
       }
     }
     lon = adjust_lon_default(this.long0 + x3 / (this.a * this.k0), this.over);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names = ["Mercator", "Popular Visualisation Pseudo Mercator", "Mercator_1SP", "Mercator_Auxiliary_Sphere", "Mercator_Variant_A", "merc"];
   var merc_default = {
@@ -16866,10 +16866,10 @@ var YasguiGeoTg = (() => {
       return true;
     }
   }
-  function geodeticToGeocentric(p2, es, a2) {
-    var Longitude = p2.x;
-    var Latitude = p2.y;
-    var Height = p2.z ? p2.z : 0;
+  function geodeticToGeocentric(p, es, a2) {
+    var Longitude = p.x;
+    var Latitude = p.y;
+    var Height = p.z ? p.z : 0;
     var Rn;
     var Sin_Lat;
     var Sin2_Lat;
@@ -16879,9 +16879,9 @@ var YasguiGeoTg = (() => {
     } else if (Latitude > HALF_PI && Latitude < 1.001 * HALF_PI) {
       Latitude = HALF_PI;
     } else if (Latitude < -HALF_PI) {
-      return { x: -Infinity, y: -Infinity, z: p2.z };
+      return { x: -Infinity, y: -Infinity, z: p.z };
     } else if (Latitude > HALF_PI) {
-      return { x: Infinity, y: Infinity, z: p2.z };
+      return { x: Infinity, y: Infinity, z: p.z };
     }
     if (Longitude > Math.PI) {
       Longitude -= 2 * Math.PI;
@@ -16896,7 +16896,7 @@ var YasguiGeoTg = (() => {
       z: (Rn * (1 - es) + Height) * Sin_Lat
     };
   }
-  function geocentricToGeodetic(p2, es, a2, b2) {
+  function geocentricToGeodetic(p, es, a2, b2) {
     var genau = 1e-12;
     var genau2 = genau * genau;
     var maxiter = 30;
@@ -16913,9 +16913,9 @@ var YasguiGeoTg = (() => {
     var SPHI;
     var SDPHI;
     var iter;
-    var X = p2.x;
-    var Y = p2.y;
-    var Z2 = p2.z ? p2.z : 0;
+    var X = p.x;
+    var Y = p.y;
+    var Z2 = p.z ? p.z : 0;
     var Longitude;
     var Latitude;
     var Height;
@@ -16927,9 +16927,9 @@ var YasguiGeoTg = (() => {
         Latitude = HALF_PI;
         Height = -b2;
         return {
-          x: p2.x,
-          y: p2.y,
-          z: p2.z
+          x: p.x,
+          y: p.y,
+          z: p.z
         };
       }
     } else {
@@ -16960,12 +16960,12 @@ var YasguiGeoTg = (() => {
       z: Height
     };
   }
-  function geocentricToWgs84(p2, datum_type, datum_params) {
+  function geocentricToWgs84(p, datum_type, datum_params) {
     if (datum_type === PJD_3PARAM) {
       return {
-        x: p2.x + datum_params[0],
-        y: p2.y + datum_params[1],
-        z: p2.z + datum_params[2]
+        x: p.x + datum_params[0],
+        y: p.y + datum_params[1],
+        z: p.z + datum_params[2]
       };
     } else if (datum_type === PJD_7PARAM) {
       var Dx_BF = datum_params[0];
@@ -16976,18 +16976,18 @@ var YasguiGeoTg = (() => {
       var Rz_BF = datum_params[5];
       var M_BF = datum_params[6];
       return {
-        x: M_BF * (p2.x - Rz_BF * p2.y + Ry_BF * p2.z) + Dx_BF,
-        y: M_BF * (Rz_BF * p2.x + p2.y - Rx_BF * p2.z) + Dy_BF,
-        z: M_BF * (-Ry_BF * p2.x + Rx_BF * p2.y + p2.z) + Dz_BF
+        x: M_BF * (p.x - Rz_BF * p.y + Ry_BF * p.z) + Dx_BF,
+        y: M_BF * (Rz_BF * p.x + p.y - Rx_BF * p.z) + Dy_BF,
+        z: M_BF * (-Ry_BF * p.x + Rx_BF * p.y + p.z) + Dz_BF
       };
     }
   }
-  function geocentricFromWgs84(p2, datum_type, datum_params) {
+  function geocentricFromWgs84(p, datum_type, datum_params) {
     if (datum_type === PJD_3PARAM) {
       return {
-        x: p2.x - datum_params[0],
-        y: p2.y - datum_params[1],
-        z: p2.z - datum_params[2]
+        x: p.x - datum_params[0],
+        y: p.y - datum_params[1],
+        z: p.z - datum_params[2]
       };
     } else if (datum_type === PJD_7PARAM) {
       var Dx_BF = datum_params[0];
@@ -16997,9 +16997,9 @@ var YasguiGeoTg = (() => {
       var Ry_BF = datum_params[4];
       var Rz_BF = datum_params[5];
       var M_BF = datum_params[6];
-      var x_tmp = (p2.x - Dx_BF) / M_BF;
-      var y_tmp = (p2.y - Dy_BF) / M_BF;
-      var z_tmp = (p2.z - Dz_BF) / M_BF;
+      var x_tmp = (p.x - Dx_BF) / M_BF;
+      var y_tmp = (p.y - Dy_BF) / M_BF;
+      var z_tmp = (p.z - Dz_BF) / M_BF;
       return {
         x: x_tmp + Rz_BF * y_tmp - Ry_BF * z_tmp,
         y: -Rz_BF * x_tmp + y_tmp + Rx_BF * z_tmp,
@@ -18001,9 +18001,9 @@ var YasguiGeoTg = (() => {
       this.ml0 = pj_mlfn_default(this.lat0, Math.sin(this.lat0), Math.cos(this.lat0), this.en);
     }
   }
-  function forward3(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward3(p) {
+    var lon = p.x;
+    var lat = p.y;
     var delta_lon = adjust_lon_default(lon - this.long0, this.over);
     var con;
     var x3, y3;
@@ -18034,26 +18034,26 @@ var YasguiGeoTg = (() => {
     } else {
       var al = cos_phi * delta_lon;
       var als = Math.pow(al, 2);
-      var c2 = this.ep2 * Math.pow(cos_phi, 2);
-      var cs = Math.pow(c2, 2);
+      var c3 = this.ep2 * Math.pow(cos_phi, 2);
+      var cs = Math.pow(c3, 2);
       var tq = Math.abs(cos_phi) > EPSLN ? Math.tan(lat) : 0;
       var t = Math.pow(tq, 2);
       var ts = Math.pow(t, 2);
       con = 1 - this.es * Math.pow(sin_phi, 2);
       al = al / Math.sqrt(con);
       var ml = pj_mlfn_default(lat, sin_phi, cos_phi, this.en);
-      x3 = this.a * (this.k0 * al * (1 + als / 6 * (1 - t + c2 + als / 20 * (5 - 18 * t + ts + 14 * c2 - 58 * t * c2 + als / 42 * (61 + 179 * ts - ts * t - 479 * t))))) + this.x0;
-      y3 = this.a * (this.k0 * (ml - this.ml0 + sin_phi * delta_lon * al / 2 * (1 + als / 12 * (5 - t + 9 * c2 + 4 * cs + als / 30 * (61 + ts - 58 * t + 270 * c2 - 330 * t * c2 + als / 56 * (1385 + 543 * ts - ts * t - 3111 * t)))))) + this.y0;
+      x3 = this.a * (this.k0 * al * (1 + als / 6 * (1 - t + c3 + als / 20 * (5 - 18 * t + ts + 14 * c3 - 58 * t * c3 + als / 42 * (61 + 179 * ts - ts * t - 479 * t))))) + this.x0;
+      y3 = this.a * (this.k0 * (ml - this.ml0 + sin_phi * delta_lon * al / 2 * (1 + als / 12 * (5 - t + 9 * c3 + 4 * cs + als / 30 * (61 + ts - 58 * t + 270 * c3 - 330 * t * c3 + als / 56 * (1385 + 543 * ts - ts * t - 3111 * t)))))) + this.y0;
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse3(p2) {
+  function inverse3(p) {
     var con, phi;
     var lat, lon;
-    var x3 = (p2.x - this.x0) * (1 / this.a);
-    var y3 = (p2.y - this.y0) * (1 / this.a);
+    var x3 = (p.x - this.x0) * (1 / this.a);
+    var y3 = (p.y - this.y0) * (1 / this.a);
     if (!this.es) {
       var f3 = Math.exp(x3 / this.k0);
       var g2 = 0.5 * (f3 - 1 / f3);
@@ -18076,24 +18076,24 @@ var YasguiGeoTg = (() => {
         var sin_phi = Math.sin(phi);
         var cos_phi = Math.cos(phi);
         var tan_phi = Math.abs(cos_phi) > EPSLN ? Math.tan(phi) : 0;
-        var c2 = this.ep2 * Math.pow(cos_phi, 2);
-        var cs = Math.pow(c2, 2);
+        var c3 = this.ep2 * Math.pow(cos_phi, 2);
+        var cs = Math.pow(c3, 2);
         var t = Math.pow(tan_phi, 2);
         var ts = Math.pow(t, 2);
         con = 1 - this.es * Math.pow(sin_phi, 2);
         var d3 = x3 * Math.sqrt(con) / this.k0;
         var ds = Math.pow(d3, 2);
         con = con * tan_phi;
-        lat = phi - con * ds / (1 - this.es) * 0.5 * (1 - ds / 12 * (5 + 3 * t - 9 * c2 * t + c2 - 4 * cs - ds / 30 * (61 + 90 * t - 252 * c2 * t + 45 * ts + 46 * c2 - ds / 56 * (1385 + 3633 * t + 4095 * ts + 1574 * ts * t))));
-        lon = adjust_lon_default(this.long0 + d3 * (1 - ds / 6 * (1 + 2 * t + c2 - ds / 20 * (5 + 28 * t + 24 * ts + 8 * c2 * t + 6 * c2 - ds / 42 * (61 + 662 * t + 1320 * ts + 720 * ts * t)))) / cos_phi, this.over);
+        lat = phi - con * ds / (1 - this.es) * 0.5 * (1 - ds / 12 * (5 + 3 * t - 9 * c3 * t + c3 - 4 * cs - ds / 30 * (61 + 90 * t - 252 * c3 * t + 45 * ts + 46 * c3 - ds / 56 * (1385 + 3633 * t + 4095 * ts + 1574 * ts * t))));
+        lon = adjust_lon_default(this.long0 + d3 * (1 - ds / 6 * (1 + 2 * t + c3 - ds / 20 * (5 + 28 * t + 24 * ts + 8 * c3 * t + 6 * c3 - ds / 42 * (61 + 662 * t + 1320 * ts + 720 * ts * t)))) / cos_phi, this.over);
       } else {
         lat = HALF_PI * sign_default(y3);
         lon = 0;
       }
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names4 = ["Fast_Transverse_Mercator", "Fast Transverse Mercator"];
   var tmerc_default = {
@@ -18257,9 +18257,9 @@ var YasguiGeoTg = (() => {
     var Z2 = gatg_default(this.cbg, this.lat0);
     this.Zb = -this.Qn * (Z2 + clens_default(this.gtu, 2 * Z2));
   }
-  function forward4(p2) {
-    var Ce = adjust_lon_default(p2.x - this.long0, this.over);
-    var Cn = p2.y;
+  function forward4(p) {
+    var Ce = adjust_lon_default(p.x - this.long0, this.over);
+    var Cn = p.y;
     Cn = gatg_default(this.cbg, Cn);
     var sin_Cn = Math.sin(Cn);
     var cos_Cn = Math.cos(Cn);
@@ -18280,13 +18280,13 @@ var YasguiGeoTg = (() => {
       x3 = Infinity;
       y3 = Infinity;
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse4(p2) {
-    var Ce = (p2.x - this.x0) * (1 / this.a);
-    var Cn = (p2.y - this.y0) * (1 / this.a);
+  function inverse4(p) {
+    var Ce = (p.x - this.x0) * (1 / this.a);
+    var Cn = (p.y - this.y0) * (1 / this.a);
     Cn = (Cn - this.Zb) / this.Qn;
     Ce = Ce / this.Qn;
     var lon;
@@ -18308,9 +18308,9 @@ var YasguiGeoTg = (() => {
       lon = Infinity;
       lat = Infinity;
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names5 = ["Extended_Transverse_Mercator", "Extended Transverse Mercator", "etmerc", "Transverse_Mercator", "Transverse Mercator", "Gauss Kruger", "Gauss_Kruger", "tmerc"];
   var etmerc_default = {
@@ -18373,31 +18373,31 @@ var YasguiGeoTg = (() => {
     this.ratexp = 0.5 * this.C * this.e;
     this.K = Math.tan(0.5 * this.phic0 + FORTPI) / (Math.pow(Math.tan(0.5 * this.lat0 + FORTPI), this.C) * srat_default(this.e * sphi, this.ratexp));
   }
-  function forward5(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
-    p2.y = 2 * Math.atan(this.K * Math.pow(Math.tan(0.5 * lat + FORTPI), this.C) * srat_default(this.e * Math.sin(lat), this.ratexp)) - HALF_PI;
-    p2.x = this.C * lon;
-    return p2;
+  function forward5(p) {
+    var lon = p.x;
+    var lat = p.y;
+    p.y = 2 * Math.atan(this.K * Math.pow(Math.tan(0.5 * lat + FORTPI), this.C) * srat_default(this.e * Math.sin(lat), this.ratexp)) - HALF_PI;
+    p.x = this.C * lon;
+    return p;
   }
-  function inverse5(p2) {
+  function inverse5(p) {
     var DEL_TOL = 1e-14;
-    var lon = p2.x / this.C;
-    var lat = p2.y;
+    var lon = p.x / this.C;
+    var lat = p.y;
     var num = Math.pow(Math.tan(0.5 * lat + FORTPI) / this.K, 1 / this.C);
     for (var i = MAX_ITER2; i > 0; --i) {
-      lat = 2 * Math.atan(num * srat_default(this.e * Math.sin(p2.y), -0.5 * this.e)) - HALF_PI;
-      if (Math.abs(lat - p2.y) < DEL_TOL) {
+      lat = 2 * Math.atan(num * srat_default(this.e * Math.sin(p.y), -0.5 * this.e)) - HALF_PI;
+      if (Math.abs(lat - p.y) < DEL_TOL) {
         break;
       }
-      p2.y = lat;
+      p.y = lat;
     }
     if (!i) {
       return null;
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names7 = ["gauss"];
   var gauss_default = {
@@ -18420,41 +18420,41 @@ var YasguiGeoTg = (() => {
       this.title = "Oblique Stereographic Alternative";
     }
   }
-  function forward6(p2) {
+  function forward6(p) {
     var sinc, cosc, cosl, k;
-    p2.x = adjust_lon_default(p2.x - this.long0, this.over);
-    gauss_default.forward.apply(this, [p2]);
-    sinc = Math.sin(p2.y);
-    cosc = Math.cos(p2.y);
-    cosl = Math.cos(p2.x);
+    p.x = adjust_lon_default(p.x - this.long0, this.over);
+    gauss_default.forward.apply(this, [p]);
+    sinc = Math.sin(p.y);
+    cosc = Math.cos(p.y);
+    cosl = Math.cos(p.x);
     k = this.k0 * this.R2 / (1 + this.sinc0 * sinc + this.cosc0 * cosc * cosl);
-    p2.x = k * cosc * Math.sin(p2.x);
-    p2.y = k * (this.cosc0 * sinc - this.sinc0 * cosc * cosl);
-    p2.x = this.a * p2.x + this.x0;
-    p2.y = this.a * p2.y + this.y0;
-    return p2;
+    p.x = k * cosc * Math.sin(p.x);
+    p.y = k * (this.cosc0 * sinc - this.sinc0 * cosc * cosl);
+    p.x = this.a * p.x + this.x0;
+    p.y = this.a * p.y + this.y0;
+    return p;
   }
-  function inverse6(p2) {
+  function inverse6(p) {
     var sinc, cosc, lon, lat, rho;
-    p2.x = (p2.x - this.x0) / this.a;
-    p2.y = (p2.y - this.y0) / this.a;
-    p2.x /= this.k0;
-    p2.y /= this.k0;
-    if (rho = hypot_default(p2.x, p2.y)) {
-      var c2 = 2 * Math.atan2(rho, this.R2);
-      sinc = Math.sin(c2);
-      cosc = Math.cos(c2);
-      lat = Math.asin(cosc * this.sinc0 + p2.y * sinc * this.cosc0 / rho);
-      lon = Math.atan2(p2.x * sinc, rho * this.cosc0 * cosc - p2.y * this.sinc0 * sinc);
+    p.x = (p.x - this.x0) / this.a;
+    p.y = (p.y - this.y0) / this.a;
+    p.x /= this.k0;
+    p.y /= this.k0;
+    if (rho = hypot_default(p.x, p.y)) {
+      var c3 = 2 * Math.atan2(rho, this.R2);
+      sinc = Math.sin(c3);
+      cosc = Math.cos(c3);
+      lat = Math.asin(cosc * this.sinc0 + p.y * sinc * this.cosc0 / rho);
+      lon = Math.atan2(p.x * sinc, rho * this.cosc0 * cosc - p.y * this.sinc0 * sinc);
     } else {
       lat = this.phic0;
       lon = 0;
     }
-    p2.x = lon;
-    p2.y = lat;
-    gauss_default.inverse.apply(this, [p2]);
-    p2.x = adjust_lon_default(p2.x + this.long0, this.over);
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    gauss_default.inverse.apply(this, [p]);
+    p.x = adjust_lon_default(p.x + this.long0, this.over);
+    return p;
   }
   var names8 = ["Stereographic_North_Pole", "Oblique_Stereographic", "sterea", "Oblique Stereographic Alternative", "Double_Stereographic"];
   var sterea_default = {
@@ -18498,23 +18498,23 @@ var YasguiGeoTg = (() => {
       this.sinX0 = Math.sin(this.X0);
     }
   }
-  function forward7(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward7(p) {
+    var lon = p.x;
+    var lat = p.y;
     var sinlat = Math.sin(lat);
     var coslat = Math.cos(lat);
     var A6, X, sinX, cosX, ts, rh;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     if (Math.abs(Math.abs(lon - this.long0) - Math.PI) <= EPSLN && Math.abs(lat + this.lat0) <= EPSLN) {
-      p2.x = NaN;
-      p2.y = NaN;
-      return p2;
+      p.x = NaN;
+      p.y = NaN;
+      return p;
     }
     if (this.sphere) {
       A6 = 2 * this.k0 / (1 + this.sinlat0 * sinlat + this.coslat0 * coslat * Math.cos(dlon));
-      p2.x = this.a * A6 * coslat * Math.sin(dlon) + this.x0;
-      p2.y = this.a * A6 * (this.coslat0 * sinlat - this.sinlat0 * coslat * Math.cos(dlon)) + this.y0;
-      return p2;
+      p.x = this.a * A6 * coslat * Math.sin(dlon) + this.x0;
+      p.y = this.a * A6 * (this.coslat0 * sinlat - this.sinlat0 * coslat * Math.cos(dlon)) + this.y0;
+      return p;
     } else {
       X = 2 * Math.atan(ssfn_(lat, sinlat, this.e)) - HALF_PI;
       cosX = Math.cos(X);
@@ -18522,76 +18522,76 @@ var YasguiGeoTg = (() => {
       if (Math.abs(this.coslat0) <= EPSLN) {
         ts = tsfnz_default(this.e, lat * this.con, this.con * sinlat);
         rh = 2 * this.a * this.k0 * ts / this.cons;
-        p2.x = this.x0 + rh * Math.sin(lon - this.long0);
-        p2.y = this.y0 - this.con * rh * Math.cos(lon - this.long0);
-        return p2;
+        p.x = this.x0 + rh * Math.sin(lon - this.long0);
+        p.y = this.y0 - this.con * rh * Math.cos(lon - this.long0);
+        return p;
       } else if (Math.abs(this.sinlat0) < EPSLN) {
         A6 = 2 * this.a * this.k0 / (1 + cosX * Math.cos(dlon));
-        p2.y = A6 * sinX;
+        p.y = A6 * sinX;
       } else {
         A6 = 2 * this.a * this.k0 * this.ms1 / (this.cosX0 * (1 + this.sinX0 * sinX + this.cosX0 * cosX * Math.cos(dlon)));
-        p2.y = A6 * (this.cosX0 * sinX - this.sinX0 * cosX * Math.cos(dlon)) + this.y0;
+        p.y = A6 * (this.cosX0 * sinX - this.sinX0 * cosX * Math.cos(dlon)) + this.y0;
       }
-      p2.x = A6 * cosX * Math.sin(dlon) + this.x0;
+      p.x = A6 * cosX * Math.sin(dlon) + this.x0;
     }
-    return p2;
+    return p;
   }
-  function inverse7(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
+  function inverse7(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
     var lon, lat, ts, ce, Chi;
-    var rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+    var rh = Math.sqrt(p.x * p.x + p.y * p.y);
     if (this.sphere) {
-      var c2 = 2 * Math.atan(rh / (2 * this.a * this.k0));
+      var c3 = 2 * Math.atan(rh / (2 * this.a * this.k0));
       lon = this.long0;
       lat = this.lat0;
       if (rh <= EPSLN) {
-        p2.x = lon;
-        p2.y = lat;
-        return p2;
+        p.x = lon;
+        p.y = lat;
+        return p;
       }
-      lat = Math.asin(Math.cos(c2) * this.sinlat0 + p2.y * Math.sin(c2) * this.coslat0 / rh);
+      lat = Math.asin(Math.cos(c3) * this.sinlat0 + p.y * Math.sin(c3) * this.coslat0 / rh);
       if (Math.abs(this.coslat0) < EPSLN) {
         if (this.lat0 > 0) {
-          lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, -1 * p2.y), this.over);
+          lon = adjust_lon_default(this.long0 + Math.atan2(p.x, -1 * p.y), this.over);
         } else {
-          lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, p2.y), this.over);
+          lon = adjust_lon_default(this.long0 + Math.atan2(p.x, p.y), this.over);
         }
       } else {
-        lon = adjust_lon_default(this.long0 + Math.atan2(p2.x * Math.sin(c2), rh * this.coslat0 * Math.cos(c2) - p2.y * this.sinlat0 * Math.sin(c2)), this.over);
+        lon = adjust_lon_default(this.long0 + Math.atan2(p.x * Math.sin(c3), rh * this.coslat0 * Math.cos(c3) - p.y * this.sinlat0 * Math.sin(c3)), this.over);
       }
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     } else {
       if (Math.abs(this.coslat0) <= EPSLN) {
         if (rh <= EPSLN) {
           lat = this.lat0;
           lon = this.long0;
-          p2.x = lon;
-          p2.y = lat;
-          return p2;
+          p.x = lon;
+          p.y = lat;
+          return p;
         }
-        p2.x *= this.con;
-        p2.y *= this.con;
+        p.x *= this.con;
+        p.y *= this.con;
         ts = rh * this.cons / (2 * this.a * this.k0);
         lat = this.con * phi2z_default(this.e, ts);
-        lon = this.con * adjust_lon_default(this.con * this.long0 + Math.atan2(p2.x, -1 * p2.y), this.over);
+        lon = this.con * adjust_lon_default(this.con * this.long0 + Math.atan2(p.x, -1 * p.y), this.over);
       } else {
         ce = 2 * Math.atan(rh * this.cosX0 / (2 * this.a * this.k0 * this.ms1));
         lon = this.long0;
         if (rh <= EPSLN) {
           Chi = this.X0;
         } else {
-          Chi = Math.asin(Math.cos(ce) * this.sinX0 + p2.y * Math.sin(ce) * this.cosX0 / rh);
-          lon = adjust_lon_default(this.long0 + Math.atan2(p2.x * Math.sin(ce), rh * this.cosX0 * Math.cos(ce) - p2.y * this.sinX0 * Math.sin(ce)), this.over);
+          Chi = Math.asin(Math.cos(ce) * this.sinX0 + p.y * Math.sin(ce) * this.cosX0 / rh);
+          lon = adjust_lon_default(this.long0 + Math.atan2(p.x * Math.sin(ce), rh * this.cosX0 * Math.cos(ce) - p.y * this.sinX0 * Math.sin(ce)), this.over);
         }
         lat = -1 * phi2z_default(this.e, Math.tan(0.5 * (HALF_PI + Chi)));
       }
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names9 = ["stere", "Stereographic_South_Pole", "Polar_Stereographic_variant_A", "Polar_Stereographic_variant_B", "Polar_Stereographic"];
   var stere_default = {
@@ -18620,21 +18620,21 @@ var YasguiGeoTg = (() => {
     var k3 = Math.log((1 + e * sinPhy0) / (1 - e * sinPhy0));
     this.K = k1 - this.alpha * k2 + this.alpha * e / 2 * k3;
   }
-  function forward8(p2) {
-    var Sa1 = Math.log(Math.tan(Math.PI / 4 - p2.y / 2));
-    var Sa2 = this.e / 2 * Math.log((1 + this.e * Math.sin(p2.y)) / (1 - this.e * Math.sin(p2.y)));
+  function forward8(p) {
+    var Sa1 = Math.log(Math.tan(Math.PI / 4 - p.y / 2));
+    var Sa2 = this.e / 2 * Math.log((1 + this.e * Math.sin(p.y)) / (1 - this.e * Math.sin(p.y)));
     var S3 = -this.alpha * (Sa1 + Sa2) + this.K;
     var b2 = 2 * (Math.atan(Math.exp(S3)) - Math.PI / 4);
-    var I2 = this.alpha * (p2.x - this.lambda0);
+    var I2 = this.alpha * (p.x - this.lambda0);
     var rotI = Math.atan(Math.sin(I2) / (Math.sin(this.b0) * Math.tan(b2) + Math.cos(this.b0) * Math.cos(I2)));
     var rotB = Math.asin(Math.cos(this.b0) * Math.sin(b2) - Math.sin(this.b0) * Math.cos(b2) * Math.cos(I2));
-    p2.y = this.R / 2 * Math.log((1 + Math.sin(rotB)) / (1 - Math.sin(rotB))) + this.y0;
-    p2.x = this.R * rotI + this.x0;
-    return p2;
+    p.y = this.R / 2 * Math.log((1 + Math.sin(rotB)) / (1 - Math.sin(rotB))) + this.y0;
+    p.x = this.R * rotI + this.x0;
+    return p;
   }
-  function inverse8(p2) {
-    var Y = p2.x - this.x0;
-    var X = p2.y - this.y0;
+  function inverse8(p) {
+    var Y = p.x - this.x0;
+    var X = p.y - this.y0;
     var rotI = Y / this.R;
     var rotB = 2 * (Math.atan(Math.exp(X / this.R)) - Math.PI / 4);
     var b2 = Math.asin(Math.cos(this.b0) * Math.sin(rotB) + Math.sin(this.b0) * Math.cos(rotB) * Math.cos(rotI));
@@ -18652,9 +18652,9 @@ var YasguiGeoTg = (() => {
       prevPhy = phy;
       phy = 2 * Math.atan(Math.exp(S3)) - Math.PI / 2;
     }
-    p2.x = lambda;
-    p2.y = phy;
-    return p2;
+    p.x = lambda;
+    p.y = phy;
+    return p;
   }
   var names10 = ["somerc"];
   var somerc_default = {
@@ -18672,7 +18672,7 @@ var YasguiGeoTg = (() => {
     return "no_uoff" in P3 || "no_off" in P3 || typeAProjections.indexOf(projectionName) !== -1 || typeAProjections.indexOf(getNormalizedProjName(projectionName)) !== -1;
   }
   function init10() {
-    var con, com, cosph0, D, F, H, L3, sinph0, p2, J, gamma = 0, gamma0, lamc = 0, lam1 = 0, lam2 = 0, phi1 = 0, phi2 = 0, alpha_c = 0;
+    var con, com, cosph0, D, F, H, L3, sinph0, p, J, gamma = 0, gamma0, lamc = 0, lam1 = 0, lam2 = 0, phi1 = 0, phi2 = 0, alpha_c = 0;
     this.no_off = isTypeA(this);
     this.no_rot = "no_rot" in this;
     var alp = false;
@@ -18741,7 +18741,7 @@ var YasguiGeoTg = (() => {
       H = Math.pow(tsfnz_default(this.e, phi1, Math.sin(phi1)), this.B);
       L3 = Math.pow(tsfnz_default(this.e, phi2, Math.sin(phi2)), this.B);
       F = this.E / H;
-      p2 = (L3 - H) / (L3 + H);
+      p = (L3 - H) / (L3 + H);
       J = this.E * this.E;
       J = (J - L3 * H) / (J + L3 * H);
       con = lam1 - lam2;
@@ -18750,7 +18750,7 @@ var YasguiGeoTg = (() => {
       } else if (con > Math.PI) {
         lam2 += TWO_PI;
       }
-      this.lam0 = adjust_lon_default(0.5 * (lam1 + lam2) - Math.atan(J * Math.tan(0.5 * this.B * (lam1 - lam2)) / p2) / this.B, this.over);
+      this.lam0 = adjust_lon_default(0.5 * (lam1 + lam2) - Math.atan(J * Math.tan(0.5 * this.B * (lam1 - lam2)) / p) / this.B, this.over);
       gamma0 = Math.atan(2 * Math.sin(this.B * adjust_lon_default(lam1 - this.lam0, this.over)) / (F - 1 / F));
       gamma = alpha_c = Math.asin(D * Math.sin(gamma0));
     }
@@ -18773,59 +18773,59 @@ var YasguiGeoTg = (() => {
     this.v_pole_n = this.ArB * Math.log(Math.tan(FORTPI - F));
     this.v_pole_s = this.ArB * Math.log(Math.tan(FORTPI + F));
   }
-  function forward9(p2) {
+  function forward9(p) {
     var coords = {};
-    var S3, T2, U2, V2, W, temp, u2, v;
-    p2.x = p2.x - this.lam0;
-    if (Math.abs(Math.abs(p2.y) - HALF_PI) > EPSLN) {
-      W = this.E / Math.pow(tsfnz_default(this.e, p2.y, Math.sin(p2.y)), this.B);
+    var S3, T2, U2, V2, W, temp, u3, v;
+    p.x = p.x - this.lam0;
+    if (Math.abs(Math.abs(p.y) - HALF_PI) > EPSLN) {
+      W = this.E / Math.pow(tsfnz_default(this.e, p.y, Math.sin(p.y)), this.B);
       temp = 1 / W;
       S3 = 0.5 * (W - temp);
       T2 = 0.5 * (W + temp);
-      V2 = Math.sin(this.B * p2.x);
+      V2 = Math.sin(this.B * p.x);
       U2 = (S3 * this.singam - V2 * this.cosgam) / T2;
       if (Math.abs(Math.abs(U2) - 1) < EPSLN) {
         throw new Error();
       }
       v = 0.5 * this.ArB * Math.log((1 - U2) / (1 + U2));
-      temp = Math.cos(this.B * p2.x);
+      temp = Math.cos(this.B * p.x);
       if (Math.abs(temp) < TOL) {
-        u2 = this.A * p2.x;
+        u3 = this.A * p.x;
       } else {
-        u2 = this.ArB * Math.atan2(S3 * this.cosgam + V2 * this.singam, temp);
+        u3 = this.ArB * Math.atan2(S3 * this.cosgam + V2 * this.singam, temp);
       }
     } else {
-      v = p2.y > 0 ? this.v_pole_n : this.v_pole_s;
-      u2 = this.ArB * p2.y;
+      v = p.y > 0 ? this.v_pole_n : this.v_pole_s;
+      u3 = this.ArB * p.y;
     }
     if (this.no_rot) {
-      coords.x = u2;
+      coords.x = u3;
       coords.y = v;
     } else {
-      u2 -= this.u_0;
-      coords.x = v * this.cosrot + u2 * this.sinrot;
-      coords.y = u2 * this.cosrot - v * this.sinrot;
+      u3 -= this.u_0;
+      coords.x = v * this.cosrot + u3 * this.sinrot;
+      coords.y = u3 * this.cosrot - v * this.sinrot;
     }
     coords.x = this.a * coords.x + this.x0;
     coords.y = this.a * coords.y + this.y0;
     return coords;
   }
-  function inverse9(p2) {
-    var u2, v, Qp, Sp, Tp, Vp, Up;
+  function inverse9(p) {
+    var u3, v, Qp, Sp, Tp, Vp, Up;
     var coords = {};
-    p2.x = (p2.x - this.x0) * (1 / this.a);
-    p2.y = (p2.y - this.y0) * (1 / this.a);
+    p.x = (p.x - this.x0) * (1 / this.a);
+    p.y = (p.y - this.y0) * (1 / this.a);
     if (this.no_rot) {
-      v = p2.y;
-      u2 = p2.x;
+      v = p.y;
+      u3 = p.x;
     } else {
-      v = p2.x * this.cosrot - p2.y * this.sinrot;
-      u2 = p2.y * this.cosrot + p2.x * this.sinrot + this.u_0;
+      v = p.x * this.cosrot - p.y * this.sinrot;
+      u3 = p.y * this.cosrot + p.x * this.sinrot + this.u_0;
     }
     Qp = Math.exp(-this.BrA * v);
     Sp = 0.5 * (Qp - 1 / Qp);
     Tp = 0.5 * (Qp + 1 / Qp);
-    Vp = Math.sin(this.BrA * u2);
+    Vp = Math.sin(this.BrA * u3);
     Up = (Vp * this.cosgam + Sp * this.singam) / Tp;
     if (Math.abs(Math.abs(Up) - 1) < EPSLN) {
       coords.x = 0;
@@ -18836,7 +18836,7 @@ var YasguiGeoTg = (() => {
       if (coords.y === Infinity) {
         throw new Error();
       }
-      coords.x = -this.rB * Math.atan2(Sp * this.cosgam - Vp * this.singam, Math.cos(this.BrA * u2));
+      coords.x = -this.rB * Math.atan2(Sp * this.cosgam - Vp * this.singam, Math.cos(this.BrA * u3));
     }
     coords.x += this.lam0;
     return coords;
@@ -18887,9 +18887,9 @@ var YasguiGeoTg = (() => {
       this.title = "Lambert Conformal Conic";
     }
   }
-  function forward10(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward10(p) {
+    var lon = p.x;
+    var lat = p.y;
     if (Math.abs(2 * Math.abs(lat) - Math.PI) <= EPSLN) {
       lat = sign_default(lat) * (HALF_PI - 2 * EPSLN);
     }
@@ -18906,15 +18906,15 @@ var YasguiGeoTg = (() => {
       rh1 = 0;
     }
     var theta = this.ns * adjust_lon_default(lon - this.long0, this.over);
-    p2.x = this.k0 * (rh1 * Math.sin(theta)) + this.x0;
-    p2.y = this.k0 * (this.rh - rh1 * Math.cos(theta)) + this.y0;
-    return p2;
+    p.x = this.k0 * (rh1 * Math.sin(theta)) + this.x0;
+    p.y = this.k0 * (this.rh - rh1 * Math.cos(theta)) + this.y0;
+    return p;
   }
-  function inverse10(p2) {
+  function inverse10(p) {
     var rh1, con, ts;
     var lat, lon;
-    var x3 = (p2.x - this.x0) / this.k0;
-    var y3 = this.rh - (p2.y - this.y0) / this.k0;
+    var x3 = (p.x - this.x0) / this.k0;
+    var y3 = this.rh - (p.y - this.y0) / this.k0;
     if (this.ns > 0) {
       rh1 = Math.sqrt(x3 * x3 + y3 * y3);
       con = 1;
@@ -18937,9 +18937,9 @@ var YasguiGeoTg = (() => {
       lat = -HALF_PI;
     }
     lon = adjust_lon_default(theta / this.ns + this.long0, this.over);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names12 = [
     "Lambert Tangential Conformal Conic Projection",
@@ -18988,58 +18988,58 @@ var YasguiGeoTg = (() => {
     this.ro0 = this.k1 * this.n0 / Math.tan(this.s0);
     this.ad = this.s90 - this.uq;
   }
-  function forward11(p2) {
-    var gfi, u2, deltav, s2, d3, eps, ro;
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward11(p) {
+    var gfi, u3, deltav, s2, d3, eps, ro;
+    var lon = p.x;
+    var lat = p.y;
     var delta_lon = adjust_lon_default(lon - this.long0, this.over);
     gfi = Math.pow((1 + this.e * Math.sin(lat)) / (1 - this.e * Math.sin(lat)), this.alfa * this.e / 2);
-    u2 = 2 * (Math.atan(this.k * Math.pow(Math.tan(lat / 2 + this.s45), this.alfa) / gfi) - this.s45);
+    u3 = 2 * (Math.atan(this.k * Math.pow(Math.tan(lat / 2 + this.s45), this.alfa) / gfi) - this.s45);
     deltav = -delta_lon * this.alfa;
-    s2 = Math.asin(Math.cos(this.ad) * Math.sin(u2) + Math.sin(this.ad) * Math.cos(u2) * Math.cos(deltav));
-    d3 = Math.asin(Math.cos(u2) * Math.sin(deltav) / Math.cos(s2));
+    s2 = Math.asin(Math.cos(this.ad) * Math.sin(u3) + Math.sin(this.ad) * Math.cos(u3) * Math.cos(deltav));
+    d3 = Math.asin(Math.cos(u3) * Math.sin(deltav) / Math.cos(s2));
     eps = this.n * d3;
     ro = this.ro0 * Math.pow(Math.tan(this.s0 / 2 + this.s45), this.n) / Math.pow(Math.tan(s2 / 2 + this.s45), this.n);
-    p2.y = ro * Math.cos(eps) / 1;
-    p2.x = ro * Math.sin(eps) / 1;
+    p.y = ro * Math.cos(eps) / 1;
+    p.x = ro * Math.sin(eps) / 1;
     if (!this.czech) {
-      p2.y *= -1;
-      p2.x *= -1;
+      p.y *= -1;
+      p.x *= -1;
     }
-    return p2;
+    return p;
   }
-  function inverse11(p2) {
-    var u2, deltav, s2, d3, eps, ro, fi1;
+  function inverse11(p) {
+    var u3, deltav, s2, d3, eps, ro, fi1;
     var ok;
-    var tmp = p2.x;
-    p2.x = p2.y;
-    p2.y = tmp;
+    var tmp = p.x;
+    p.x = p.y;
+    p.y = tmp;
     if (!this.czech) {
-      p2.y *= -1;
-      p2.x *= -1;
+      p.y *= -1;
+      p.x *= -1;
     }
-    ro = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
-    eps = Math.atan2(p2.y, p2.x);
+    ro = Math.sqrt(p.x * p.x + p.y * p.y);
+    eps = Math.atan2(p.y, p.x);
     d3 = eps / Math.sin(this.s0);
     s2 = 2 * (Math.atan(Math.pow(this.ro0 / ro, 1 / this.n) * Math.tan(this.s0 / 2 + this.s45)) - this.s45);
-    u2 = Math.asin(Math.cos(this.ad) * Math.sin(s2) - Math.sin(this.ad) * Math.cos(s2) * Math.cos(d3));
-    deltav = Math.asin(Math.cos(s2) * Math.sin(d3) / Math.cos(u2));
-    p2.x = this.long0 - deltav / this.alfa;
-    fi1 = u2;
+    u3 = Math.asin(Math.cos(this.ad) * Math.sin(s2) - Math.sin(this.ad) * Math.cos(s2) * Math.cos(d3));
+    deltav = Math.asin(Math.cos(s2) * Math.sin(d3) / Math.cos(u3));
+    p.x = this.long0 - deltav / this.alfa;
+    fi1 = u3;
     ok = 0;
     var iter = 0;
     do {
-      p2.y = 2 * (Math.atan(Math.pow(this.k, -1 / this.alfa) * Math.pow(Math.tan(u2 / 2 + this.s45), 1 / this.alfa) * Math.pow((1 + this.e * Math.sin(fi1)) / (1 - this.e * Math.sin(fi1)), this.e / 2)) - this.s45);
-      if (Math.abs(fi1 - p2.y) < 1e-10) {
+      p.y = 2 * (Math.atan(Math.pow(this.k, -1 / this.alfa) * Math.pow(Math.tan(u3 / 2 + this.s45), 1 / this.alfa) * Math.pow((1 + this.e * Math.sin(fi1)) / (1 - this.e * Math.sin(fi1)), this.e / 2)) - this.s45);
+      if (Math.abs(fi1 - p.y) < 1e-10) {
         ok = 1;
       }
-      fi1 = p2.y;
+      fi1 = p.y;
       iter += 1;
     } while (ok === 0 && iter < 15);
     if (iter >= 15) {
       return null;
     }
-    return p2;
+    return p;
   }
   var names13 = ["Krovak", "krovak"];
   var krovak_default = {
@@ -19110,10 +19110,10 @@ var YasguiGeoTg = (() => {
       this.ml0 = this.a * mlfn_default(this.e0, this.e1, this.e2, this.e3, this.lat0);
     }
   }
-  function forward12(p2) {
+  function forward12(p) {
     var x3, y3;
-    var lam = p2.x;
-    var phi = p2.y;
+    var lam = p.x;
+    var phi = p.y;
     lam = adjust_lon_default(lam - this.long0, this.over);
     if (this.sphere) {
       x3 = this.a * Math.asin(Math.cos(phi) * Math.sin(lam));
@@ -19130,15 +19130,15 @@ var YasguiGeoTg = (() => {
       x3 = nl * al * (1 - asq * tl * (1 / 6 - (8 - tl + 8 * cl) * asq / 120));
       y3 = ml - this.ml0 + nl * sinphi / cosphi * asq * (0.5 + (5 - tl + 6 * cl) * asq / 24);
     }
-    p2.x = x3 + this.x0;
-    p2.y = y3 + this.y0;
-    return p2;
+    p.x = x3 + this.x0;
+    p.y = y3 + this.y0;
+    return p;
   }
-  function inverse12(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
-    var x3 = p2.x / this.a;
-    var y3 = p2.y / this.a;
+  function inverse12(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
+    var x3 = p.x / this.a;
+    var y3 = p.y / this.a;
     var phi, lam;
     if (this.sphere) {
       var dd = y3 + this.lat0;
@@ -19148,12 +19148,12 @@ var YasguiGeoTg = (() => {
       var ml1 = this.ml0 / this.a + y3;
       var phi1 = imlfn_default(ml1, this.e0, this.e1, this.e2, this.e3);
       if (Math.abs(Math.abs(phi1) - HALF_PI) <= EPSLN) {
-        p2.x = this.long0;
-        p2.y = HALF_PI;
+        p.x = this.long0;
+        p.y = HALF_PI;
         if (y3 < 0) {
-          p2.y *= -1;
+          p.y *= -1;
         }
-        return p2;
+        return p;
       }
       var nl1 = gN_default(this.a, this.e, Math.sin(phi1));
       var rl1 = nl1 * nl1 * nl1 / this.a / this.a * (1 - this.es);
@@ -19163,9 +19163,9 @@ var YasguiGeoTg = (() => {
       phi = phi1 - nl1 * Math.tan(phi1) / rl1 * dl * dl * (0.5 - (1 + 3 * tl1) * dl * dl / 24);
       lam = dl * (1 - dsq * (tl1 / 3 + (1 + 3 * tl1) * tl1 * dsq / 15)) / Math.cos(phi1);
     }
-    p2.x = adjust_lon_default(lam + this.long0, this.over);
-    p2.y = adjust_lat_default(phi);
-    return p2;
+    p.x = adjust_lon_default(lam + this.long0, this.over);
+    p.y = adjust_lat_default(phi);
+    return p;
   }
   var names14 = ["Cassini", "Cassini_Soldner", "cass"];
   var cass_default = {
@@ -19235,10 +19235,10 @@ var YasguiGeoTg = (() => {
       }
     }
   }
-  function forward13(p2) {
+  function forward13(p) {
     var x3, y3, coslam, sinlam, sinphi, q, sinb, cosb, b2, cosphi;
-    var lam = p2.x;
-    var phi = p2.y;
+    var lam = p.x;
+    var phi = p.y;
     lam = adjust_lon_default(lam - this.long0, this.over);
     if (this.sphere) {
       sinphi = Math.sin(phi);
@@ -19317,15 +19317,15 @@ var YasguiGeoTg = (() => {
           break;
       }
     }
-    p2.x = this.a * x3 + this.x0;
-    p2.y = this.a * y3 + this.y0;
-    return p2;
+    p.x = this.a * x3 + this.x0;
+    p.y = this.a * y3 + this.y0;
+    return p;
   }
-  function inverse13(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
-    var x3 = p2.x / this.a;
-    var y3 = p2.y / this.a;
+  function inverse13(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
+    var x3 = p.x / this.a;
+    var y3 = p.y / this.a;
     var lam, phi, cCe, sCe, q, rho, ab;
     if (this.sphere) {
       var cosz = 0, rh, sinz = 0;
@@ -19366,9 +19366,9 @@ var YasguiGeoTg = (() => {
         y3 *= this.dd;
         rho = Math.sqrt(x3 * x3 + y3 * y3);
         if (rho < EPSLN) {
-          p2.x = this.long0;
-          p2.y = this.lat0;
-          return p2;
+          p.x = this.long0;
+          p.y = this.lat0;
+          return p;
         }
         sCe = 2 * Math.asin(0.5 * rho / this.rq);
         cCe = Math.cos(sCe);
@@ -19388,9 +19388,9 @@ var YasguiGeoTg = (() => {
         }
         q = x3 * x3 + y3 * y3;
         if (!q) {
-          p2.x = this.long0;
-          p2.y = this.lat0;
-          return p2;
+          p.x = this.long0;
+          p.y = this.lat0;
+          return p;
         }
         ab = 1 - q / this.qp;
         if (this.mode === this.S_POLE) {
@@ -19400,9 +19400,9 @@ var YasguiGeoTg = (() => {
       lam = Math.atan2(x3, y3);
       phi = authlat(Math.asin(ab), this.apa);
     }
-    p2.x = adjust_lon_default(this.long0 + lam, this.over);
-    p2.y = phi;
-    return p2;
+    p.x = adjust_lon_default(this.long0 + lam, this.over);
+    p.y = phi;
+    return p;
   }
   var P00 = 0.3333333333333333;
   var P01 = 0.17222222222222222;
@@ -19478,9 +19478,9 @@ var YasguiGeoTg = (() => {
     this.c = this.ms1 * this.ms1 + this.ns0 * this.qs1;
     this.rh = this.a * Math.sqrt(this.c - this.ns0 * this.qs0) / this.ns0;
   }
-  function forward14(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward14(p) {
+    var lon = p.x;
+    var lat = p.y;
     this.sin_phi = Math.sin(lat);
     this.cos_phi = Math.cos(lat);
     var qs = qsfnz_default(this.e3, this.sin_phi);
@@ -19488,24 +19488,24 @@ var YasguiGeoTg = (() => {
     var theta = this.ns0 * adjust_lon_default(lon - this.long0, this.over);
     var x3 = rh1 * Math.sin(theta) + this.x0;
     var y3 = this.rh - rh1 * Math.cos(theta) + this.y0;
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse14(p2) {
+  function inverse14(p) {
     var rh1, qs, con, theta, lon, lat;
-    p2.x -= this.x0;
-    p2.y = this.rh - p2.y + this.y0;
+    p.x -= this.x0;
+    p.y = this.rh - p.y + this.y0;
     if (this.ns0 >= 0) {
-      rh1 = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+      rh1 = Math.sqrt(p.x * p.x + p.y * p.y);
       con = 1;
     } else {
-      rh1 = -Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+      rh1 = -Math.sqrt(p.x * p.x + p.y * p.y);
       con = -1;
     }
     theta = 0;
     if (rh1 !== 0) {
-      theta = Math.atan2(con * p2.x, con * p2.y);
+      theta = Math.atan2(con * p.x, con * p.y);
     }
     con = rh1 * this.ns0 / this.a;
     if (this.sphere) {
@@ -19515,9 +19515,9 @@ var YasguiGeoTg = (() => {
       lat = this.phi1z(this.e3, qs);
     }
     lon = adjust_lon_default(theta / this.ns0 + this.long0, this.over);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   function phi1z(eccent, qs) {
     var sinphi, cosphi, con, com, dphi;
@@ -19555,15 +19555,15 @@ var YasguiGeoTg = (() => {
     this.infinity_dist = 1e3 * this.a;
     this.rc = 1;
   }
-  function forward15(p2) {
+  function forward15(p) {
     var sinphi, cosphi;
     var dlon;
     var coslon;
     var ksp;
     var g2;
     var x3, y3;
-    var lon = p2.x;
-    var lat = p2.y;
+    var lon = p.x;
+    var lat = p.y;
     dlon = adjust_lon_default(lon - this.long0, this.over);
     sinphi = Math.sin(lat);
     cosphi = Math.cos(lat);
@@ -19577,33 +19577,33 @@ var YasguiGeoTg = (() => {
       x3 = this.x0 + this.infinity_dist * cosphi * Math.sin(dlon);
       y3 = this.y0 + this.infinity_dist * (this.cos_p14 * sinphi - this.sin_p14 * cosphi * coslon);
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse15(p2) {
+  function inverse15(p) {
     var rh;
     var sinc, cosc;
-    var c2;
+    var c3;
     var lon, lat;
-    p2.x = (p2.x - this.x0) / this.a;
-    p2.y = (p2.y - this.y0) / this.a;
-    p2.x /= this.k0;
-    p2.y /= this.k0;
-    if (rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y)) {
-      c2 = Math.atan2(rh, this.rc);
-      sinc = Math.sin(c2);
-      cosc = Math.cos(c2);
-      lat = asinz_default(cosc * this.sin_p14 + p2.y * sinc * this.cos_p14 / rh);
-      lon = Math.atan2(p2.x * sinc, rh * this.cos_p14 * cosc - p2.y * this.sin_p14 * sinc);
+    p.x = (p.x - this.x0) / this.a;
+    p.y = (p.y - this.y0) / this.a;
+    p.x /= this.k0;
+    p.y /= this.k0;
+    if (rh = Math.sqrt(p.x * p.x + p.y * p.y)) {
+      c3 = Math.atan2(rh, this.rc);
+      sinc = Math.sin(c3);
+      cosc = Math.cos(c3);
+      lat = asinz_default(cosc * this.sin_p14 + p.y * sinc * this.cos_p14 / rh);
+      lon = Math.atan2(p.x * sinc, rh * this.cos_p14 * cosc - p.y * this.sin_p14 * sinc);
       lon = adjust_lon_default(this.long0 + lon, this.over);
     } else {
       lat = this.phic0;
       lon = 0;
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names17 = ["gnom"];
   var gnom_default = {
@@ -19647,9 +19647,9 @@ var YasguiGeoTg = (() => {
       this.k0 = msfnz_default(this.e, Math.sin(this.lat_ts), Math.cos(this.lat_ts));
     }
   }
-  function forward16(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward16(p) {
+    var lon = p.x;
+    var lat = p.y;
     var x3, y3;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     if (this.sphere) {
@@ -19660,24 +19660,24 @@ var YasguiGeoTg = (() => {
       x3 = this.x0 + this.a * this.k0 * dlon;
       y3 = this.y0 + this.a * qs * 0.5 / this.k0;
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse16(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
+  function inverse16(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
     var lon, lat;
     if (this.sphere) {
-      lon = adjust_lon_default(this.long0 + p2.x / this.a / Math.cos(this.lat_ts), this.over);
-      lat = Math.asin(p2.y / this.a * Math.cos(this.lat_ts));
+      lon = adjust_lon_default(this.long0 + p.x / this.a / Math.cos(this.lat_ts), this.over);
+      lat = Math.asin(p.y / this.a * Math.cos(this.lat_ts));
     } else {
-      lat = iqsfnz_default(this.e, 2 * p2.y * this.k0 / this.a);
-      lon = adjust_lon_default(this.long0 + p2.x / (this.a * this.k0), this.over);
+      lat = iqsfnz_default(this.e, 2 * p.y * this.k0 / this.a);
+      lon = adjust_lon_default(this.long0 + p.x / (this.a * this.k0), this.over);
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names18 = ["cea"];
   var cea_default = {
@@ -19697,21 +19697,21 @@ var YasguiGeoTg = (() => {
     this.title = this.title || "Equidistant Cylindrical (Plate Carre)";
     this.rc = Math.cos(this.lat_ts);
   }
-  function forward17(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward17(p) {
+    var lon = p.x;
+    var lat = p.y;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     var dlat = adjust_lat_default(lat - this.lat0);
-    p2.x = this.x0 + this.a * dlon * this.rc;
-    p2.y = this.y0 + this.a * dlat;
-    return p2;
+    p.x = this.x0 + this.a * dlon * this.rc;
+    p.y = this.y0 + this.a * dlat;
+    return p;
   }
-  function inverse17(p2) {
-    var x3 = p2.x;
-    var y3 = p2.y;
-    p2.x = adjust_lon_default(this.long0 + (x3 - this.x0) / (this.a * this.rc), this.over);
-    p2.y = adjust_lat_default(this.lat0 + (y3 - this.y0) / this.a);
-    return p2;
+  function inverse17(p) {
+    var x3 = p.x;
+    var y3 = p.y;
+    p.x = adjust_lon_default(this.long0 + (x3 - this.x0) / (this.a * this.rc), this.over);
+    p.y = adjust_lat_default(this.lat0 + (y3 - this.y0) / this.a);
+    return p;
   }
   var names19 = ["Equirectangular", "Equidistant_Cylindrical", "Equidistant_Cylindrical_Spherical", "eqc"];
   var eqc_default = {
@@ -19733,9 +19733,9 @@ var YasguiGeoTg = (() => {
     this.e3 = e3fn_default(this.es);
     this.ml0 = this.a * mlfn_default(this.e0, this.e1, this.e2, this.e3, this.lat0);
   }
-  function forward18(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward18(p) {
+    var lon = p.x;
+    var lat = p.y;
     var x3, y3, el;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     el = dlon * Math.sin(lat);
@@ -19757,16 +19757,16 @@ var YasguiGeoTg = (() => {
         y3 = this.a * mlfn_default(this.e0, this.e1, this.e2, this.e3, lat) - this.ml0 + nl * (1 - Math.cos(el));
       }
     }
-    p2.x = x3 + this.x0;
-    p2.y = y3 + this.y0;
-    return p2;
+    p.x = x3 + this.x0;
+    p.y = y3 + this.y0;
+    return p;
   }
-  function inverse18(p2) {
+  function inverse18(p) {
     var lon, lat, x3, y3, i;
     var al, bl;
     var phi, dphi;
-    x3 = p2.x - this.x0;
-    y3 = p2.y - this.y0;
+    x3 = p.x - this.x0;
+    y3 = p.y - this.y0;
     if (this.sphere) {
       if (Math.abs(y3 + this.a * this.lat0) <= EPSLN) {
         lon = adjust_lon_default(x3 / this.a + this.long0, this.over);
@@ -19814,9 +19814,9 @@ var YasguiGeoTg = (() => {
         lon = adjust_lon_default(this.long0 + Math.asin(x3 * cl / this.a) / Math.sin(lat), this.over);
       }
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names20 = ["Polyconic", "American_Polyconic", "poly"];
   var poly_default = {
@@ -19878,10 +19878,10 @@ var YasguiGeoTg = (() => {
     this.D[8] = 394e-5;
     this.D[9] = -13e-4;
   }
-  function forward19(p2) {
+  function forward19(p) {
     var n;
-    var lon = p2.x;
-    var lat = p2.y;
+    var lon = p.x;
+    var lat = p.y;
     var delta_lat = lat - this.lat0;
     var delta_lon = lon - this.long0;
     var d_phi = delta_lat / SEC_TO_RAD * 1e-5;
@@ -19908,14 +19908,14 @@ var YasguiGeoTg = (() => {
       z_re = z_re + this.B_re[n] * th_n_re - this.B_im[n] * th_n_im;
       z_im = z_im + this.B_im[n] * th_n_re + this.B_re[n] * th_n_im;
     }
-    p2.x = z_im * this.a + this.x0;
-    p2.y = z_re * this.a + this.y0;
-    return p2;
+    p.x = z_im * this.a + this.x0;
+    p.y = z_re * this.a + this.y0;
+    return p;
   }
-  function inverse19(p2) {
+  function inverse19(p) {
     var n;
-    var x3 = p2.x;
-    var y3 = p2.y;
+    var x3 = p.x;
+    var y3 = p.y;
     var delta_x = x3 - this.x0;
     var delta_y = y3 - this.y0;
     var z_re = delta_y / this.a;
@@ -19975,9 +19975,9 @@ var YasguiGeoTg = (() => {
     }
     var lat = this.lat0 + d_phi * SEC_TO_RAD * 1e5;
     var lon = this.long0 + d_lambda;
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names21 = ["New_Zealand_Map_Grid", "nzmg"];
   var nzmg_default = {
@@ -19990,24 +19990,24 @@ var YasguiGeoTg = (() => {
   // node_modules/proj4/lib/projections/mill.js
   function init21() {
   }
-  function forward20(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward20(p) {
+    var lon = p.x;
+    var lat = p.y;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     var x3 = this.x0 + this.a * dlon;
     var y3 = this.y0 + this.a * Math.log(Math.tan(Math.PI / 4 + lat / 2.5)) * 1.25;
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse20(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
-    var lon = adjust_lon_default(this.long0 + p2.x / this.a, this.over);
-    var lat = 2.5 * (Math.atan(Math.exp(0.8 * p2.y / this.a)) - Math.PI / 4);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+  function inverse20(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
+    var lon = adjust_lon_default(this.long0 + p.x / this.a, this.over);
+    var lat = 2.5 * (Math.atan(Math.exp(0.8 * p.y / this.a)) - Math.PI / 4);
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names22 = ["Miller_Cylindrical", "mill"];
   var mill_default = {
@@ -20030,10 +20030,10 @@ var YasguiGeoTg = (() => {
       this.C_x = this.C_y / (this.m + 1);
     }
   }
-  function forward21(p2) {
+  function forward21(p) {
     var x3, y3;
-    var lon = p2.x;
-    var lat = p2.y;
+    var lon = p.x;
+    var lat = p.y;
     lon = adjust_lon_default(lon - this.long0, this.over);
     if (this.sphere) {
       if (!this.m) {
@@ -20052,20 +20052,20 @@ var YasguiGeoTg = (() => {
       y3 = this.a * this.C_y * lat;
     } else {
       var s2 = Math.sin(lat);
-      var c2 = Math.cos(lat);
-      y3 = this.a * pj_mlfn_default(lat, s2, c2, this.en);
-      x3 = this.a * lon * c2 / Math.sqrt(1 - this.es * s2 * s2);
+      var c3 = Math.cos(lat);
+      y3 = this.a * pj_mlfn_default(lat, s2, c3, this.en);
+      x3 = this.a * lon * c3 / Math.sqrt(1 - this.es * s2 * s2);
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse21(p2) {
+  function inverse21(p) {
     var lat, temp, lon, s2;
-    p2.x -= this.x0;
-    lon = p2.x / this.a;
-    p2.y -= this.y0;
-    lat = p2.y / this.a;
+    p.x -= this.x0;
+    lon = p.x / this.a;
+    p.y -= this.y0;
+    lat = p.y / this.a;
     if (this.sphere) {
       lat /= this.C_y;
       lon = lon / (this.C_x * (this.m + Math.cos(lat)));
@@ -20077,19 +20077,19 @@ var YasguiGeoTg = (() => {
       lon = adjust_lon_default(lon + this.long0, this.over);
       lat = adjust_lat_default(lat);
     } else {
-      lat = pj_inv_mlfn_default(p2.y / this.a, this.es, this.en);
+      lat = pj_inv_mlfn_default(p.y / this.a, this.es, this.en);
       s2 = Math.abs(lat);
       if (s2 < HALF_PI) {
         s2 = Math.sin(lat);
-        temp = this.long0 + p2.x * Math.sqrt(1 - this.es * s2 * s2) / (this.a * Math.cos(lat));
+        temp = this.long0 + p.x * Math.sqrt(1 - this.es * s2 * s2) / (this.a * Math.cos(lat));
         lon = adjust_lon_default(temp, this.over);
       } else if (s2 - EPSLN < HALF_PI) {
         lon = this.long0;
       }
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names23 = ["Sinusoidal", "sinu"];
   var sinu_default = {
@@ -20105,9 +20105,9 @@ var YasguiGeoTg = (() => {
     this.y0 = this.y0 !== void 0 ? this.y0 : 0;
     this.long0 = this.long0 !== void 0 ? this.long0 : 0;
   }
-  function forward22(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward22(p) {
+    var lon = p.x;
+    var lat = p.y;
     var delta_lon = adjust_lon_default(lon - this.long0, this.over);
     var theta = lat;
     var con = Math.PI * Math.sin(lat);
@@ -20124,21 +20124,21 @@ var YasguiGeoTg = (() => {
     }
     var x3 = 0.900316316158 * this.a * delta_lon * Math.cos(theta) + this.x0;
     var y3 = 1.4142135623731 * this.a * Math.sin(theta) + this.y0;
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse22(p2) {
+  function inverse22(p) {
     var theta;
     var arg;
-    p2.x -= this.x0;
-    p2.y -= this.y0;
-    arg = p2.y / (1.4142135623731 * this.a);
+    p.x -= this.x0;
+    p.y -= this.y0;
+    arg = p.y / (1.4142135623731 * this.a);
     if (Math.abs(arg) > 0.999999999999) {
       arg = 0.999999999999;
     }
     theta = Math.asin(arg);
-    var lon = adjust_lon_default(this.long0 + p2.x / (0.900316316158 * this.a * Math.cos(theta)), this.over);
+    var lon = adjust_lon_default(this.long0 + p.x / (0.900316316158 * this.a * Math.cos(theta)), this.over);
     if (lon < -Math.PI) {
       lon = -Math.PI;
     }
@@ -20150,9 +20150,9 @@ var YasguiGeoTg = (() => {
       arg = 1;
     }
     var lat = Math.asin(arg);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names24 = ["Mollweide", "moll"];
   var moll_default = {
@@ -20192,9 +20192,9 @@ var YasguiGeoTg = (() => {
     this.ml0 = mlfn_default(this.e0, this.e1, this.e2, this.e3, this.lat0);
     this.rh = this.a * (this.g - this.ml0);
   }
-  function forward23(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward23(p) {
+    var lon = p.x;
+    var lat = p.y;
     var rh1;
     if (this.sphere) {
       rh1 = this.a * (this.g - lat);
@@ -20205,38 +20205,38 @@ var YasguiGeoTg = (() => {
     var theta = this.ns * adjust_lon_default(lon - this.long0, this.over);
     var x3 = this.x0 + rh1 * Math.sin(theta);
     var y3 = this.y0 + this.rh - rh1 * Math.cos(theta);
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse23(p2) {
-    p2.x -= this.x0;
-    p2.y = this.rh - p2.y + this.y0;
+  function inverse23(p) {
+    p.x -= this.x0;
+    p.y = this.rh - p.y + this.y0;
     var con, rh1, lat, lon;
     if (this.ns >= 0) {
-      rh1 = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+      rh1 = Math.sqrt(p.x * p.x + p.y * p.y);
       con = 1;
     } else {
-      rh1 = -Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+      rh1 = -Math.sqrt(p.x * p.x + p.y * p.y);
       con = -1;
     }
     var theta = 0;
     if (rh1 !== 0) {
-      theta = Math.atan2(con * p2.x, con * p2.y);
+      theta = Math.atan2(con * p.x, con * p.y);
     }
     if (this.sphere) {
       lon = adjust_lon_default(this.long0 + theta / this.ns, this.over);
       lat = adjust_lat_default(this.g - rh1 / this.a);
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     } else {
       var ml = this.g - rh1 / this.a;
       lat = imlfn_default(ml, this.e0, this.e1, this.e2, this.e3);
       lon = adjust_lon_default(this.long0 + theta / this.ns, this.over);
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     }
   }
   var names25 = ["Equidistant_Conic", "eqdc"];
@@ -20251,9 +20251,9 @@ var YasguiGeoTg = (() => {
   function init25() {
     this.R = this.a;
   }
-  function forward24(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward24(p) {
+    var lon = p.x;
+    var lat = p.y;
     var dlon = adjust_lon_default(lon - this.long0, this.over);
     var x3, y3;
     if (Math.abs(lat) <= EPSLN) {
@@ -20289,29 +20289,29 @@ var YasguiGeoTg = (() => {
     } else {
       y3 = this.y0 - con;
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse24(p2) {
+  function inverse24(p) {
     var lon, lat;
-    var xx, yy, xys, c1, c2, c3;
+    var xx, yy, xys, c1, c22, c3;
     var a1;
     var m1;
     var con;
     var th1;
     var d3;
-    p2.x -= this.x0;
-    p2.y -= this.y0;
+    p.x -= this.x0;
+    p.y -= this.y0;
     con = Math.PI * this.R;
-    xx = p2.x / con;
-    yy = p2.y / con;
+    xx = p.x / con;
+    yy = p.y / con;
     xys = xx * xx + yy * yy;
     c1 = -Math.abs(yy) * (1 + xys);
-    c2 = c1 - 2 * yy * yy + xx * xx;
+    c22 = c1 - 2 * yy * yy + xx * xx;
     c3 = -2 * c1 + 1 + 2 * yy * yy + xys * xys;
-    d3 = yy * yy / c3 + (2 * c2 * c2 * c2 / c3 / c3 / c3 - 9 * c1 * c2 / c3 / c3) / 27;
-    a1 = (c1 - c2 * c2 / 3 / c3) / c3;
+    d3 = yy * yy / c3 + (2 * c22 * c22 * c22 / c3 / c3 / c3 - 9 * c1 * c22 / c3 / c3) / 27;
+    a1 = (c1 - c22 * c22 / 3 / c3) / c3;
     m1 = 2 * Math.sqrt(-a1 / 3);
     con = 3 * d3 / a1 / m1;
     if (Math.abs(con) > 1) {
@@ -20322,19 +20322,19 @@ var YasguiGeoTg = (() => {
       }
     }
     th1 = Math.acos(con) / 3;
-    if (p2.y >= 0) {
-      lat = (-m1 * Math.cos(th1 + Math.PI / 3) - c2 / 3 / c3) * Math.PI;
+    if (p.y >= 0) {
+      lat = (-m1 * Math.cos(th1 + Math.PI / 3) - c22 / 3 / c3) * Math.PI;
     } else {
-      lat = -(-m1 * Math.cos(th1 + Math.PI / 3) - c2 / 3 / c3) * Math.PI;
+      lat = -(-m1 * Math.cos(th1 + Math.PI / 3) - c22 / 3 / c3) * Math.PI;
     }
     if (Math.abs(xx) < EPSLN) {
       lon = this.long0;
     } else {
       lon = adjust_lon_default(this.long0 + Math.PI * (xys - 1 + Math.sqrt(1 + 2 * (xx * xx - yy * yy) + xys * xys)) / 2 / xx, this.over);
     }
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names26 = ["Van_der_Grinten_I", "VanDerGrinten", "Van_der_Grinten", "vandg"];
   var vandg_default = {
@@ -20427,29 +20427,29 @@ var YasguiGeoTg = (() => {
     this.cos_p12 = Math.cos(this.lat0);
     this.f = this.es / (1 + Math.sqrt(1 - this.es));
   }
-  function forward25(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
-    var sinphi = Math.sin(p2.y);
-    var cosphi = Math.cos(p2.y);
+  function forward25(p) {
+    var lon = p.x;
+    var lat = p.y;
+    var sinphi = Math.sin(p.y);
+    var cosphi = Math.cos(p.y);
     var dlon = adjust_lon_default(lon - this.long0, this.over);
-    var e0, e1, e2, e3, Mlp, Ml, c2, kp, cos_c, vars, azi1;
+    var e0, e1, e2, e3, Mlp, Ml, c3, kp, cos_c, vars, azi1;
     if (this.sphere) {
       if (Math.abs(this.sin_p12 - 1) <= EPSLN) {
-        p2.x = this.x0 + this.a * (HALF_PI - lat) * Math.sin(dlon);
-        p2.y = this.y0 - this.a * (HALF_PI - lat) * Math.cos(dlon);
-        return p2;
+        p.x = this.x0 + this.a * (HALF_PI - lat) * Math.sin(dlon);
+        p.y = this.y0 - this.a * (HALF_PI - lat) * Math.cos(dlon);
+        return p;
       } else if (Math.abs(this.sin_p12 + 1) <= EPSLN) {
-        p2.x = this.x0 + this.a * (HALF_PI + lat) * Math.sin(dlon);
-        p2.y = this.y0 + this.a * (HALF_PI + lat) * Math.cos(dlon);
-        return p2;
+        p.x = this.x0 + this.a * (HALF_PI + lat) * Math.sin(dlon);
+        p.y = this.y0 + this.a * (HALF_PI + lat) * Math.cos(dlon);
+        return p;
       } else {
         cos_c = this.sin_p12 * sinphi + this.cos_p12 * cosphi * Math.cos(dlon);
-        c2 = Math.acos(cos_c);
-        kp = c2 ? c2 / Math.sin(c2) : 1;
-        p2.x = this.x0 + this.a * kp * cosphi * Math.sin(dlon);
-        p2.y = this.y0 + this.a * kp * (this.cos_p12 * sinphi - this.sin_p12 * cosphi * Math.cos(dlon));
-        return p2;
+        c3 = Math.acos(cos_c);
+        kp = c3 ? c3 / Math.sin(c3) : 1;
+        p.x = this.x0 + this.a * kp * cosphi * Math.sin(dlon);
+        p.y = this.y0 + this.a * kp * (this.cos_p12 * sinphi - this.sin_p12 * cosphi * Math.cos(dlon));
+        return p;
       }
     } else {
       e0 = e0fn_default(this.es);
@@ -20459,34 +20459,34 @@ var YasguiGeoTg = (() => {
       if (Math.abs(this.sin_p12 - 1) <= EPSLN) {
         Mlp = this.a * mlfn_default(e0, e1, e2, e3, HALF_PI);
         Ml = this.a * mlfn_default(e0, e1, e2, e3, lat);
-        p2.x = this.x0 + (Mlp - Ml) * Math.sin(dlon);
-        p2.y = this.y0 - (Mlp - Ml) * Math.cos(dlon);
-        return p2;
+        p.x = this.x0 + (Mlp - Ml) * Math.sin(dlon);
+        p.y = this.y0 - (Mlp - Ml) * Math.cos(dlon);
+        return p;
       } else if (Math.abs(this.sin_p12 + 1) <= EPSLN) {
         Mlp = this.a * mlfn_default(e0, e1, e2, e3, HALF_PI);
         Ml = this.a * mlfn_default(e0, e1, e2, e3, lat);
-        p2.x = this.x0 + (Mlp + Ml) * Math.sin(dlon);
-        p2.y = this.y0 + (Mlp + Ml) * Math.cos(dlon);
-        return p2;
+        p.x = this.x0 + (Mlp + Ml) * Math.sin(dlon);
+        p.y = this.y0 + (Mlp + Ml) * Math.cos(dlon);
+        return p;
       } else {
         if (Math.abs(lon) < EPSLN && Math.abs(lat - this.lat0) < EPSLN) {
-          p2.x = p2.y = 0;
-          return p2;
+          p.x = p.y = 0;
+          return p;
         }
         vars = vincentyInverse(this.lat0, this.long0, lat, lon, this.a, this.f);
         azi1 = vars.azi1;
-        p2.x = vars.s12 * Math.sin(azi1);
-        p2.y = vars.s12 * Math.cos(azi1);
-        return p2;
+        p.x = vars.s12 * Math.sin(azi1);
+        p.y = vars.s12 * Math.cos(azi1);
+        return p;
       }
     }
   }
-  function inverse25(p2) {
-    p2.x -= this.x0;
-    p2.y -= this.y0;
+  function inverse25(p) {
+    p.x -= this.x0;
+    p.y -= this.y0;
     var rh, z, sinz, cosz, lon, lat, con, e0, e1, e2, e3, Mlp, M3, azi1, s12, vars;
     if (this.sphere) {
-      rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+      rh = Math.sqrt(p.x * p.x + p.y * p.y);
       if (rh > 2 * HALF_PI * this.a) {
         return;
       }
@@ -20497,21 +20497,21 @@ var YasguiGeoTg = (() => {
       if (Math.abs(rh) <= EPSLN) {
         lat = this.lat0;
       } else {
-        lat = asinz_default(cosz * this.sin_p12 + p2.y * sinz * this.cos_p12 / rh);
+        lat = asinz_default(cosz * this.sin_p12 + p.y * sinz * this.cos_p12 / rh);
         con = Math.abs(this.lat0) - HALF_PI;
         if (Math.abs(con) <= EPSLN) {
           if (this.lat0 >= 0) {
-            lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, -p2.y), this.over);
+            lon = adjust_lon_default(this.long0 + Math.atan2(p.x, -p.y), this.over);
           } else {
-            lon = adjust_lon_default(this.long0 - Math.atan2(-p2.x, p2.y), this.over);
+            lon = adjust_lon_default(this.long0 - Math.atan2(-p.x, p.y), this.over);
           }
         } else {
-          lon = adjust_lon_default(this.long0 + Math.atan2(p2.x * sinz, rh * this.cos_p12 * cosz - p2.y * this.sin_p12 * sinz), this.over);
+          lon = adjust_lon_default(this.long0 + Math.atan2(p.x * sinz, rh * this.cos_p12 * cosz - p.y * this.sin_p12 * sinz), this.over);
         }
       }
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     } else {
       e0 = e0fn_default(this.es);
       e1 = e1fn_default(this.es);
@@ -20519,29 +20519,29 @@ var YasguiGeoTg = (() => {
       e3 = e3fn_default(this.es);
       if (Math.abs(this.sin_p12 - 1) <= EPSLN) {
         Mlp = this.a * mlfn_default(e0, e1, e2, e3, HALF_PI);
-        rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+        rh = Math.sqrt(p.x * p.x + p.y * p.y);
         M3 = Mlp - rh;
         lat = imlfn_default(M3 / this.a, e0, e1, e2, e3);
-        lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, -1 * p2.y), this.over);
-        p2.x = lon;
-        p2.y = lat;
-        return p2;
+        lon = adjust_lon_default(this.long0 + Math.atan2(p.x, -1 * p.y), this.over);
+        p.x = lon;
+        p.y = lat;
+        return p;
       } else if (Math.abs(this.sin_p12 + 1) <= EPSLN) {
         Mlp = this.a * mlfn_default(e0, e1, e2, e3, HALF_PI);
-        rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+        rh = Math.sqrt(p.x * p.x + p.y * p.y);
         M3 = rh - Mlp;
         lat = imlfn_default(M3 / this.a, e0, e1, e2, e3);
-        lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, p2.y), this.over);
-        p2.x = lon;
-        p2.y = lat;
-        return p2;
+        lon = adjust_lon_default(this.long0 + Math.atan2(p.x, p.y), this.over);
+        p.x = lon;
+        p.y = lat;
+        return p;
       } else {
-        azi1 = Math.atan2(p2.x, p2.y);
-        s12 = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+        azi1 = Math.atan2(p.x, p.y);
+        s12 = Math.sqrt(p.x * p.x + p.y * p.y);
         vars = vincentyDirect(this.lat0, this.long0, azi1, s12, this.a, this.f);
-        p2.x = vars.lon2;
-        p2.y = vars.lat2;
-        return p2;
+        p.x = vars.lon2;
+        p.y = vars.lat2;
+        return p;
       }
     }
   }
@@ -20558,14 +20558,14 @@ var YasguiGeoTg = (() => {
     this.sin_p14 = Math.sin(this.lat0);
     this.cos_p14 = Math.cos(this.lat0);
   }
-  function forward26(p2) {
+  function forward26(p) {
     var sinphi, cosphi;
     var dlon;
     var coslon;
     var ksp;
     var g2, x3, y3;
-    var lon = p2.x;
-    var lat = p2.y;
+    var lon = p.x;
+    var lat = p.y;
     dlon = adjust_lon_default(lon - this.long0, this.over);
     sinphi = Math.sin(lat);
     cosphi = Math.cos(lat);
@@ -20576,45 +20576,45 @@ var YasguiGeoTg = (() => {
       x3 = this.a * ksp * cosphi * Math.sin(dlon);
       y3 = this.y0 + this.a * ksp * (this.cos_p14 * sinphi - this.sin_p14 * cosphi * coslon);
     }
-    p2.x = x3;
-    p2.y = y3;
-    return p2;
+    p.x = x3;
+    p.y = y3;
+    return p;
   }
-  function inverse26(p2) {
+  function inverse26(p) {
     var rh;
     var z;
     var sinz, cosz;
     var con;
     var lon, lat;
-    p2.x -= this.x0;
-    p2.y -= this.y0;
-    rh = Math.sqrt(p2.x * p2.x + p2.y * p2.y);
+    p.x -= this.x0;
+    p.y -= this.y0;
+    rh = Math.sqrt(p.x * p.x + p.y * p.y);
     z = asinz_default(rh / this.a);
     sinz = Math.sin(z);
     cosz = Math.cos(z);
     lon = this.long0;
     if (Math.abs(rh) <= EPSLN) {
       lat = this.lat0;
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     }
-    lat = asinz_default(cosz * this.sin_p14 + p2.y * sinz * this.cos_p14 / rh);
+    lat = asinz_default(cosz * this.sin_p14 + p.y * sinz * this.cos_p14 / rh);
     con = Math.abs(this.lat0) - HALF_PI;
     if (Math.abs(con) <= EPSLN) {
       if (this.lat0 >= 0) {
-        lon = adjust_lon_default(this.long0 + Math.atan2(p2.x, -p2.y), this.over);
+        lon = adjust_lon_default(this.long0 + Math.atan2(p.x, -p.y), this.over);
       } else {
-        lon = adjust_lon_default(this.long0 - Math.atan2(-p2.x, p2.y), this.over);
+        lon = adjust_lon_default(this.long0 - Math.atan2(-p.x, p.y), this.over);
       }
-      p2.x = lon;
-      p2.y = lat;
-      return p2;
+      p.x = lon;
+      p.y = lat;
+      return p;
     }
-    lon = adjust_lon_default(this.long0 + Math.atan2(p2.x * sinz, rh * this.cos_p14 * cosz - p2.y * this.sin_p14 * sinz), this.over);
-    p2.x = lon;
-    p2.y = lat;
-    return p2;
+    lon = adjust_lon_default(this.long0 + Math.atan2(p.x * sinz, rh * this.cos_p14 * cosz - p.y * this.sin_p14 * sinz), this.over);
+    p.x = lon;
+    p.y = lat;
+    return p;
   }
   var names28 = ["ortho"];
   var ortho_default = {
@@ -20662,19 +20662,19 @@ var YasguiGeoTg = (() => {
       this.one_minus_f_squared = this.one_minus_f * this.one_minus_f;
     }
   }
-  function forward27(p2) {
+  function forward27(p) {
     var xy = { x: 0, y: 0 };
     var lat, lon;
     var theta, phi;
     var t, mu;
     var area = { value: 0 };
-    p2.x -= this.long0;
+    p.x -= this.long0;
     if (this.es !== 0) {
-      lat = Math.atan(this.one_minus_f_squared * Math.tan(p2.y));
+      lat = Math.atan(this.one_minus_f_squared * Math.tan(p.y));
     } else {
-      lat = p2.y;
+      lat = p.y;
     }
-    lon = p2.x;
+    lon = p.x;
     if (this.face === FACE_ENUM.TOP) {
       phi = HALF_PI - lat;
       if (lon >= FORTPI && lon <= HALF_PI + FORTPI) {
@@ -20753,26 +20753,26 @@ var YasguiGeoTg = (() => {
     xy.y = t * Math.sin(mu);
     xy.x = xy.x * this.a + this.x0;
     xy.y = xy.y * this.a + this.y0;
-    p2.x = xy.x;
-    p2.y = xy.y;
-    return p2;
+    p.x = xy.x;
+    p.y = xy.y;
+    return p;
   }
-  function inverse27(p2) {
+  function inverse27(p) {
     var lp = { lam: 0, phi: 0 };
     var mu, nu, cosmu, tannu;
     var tantheta, theta, cosphi, phi;
     var t;
     var area = { value: 0 };
-    p2.x = (p2.x - this.x0) / this.a;
-    p2.y = (p2.y - this.y0) / this.a;
-    nu = Math.atan(Math.sqrt(p2.x * p2.x + p2.y * p2.y));
-    mu = Math.atan2(p2.y, p2.x);
-    if (p2.x >= 0 && p2.x >= Math.abs(p2.y)) {
+    p.x = (p.x - this.x0) / this.a;
+    p.y = (p.y - this.y0) / this.a;
+    nu = Math.atan(Math.sqrt(p.x * p.x + p.y * p.y));
+    mu = Math.atan2(p.y, p.x);
+    if (p.x >= 0 && p.x >= Math.abs(p.y)) {
       area.value = AREA_ENUM.AREA_0;
-    } else if (p2.y >= 0 && p2.y >= Math.abs(p2.x)) {
+    } else if (p.y >= 0 && p.y >= Math.abs(p.x)) {
       area.value = AREA_ENUM.AREA_1;
       mu -= HALF_PI;
-    } else if (p2.x < 0 && -p2.x >= Math.abs(p2.y)) {
+    } else if (p.x < 0 && -p.x >= Math.abs(p.y)) {
       area.value = AREA_ENUM.AREA_2;
       mu = mu < 0 ? mu + SPI : mu - SPI;
     } else {
@@ -20875,9 +20875,9 @@ var YasguiGeoTg = (() => {
       }
     }
     lp.lam += this.long0;
-    p2.x = lp.lam;
-    p2.y = lp.phi;
-    return p2;
+    p.x = lp.lam;
+    p.y = lp.phi;
+    return p;
   }
   function qsc_fwd_equat_face_theta(phi, y3, x3, area) {
     var theta;
@@ -21061,12 +21061,12 @@ var YasguiGeoTg = (() => {
   function init30() {
     this.name = "geocent";
   }
-  function forward29(p2) {
-    var point = geodeticToGeocentric(p2, this.es, this.a);
+  function forward29(p) {
+    var point = geodeticToGeocentric(p, this.es, this.a);
     return point;
   }
-  function inverse29(p2) {
-    var point = geocentricToGeodetic(p2, this.es, this.a, this.b);
+  function inverse29(p) {
+    var point = geocentricToGeodetic(p, this.es, this.a, this.b);
     return point;
   }
   var names31 = ["Geocentric", "geocentric", "geocent", "Geocent"];
@@ -21097,16 +21097,16 @@ var YasguiGeoTg = (() => {
     // default is Equator, conversion to rad is automatic
   };
   function init31() {
-    Object.keys(params).forEach(function(p2) {
-      if (typeof this[p2] === "undefined") {
-        this[p2] = params[p2].def;
-      } else if (params[p2].num && isNaN(this[p2])) {
-        throw new Error("Invalid parameter value, must be numeric " + p2 + " = " + this[p2]);
-      } else if (params[p2].num) {
-        this[p2] = parseFloat(this[p2]);
+    Object.keys(params).forEach(function(p) {
+      if (typeof this[p] === "undefined") {
+        this[p] = params[p].def;
+      } else if (params[p].num && isNaN(this[p])) {
+        throw new Error("Invalid parameter value, must be numeric " + p + " = " + this[p]);
+      } else if (params[p].num) {
+        this[p] = parseFloat(this[p]);
       }
-      if (params[p2].degrees) {
-        this[p2] = this[p2] * D2R;
+      if (params[p].degrees) {
+        this[p] = this[p] * D2R;
       }
     }.bind(this));
     if (Math.abs(Math.abs(this.lat0) - HALF_PI) < EPSLN) {
@@ -21134,11 +21134,11 @@ var YasguiGeoTg = (() => {
     this.cw = Math.cos(omega);
     this.sw = Math.sin(omega);
   }
-  function forward30(p2) {
-    p2.x -= this.long0;
-    var sinphi = Math.sin(p2.y);
-    var cosphi = Math.cos(p2.y);
-    var coslam = Math.cos(p2.x);
+  function forward30(p) {
+    p.x -= this.long0;
+    var sinphi = Math.sin(p.y);
+    var cosphi = Math.cos(p.y);
+    var coslam = Math.cos(p.x);
     var x3, y3;
     switch (this.mode) {
       case mode.OBLIQ:
@@ -21155,7 +21155,7 @@ var YasguiGeoTg = (() => {
         break;
     }
     y3 = this.pn1 / (this.p - y3);
-    x3 = y3 * cosphi * Math.sin(p2.x);
+    x3 = y3 * cosphi * Math.sin(p.x);
     switch (this.mode) {
       case mode.OBLIQ:
         y3 *= this.cosph0 * sinphi - this.sinph0 * cosphi * coslam;
@@ -21175,24 +21175,24 @@ var YasguiGeoTg = (() => {
     ba = 1 / (yt * this.sw * this.h1 + this.cw);
     x3 = (x3 * this.cg - y3 * this.sg) * this.cw * ba;
     y3 = yt * ba;
-    p2.x = x3 * this.a;
-    p2.y = y3 * this.a;
-    return p2;
+    p.x = x3 * this.a;
+    p.y = y3 * this.a;
+    return p;
   }
-  function inverse30(p2) {
-    p2.x /= this.a;
-    p2.y /= this.a;
-    var r = { x: p2.x, y: p2.y };
+  function inverse30(p) {
+    p.x /= this.a;
+    p.y /= this.a;
+    var r = { x: p.x, y: p.y };
     var bm, bq, yt;
-    yt = 1 / (this.pn1 - p2.y * this.sw);
-    bm = this.pn1 * p2.x * yt;
-    bq = this.pn1 * p2.y * this.cw * yt;
-    p2.x = bm * this.cg + bq * this.sg;
-    p2.y = bq * this.cg - bm * this.sg;
-    var rh = hypot_default(p2.x, p2.y);
+    yt = 1 / (this.pn1 - p.y * this.sw);
+    bm = this.pn1 * p.x * yt;
+    bq = this.pn1 * p.y * this.cw * yt;
+    p.x = bm * this.cg + bq * this.sg;
+    p.y = bq * this.cg - bm * this.sg;
+    var rh = hypot_default(p.x, p.y);
     if (Math.abs(rh) < EPSLN) {
       r.x = 0;
-      r.y = p2.y;
+      r.y = p.y;
     } else {
       var cosz, sinz;
       sinz = 1 - rh * rh * this.pfact;
@@ -21200,28 +21200,28 @@ var YasguiGeoTg = (() => {
       cosz = Math.sqrt(1 - sinz * sinz);
       switch (this.mode) {
         case mode.OBLIQ:
-          r.y = Math.asin(cosz * this.sinph0 + p2.y * sinz * this.cosph0 / rh);
-          p2.y = (cosz - this.sinph0 * Math.sin(r.y)) * rh;
-          p2.x *= sinz * this.cosph0;
+          r.y = Math.asin(cosz * this.sinph0 + p.y * sinz * this.cosph0 / rh);
+          p.y = (cosz - this.sinph0 * Math.sin(r.y)) * rh;
+          p.x *= sinz * this.cosph0;
           break;
         case mode.EQUIT:
-          r.y = Math.asin(p2.y * sinz / rh);
-          p2.y = cosz * rh;
-          p2.x *= sinz;
+          r.y = Math.asin(p.y * sinz / rh);
+          p.y = cosz * rh;
+          p.x *= sinz;
           break;
         case mode.N_POLE:
           r.y = Math.asin(cosz);
-          p2.y = -p2.y;
+          p.y = -p.y;
           break;
         case mode.S_POLE:
           r.y = -Math.asin(cosz);
           break;
       }
-      r.x = Math.atan2(p2.x, p2.y);
+      r.x = Math.atan2(p.x, p.y);
     }
-    p2.x = r.x + this.long0;
-    p2.y = r.y;
-    return p2;
+    p.x = r.x + this.long0;
+    p.y = r.y;
+    return p;
   }
   var names32 = ["Tilted_Perspective", "tpers"];
   var tpers_default = {
@@ -21258,9 +21258,9 @@ var YasguiGeoTg = (() => {
       this.title = "Geostationary Satellite View";
     }
   }
-  function forward31(p2) {
-    var lon = p2.x;
-    var lat = p2.y;
+  function forward31(p) {
+    var lon = p.x;
+    var lat = p.y;
     var tmp, v_x, v_y, v_z;
     lon = lon - this.long0;
     if (this.shape === "ellipse") {
@@ -21270,17 +21270,17 @@ var YasguiGeoTg = (() => {
       v_y = r * Math.sin(lon) * Math.cos(lat);
       v_z = r * Math.sin(lat);
       if ((this.radius_g - v_x) * v_x - v_y * v_y - v_z * v_z * this.radius_p_inv2 < 0) {
-        p2.x = Number.NaN;
-        p2.y = Number.NaN;
-        return p2;
+        p.x = Number.NaN;
+        p.y = Number.NaN;
+        return p;
       }
       tmp = this.radius_g - v_x;
       if (this.flip_axis) {
-        p2.x = this.radius_g_1 * Math.atan(v_y / hypot_default(v_z, tmp));
-        p2.y = this.radius_g_1 * Math.atan(v_z / tmp);
+        p.x = this.radius_g_1 * Math.atan(v_y / hypot_default(v_z, tmp));
+        p.y = this.radius_g_1 * Math.atan(v_z / tmp);
       } else {
-        p2.x = this.radius_g_1 * Math.atan(v_y / tmp);
-        p2.y = this.radius_g_1 * Math.atan(v_z / hypot_default(v_y, tmp));
+        p.x = this.radius_g_1 * Math.atan(v_y / tmp);
+        p.y = this.radius_g_1 * Math.atan(v_z / hypot_default(v_y, tmp));
       }
     } else if (this.shape === "sphere") {
       tmp = Math.cos(lat);
@@ -21289,73 +21289,73 @@ var YasguiGeoTg = (() => {
       v_z = Math.sin(lat);
       tmp = this.radius_g - v_x;
       if (this.flip_axis) {
-        p2.x = this.radius_g_1 * Math.atan(v_y / hypot_default(v_z, tmp));
-        p2.y = this.radius_g_1 * Math.atan(v_z / tmp);
+        p.x = this.radius_g_1 * Math.atan(v_y / hypot_default(v_z, tmp));
+        p.y = this.radius_g_1 * Math.atan(v_z / tmp);
       } else {
-        p2.x = this.radius_g_1 * Math.atan(v_y / tmp);
-        p2.y = this.radius_g_1 * Math.atan(v_z / hypot_default(v_y, tmp));
+        p.x = this.radius_g_1 * Math.atan(v_y / tmp);
+        p.y = this.radius_g_1 * Math.atan(v_z / hypot_default(v_y, tmp));
       }
     }
-    p2.x = p2.x * this.a;
-    p2.y = p2.y * this.a;
-    return p2;
+    p.x = p.x * this.a;
+    p.y = p.y * this.a;
+    return p;
   }
-  function inverse31(p2) {
+  function inverse31(p) {
     var v_x = -1;
     var v_y = 0;
     var v_z = 0;
     var a2, b2, det, k;
-    p2.x = p2.x / this.a;
-    p2.y = p2.y / this.a;
+    p.x = p.x / this.a;
+    p.y = p.y / this.a;
     if (this.shape === "ellipse") {
       if (this.flip_axis) {
-        v_z = Math.tan(p2.y / this.radius_g_1);
-        v_y = Math.tan(p2.x / this.radius_g_1) * hypot_default(1, v_z);
+        v_z = Math.tan(p.y / this.radius_g_1);
+        v_y = Math.tan(p.x / this.radius_g_1) * hypot_default(1, v_z);
       } else {
-        v_y = Math.tan(p2.x / this.radius_g_1);
-        v_z = Math.tan(p2.y / this.radius_g_1) * hypot_default(1, v_y);
+        v_y = Math.tan(p.x / this.radius_g_1);
+        v_z = Math.tan(p.y / this.radius_g_1) * hypot_default(1, v_y);
       }
       var v_zp = v_z / this.radius_p;
       a2 = v_y * v_y + v_zp * v_zp + v_x * v_x;
       b2 = 2 * this.radius_g * v_x;
       det = b2 * b2 - 4 * a2 * this.C;
       if (det < 0) {
-        p2.x = Number.NaN;
-        p2.y = Number.NaN;
-        return p2;
+        p.x = Number.NaN;
+        p.y = Number.NaN;
+        return p;
       }
       k = (-b2 - Math.sqrt(det)) / (2 * a2);
       v_x = this.radius_g + k * v_x;
       v_y *= k;
       v_z *= k;
-      p2.x = Math.atan2(v_y, v_x);
-      p2.y = Math.atan(v_z * Math.cos(p2.x) / v_x);
-      p2.y = Math.atan(this.radius_p_inv2 * Math.tan(p2.y));
+      p.x = Math.atan2(v_y, v_x);
+      p.y = Math.atan(v_z * Math.cos(p.x) / v_x);
+      p.y = Math.atan(this.radius_p_inv2 * Math.tan(p.y));
     } else if (this.shape === "sphere") {
       if (this.flip_axis) {
-        v_z = Math.tan(p2.y / this.radius_g_1);
-        v_y = Math.tan(p2.x / this.radius_g_1) * Math.sqrt(1 + v_z * v_z);
+        v_z = Math.tan(p.y / this.radius_g_1);
+        v_y = Math.tan(p.x / this.radius_g_1) * Math.sqrt(1 + v_z * v_z);
       } else {
-        v_y = Math.tan(p2.x / this.radius_g_1);
-        v_z = Math.tan(p2.y / this.radius_g_1) * Math.sqrt(1 + v_y * v_y);
+        v_y = Math.tan(p.x / this.radius_g_1);
+        v_z = Math.tan(p.y / this.radius_g_1) * Math.sqrt(1 + v_y * v_y);
       }
       a2 = v_y * v_y + v_z * v_z + v_x * v_x;
       b2 = 2 * this.radius_g * v_x;
       det = b2 * b2 - 4 * a2 * this.C;
       if (det < 0) {
-        p2.x = Number.NaN;
-        p2.y = Number.NaN;
-        return p2;
+        p.x = Number.NaN;
+        p.y = Number.NaN;
+        return p;
       }
       k = (-b2 - Math.sqrt(det)) / (2 * a2);
       v_x = this.radius_g + k * v_x;
       v_y *= k;
       v_z *= k;
-      p2.x = Math.atan2(v_y, v_x);
-      p2.y = Math.atan(v_z * Math.cos(p2.x) / v_x);
+      p.x = Math.atan2(v_y, v_x);
+      p.y = Math.atan(v_z * Math.cos(p.x) / v_x);
     }
-    p2.x = p2.x + this.long0;
-    return p2;
+    p.x = p.x + this.long0;
+    return p;
   }
   var names33 = ["Geostationary Satellite View", "Geostationary_Satellite", "geos"];
   var geos_default = {
@@ -21377,24 +21377,24 @@ var YasguiGeoTg = (() => {
     this.x0 = this.x0 !== void 0 ? this.x0 : 0;
     this.y0 = this.y0 !== void 0 ? this.y0 : 0;
   }
-  function forward32(p2) {
-    var lam = adjust_lon_default(p2.x - this.long0, this.over);
-    var phi = p2.y;
+  function forward32(p) {
+    var lam = adjust_lon_default(p.x - this.long0, this.over);
+    var phi = p.y;
     var paramLat = Math.asin(M * Math.sin(phi)), paramLatSq = paramLat * paramLat, paramLatPow6 = paramLatSq * paramLatSq * paramLatSq;
-    p2.x = lam * Math.cos(paramLat) / (M * (A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq)));
-    p2.y = paramLat * (A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq));
-    p2.x = this.a * p2.x + this.x0;
-    p2.y = this.a * p2.y + this.y0;
-    return p2;
+    p.x = lam * Math.cos(paramLat) / (M * (A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq)));
+    p.y = paramLat * (A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq));
+    p.x = this.a * p.x + this.x0;
+    p.y = this.a * p.y + this.y0;
+    return p;
   }
-  function inverse32(p2) {
-    p2.x = (p2.x - this.x0) / this.a;
-    p2.y = (p2.y - this.y0) / this.a;
-    var EPS = 1e-9, NITER = 12, paramLat = p2.y, paramLatSq, paramLatPow6, fy, fpy, dlat, i;
+  function inverse32(p) {
+    p.x = (p.x - this.x0) / this.a;
+    p.y = (p.y - this.y0) / this.a;
+    var EPS = 1e-9, NITER = 12, paramLat = p.y, paramLatSq, paramLatPow6, fy, fpy, dlat, i;
     for (i = 0; i < NITER; ++i) {
       paramLatSq = paramLat * paramLat;
       paramLatPow6 = paramLatSq * paramLatSq * paramLatSq;
-      fy = paramLat * (A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq)) - p2.y;
+      fy = paramLat * (A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq)) - p.y;
       fpy = A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq);
       paramLat -= dlat = fy / fpy;
       if (Math.abs(dlat) < EPS) {
@@ -21403,10 +21403,10 @@ var YasguiGeoTg = (() => {
     }
     paramLatSq = paramLat * paramLat;
     paramLatPow6 = paramLatSq * paramLatSq * paramLatSq;
-    p2.x = M * p2.x * (A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq)) / Math.cos(paramLat);
-    p2.y = Math.asin(Math.sin(paramLat) / M);
-    p2.x = adjust_lon_default(p2.x + this.long0, this.over);
-    return p2;
+    p.x = M * p.x * (A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq)) / Math.cos(paramLat);
+    p.y = Math.asin(Math.sin(paramLat) / M);
+    p.x = adjust_lon_default(p.x + this.long0, this.over);
+    return p;
   }
   var names34 = ["eqearth", "Equal Earth", "Equal_Earth"];
   var eqearth_default = {
@@ -21419,7 +21419,7 @@ var YasguiGeoTg = (() => {
   // node_modules/proj4/lib/projections/bonne.js
   var EPS10 = 1e-10;
   function init34() {
-    var c2;
+    var c3;
     this.phi1 = this.lat1;
     if (Math.abs(this.phi1) < EPS10) {
       throw new Error();
@@ -21429,10 +21429,10 @@ var YasguiGeoTg = (() => {
       this.m1 = pj_mlfn_default(
         this.phi1,
         this.am1 = Math.sin(this.phi1),
-        c2 = Math.cos(this.phi1),
+        c3 = Math.cos(this.phi1),
         this.en
       );
-      this.am1 = c2 / (Math.sqrt(1 - this.es * this.am1 * this.am1) * this.am1);
+      this.am1 = c3 / (Math.sqrt(1 - this.es * this.am1 * this.am1) * this.am1);
       this.inverse = e_inv;
       this.forward = e_fwd;
     } else {
@@ -21445,56 +21445,56 @@ var YasguiGeoTg = (() => {
       this.forward = s_fwd;
     }
   }
-  function e_fwd(p2) {
-    var lam = adjust_lon_default(p2.x - (this.long0 || 0), this.over);
-    var phi = p2.y;
-    var rh, E3, c2;
-    rh = this.am1 + this.m1 - pj_mlfn_default(phi, E3 = Math.sin(phi), c2 = Math.cos(phi), this.en);
-    E3 = c2 * lam / (rh * Math.sqrt(1 - this.es * E3 * E3));
-    p2.x = rh * Math.sin(E3);
-    p2.y = this.am1 - rh * Math.cos(E3);
-    p2.x = this.a * p2.x + (this.x0 || 0);
-    p2.y = this.a * p2.y + (this.y0 || 0);
-    return p2;
+  function e_fwd(p) {
+    var lam = adjust_lon_default(p.x - (this.long0 || 0), this.over);
+    var phi = p.y;
+    var rh, E3, c3;
+    rh = this.am1 + this.m1 - pj_mlfn_default(phi, E3 = Math.sin(phi), c3 = Math.cos(phi), this.en);
+    E3 = c3 * lam / (rh * Math.sqrt(1 - this.es * E3 * E3));
+    p.x = rh * Math.sin(E3);
+    p.y = this.am1 - rh * Math.cos(E3);
+    p.x = this.a * p.x + (this.x0 || 0);
+    p.y = this.a * p.y + (this.y0 || 0);
+    return p;
   }
-  function e_inv(p2) {
-    p2.x = (p2.x - (this.x0 || 0)) / this.a;
-    p2.y = (p2.y - (this.y0 || 0)) / this.a;
+  function e_inv(p) {
+    p.x = (p.x - (this.x0 || 0)) / this.a;
+    p.y = (p.y - (this.y0 || 0)) / this.a;
     var s2, rh, lam, phi;
-    rh = hypot_default(p2.x, p2.y = this.am1 - p2.y);
+    rh = hypot_default(p.x, p.y = this.am1 - p.y);
     phi = pj_inv_mlfn_default(this.am1 + this.m1 - rh, this.es, this.en);
     if ((s2 = Math.abs(phi)) < HALF_PI) {
       s2 = Math.sin(phi);
-      lam = rh * Math.atan2(p2.x, p2.y) * Math.sqrt(1 - this.es * s2 * s2) / Math.cos(phi);
+      lam = rh * Math.atan2(p.x, p.y) * Math.sqrt(1 - this.es * s2 * s2) / Math.cos(phi);
     } else if (Math.abs(s2 - HALF_PI) <= EPS10) {
       lam = 0;
     } else {
       throw new Error();
     }
-    p2.x = adjust_lon_default(lam + (this.long0 || 0), this.over);
-    p2.y = adjust_lat_default(phi);
-    return p2;
+    p.x = adjust_lon_default(lam + (this.long0 || 0), this.over);
+    p.y = adjust_lat_default(phi);
+    return p;
   }
-  function s_fwd(p2) {
-    var lam = adjust_lon_default(p2.x - (this.long0 || 0), this.over);
-    var phi = p2.y;
+  function s_fwd(p) {
+    var lam = adjust_lon_default(p.x - (this.long0 || 0), this.over);
+    var phi = p.y;
     var E3, rh;
     rh = this.cphi1 + this.phi1 - phi;
     if (Math.abs(rh) > EPS10) {
-      p2.x = rh * Math.sin(E3 = lam * Math.cos(phi) / rh);
-      p2.y = this.cphi1 - rh * Math.cos(E3);
+      p.x = rh * Math.sin(E3 = lam * Math.cos(phi) / rh);
+      p.y = this.cphi1 - rh * Math.cos(E3);
     } else {
-      p2.x = p2.y = 0;
+      p.x = p.y = 0;
     }
-    p2.x = this.a * p2.x + (this.x0 || 0);
-    p2.y = this.a * p2.y + (this.y0 || 0);
-    return p2;
+    p.x = this.a * p.x + (this.x0 || 0);
+    p.y = this.a * p.y + (this.y0 || 0);
+    return p;
   }
-  function s_inv(p2) {
-    p2.x = (p2.x - (this.x0 || 0)) / this.a;
-    p2.y = (p2.y - (this.y0 || 0)) / this.a;
+  function s_inv(p) {
+    p.x = (p.x - (this.x0 || 0)) / this.a;
+    p.y = (p.y - (this.y0 || 0)) / this.a;
     var lam, phi;
-    var rh = hypot_default(p2.x, p2.y = this.cphi1 - p2.y);
+    var rh = hypot_default(p.x, p.y = this.cphi1 - p.y);
     phi = this.cphi1 + this.phi1 - rh;
     if (Math.abs(phi) > HALF_PI) {
       throw new Error();
@@ -21502,11 +21502,11 @@ var YasguiGeoTg = (() => {
     if (Math.abs(Math.abs(phi) - HALF_PI) <= EPS10) {
       lam = 0;
     } else {
-      lam = rh * Math.atan2(p2.x, p2.y) / Math.cos(phi);
+      lam = rh * Math.atan2(p.x, p.y) / Math.cos(phi);
     }
-    p2.x = adjust_lon_default(lam + (this.long0 || 0), this.over);
-    p2.y = adjust_lat_default(phi);
-    return p2;
+    p.x = adjust_lon_default(lam + (this.long0 || 0), this.over);
+    p.y = adjust_lat_default(phi);
+    return p;
   }
   var names35 = ["bonne", "Bonne (Werner lat_1=90)"];
   var bonne_default = {
@@ -21578,7 +21578,7 @@ var YasguiGeoTg = (() => {
       const set = paramSets[setKey];
       const params2 = Object.entries(set);
       const setHasParams = params2.some(
-        ([p2]) => typeof this[p2] !== "undefined"
+        ([p]) => typeof this[p] !== "undefined"
       );
       if (!setHasParams) {
         continue;
@@ -21607,11 +21607,11 @@ var YasguiGeoTg = (() => {
       this.projectionType = projectionType.TRANSVERSE;
     }
   }
-  function forward33(p2) {
-    return this.projectionType.forward(this, p2);
+  function forward33(p) {
+    return this.projectionType.forward(this, p);
   }
-  function inverse33(p2) {
-    return this.projectionType.inverse(this, p2);
+  function inverse33(p) {
+    return this.projectionType.inverse(this, p);
   }
   function createRotation(params2, how) {
     let phip, lamp;
@@ -21801,7 +21801,7 @@ var YasguiGeoTg = (() => {
   // node_modules/betterknown/dist/betterknown.mjs
   var d = Object.defineProperty;
   var M2 = (t, e, n) => e in t ? d(t, e, { enumerable: true, configurable: true, writable: true, value: n }) : t[e] = n;
-  var p = (t, e, n) => (M2(t, typeof e != "symbol" ? e + "" : e, n), n);
+  var u = (t, e, n) => (M2(t, typeof e != "symbol" ? e + "" : e, n), n);
   var f = [
     "Point",
     "LineString",
@@ -21812,11 +21812,11 @@ var YasguiGeoTg = (() => {
     "GeometryCollection"
   ];
   var g = ["ZM", "Z", "M"];
-  var o = "EMPTY";
+  var c = "EMPTY";
   var G = class {
     constructor(e) {
-      p(this, "value");
-      p(this, "position");
+      u(this, "value");
+      u(this, "position");
       this.value = e.toUpperCase(), this.position = 0;
     }
     match(e) {
@@ -21907,7 +21907,7 @@ var YasguiGeoTg = (() => {
     }
   };
   var E = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "Point", coordinates: [] };
     t.expectGroupStart();
     const n = t.matchCoordinate(e);
@@ -21917,7 +21917,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var m = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "LineString", coordinates: [] };
     t.expectGroupStart();
     const n = t.matchCoordinates(e);
@@ -21927,7 +21927,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var y = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "Polygon", coordinates: [] };
     const n = [];
     for (t.expectGroupStart(), t.expectGroupStart(), n.push(t.matchCoordinates(e)), t.expectGroupEnd(); t.isMatch(","); )
@@ -21938,7 +21938,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var S = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "MultiPoint", coordinates: [] };
     t.expectGroupStart();
     const n = t.matchCoordinates(e);
@@ -21948,7 +21948,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var x = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "MultiLineString", coordinates: [] };
     t.expectGroupStart();
     const n = [];
@@ -21961,7 +21961,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var P = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "MultiPolygon", coordinates: [] };
     t.expectGroupStart();
     const n = [];
@@ -21978,7 +21978,7 @@ var YasguiGeoTg = (() => {
     };
   };
   var T = (t, e) => {
-    if (t.isMatch(o))
+    if (t.isMatch(c))
       return e.emptyAsNull ? null : { type: "GeometryCollection", geometries: [] };
     t.expectGroupStart();
     const n = [];
@@ -21997,8 +21997,8 @@ var YasguiGeoTg = (() => {
     if (r)
       n = parseInt(r[1], 10);
     else {
-      const u2 = t.matchRegex([/^<([^>]+)>/i]);
-      u2 && (n = u2[1].toLowerCase());
+      const p = t.matchRegex([/^<([^>]+)>/i]);
+      p && (n = p[1].toLowerCase());
     }
     const s2 = t.matchType(), h2 = t.matchDimension(), i = {
       ...e,
@@ -22035,17 +22035,17 @@ var YasguiGeoTg = (() => {
   var E2 = 90;
   var A5 = 180;
   var m2 = 15;
-  var u = 10;
-  var y2 = a ** (u / 2 - 1);
+  var u2 = 10;
+  var y2 = a ** (u2 / 2 - 1);
   var R2 = a ** 3;
-  var C = m2 - u;
+  var C = m2 - u2;
   var f2 = 4;
   var b = 5;
   var d2 = b ** (C - 1);
   var B = f2 ** (C - 1);
-  var x2 = R2 * b ** (m2 - u);
-  var h = R2 * f2 ** (m2 - u);
-  var c = class {
+  var x2 = R2 * b ** (m2 - u2);
+  var h = R2 * f2 ** (m2 - u2);
+  var c2 = class {
     latitudeLo;
     longitudeLo;
     latitudeHi;
@@ -22057,8 +22057,8 @@ var YasguiGeoTg = (() => {
     get longitudeCenter() {
       return Math.min(this.longitudeLo + (this.longitudeHi - this.longitudeLo) / 2, A5);
     }
-    constructor(n, r, e, o2, i) {
-      this.latitudeLo = n, this.longitudeLo = r, this.latitudeHi = e, this.longitudeHi = o2, this.codeLength = i;
+    constructor(n, r, e, o, i) {
+      this.latitudeLo = n, this.longitudeLo = r, this.latitudeHi = e, this.longitudeHi = o, this.codeLength = i;
     }
   };
   function S2(t) {
@@ -22067,8 +22067,8 @@ var YasguiGeoTg = (() => {
     if (n === -1 || n !== t.lastIndexOf("+") || t.length === 1 || n > 8 || n % 2 === 1) return false;
     let r = t.indexOf("0");
     if (r > -1) {
-      let o2 = t.match(new RegExp(`(${"0"}+)`, "g"));
-      if (n < 8 || r === 0 || !o2 || o2.length > 1 || o2[0].length % 2 === 1 || o2[0].length > 6 || t.charAt(t.length - 1) !== "+") return false;
+      let o = t.match(new RegExp(`(${"0"}+)`, "g"));
+      if (n < 8 || r === 0 || !o || o.length > 1 || o[0].length % 2 === 1 || o[0].length > 6 || t.charAt(t.length - 1) !== "+") return false;
     }
     return t.length - n - 1 === 1 ? false : (t = t.replace(new RegExp(`\\${"+"}+`), "").replace(new RegExp(`${"0"}+`), ""), new RegExp(`^[${s}\\${"+"}]+$`, "i").test(t));
   }
@@ -22083,20 +22083,20 @@ var YasguiGeoTg = (() => {
   function U(t) {
     if (!P2(t)) throw new Error(`IllegalArgumentException: Passed Plus Code is not a valid full code: ${t}`);
     t = t.replace("+", "").replace(/0/g, "").toLocaleUpperCase("en-US");
-    let n = -E2 * R2, r = -A5 * R2, e = 0, o2 = 0, i = Math.min(t.length, u), l2 = y2;
+    let n = -E2 * R2, r = -A5 * R2, e = 0, o = 0, i = Math.min(t.length, u2), l2 = y2;
     for (let N = 0; N < i; N += 2) n += s.indexOf(t.charAt(N)) * l2, r += s.indexOf(t.charAt(N + 1)) * l2, N < i - 2 && (l2 /= a);
     let _ = l2 / R2, I2 = l2 / R2;
-    if (t.length > u) {
+    if (t.length > u2) {
       let N = d2, w = B;
       i = Math.min(t.length, m2);
-      for (let L3 = u; L3 < i; L3++) {
+      for (let L3 = u2; L3 < i; L3++) {
         let $ = s.indexOf(t.charAt(L3)), Q = Math.floor($ / f2), q = $ % f2;
-        e += Q * N, o2 += q * w, L3 < i - 1 && (N /= b, w /= f2);
+        e += Q * N, o += q * w, L3 < i - 1 && (N /= b, w /= f2);
       }
       _ = N / x2, I2 = w / h;
     }
-    let T2 = n / R2 + e / x2, X = r / R2 + o2 / h;
-    return new c(T2, X, T2 + _, X + I2, Math.min(t.length, m2));
+    let T2 = n / R2 + e / x2, X = r / R2 + o / h;
+    return new c2(T2, X, T2 + _, X + I2, Math.min(t.length, m2));
   }
 
   // node_modules/gml2geojson/src/index.js
@@ -22247,7 +22247,7 @@ var YasguiGeoTg = (() => {
     }
     const split = " ";
     const coords = text.split(split);
-    let [c1, c2] = coords;
+    let [c1, c22] = coords;
     if (c1.indexOf(",") > -1) {
       const coordinates = [];
       for (let i = 0, len = coords.length; i < len; i++) {
@@ -22260,11 +22260,11 @@ var YasguiGeoTg = (() => {
       return coordinates.length > 1 ? coordinates : coordinates[0];
     } else {
       c1 = trim(c1);
-      c2 = trim(c2);
+      c22 = trim(c22);
       if (isShape) {
-        return [c2, c1];
+        return [c22, c1];
       }
-      return [c1, c2];
+      return [c1, c22];
     }
   }
   function trim(str) {
@@ -27167,7 +27167,7 @@ var YasguiGeoTg = (() => {
   var parseWKT = async (wkt) => {
     wkt = wkt.replaceAll(/^\s+|\s+$/gu, "");
     if (wkt.startsWith("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>")) {
-      return R(wkt.replaceAll("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>", ""), { proj: lib_default });
+      return R(wkt.replaceAll("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>", "<http://www.opengis.net/def/crs/EPSG/0/4326>"), { proj: lib_default });
     }
     if (wkt.startsWith("<http://www.opengis.net/def/crs/EPSG/0/4326>")) {
       return R(wkt, { proj: lib_default });
@@ -27287,14 +27287,14 @@ var YasguiGeoTg = (() => {
             });
           },
           onEachFeature: (feature, layer) => {
-            const p2 = feature.properties;
-            const DEFAULT_CONTENT_FN = () => Object.keys(p2).map(
-              (k) => `<b>${k}:</b> ${p2[k].value.length > 120 ? p2[k].value.substring(0, 120) + "..." : p2[k].value}`
+            const p = feature.properties;
+            const DEFAULT_CONTENT_FN = () => Object.keys(p).map(
+              (k) => `<b>${k}:</b> ${p[k].value.length > 120 ? p[k].value.substring(0, 120) + "..." : p[k].value}`
             ).join("<br/>");
-            const popupContent = p2.wktLabel?.value || DEFAULT_CONTENT_FN();
+            const popupContent = p.wktLabel?.value || DEFAULT_CONTENT_FN();
             layer.bindPopup(popupContent);
-            if (p2.wktTooltip?.value) {
-              layer.bindTooltip(p2.wktTooltip.value);
+            if (p.wktTooltip?.value) {
+              layer.bindTooltip(p.wktTooltip.value);
             }
           },
           style: (feature) => {
