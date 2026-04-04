@@ -538,14 +538,14 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?rcc8eq) as ?equals) (xsd:boolean(?rcc8eq2) as ?equals2)
+SELECT ?geom1 ?geom2 (xsd:boolean(?rcc8eq) as ?equals) (xsd:boolean(?rcc8eq2) as ?equals2)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:B geo:hasDefaultGeometry ?bGeom .
-  ?bGeom geo:asWKT ?bLiteral .
-  BIND (geof:rcc8eq(?aLiteral, ?aLiteral) as ?rcc8eq)
-  BIND (geof:rcc8eq(?aLiteral, ?bLiteral) as ?rcc8eq2)
+  ?bGeom geo:asWKT ?geom2 .
+  BIND (geof:rcc8eq(?geom1, ?geom1) as ?rcc8eq)
+  BIND (geof:rcc8eq(?geom1, ?geom2) as ?rcc8eq2)
 }`,
 "http://www.opengis.net/def/function/geosparql/rcc8ntpp":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
