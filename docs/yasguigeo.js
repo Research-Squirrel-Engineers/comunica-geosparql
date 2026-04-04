@@ -27156,7 +27156,7 @@ var YasguiGeoTg = (() => {
     let geocodeuri = "";
     if (geocode.startsWith("<")) {
       geocodeuri = geocode.substring(1, geocode.indexOf(">"));
-      geocode = geocode.substring(geocode.indexOf(">") + 1);
+      geocode = geocode.substring(geocode.indexOf(">") + 1).trim();
     }
     if (geocodeuri === "http://opengis.net/ont/geocode/OpenLocationCode") {
       let decoded = U(geocode);
@@ -27167,7 +27167,7 @@ var YasguiGeoTg = (() => {
   var parseWKT = async (wkt) => {
     wkt = wkt.replaceAll(/^\s+|\s+$/gu, "");
     if (wkt.startsWith("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>")) {
-      return R(`SRID=4326;${wkt.replaceAll("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>", "<http://www.opengis.net/def/crs/EPSG/0/4326>")}`, { proj: lib_default });
+      return R(`${wkt.replaceAll("<http://www.opengis.net/def/crs/OGC/1.3/CRS84>", "")}`, { proj: lib_default });
     }
     if (wkt.startsWith("<http://www.opengis.net/def/crs/EPSG/0/4326>")) {
       return R(wkt, { proj: lib_default });
