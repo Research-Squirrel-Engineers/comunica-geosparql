@@ -41169,9 +41169,9 @@ var YasguiGeoTg = (() => {
     }
     if (dggsuri.startsWith("https://h3geo.org/res/")) {
       let resolution = dggsuri.replaceAll("https://h3geo.org/res/", "");
-      let ispoint = false;
-      if (dggs.includes("CELL")) {
-        ispoint = true;
+      let ispoint = true;
+      if (dggs.includes("CELLLIST")) {
+        ispoint = false;
       }
       dggs = dggs.replaceAll("CELLLIST", "").replaceAll("CELL", "").replaceAll("(", "[").replaceAll(")", "]").replaceAll("'", '"');
       let dggsdict = JSON.parse(dggs);
