@@ -41163,7 +41163,7 @@ var YasguiGeoTg = (() => {
   var parseDGGS = async (dggs) => {
     dggs = dggs.replaceAll(/^\s+|\s+$/gu, "");
     let dggsuri = "";
-    if (geocode.startsWith("<")) {
+    if (dggs.startsWith("<")) {
       dggsuri = dggs.substring(1, dggs.indexOf(">"));
       dggs = dggs.substring(dggs.indexOf(">") + 1).trim();
     }
@@ -41186,15 +41186,15 @@ var YasguiGeoTg = (() => {
     const { folders, geojson } = parse2(kml);
     return geojson.geometry;
   };
-  var parseGeoCode = async (geocode2) => {
-    geocode2 = geocode2.replaceAll(/^\s+|\s+$/gu, "");
+  var parseGeoCode = async (geocode) => {
+    geocode = geocode.replaceAll(/^\s+|\s+$/gu, "");
     let geocodeuri = "";
-    if (geocode2.startsWith("<")) {
-      geocodeuri = geocode2.substring(1, geocode2.indexOf(">"));
-      geocode2 = geocode2.substring(geocode2.indexOf(">") + 1).trim();
+    if (geocode.startsWith("<")) {
+      geocodeuri = geocode.substring(1, geocode.indexOf(">"));
+      geocode = geocode.substring(geocode.indexOf(">") + 1).trim();
     }
     if (geocodeuri === "http://opengis.net/ont/geocode/OpenLocationCode") {
-      let decoded = U(geocode2);
+      let decoded = U(geocode);
       return { "type": "Point", "coordinates": [decoded.latitudeCenter, decoded.longitudeCenter] };
     }
     return {};
