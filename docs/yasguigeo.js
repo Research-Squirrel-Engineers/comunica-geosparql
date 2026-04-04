@@ -41175,6 +41175,7 @@ var YasguiGeoTg = (() => {
       }
       dggs = dggs.replaceAll("CELLLIST", "").replaceAll("CELL", "").replaceAll("(", "[").replaceAll(")", "]").replaceAll("'", '"');
       let dggsdict = JSON.parse(dggs);
+      console.log(dggsdict);
       if (ispoint) {
         let decoded = cellToLatLng(dggsdict[0]);
         return { "type": "Point", "coordinates": [decoded[0], decoded[1]] };
