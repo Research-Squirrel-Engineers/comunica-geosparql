@@ -5576,16 +5576,16 @@ var YasguiGeoTg = (() => {
           },
           // recursively convert latlngs input into actual LatLng instances; calculate bounds along the way
           _convertLatLngs: function(latlngs) {
-            var result = [], flat = isFlat(latlngs);
+            var result2 = [], flat = isFlat(latlngs);
             for (var i = 0, len = latlngs.length; i < len; i++) {
               if (flat) {
-                result[i] = toLatLng(latlngs[i]);
-                this._bounds.extend(result[i]);
+                result2[i] = toLatLng(latlngs[i]);
+                this._bounds.extend(result2[i]);
               } else {
-                result[i] = this._convertLatLngs(latlngs[i]);
+                result2[i] = this._convertLatLngs(latlngs[i]);
               }
             }
-            return result;
+            return result2;
           },
           _project: function() {
             var pxBounds = new Bounds();
@@ -5607,7 +5607,7 @@ var YasguiGeoTg = (() => {
             ]);
           },
           // recursively turns latlngs into a set of rings with projected coordinates
-          _projectLatlngs: function(latlngs, result, projectedBounds) {
+          _projectLatlngs: function(latlngs, result2, projectedBounds) {
             var flat = latlngs[0] instanceof LatLng, len = latlngs.length, i, ring;
             if (flat) {
               ring = [];
@@ -5615,10 +5615,10 @@ var YasguiGeoTg = (() => {
                 ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
                 projectedBounds.extend(ring[i]);
               }
-              result.push(ring);
+              result2.push(ring);
             } else {
               for (i = 0; i < len; i++) {
-                this._projectLatlngs(latlngs[i], result, projectedBounds);
+                this._projectLatlngs(latlngs[i], result2, projectedBounds);
               }
             }
           },
@@ -5708,11 +5708,11 @@ var YasguiGeoTg = (() => {
             return polygonCenter(this._defaultShape(), this._map.options.crs);
           },
           _convertLatLngs: function(latlngs) {
-            var result = Polyline.prototype._convertLatLngs.call(this, latlngs), len = result.length;
-            if (len >= 2 && result[0] instanceof LatLng && result[0].equals(result[len - 1])) {
-              result.pop();
+            var result2 = Polyline.prototype._convertLatLngs.call(this, latlngs), len = result2.length;
+            if (len >= 2 && result2[0] instanceof LatLng && result2[0].equals(result2[len - 1])) {
+              result2.pop();
             }
-            return result;
+            return result2;
           },
           _setLatLngs: function(latlngs) {
             Polyline.prototype._setLatLngs.call(this, latlngs);
@@ -10328,11 +10328,11 @@ var YasguiGeoTg = (() => {
           return this;
         }
         root() {
-          let result = this;
-          while (result.parent && result.parent.type !== "document") {
-            result = result.parent;
+          let result2 = this;
+          while (result2.parent && result2.parent.type !== "document") {
+            result2 = result2.parent;
           }
-          return result;
+          return result2;
         }
         toJSON(_, inputs) {
           let fixed = {};
@@ -10385,16 +10385,16 @@ var YasguiGeoTg = (() => {
         }
         toString(stringifier = stringify2) {
           if (stringifier.stringify) stringifier = stringifier.stringify;
-          let result = "";
+          let result2 = "";
           stringifier(this, (i) => {
-            result += i;
+            result2 += i;
           });
-          return result;
+          return result2;
         }
-        warn(result, text, opts = {}) {
+        warn(result2, text, opts = {}) {
           let data = { node: this };
           for (let i in opts) data[i] = opts[i];
-          return result.warn(text, data);
+          return result2.warn(text, data);
         }
       };
       module.exports = Node2;
@@ -10493,15 +10493,15 @@ var YasguiGeoTg = (() => {
         each(callback) {
           if (!this.proxyOf.nodes) return void 0;
           let iterator = this.getIterator();
-          let index, result;
+          let index, result2;
           while (this.indexes[iterator] < this.proxyOf.nodes.length) {
             index = this.indexes[iterator];
-            result = callback(this.proxyOf.nodes[index], index);
-            if (result === false) break;
+            result2 = callback(this.proxyOf.nodes[index], index);
+            if (result2 === false) break;
             this.indexes[iterator] += 1;
           }
           delete this.indexes[iterator];
-          return result;
+          return result2;
         }
         every(condition) {
           return this.nodes.every(condition);
@@ -10703,16 +10703,16 @@ var YasguiGeoTg = (() => {
         }
         walk(callback) {
           return this.each((child, i) => {
-            let result;
+            let result2;
             try {
-              result = callback(child, i);
+              result2 = callback(child, i);
             } catch (e) {
               throw child.addToError(e);
             }
-            if (result !== false && child.walk) {
-              result = child.walk(callback);
+            if (result2 !== false && child.walk) {
+              result2 = child.walk(callback);
             }
-            return result;
+            return result2;
           });
         }
         walkAtRules(name, callback) {
@@ -11114,7 +11114,7 @@ var YasguiGeoTg = (() => {
           if (this.map) this.map.file = this.from;
         }
         error(message, line, column, opts = {}) {
-          let endColumn, endLine, endOffset, offset, result;
+          let endColumn, endLine, endOffset, offset, result2;
           if (line && typeof line === "object") {
             let start2 = line;
             let end = column;
@@ -11148,7 +11148,7 @@ var YasguiGeoTg = (() => {
           }
           let origin = this.origin(line, column, endLine, endColumn);
           if (origin) {
-            result = new CssSyntaxError2(
+            result2 = new CssSyntaxError2(
               message,
               origin.endLine === void 0 ? origin.line : { column: origin.column, line: origin.line },
               origin.endLine === void 0 ? origin.column : { column: origin.endColumn, line: origin.endLine },
@@ -11157,7 +11157,7 @@ var YasguiGeoTg = (() => {
               opts.plugin
             );
           } else {
-            result = new CssSyntaxError2(
+            result2 = new CssSyntaxError2(
               message,
               endLine === void 0 ? line : { column, line },
               endLine === void 0 ? column : { column: endColumn, line: endLine },
@@ -11166,14 +11166,14 @@ var YasguiGeoTg = (() => {
               opts.plugin
             );
           }
-          result.input = { column, endColumn, endLine, endOffset, line, offset, source: this.css };
+          result2.input = { column, endColumn, endLine, endOffset, line, offset, source: this.css };
           if (this.file) {
             if (pathToFileURL) {
-              result.input.url = pathToFileURL(this.file).toString();
+              result2.input.url = pathToFileURL(this.file).toString();
             }
-            result.input.file = this.file;
+            result2.input.file = this.file;
           }
-          return result;
+          return result2;
         }
         fromLineAndColumn(line, column) {
           let lineToIndex = getLineToIndex(this);
@@ -11230,7 +11230,7 @@ var YasguiGeoTg = (() => {
               this.map.consumer().sourceRoot || pathToFileURL(this.map.mapFile)
             );
           }
-          let result = {
+          let result2 = {
             column: from.column,
             endColumn: to && to.column,
             endLine: to && to.line,
@@ -11239,14 +11239,14 @@ var YasguiGeoTg = (() => {
           };
           if (fromUrl.protocol === "file:") {
             if (fileURLToPath) {
-              result.file = fileURLToPath(fromUrl);
+              result2.file = fileURLToPath(fromUrl);
             } else {
               throw new Error(`file: protocol is not available in this PostCSS build`);
             }
           }
           let source = consumer.sourceContentFor(from.source);
-          if (source) result.source = source;
-          return result;
+          if (source) result2.source = source;
+          return result2;
         }
         toJSON() {
           let json = {};
@@ -11539,11 +11539,11 @@ var YasguiGeoTg = (() => {
           if (pathAvailable && sourceMapAvailable && this.isMap()) {
             return this.generateMap();
           } else {
-            let result = "";
+            let result2 = "";
             this.stringify(this.root, (i) => {
-              result += i;
+              result2 += i;
             });
-            return [result];
+            return [result2];
           }
         }
         generateMap() {
@@ -12487,12 +12487,12 @@ var YasguiGeoTg = (() => {
           return spaces;
         }
         stringFrom(tokens, from) {
-          let result = "";
+          let result2 = "";
           for (let i = from; i < tokens.length; i++) {
-            result += tokens[i][1];
+            result2 += tokens[i][1];
           }
           tokens.splice(from, tokens.length - from);
-          return result;
+          return result2;
         }
         unclosedBlock() {
           let pos = this.current.source.start;
@@ -13699,16 +13699,16 @@ var YasguiGeoTg = (() => {
     static extractAxes(node) {
       return node.filter((child) => Array.isArray(child) && child[0] === "AXIS").map((axis) => this.convertAxis(axis)).sort((a2, b2) => (a2.order || 0) - (b2.order || 0));
     }
-    static convert(node, result = {}) {
+    static convert(node, result2 = {}) {
       switch (node[0]) {
         case "PROJCRS":
-          result.type = "ProjectedCRS";
-          result.name = node[1];
-          result.base_crs = node.find((child) => Array.isArray(child) && child[0] === "BASEGEOGCRS") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "BASEGEOGCRS")) : null;
-          result.conversion = node.find((child) => Array.isArray(child) && child[0] === "CONVERSION") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "CONVERSION")) : null;
+          result2.type = "ProjectedCRS";
+          result2.name = node[1];
+          result2.base_crs = node.find((child) => Array.isArray(child) && child[0] === "BASEGEOGCRS") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "BASEGEOGCRS")) : null;
+          result2.conversion = node.find((child) => Array.isArray(child) && child[0] === "CONVERSION") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "CONVERSION")) : null;
           const csNode = node.find((child) => Array.isArray(child) && child[0] === "CS");
           if (csNode) {
-            result.coordinate_system = {
+            result2.coordinate_system = {
               type: csNode[1],
               axis: this.extractAxes(node)
             };
@@ -13716,23 +13716,23 @@ var YasguiGeoTg = (() => {
           const lengthUnitNode = node.find((child) => Array.isArray(child) && child[0] === "LENGTHUNIT");
           if (lengthUnitNode) {
             const unit2 = this.convertUnit(lengthUnitNode);
-            result.coordinate_system.unit = unit2;
+            result2.coordinate_system.unit = unit2;
           }
-          result.id = this.getId(node);
+          result2.id = this.getId(node);
           break;
         case "BASEGEOGCRS":
         case "GEOGCRS":
-          result.type = "GeographicCRS";
-          result.name = node[1];
+          result2.type = "GeographicCRS";
+          result2.name = node[1];
           const datumOrEnsembleNode = node.find(
             (child) => Array.isArray(child) && (child[0] === "DATUM" || child[0] === "ENSEMBLE")
           );
           if (datumOrEnsembleNode) {
             const datumOrEnsemble = this.convert(datumOrEnsembleNode);
             if (datumOrEnsembleNode[0] === "ENSEMBLE") {
-              result.datum_ensemble = datumOrEnsemble;
+              result2.datum_ensemble = datumOrEnsemble;
             } else {
-              result.datum = datumOrEnsemble;
+              result2.datum = datumOrEnsemble;
             }
             const primem = node.find((child) => Array.isArray(child) && child[0] === "PRIMEM");
             if (primem && primem[1] !== "Greenwich") {
@@ -13742,21 +13742,21 @@ var YasguiGeoTg = (() => {
               };
             }
           }
-          result.coordinate_system = {
+          result2.coordinate_system = {
             type: "ellipsoidal",
             axis: this.extractAxes(node)
           };
-          result.id = this.getId(node);
+          result2.id = this.getId(node);
           break;
         case "DATUM":
-          result.type = "GeodeticReferenceFrame";
-          result.name = node[1];
-          result.ellipsoid = node.find((child) => Array.isArray(child) && child[0] === "ELLIPSOID") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "ELLIPSOID")) : null;
+          result2.type = "GeodeticReferenceFrame";
+          result2.name = node[1];
+          result2.ellipsoid = node.find((child) => Array.isArray(child) && child[0] === "ELLIPSOID") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "ELLIPSOID")) : null;
           break;
         case "ENSEMBLE":
-          result.type = "DatumEnsemble";
-          result.name = node[1];
-          result.members = node.filter((child) => Array.isArray(child) && child[0] === "MEMBER").map((member) => ({
+          result2.type = "DatumEnsemble";
+          result2.name = node[1];
+          result2.members = node.filter((child) => Array.isArray(child) && child[0] === "MEMBER").map((member) => ({
             type: "DatumEnsembleMember",
             name: member[1],
             id: this.getId(member)
@@ -13764,67 +13764,67 @@ var YasguiGeoTg = (() => {
           }));
           const accuracyNode = node.find((child) => Array.isArray(child) && child[0] === "ENSEMBLEACCURACY");
           if (accuracyNode) {
-            result.accuracy = parseFloat(accuracyNode[1]);
+            result2.accuracy = parseFloat(accuracyNode[1]);
           }
           const ellipsoidNode = node.find((child) => Array.isArray(child) && child[0] === "ELLIPSOID");
           if (ellipsoidNode) {
-            result.ellipsoid = this.convert(ellipsoidNode);
+            result2.ellipsoid = this.convert(ellipsoidNode);
           }
-          result.id = this.getId(node);
+          result2.id = this.getId(node);
           break;
         case "ELLIPSOID":
-          result.type = "Ellipsoid";
-          result.name = node[1];
-          result.semi_major_axis = parseFloat(node[2]);
-          result.inverse_flattening = parseFloat(node[3]);
-          const units = node.find((child) => Array.isArray(child) && child[0] === "LENGTHUNIT") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "LENGTHUNIT"), result) : null;
+          result2.type = "Ellipsoid";
+          result2.name = node[1];
+          result2.semi_major_axis = parseFloat(node[2]);
+          result2.inverse_flattening = parseFloat(node[3]);
+          const units = node.find((child) => Array.isArray(child) && child[0] === "LENGTHUNIT") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "LENGTHUNIT"), result2) : null;
           break;
         case "CONVERSION":
-          result.type = "Conversion";
-          result.name = node[1];
-          result.method = node.find((child) => Array.isArray(child) && child[0] === "METHOD") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "METHOD")) : null;
-          result.parameters = node.filter((child) => Array.isArray(child) && child[0] === "PARAMETER").map((param) => this.convert(param));
+          result2.type = "Conversion";
+          result2.name = node[1];
+          result2.method = node.find((child) => Array.isArray(child) && child[0] === "METHOD") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "METHOD")) : null;
+          result2.parameters = node.filter((child) => Array.isArray(child) && child[0] === "PARAMETER").map((param) => this.convert(param));
           break;
         case "METHOD":
-          result.type = "Method";
-          result.name = node[1];
-          result.id = this.getId(node);
+          result2.type = "Method";
+          result2.name = node[1];
+          result2.id = this.getId(node);
           break;
         case "PARAMETER":
-          result.type = "Parameter";
-          result.name = node[1];
-          result.value = parseFloat(node[2]);
-          result.unit = this.convertUnit(
+          result2.type = "Parameter";
+          result2.name = node[1];
+          result2.value = parseFloat(node[2]);
+          result2.unit = this.convertUnit(
             node.find(
               (child) => Array.isArray(child) && (child[0] === "LENGTHUNIT" || child[0] === "ANGLEUNIT" || child[0] === "SCALEUNIT")
             )
           );
-          result.id = this.getId(node);
+          result2.id = this.getId(node);
           break;
         case "BOUNDCRS":
-          result.type = "BoundCRS";
+          result2.type = "BoundCRS";
           const sourceCrsNode = node.find((child) => Array.isArray(child) && child[0] === "SOURCECRS");
           if (sourceCrsNode) {
             const sourceCrsContent = sourceCrsNode.find((child) => Array.isArray(child));
-            result.source_crs = sourceCrsContent ? this.convert(sourceCrsContent) : null;
+            result2.source_crs = sourceCrsContent ? this.convert(sourceCrsContent) : null;
           }
           const targetCrsNode = node.find((child) => Array.isArray(child) && child[0] === "TARGETCRS");
           if (targetCrsNode) {
             const targetCrsContent = targetCrsNode.find((child) => Array.isArray(child));
-            result.target_crs = targetCrsContent ? this.convert(targetCrsContent) : null;
+            result2.target_crs = targetCrsContent ? this.convert(targetCrsContent) : null;
           }
           const transformationNode = node.find((child) => Array.isArray(child) && child[0] === "ABRIDGEDTRANSFORMATION");
           if (transformationNode) {
-            result.transformation = this.convert(transformationNode);
+            result2.transformation = this.convert(transformationNode);
           } else {
-            result.transformation = null;
+            result2.transformation = null;
           }
           break;
         case "ABRIDGEDTRANSFORMATION":
-          result.type = "Transformation";
-          result.name = node[1];
-          result.method = node.find((child) => Array.isArray(child) && child[0] === "METHOD") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "METHOD")) : null;
-          result.parameters = node.filter((child) => Array.isArray(child) && (child[0] === "PARAMETER" || child[0] === "PARAMETERFILE")).map((param) => {
+          result2.type = "Transformation";
+          result2.name = node[1];
+          result2.method = node.find((child) => Array.isArray(child) && child[0] === "METHOD") ? this.convert(node.find((child) => Array.isArray(child) && child[0] === "METHOD")) : null;
+          result2.parameters = node.filter((child) => Array.isArray(child) && (child[0] === "PARAMETER" || child[0] === "PARAMETERFILE")).map((param) => {
             if (param[0] === "PARAMETER") {
               return this.convert(param);
             } else if (param[0] === "PARAMETERFILE") {
@@ -13838,69 +13838,69 @@ var YasguiGeoTg = (() => {
               };
             }
           });
-          if (result.parameters.length === 7) {
-            const scaleDifference = result.parameters[6];
+          if (result2.parameters.length === 7) {
+            const scaleDifference = result2.parameters[6];
             if (scaleDifference.name === "Scale difference") {
               scaleDifference.value = Math.round((scaleDifference.value - 1) * 1e12) / 1e6;
             }
           }
-          result.id = this.getId(node);
+          result2.id = this.getId(node);
           break;
         case "AXIS":
-          if (!result.coordinate_system) {
-            result.coordinate_system = { type: "unspecified", axis: [] };
+          if (!result2.coordinate_system) {
+            result2.coordinate_system = { type: "unspecified", axis: [] };
           }
-          result.coordinate_system.axis.push(this.convertAxis(node));
+          result2.coordinate_system.axis.push(this.convertAxis(node));
           break;
         case "LENGTHUNIT":
           const unit = this.convertUnit(node, "LinearUnit");
-          if (result.coordinate_system && result.coordinate_system.axis) {
-            result.coordinate_system.axis.forEach((axis) => {
+          if (result2.coordinate_system && result2.coordinate_system.axis) {
+            result2.coordinate_system.axis.forEach((axis) => {
               if (!axis.unit) {
                 axis.unit = unit;
               }
             });
           }
           if (unit.conversion_factor && unit.conversion_factor !== 1) {
-            if (result.semi_major_axis) {
-              result.semi_major_axis = {
-                value: result.semi_major_axis,
+            if (result2.semi_major_axis) {
+              result2.semi_major_axis = {
+                value: result2.semi_major_axis,
                 unit
               };
             }
           }
           break;
         default:
-          result.keyword = node[0];
+          result2.keyword = node[0];
           break;
       }
-      return result;
+      return result2;
     }
   };
   var PROJJSONBuilderBase_default = PROJJSONBuilderBase;
 
   // node_modules/wkt-parser/PROJJSONBuilder2015.js
   var PROJJSONBuilder2015 = class extends PROJJSONBuilderBase_default {
-    static convert(node, result = {}) {
-      super.convert(node, result);
-      if (result.coordinate_system && result.coordinate_system.subtype === "Cartesian") {
-        delete result.coordinate_system;
+    static convert(node, result2 = {}) {
+      super.convert(node, result2);
+      if (result2.coordinate_system && result2.coordinate_system.subtype === "Cartesian") {
+        delete result2.coordinate_system;
       }
-      if (result.usage) {
-        delete result.usage;
+      if (result2.usage) {
+        delete result2.usage;
       }
-      return result;
+      return result2;
     }
   };
   var PROJJSONBuilder2015_default = PROJJSONBuilder2015;
 
   // node_modules/wkt-parser/PROJJSONBuilder2019.js
   var PROJJSONBuilder2019 = class extends PROJJSONBuilderBase_default {
-    static convert(node, result = {}) {
-      super.convert(node, result);
+    static convert(node, result2 = {}) {
+      super.convert(node, result2);
       const csNode = node.find((child) => Array.isArray(child) && child[0] === "CS");
       if (csNode) {
-        result.coordinate_system = {
+        result2.coordinate_system = {
           subtype: csNode[1],
           axis: this.extractAxes(node)
         };
@@ -13910,18 +13910,18 @@ var YasguiGeoTg = (() => {
         const scope = usageNode.find((child) => Array.isArray(child) && child[0] === "SCOPE");
         const area = usageNode.find((child) => Array.isArray(child) && child[0] === "AREA");
         const bbox = usageNode.find((child) => Array.isArray(child) && child[0] === "BBOX");
-        result.usage = {};
+        result2.usage = {};
         if (scope) {
-          result.usage.scope = scope[1];
+          result2.usage.scope = scope[1];
         }
         if (area) {
-          result.usage.area = area[1];
+          result2.usage.area = area[1];
         }
         if (bbox) {
-          result.usage.bbox = bbox.slice(1);
+          result2.usage.bbox = bbox.slice(1);
         }
       }
-      return result;
+      return result2;
     }
   };
   var PROJJSONBuilder2019_default = PROJJSONBuilder2019;
@@ -14261,23 +14261,23 @@ var YasguiGeoTg = (() => {
 
   // node_modules/wkt-parser/transformPROJJSON.js
   function processUnit(unit) {
-    let result = { units: null, to_meter: void 0 };
+    let result2 = { units: null, to_meter: void 0 };
     if (typeof unit === "string") {
-      result.units = unit.toLowerCase();
-      if (result.units === "metre") {
-        result.units = "meter";
+      result2.units = unit.toLowerCase();
+      if (result2.units === "metre") {
+        result2.units = "meter";
       }
-      if (result.units === "meter") {
-        result.to_meter = 1;
+      if (result2.units === "meter") {
+        result2.to_meter = 1;
       }
     } else if (unit && unit.name) {
-      result.units = unit.name.toLowerCase();
-      if (result.units === "metre") {
-        result.units = "meter";
+      result2.units = unit.name.toLowerCase();
+      if (result2.units === "metre") {
+        result2.units = "meter";
       }
-      result.to_meter = unit.conversion_factor;
+      result2.to_meter = unit.conversion_factor;
     }
-    return result;
+    return result2;
   }
   function toValue(valueOrObject) {
     if (typeof valueOrObject === "object") {
@@ -14285,33 +14285,33 @@ var YasguiGeoTg = (() => {
     }
     return valueOrObject;
   }
-  function calculateEllipsoid(value, result) {
+  function calculateEllipsoid(value, result2) {
     if (value.ellipsoid.radius) {
-      result.a = value.ellipsoid.radius;
-      result.rf = 0;
+      result2.a = value.ellipsoid.radius;
+      result2.rf = 0;
     } else {
-      result.a = toValue(value.ellipsoid.semi_major_axis);
+      result2.a = toValue(value.ellipsoid.semi_major_axis);
       if (value.ellipsoid.inverse_flattening !== void 0) {
-        result.rf = value.ellipsoid.inverse_flattening;
+        result2.rf = value.ellipsoid.inverse_flattening;
       } else if (value.ellipsoid.semi_major_axis !== void 0 && value.ellipsoid.semi_minor_axis !== void 0) {
-        result.rf = result.a / (result.a - toValue(value.ellipsoid.semi_minor_axis));
+        result2.rf = result2.a / (result2.a - toValue(value.ellipsoid.semi_minor_axis));
       }
     }
   }
-  function transformPROJJSON(projjson, result = {}) {
+  function transformPROJJSON(projjson, result2 = {}) {
     if (!projjson || typeof projjson !== "object") {
       return projjson;
     }
     if (projjson.type === "BoundCRS") {
-      transformPROJJSON(projjson.source_crs, result);
+      transformPROJJSON(projjson.source_crs, result2);
       if (projjson.transformation) {
         if (projjson.transformation.method && projjson.transformation.method.name === "NTv2") {
-          result.nadgrids = projjson.transformation.parameters[0].value;
+          result2.nadgrids = projjson.transformation.parameters[0].value;
         } else {
-          result.datum_params = projjson.transformation.parameters.map((param) => param.value);
+          result2.datum_params = projjson.transformation.parameters.map((param) => param.value);
         }
       }
-      return result;
+      return result2;
     }
     Object.keys(projjson).forEach((key) => {
       const value = projjson[key];
@@ -14320,39 +14320,39 @@ var YasguiGeoTg = (() => {
       }
       switch (key) {
         case "name":
-          if (result.srsCode) {
+          if (result2.srsCode) {
             break;
           }
-          result.name = value;
-          result.srsCode = value;
+          result2.name = value;
+          result2.srsCode = value;
           break;
         case "type":
           if (value === "GeographicCRS") {
-            result.projName = "longlat";
+            result2.projName = "longlat";
           } else if (value === "ProjectedCRS" && projjson.conversion && projjson.conversion.method) {
-            result.projName = projjson.conversion.method.name;
+            result2.projName = projjson.conversion.method.name;
           }
           break;
         case "datum":
         case "datum_ensemble":
           if (value.ellipsoid) {
-            result.ellps = value.ellipsoid.name;
-            calculateEllipsoid(value, result);
+            result2.ellps = value.ellipsoid.name;
+            calculateEllipsoid(value, result2);
           }
           if (value.prime_meridian) {
-            result.from_greenwich = value.prime_meridian.longitude * Math.PI / 180;
+            result2.from_greenwich = value.prime_meridian.longitude * Math.PI / 180;
           }
           break;
         case "ellipsoid":
-          result.ellps = value.name;
-          calculateEllipsoid(value, result);
+          result2.ellps = value.name;
+          calculateEllipsoid(value, result2);
           break;
         case "prime_meridian":
-          result.long0 = (value.longitude || 0) * Math.PI / 180;
+          result2.long0 = (value.longitude || 0) * Math.PI / 180;
           break;
         case "coordinate_system":
           if (value.axis) {
-            result.axis = value.axis.map((axis) => {
+            result2.axis = value.axis.map((axis) => {
               const direction = axis.direction;
               if (direction === "east") return "e";
               if (direction === "north") return "n";
@@ -14362,132 +14362,132 @@ var YasguiGeoTg = (() => {
             }).join("") + "u";
             if (value.unit) {
               const { units, to_meter } = processUnit(value.unit);
-              result.units = units;
-              result.to_meter = to_meter;
+              result2.units = units;
+              result2.to_meter = to_meter;
             } else if (value.axis[0] && value.axis[0].unit) {
               const { units, to_meter } = processUnit(value.axis[0].unit);
-              result.units = units;
-              result.to_meter = to_meter;
+              result2.units = units;
+              result2.to_meter = to_meter;
             }
           }
           break;
         case "id":
           if (value.authority && value.code) {
-            result.title = value.authority + ":" + value.code;
+            result2.title = value.authority + ":" + value.code;
           }
           break;
         case "conversion":
           if (value.method && value.method.name) {
-            result.projName = value.method.name;
+            result2.projName = value.method.name;
           }
           if (value.parameters) {
             value.parameters.forEach((param) => {
               const paramName = param.name.toLowerCase().replace(/\s+/g, "_");
               const paramValue = param.value;
               if (param.unit && param.unit.conversion_factor) {
-                result[paramName] = paramValue * param.unit.conversion_factor;
+                result2[paramName] = paramValue * param.unit.conversion_factor;
               } else if (param.unit === "degree") {
-                result[paramName] = paramValue * Math.PI / 180;
+                result2[paramName] = paramValue * Math.PI / 180;
               } else {
-                result[paramName] = paramValue;
+                result2[paramName] = paramValue;
               }
             });
           }
           break;
         case "unit":
           if (value.name) {
-            result.units = value.name.toLowerCase();
-            if (result.units === "metre") {
-              result.units = "meter";
+            result2.units = value.name.toLowerCase();
+            if (result2.units === "metre") {
+              result2.units = "meter";
             }
           }
           if (value.conversion_factor) {
-            result.to_meter = value.conversion_factor;
+            result2.to_meter = value.conversion_factor;
           }
           break;
         case "base_crs":
-          transformPROJJSON(value, result);
-          result.datumCode = value.id ? value.id.authority + "_" + value.id.code : value.name;
+          transformPROJJSON(value, result2);
+          result2.datumCode = value.id ? value.id.authority + "_" + value.id.code : value.name;
           break;
         default:
           break;
       }
     });
-    if (result.latitude_of_false_origin !== void 0) {
-      result.lat0 = result.latitude_of_false_origin;
+    if (result2.latitude_of_false_origin !== void 0) {
+      result2.lat0 = result2.latitude_of_false_origin;
     }
-    if (result.longitude_of_false_origin !== void 0) {
-      result.long0 = result.longitude_of_false_origin;
+    if (result2.longitude_of_false_origin !== void 0) {
+      result2.long0 = result2.longitude_of_false_origin;
     }
-    if (result.latitude_of_standard_parallel !== void 0) {
-      result.lat0 = result.latitude_of_standard_parallel;
-      result.lat1 = result.latitude_of_standard_parallel;
+    if (result2.latitude_of_standard_parallel !== void 0) {
+      result2.lat0 = result2.latitude_of_standard_parallel;
+      result2.lat1 = result2.latitude_of_standard_parallel;
     }
-    if (result.latitude_of_1st_standard_parallel !== void 0) {
-      result.lat1 = result.latitude_of_1st_standard_parallel;
+    if (result2.latitude_of_1st_standard_parallel !== void 0) {
+      result2.lat1 = result2.latitude_of_1st_standard_parallel;
     }
-    if (result.latitude_of_2nd_standard_parallel !== void 0) {
-      result.lat2 = result.latitude_of_2nd_standard_parallel;
+    if (result2.latitude_of_2nd_standard_parallel !== void 0) {
+      result2.lat2 = result2.latitude_of_2nd_standard_parallel;
     }
-    if (result.latitude_of_projection_centre !== void 0) {
-      result.lat0 = result.latitude_of_projection_centre;
+    if (result2.latitude_of_projection_centre !== void 0) {
+      result2.lat0 = result2.latitude_of_projection_centre;
     }
-    if (result.longitude_of_projection_centre !== void 0) {
-      result.longc = result.longitude_of_projection_centre;
+    if (result2.longitude_of_projection_centre !== void 0) {
+      result2.longc = result2.longitude_of_projection_centre;
     }
-    if (result.easting_at_false_origin !== void 0) {
-      result.x0 = result.easting_at_false_origin;
+    if (result2.easting_at_false_origin !== void 0) {
+      result2.x0 = result2.easting_at_false_origin;
     }
-    if (result.northing_at_false_origin !== void 0) {
-      result.y0 = result.northing_at_false_origin;
+    if (result2.northing_at_false_origin !== void 0) {
+      result2.y0 = result2.northing_at_false_origin;
     }
-    if (result.latitude_of_natural_origin !== void 0) {
-      result.lat0 = result.latitude_of_natural_origin;
+    if (result2.latitude_of_natural_origin !== void 0) {
+      result2.lat0 = result2.latitude_of_natural_origin;
     }
-    if (result.longitude_of_natural_origin !== void 0) {
-      result.long0 = result.longitude_of_natural_origin;
+    if (result2.longitude_of_natural_origin !== void 0) {
+      result2.long0 = result2.longitude_of_natural_origin;
     }
-    if (result.longitude_of_origin !== void 0) {
-      result.long0 = result.longitude_of_origin;
+    if (result2.longitude_of_origin !== void 0) {
+      result2.long0 = result2.longitude_of_origin;
     }
-    if (result.false_easting !== void 0) {
-      result.x0 = result.false_easting;
+    if (result2.false_easting !== void 0) {
+      result2.x0 = result2.false_easting;
     }
-    if (result.easting_at_projection_centre) {
-      result.x0 = result.easting_at_projection_centre;
+    if (result2.easting_at_projection_centre) {
+      result2.x0 = result2.easting_at_projection_centre;
     }
-    if (result.false_northing !== void 0) {
-      result.y0 = result.false_northing;
+    if (result2.false_northing !== void 0) {
+      result2.y0 = result2.false_northing;
     }
-    if (result.northing_at_projection_centre) {
-      result.y0 = result.northing_at_projection_centre;
+    if (result2.northing_at_projection_centre) {
+      result2.y0 = result2.northing_at_projection_centre;
     }
-    if (result.standard_parallel_1 !== void 0) {
-      result.lat1 = result.standard_parallel_1;
+    if (result2.standard_parallel_1 !== void 0) {
+      result2.lat1 = result2.standard_parallel_1;
     }
-    if (result.standard_parallel_2 !== void 0) {
-      result.lat2 = result.standard_parallel_2;
+    if (result2.standard_parallel_2 !== void 0) {
+      result2.lat2 = result2.standard_parallel_2;
     }
-    if (result.scale_factor_at_natural_origin !== void 0) {
-      result.k0 = result.scale_factor_at_natural_origin;
+    if (result2.scale_factor_at_natural_origin !== void 0) {
+      result2.k0 = result2.scale_factor_at_natural_origin;
     }
-    if (result.scale_factor_at_projection_centre !== void 0) {
-      result.k0 = result.scale_factor_at_projection_centre;
+    if (result2.scale_factor_at_projection_centre !== void 0) {
+      result2.k0 = result2.scale_factor_at_projection_centre;
     }
-    if (result.scale_factor_on_pseudo_standard_parallel !== void 0) {
-      result.k0 = result.scale_factor_on_pseudo_standard_parallel;
+    if (result2.scale_factor_on_pseudo_standard_parallel !== void 0) {
+      result2.k0 = result2.scale_factor_on_pseudo_standard_parallel;
     }
-    if (result.azimuth !== void 0) {
-      result.alpha = result.azimuth;
+    if (result2.azimuth !== void 0) {
+      result2.alpha = result2.azimuth;
     }
-    if (result.azimuth_at_projection_centre !== void 0) {
-      result.alpha = result.azimuth_at_projection_centre;
+    if (result2.azimuth_at_projection_centre !== void 0) {
+      result2.alpha = result2.azimuth_at_projection_centre;
     }
-    if (result.angle_from_rectified_to_skew_grid) {
-      result.rectified_grid_angle = result.angle_from_rectified_to_skew_grid;
+    if (result2.angle_from_rectified_to_skew_grid) {
+      result2.rectified_grid_angle = result2.angle_from_rectified_to_skew_grid;
     }
-    applyProjectionDefaults(result);
-    return result;
+    applyProjectionDefaults(result2);
+    return result2;
   }
 
   // node_modules/wkt-parser/index.js
@@ -17602,7 +17602,7 @@ var YasguiGeoTg = (() => {
     lat = radToDeg(lat);
     var lon = (D - (1 + 2 * T1 + C12) * D * D * D / 6 + (5 - 2 * C12 + 28 * T1 - 3 * C12 * C12 + 8 * eccPrimeSquared + 24 * T1 * T1) * D * D * D * D * D / 120) / Math.cos(phi1Rad);
     lon = LongOrigin + radToDeg(lon);
-    var result;
+    var result2;
     if (utm.accuracy) {
       var topRight = UTMtoLL({
         northing: utm.northing + utm.accuracy,
@@ -17610,19 +17610,19 @@ var YasguiGeoTg = (() => {
         zoneLetter: utm.zoneLetter,
         zoneNumber: utm.zoneNumber
       });
-      result = {
+      result2 = {
         top: topRight.lat,
         right: topRight.lon,
         bottom: lat,
         left: lon
       };
     } else {
-      result = {
+      result2 = {
         lat,
         lon
       };
     }
-    return result;
+    return result2;
   }
   function getLetterDesignator(lat) {
     var LetterDesignator = "Z";
@@ -21668,12 +21668,12 @@ var YasguiGeoTg = (() => {
     lp.y = Math.asin(
       self2.sphip * sinphi - self2.cphip * cosphi * coslam
     );
-    const result = self2.obliqueProjection.forward(lp);
+    const result2 = self2.obliqueProjection.forward(lp);
     if (self2.isIdentity) {
-      result.x *= R2D;
-      result.y *= R2D;
+      result2.x *= R2D;
+      result2.y *= R2D;
     }
-    return result;
+    return result2;
   }
   function forwardTransverse(self2, lp) {
     let { x: lam, y: phi } = lp;
@@ -21687,12 +21687,12 @@ var YasguiGeoTg = (() => {
       ) + self2.lamp
     );
     lp.y = Math.asin(-1 * cosphi * coslam);
-    const result = self2.obliqueProjection.forward(lp);
+    const result2 = self2.obliqueProjection.forward(lp);
     if (self2.isIdentity) {
-      result.x *= R2D;
-      result.y *= R2D;
+      result2.x *= R2D;
+      result2.y *= R2D;
     }
-    return result;
+    return result2;
   }
   function inverseOblique(self2, lp) {
     if (self2.isIdentity) {
@@ -41177,10 +41177,14 @@ var YasguiGeoTg = (() => {
       let dggsdict = JSON.parse(dggs);
       console.log(dggsdict);
       if (ispoint) {
+        console.log("DGGS Is point");
         let decoded = cellToLatLng(dggsdict[0]);
+        console.log(decoded);
         return { "type": "Point", "coordinates": [decoded[0], decoded[1]] };
       } else {
-        return { "type": "MultiPolygon", "geometry": cellsToMultiPolygon(dggsdict) };
+        result = cellsToMultiPolygon(dggsdict);
+        console.log(result);
+        return { "type": "MultiPolygon", "geometry": result };
       }
     }
     return {};
