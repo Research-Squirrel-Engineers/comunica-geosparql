@@ -50264,6 +50264,7 @@ ${dataLines}`;
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
     console.log(thekml);
     const geojson = toGeoJSON(thekml);
+    console.log(geojson);
     return geojson;
   };
   var parseDGGS = async (dggs) => {
