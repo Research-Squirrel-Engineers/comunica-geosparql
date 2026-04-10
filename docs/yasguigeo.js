@@ -45435,7 +45435,6 @@ ${dataLines}`;
   }
 
   // index.js
-  var import_xmldom = __toESM(require_dom_parser(), 1);
   var SRID_PROJ = {
     "2000": "+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +units=m +no_defs",
     "2001": "+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +units=m +no_defs",
