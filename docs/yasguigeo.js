@@ -107,11 +107,11 @@ var YasguiGeoTg = (() => {
           var pow = Math.pow(10, precision === void 0 ? 6 : precision);
           return Math.round(num * pow) / pow;
         }
-        function trim2(str) {
+        function trim(str) {
           return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, "");
         }
         function splitWords(str) {
-          return trim2(str).split(/\s+/);
+          return trim(str).split(/\s+/);
         }
         function setOptions(obj, options) {
           if (!Object.prototype.hasOwnProperty.call(obj, "options")) {
@@ -191,7 +191,7 @@ var YasguiGeoTg = (() => {
           wrapNum,
           falseFn,
           formatNum,
-          trim: trim2,
+          trim,
           splitWords,
           setOptions,
           getParamString,
@@ -500,12 +500,12 @@ var YasguiGeoTg = (() => {
             }
             return this;
           },
-          _propagateEvent: function(e) {
+          _propagateEvent: function(e2) {
             for (var id in this._eventParents) {
-              this._eventParents[id].fire(e.type, extend({
-                layer: e.target,
-                propagatedFrom: e.target
-              }, e), true);
+              this._eventParents[id].fire(e2.type, extend({
+                layer: e2.target,
+                propagatedFrom: e2.target
+              }, e2), true);
             }
           }
         };
@@ -1267,7 +1267,7 @@ var YasguiGeoTg = (() => {
             });
             window.addEventListener("testPassiveEventSupport", falseFn, opts);
             window.removeEventListener("testPassiveEventSupport", falseFn, opts);
-          } catch (e) {
+          } catch (e2) {
           }
           return supportsPassiveOption;
         }();
@@ -1287,7 +1287,7 @@ var YasguiGeoTg = (() => {
             var shape = div.firstChild;
             shape.style.behavior = "url(#default#VML)";
             return shape && typeof shape.adj === "object";
-          } catch (e) {
+          } catch (e2) {
             return false;
           }
         }();
@@ -1370,16 +1370,16 @@ var YasguiGeoTg = (() => {
           }
           obj.removeEventListener(pEvent[type], handler, false);
         }
-        function _globalPointerDown(e) {
-          _pointers[e.pointerId] = e;
+        function _globalPointerDown(e2) {
+          _pointers[e2.pointerId] = e2;
         }
-        function _globalPointerMove(e) {
-          if (_pointers[e.pointerId]) {
-            _pointers[e.pointerId] = e;
+        function _globalPointerMove(e2) {
+          if (_pointers[e2.pointerId]) {
+            _pointers[e2.pointerId] = e2;
           }
         }
-        function _globalPointerUp(e) {
-          delete _pointers[e.pointerId];
+        function _globalPointerUp(e2) {
+          delete _pointers[e2.pointerId];
         }
         function _addPointerDocListener() {
           if (!_pointerDocListener) {
@@ -1390,22 +1390,22 @@ var YasguiGeoTg = (() => {
             _pointerDocListener = true;
           }
         }
-        function _handlePointer(handler, e) {
-          if (e.pointerType === (e.MSPOINTER_TYPE_MOUSE || "mouse")) {
+        function _handlePointer(handler, e2) {
+          if (e2.pointerType === (e2.MSPOINTER_TYPE_MOUSE || "mouse")) {
             return;
           }
-          e.touches = [];
+          e2.touches = [];
           for (var i in _pointers) {
-            e.touches.push(_pointers[i]);
+            e2.touches.push(_pointers[i]);
           }
-          e.changedTouches = [e];
-          handler(e);
+          e2.changedTouches = [e2];
+          handler(e2);
         }
-        function _onPointerStart(handler, e) {
-          if (e.MSPOINTER_TYPE_TOUCH && e.pointerType === e.MSPOINTER_TYPE_TOUCH) {
-            preventDefault(e);
+        function _onPointerStart(handler, e2) {
+          if (e2.MSPOINTER_TYPE_TOUCH && e2.pointerType === e2.MSPOINTER_TYPE_TOUCH) {
+            preventDefault(e2);
           }
-          _handlePointer(handler, e);
+          _handlePointer(handler, e2);
         }
         function makeDblclick(event) {
           var newEvent = {}, prop, i;
@@ -1424,15 +1424,15 @@ var YasguiGeoTg = (() => {
         function addDoubleTapListener(obj, handler) {
           obj.addEventListener("dblclick", handler);
           var last = 0, detail;
-          function simDblclick(e) {
-            if (e.detail !== 1) {
-              detail = e.detail;
+          function simDblclick(e2) {
+            if (e2.detail !== 1) {
+              detail = e2.detail;
               return;
             }
-            if (e.pointerType === "mouse" || e.sourceCapabilities && !e.sourceCapabilities.firesTouchEvents) {
+            if (e2.pointerType === "mouse" || e2.sourceCapabilities && !e2.sourceCapabilities.firesTouchEvents) {
               return;
             }
-            var path = getPropagationPath(e);
+            var path = getPropagationPath(e2);
             if (path.some(function(el) {
               return el instanceof HTMLLabelElement && el.attributes.for;
             }) && !path.some(function(el) {
@@ -1444,7 +1444,7 @@ var YasguiGeoTg = (() => {
             if (now - last <= delay) {
               detail++;
               if (detail === 2) {
-                handler(makeDblclick(e));
+                handler(makeDblclick(e2));
               }
             } else {
               detail = 1;
@@ -1532,7 +1532,7 @@ var YasguiGeoTg = (() => {
           if (el.classList !== void 0) {
             el.classList.remove(name);
           } else {
-            setClass(el, trim2((" " + getClass(el) + " ").replace(" " + name + " ", " ")));
+            setClass(el, trim((" " + getClass(el) + " ").replace(" " + name + " ", " ")));
           }
         }
         function setClass(el, name) {
@@ -1559,7 +1559,7 @@ var YasguiGeoTg = (() => {
           var filter = false, filterName = "DXImageTransform.Microsoft.Alpha";
           try {
             filter = el.filters.item(filterName);
-          } catch (e) {
+          } catch (e2) {
             if (value === 1) {
               return;
             }
@@ -1757,8 +1757,8 @@ var YasguiGeoTg = (() => {
           if (obj[eventsKey] && obj[eventsKey][id]) {
             return this;
           }
-          var handler = function(e) {
-            return fn.call(context || obj, e || window.event);
+          var handler = function(e2) {
+            return fn.call(context || obj, e2 || window.event);
           };
           var originalHandler = handler;
           if (!Browser.touchNative && Browser.pointer && type.indexOf("touch") === 0) {
@@ -1769,10 +1769,10 @@ var YasguiGeoTg = (() => {
             if (type === "touchstart" || type === "touchmove" || type === "wheel" || type === "mousewheel") {
               obj.addEventListener(mouseSubst[type] || type, handler, Browser.passiveEvents ? { passive: false } : false);
             } else if (type === "mouseenter" || type === "mouseleave") {
-              handler = function(e) {
-                e = e || window.event;
-                if (isExternalTarget(obj, e)) {
-                  originalHandler(e);
+              handler = function(e2) {
+                e2 = e2 || window.event;
+                if (isExternalTarget(obj, e2)) {
+                  originalHandler(e2);
                 }
               };
               obj.addEventListener(mouseSubst[type], handler, false);
@@ -1802,13 +1802,13 @@ var YasguiGeoTg = (() => {
           }
           obj[eventsKey][id] = null;
         }
-        function stopPropagation(e) {
-          if (e.stopPropagation) {
-            e.stopPropagation();
-          } else if (e.originalEvent) {
-            e.originalEvent._stopped = true;
+        function stopPropagation(e2) {
+          if (e2.stopPropagation) {
+            e2.stopPropagation();
+          } else if (e2.originalEvent) {
+            e2.originalEvent._stopped = true;
           } else {
-            e.cancelBubble = true;
+            e2.cancelBubble = true;
           }
           return this;
         }
@@ -1821,17 +1821,17 @@ var YasguiGeoTg = (() => {
           el["_leaflet_disable_click"] = true;
           return this;
         }
-        function preventDefault(e) {
-          if (e.preventDefault) {
-            e.preventDefault();
+        function preventDefault(e2) {
+          if (e2.preventDefault) {
+            e2.preventDefault();
           } else {
-            e.returnValue = false;
+            e2.returnValue = false;
           }
           return this;
         }
-        function stop(e) {
-          preventDefault(e);
-          stopPropagation(e);
+        function stop2(e2) {
+          preventDefault(e2);
+          stopPropagation(e2);
           return this;
         }
         function getPropagationPath(ev) {
@@ -1846,35 +1846,35 @@ var YasguiGeoTg = (() => {
           }
           return path;
         }
-        function getMousePosition(e, container) {
+        function getMousePosition(e2, container) {
           if (!container) {
-            return new Point2(e.clientX, e.clientY);
+            return new Point2(e2.clientX, e2.clientY);
           }
           var scale2 = getScale(container), offset = scale2.boundingClientRect;
           return new Point2(
             // offset.left/top values are in page scale (like clientX/Y),
             // whereas clientLeft/Top (border width) values are the original values (before CSS scale applies).
-            (e.clientX - offset.left) / scale2.x - container.clientLeft,
-            (e.clientY - offset.top) / scale2.y - container.clientTop
+            (e2.clientX - offset.left) / scale2.x - container.clientLeft,
+            (e2.clientY - offset.top) / scale2.y - container.clientTop
           );
         }
         var wheelPxFactor = Browser.linux && Browser.chrome ? window.devicePixelRatio : Browser.mac ? window.devicePixelRatio * 3 : window.devicePixelRatio > 0 ? 2 * window.devicePixelRatio : 1;
-        function getWheelDelta(e) {
-          return Browser.edge ? e.wheelDeltaY / 2 : (
+        function getWheelDelta(e2) {
+          return Browser.edge ? e2.wheelDeltaY / 2 : (
             // Don't trust window-geometry-based delta
-            e.deltaY && e.deltaMode === 0 ? -e.deltaY / wheelPxFactor : (
+            e2.deltaY && e2.deltaMode === 0 ? -e2.deltaY / wheelPxFactor : (
               // Pixels
-              e.deltaY && e.deltaMode === 1 ? -e.deltaY * 20 : (
+              e2.deltaY && e2.deltaMode === 1 ? -e2.deltaY * 20 : (
                 // Lines
-                e.deltaY && e.deltaMode === 2 ? -e.deltaY * 60 : (
+                e2.deltaY && e2.deltaMode === 2 ? -e2.deltaY * 60 : (
                   // Pages
-                  e.deltaX || e.deltaZ ? 0 : (
+                  e2.deltaX || e2.deltaZ ? 0 : (
                     // Skip horizontal/depth wheel events
-                    e.wheelDelta ? (e.wheelDeltaY || e.wheelDelta) / 2 : (
+                    e2.wheelDelta ? (e2.wheelDeltaY || e2.wheelDelta) / 2 : (
                       // Legacy IE pixels
-                      e.detail && Math.abs(e.detail) < 32765 ? -e.detail * 20 : (
+                      e2.detail && Math.abs(e2.detail) < 32765 ? -e2.detail * 20 : (
                         // Legacy Moz lines
-                        e.detail ? e.detail / -32765 * 60 : (
+                        e2.detail ? e2.detail / -32765 * 60 : (
                           // Legacy Moz pages
                           0
                         )
@@ -1886,8 +1886,8 @@ var YasguiGeoTg = (() => {
             )
           );
         }
-        function isExternalTarget(el, e) {
-          var related = e.relatedTarget;
+        function isExternalTarget(el, e2) {
+          var related = e2.relatedTarget;
           if (!related) {
             return true;
           }
@@ -1908,7 +1908,7 @@ var YasguiGeoTg = (() => {
           disableScrollPropagation,
           disableClickPropagation,
           preventDefault,
-          stop,
+          stop: stop2,
           getPropagationPath,
           getMousePosition,
           getWheelDelta,
@@ -2215,21 +2215,21 @@ var YasguiGeoTg = (() => {
             targetCenter = toLatLng(targetCenter);
             targetZoom = targetZoom === void 0 ? startZoom : targetZoom;
             var w0 = Math.max(size.x, size.y), w1 = w0 * this.getZoomScale(startZoom, targetZoom), u1 = to.distanceTo(from) || 1, rho = 1.42, rho2 = rho * rho;
-            function r(i) {
+            function r2(i) {
               var s1 = i ? -1 : 1, s2 = i ? w1 : w0, t1 = w1 * w1 - w0 * w0 + s1 * rho2 * rho2 * u1 * u1, b1 = 2 * s2 * rho2 * u1, b2 = t1 / b1, sq = Math.sqrt(b2 * b2 + 1) - b2;
               var log = sq < 1e-9 ? -18 : Math.log(sq);
               return log;
             }
-            function sinh(n) {
-              return (Math.exp(n) - Math.exp(-n)) / 2;
+            function sinh(n2) {
+              return (Math.exp(n2) - Math.exp(-n2)) / 2;
             }
-            function cosh(n) {
-              return (Math.exp(n) + Math.exp(-n)) / 2;
+            function cosh(n2) {
+              return (Math.exp(n2) + Math.exp(-n2)) / 2;
             }
-            function tanh(n) {
-              return sinh(n) / cosh(n);
+            function tanh(n2) {
+              return sinh(n2) / cosh(n2);
             }
-            var r0 = r(0);
+            var r0 = r2(0);
             function w(s2) {
               return w0 * (cosh(r0) / cosh(r0 + rho * s2));
             }
@@ -2239,7 +2239,7 @@ var YasguiGeoTg = (() => {
             function easeOut(t) {
               return 1 - Math.pow(1 - t, 1.5);
             }
-            var start2 = Date.now(), S3 = (r(1) - r0) / rho, duration = options.duration ? 1e3 * options.duration : 1e3 * S3 * 0.8;
+            var start2 = Date.now(), S3 = (r2(1) - r0) / rho, duration = options.duration ? 1e3 * options.duration : 1e3 * S3 * 0.8;
             function frame() {
               var t = (Date.now() - start2) / duration, s2 = easeOut(t) * S3;
               if (t <= 1) {
@@ -2501,7 +2501,7 @@ var YasguiGeoTg = (() => {
             try {
               delete this._container._leaflet_id;
               delete this._containerId;
-            } catch (e) {
+            } catch (e2) {
               this._container._leaflet_id = void 0;
               this._containerId = void 0;
             }
@@ -2745,20 +2745,20 @@ var YasguiGeoTg = (() => {
           // @method mouseEventToContainerPoint(ev: MouseEvent): Point
           // Given a MouseEvent object, returns the pixel coordinate relative to the
           // map container where the event took place.
-          mouseEventToContainerPoint: function(e) {
-            return getMousePosition(e, this._container);
+          mouseEventToContainerPoint: function(e2) {
+            return getMousePosition(e2, this._container);
           },
           // @method mouseEventToLayerPoint(ev: MouseEvent): Point
           // Given a MouseEvent object, returns the pixel coordinate relative to
           // the [origin pixel](#map-getpixelorigin) where the event took place.
-          mouseEventToLayerPoint: function(e) {
-            return this.containerPointToLayerPoint(this.mouseEventToContainerPoint(e));
+          mouseEventToLayerPoint: function(e2) {
+            return this.containerPointToLayerPoint(this.mouseEventToContainerPoint(e2));
           },
           // @method mouseEventToLatLng(ev: MouseEvent): LatLng
           // Given a MouseEvent object, returns geographical coordinate where the
           // event took place.
-          mouseEventToLatLng: function(e) {
-            return this.layerPointToLatLng(this.mouseEventToLayerPoint(e));
+          mouseEventToLatLng: function(e2) {
+            return this.layerPointToLatLng(this.mouseEventToLayerPoint(e2));
           },
           // map initialization methods
           _initContainer: function(id) {
@@ -2904,8 +2904,8 @@ var YasguiGeoTg = (() => {
               this._resetView(this.getCenter(), this.getZoom());
             }
           },
-          _findEventTargets: function(e, type) {
-            var targets = [], target, isHover = type === "mouseout" || type === "mouseover", src = e.target || e.srcElement, dragging = false;
+          _findEventTargets: function(e2, type) {
+            var targets = [], target, isHover = type === "mouseout" || type === "mouseover", src = e2.target || e2.srcElement, dragging = false;
             while (src) {
               target = this._targets[stamp(src)];
               if (target && (type === "click" || type === "preclick") && this._draggableMoved(target)) {
@@ -2913,7 +2913,7 @@ var YasguiGeoTg = (() => {
                 break;
               }
               if (target && target.listens(type, true)) {
-                if (isHover && !isExternalTarget(src, e)) {
+                if (isHover && !isExternalTarget(src, e2)) {
                   break;
                 }
                 targets.push(target);
@@ -2939,25 +2939,25 @@ var YasguiGeoTg = (() => {
               el = el.parentNode;
             }
           },
-          _handleDOMEvent: function(e) {
-            var el = e.target || e.srcElement;
-            if (!this._loaded || el["_leaflet_disable_events"] || e.type === "click" && this._isClickDisabled(el)) {
+          _handleDOMEvent: function(e2) {
+            var el = e2.target || e2.srcElement;
+            if (!this._loaded || el["_leaflet_disable_events"] || e2.type === "click" && this._isClickDisabled(el)) {
               return;
             }
-            var type = e.type;
+            var type = e2.type;
             if (type === "mousedown") {
               preventOutline(el);
             }
-            this._fireDOMEvent(e, type);
+            this._fireDOMEvent(e2, type);
           },
           _mouseEvents: ["click", "dblclick", "mouseover", "mouseout", "contextmenu"],
-          _fireDOMEvent: function(e, type, canvasTargets) {
-            if (e.type === "click") {
-              var synth = extend({}, e);
+          _fireDOMEvent: function(e2, type, canvasTargets) {
+            if (e2.type === "click") {
+              var synth = extend({}, e2);
               synth.type = "preclick";
               this._fireDOMEvent(synth, synth.type, canvasTargets);
             }
-            var targets = this._findEventTargets(e, type);
+            var targets = this._findEventTargets(e2, type);
             if (canvasTargets) {
               var filtered = [];
               for (var i = 0; i < canvasTargets.length; i++) {
@@ -2971,15 +2971,15 @@ var YasguiGeoTg = (() => {
               return;
             }
             if (type === "contextmenu") {
-              preventDefault(e);
+              preventDefault(e2);
             }
             var target = targets[0];
             var data = {
-              originalEvent: e
+              originalEvent: e2
             };
-            if (e.type !== "keypress" && e.type !== "keydown" && e.type !== "keyup") {
+            if (e2.type !== "keypress" && e2.type !== "keydown" && e2.type !== "keyup") {
               var isMarker = target.getLatLng && (!target._radius || target._radius <= 10);
-              data.containerPoint = isMarker ? this.latLngToContainerPoint(target.getLatLng()) : this.mouseEventToContainerPoint(e);
+              data.containerPoint = isMarker ? this.latLngToContainerPoint(target.getLatLng()) : this.mouseEventToContainerPoint(e2);
               data.layerPoint = this.containerPointToLayerPoint(data.containerPoint);
               data.latlng = isMarker ? target.getLatLng() : this.layerPointToLatLng(data.layerPoint);
             }
@@ -3104,9 +3104,9 @@ var YasguiGeoTg = (() => {
           _createAnimProxy: function() {
             var proxy = this._proxy = create$1("div", "leaflet-proxy leaflet-zoom-animated");
             this._panes.mapPane.appendChild(proxy);
-            this.on("zoomanim", function(e) {
+            this.on("zoomanim", function(e2) {
               var prop = TRANSFORM, transform2 = this._proxy.style[prop];
-              setTransform(this._proxy, this.project(e.center, e.zoom), this.getZoomScale(e.zoom, 1));
+              setTransform(this._proxy, this.project(e2.center, e2.zoom), this.getZoomScale(e2.zoom, 1));
               if (transform2 === this._proxy.style[prop] && this._animatingZoom) {
                 this._onZoomTransitionEnd();
               }
@@ -3123,8 +3123,8 @@ var YasguiGeoTg = (() => {
             var c3 = this.getCenter(), z = this.getZoom();
             setTransform(this._proxy, this.project(c3, z), this.getZoomScale(z, 1));
           },
-          _catchTransitionEnd: function(e) {
-            if (this._animatingZoom && e.propertyName.indexOf("transform") >= 0) {
+          _catchTransitionEnd: function(e2) {
+            if (this._animatingZoom && e2.propertyName.indexOf("transform") >= 0) {
               this._onZoomTransitionEnd();
             }
           },
@@ -3257,8 +3257,8 @@ var YasguiGeoTg = (() => {
             this._map = null;
             return this;
           },
-          _refocusOnMap: function(e) {
-            if (this._map && e && e.screenX > 0 && e.screenY > 0) {
+          _refocusOnMap: function(e2) {
+            if (this._map && e2 && e2.screenX > 0 && e2.screenY > 0) {
               this._map.getContainer().focus();
             }
           }
@@ -3422,14 +3422,14 @@ var YasguiGeoTg = (() => {
             link.title = "Layers";
             link.setAttribute("role", "button");
             on(link, {
-              keydown: function(e) {
-                if (e.keyCode === 13) {
+              keydown: function(e2) {
+                if (e2.keyCode === 13) {
                   this._expandSafely();
                 }
               },
               // Certain screen readers intercept the key event and instead send a click event
-              click: function(e) {
-                preventDefault(e);
+              click: function(e2) {
+                preventDefault(e2);
                 this._expandSafely();
               }
             }, this);
@@ -3490,12 +3490,12 @@ var YasguiGeoTg = (() => {
             this._separator.style.display = overlaysPresent && baseLayersPresent ? "" : "none";
             return this;
           },
-          _onLayerChange: function(e) {
+          _onLayerChange: function(e2) {
             if (!this._handlingClick) {
               this._update();
             }
-            var obj = this._getLayer(stamp(e.target));
-            var type = obj.overlay ? e.type === "add" ? "overlayadd" : "overlayremove" : e.type === "add" ? "baselayerchange" : null;
+            var obj = this._getLayer(stamp(e2.target));
+            var type = obj.overlay ? e2.type === "add" ? "overlayadd" : "overlayremove" : e2.type === "add" ? "baselayerchange" : null;
             if (type) {
               this._map.fire(type, obj);
             }
@@ -3640,14 +3640,14 @@ var YasguiGeoTg = (() => {
             this._updateDisabled();
             return this;
           },
-          _zoomIn: function(e) {
+          _zoomIn: function(e2) {
             if (!this._disabled && this._map._zoom < this._map.getMaxZoom()) {
-              this._map.zoomIn(this._map.options.zoomDelta * (e.shiftKey ? 3 : 1));
+              this._map.zoomIn(this._map.options.zoomDelta * (e2.shiftKey ? 3 : 1));
             }
           },
-          _zoomOut: function(e) {
+          _zoomOut: function(e2) {
             if (!this._disabled && this._map._zoom > this._map.getMinZoom()) {
-              this._map.zoomOut(this._map.options.zoomDelta * (e.shiftKey ? 3 : 1));
+              this._map.zoomOut(this._map.options.zoomDelta * (e2.shiftKey ? 3 : 1));
             }
           },
           _createButton: function(html, title, className, container, fn) {
@@ -3658,7 +3658,7 @@ var YasguiGeoTg = (() => {
             link.setAttribute("role", "button");
             link.setAttribute("aria-label", title);
             disableClickPropagation(link);
-            on(link, "click", stop);
+            on(link, "click", stop2);
             on(link, "click", fn, this);
             on(link, "click", this._refocusOnMap, this);
             return link;
@@ -3960,7 +3960,7 @@ var YasguiGeoTg = (() => {
             this._enabled = false;
             this._moved = false;
           },
-          _onDown: function(e) {
+          _onDown: function(e2) {
             if (!this._enabled) {
               return;
             }
@@ -3968,13 +3968,13 @@ var YasguiGeoTg = (() => {
             if (hasClass(this._element, "leaflet-zoom-anim")) {
               return;
             }
-            if (e.touches && e.touches.length !== 1) {
+            if (e2.touches && e2.touches.length !== 1) {
               if (Draggable._dragging === this) {
                 this.finishDrag();
               }
               return;
             }
-            if (Draggable._dragging || e.shiftKey || e.which !== 1 && e.button !== 1 && !e.touches) {
+            if (Draggable._dragging || e2.shiftKey || e2.which !== 1 && e2.button !== 1 && !e2.touches) {
               return;
             }
             Draggable._dragging = this;
@@ -3987,23 +3987,23 @@ var YasguiGeoTg = (() => {
               return;
             }
             this.fire("down");
-            var first = e.touches ? e.touches[0] : e, sizedParent = getSizedParentNode(this._element);
+            var first = e2.touches ? e2.touches[0] : e2, sizedParent = getSizedParentNode(this._element);
             this._startPoint = new Point2(first.clientX, first.clientY);
             this._startPos = getPosition(this._element);
             this._parentScale = getScale(sizedParent);
-            var mouseevent = e.type === "mousedown";
+            var mouseevent = e2.type === "mousedown";
             on(document, mouseevent ? "mousemove" : "touchmove", this._onMove, this);
             on(document, mouseevent ? "mouseup" : "touchend touchcancel", this._onUp, this);
           },
-          _onMove: function(e) {
+          _onMove: function(e2) {
             if (!this._enabled) {
               return;
             }
-            if (e.touches && e.touches.length > 1) {
+            if (e2.touches && e2.touches.length > 1) {
               this._moved = true;
               return;
             }
-            var first = e.touches && e.touches.length === 1 ? e.touches[0] : e, offset = new Point2(first.clientX, first.clientY)._subtract(this._startPoint);
+            var first = e2.touches && e2.touches.length === 1 ? e2.touches[0] : e2, offset = new Point2(first.clientX, first.clientY)._subtract(this._startPoint);
             if (!offset.x && !offset.y) {
               return;
             }
@@ -4012,12 +4012,12 @@ var YasguiGeoTg = (() => {
             }
             offset.x /= this._parentScale.x;
             offset.y /= this._parentScale.y;
-            preventDefault(e);
+            preventDefault(e2);
             if (!this._moved) {
               this.fire("dragstart");
               this._moved = true;
               addClass(document.body, "leaflet-dragging");
-              this._lastTarget = e.target || e.srcElement;
+              this._lastTarget = e2.target || e2.srcElement;
               if (window.SVGElementInstance && this._lastTarget instanceof window.SVGElementInstance) {
                 this._lastTarget = this._lastTarget.correspondingUseElement;
               }
@@ -4025,14 +4025,14 @@ var YasguiGeoTg = (() => {
             }
             this._newPos = this._startPos.add(offset);
             this._moving = true;
-            this._lastEvent = e;
+            this._lastEvent = e2;
             this._updatePosition();
           },
           _updatePosition: function() {
-            var e = { originalEvent: this._lastEvent };
-            this.fire("predrag", e);
+            var e2 = { originalEvent: this._lastEvent };
+            this.fire("predrag", e2);
             setPosition(this._element, this._newPos);
-            this.fire("drag", e);
+            this.fire("drag", e2);
           },
           _onUp: function() {
             if (!this._enabled) {
@@ -4353,20 +4353,20 @@ var YasguiGeoTg = (() => {
           R_MINOR: 6356752314245179e-9,
           bounds: new Bounds([-2003750834279e-5, -1549657073972e-5], [2003750834279e-5, 1876465623138e-5]),
           project: function(latlng) {
-            var d3 = Math.PI / 180, r = this.R, y3 = latlng.lat * d3, tmp = this.R_MINOR / r, e = Math.sqrt(1 - tmp * tmp), con = e * Math.sin(y3);
-            var ts = Math.tan(Math.PI / 4 - y3 / 2) / Math.pow((1 - con) / (1 + con), e / 2);
-            y3 = -r * Math.log(Math.max(ts, 1e-10));
-            return new Point2(latlng.lng * d3 * r, y3);
+            var d3 = Math.PI / 180, r2 = this.R, y3 = latlng.lat * d3, tmp = this.R_MINOR / r2, e2 = Math.sqrt(1 - tmp * tmp), con = e2 * Math.sin(y3);
+            var ts = Math.tan(Math.PI / 4 - y3 / 2) / Math.pow((1 - con) / (1 + con), e2 / 2);
+            y3 = -r2 * Math.log(Math.max(ts, 1e-10));
+            return new Point2(latlng.lng * d3 * r2, y3);
           },
           unproject: function(point) {
-            var d3 = 180 / Math.PI, r = this.R, tmp = this.R_MINOR / r, e = Math.sqrt(1 - tmp * tmp), ts = Math.exp(-point.y / r), phi = Math.PI / 2 - 2 * Math.atan(ts);
+            var d3 = 180 / Math.PI, r2 = this.R, tmp = this.R_MINOR / r2, e2 = Math.sqrt(1 - tmp * tmp), ts = Math.exp(-point.y / r2), phi = Math.PI / 2 - 2 * Math.atan(ts);
             for (var i = 0, dphi = 0.1, con; i < 15 && Math.abs(dphi) > 1e-7; i++) {
-              con = e * Math.sin(phi);
-              con = Math.pow((1 - con) / (1 + con), e / 2);
+              con = e2 * Math.sin(phi);
+              con = Math.pow((1 - con) / (1 + con), e2 / 2);
               dphi = Math.PI / 2 - 2 * Math.atan(ts * con) - phi;
               phi += dphi;
             }
-            return new LatLng(phi * d3, point.x * d3 / r);
+            return new LatLng(phi * d3, point.x * d3 / r2);
           }
         };
         var index = {
@@ -4465,8 +4465,8 @@ var YasguiGeoTg = (() => {
           getAttribution: function() {
             return this.options.attribution;
           },
-          _layerAdd: function(e) {
-            var map = e.target;
+          _layerAdd: function(e2) {
+            var map = e2.target;
             if (!map.hasLayer(this)) {
               return;
             }
@@ -4913,7 +4913,7 @@ var YasguiGeoTg = (() => {
           moved: function() {
             return this._draggable && this._draggable._moved;
           },
-          _adjustPan: function(e) {
+          _adjustPan: function(e2) {
             var marker2 = this._marker, map = marker2._map, speed = this._marker.options.autoPanSpeed, padding = this._marker.options.autoPanPadding, iconPos = getPosition(marker2._icon), bounds = map.getPixelBounds(), origin = map.getPixelOrigin();
             var panBounds = toBounds(
               bounds.min._subtract(origin).add(padding),
@@ -4928,8 +4928,8 @@ var YasguiGeoTg = (() => {
               this._draggable._newPos._add(movement);
               this._draggable._startPos._add(movement);
               setPosition(marker2._icon, this._draggable._newPos);
-              this._onDrag(e);
-              this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e));
+              this._onDrag(e2);
+              this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e2));
             }
           },
           _onDragStart: function() {
@@ -4937,26 +4937,26 @@ var YasguiGeoTg = (() => {
             this._marker.closePopup && this._marker.closePopup();
             this._marker.fire("movestart").fire("dragstart");
           },
-          _onPreDrag: function(e) {
+          _onPreDrag: function(e2) {
             if (this._marker.options.autoPan) {
               cancelAnimFrame(this._panRequest);
-              this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e));
+              this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e2));
             }
           },
-          _onDrag: function(e) {
+          _onDrag: function(e2) {
             var marker2 = this._marker, shadow = marker2._shadow, iconPos = getPosition(marker2._icon), latlng = marker2._map.layerPointToLatLng(iconPos);
             if (shadow) {
               setPosition(shadow, iconPos);
             }
             marker2._latlng = latlng;
-            e.latlng = latlng;
-            e.oldLatLng = this._oldLatLng;
-            marker2.fire("move", e).fire("drag", e);
+            e2.latlng = latlng;
+            e2.oldLatLng = this._oldLatLng;
+            marker2.fire("move", e2).fire("drag", e2);
           },
-          _onDragEnd: function(e) {
+          _onDragEnd: function(e2) {
             cancelAnimFrame(this._panRequest);
             delete this._oldLatLng;
-            this._marker.fire("moveend").fire("dragend", e);
+            this._marker.fire("moveend").fire("dragend", e2);
           }
         });
         var Marker = Layer.extend({
@@ -5414,7 +5414,7 @@ var YasguiGeoTg = (() => {
             this._updateBounds();
           },
           _updateBounds: function() {
-            var r = this._radius, r2 = this._radiusY || r, w = this._clickTolerance(), p = [r + w, r2 + w];
+            var r2 = this._radius, r22 = this._radiusY || r2, w = this._clickTolerance(), p = [r2 + w, r22 + w];
             this._pxBounds = new Bounds(this._point.subtract(p), this._point.add(p));
           },
           _update: function() {
@@ -5576,9 +5576,9 @@ var YasguiGeoTg = (() => {
           },
           // recursively convert latlngs input into actual LatLng instances; calculate bounds along the way
           _convertLatLngs: function(latlngs) {
-            var result = [], flat = isFlat(latlngs);
+            var result = [], flat2 = isFlat(latlngs);
             for (var i = 0, len = latlngs.length; i < len; i++) {
-              if (flat) {
+              if (flat2) {
                 result[i] = toLatLng(latlngs[i]);
                 this._bounds.extend(result[i]);
               } else {
@@ -5608,8 +5608,8 @@ var YasguiGeoTg = (() => {
           },
           // recursively turns latlngs into a set of rings with projected coordinates
           _projectLatlngs: function(latlngs, result, projectedBounds) {
-            var flat = latlngs[0] instanceof LatLng, len = latlngs.length, i, ring;
-            if (flat) {
+            var flat2 = latlngs[0] instanceof LatLng, len = latlngs.length, i, ring;
+            if (flat2) {
               ring = [];
               for (i = 0; i < len; i++) {
                 ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
@@ -6209,8 +6209,8 @@ var YasguiGeoTg = (() => {
             img.src = this._url;
             img.alt = this.options.alt;
           },
-          _animateZoom: function(e) {
-            var scale2 = this._map.getZoomScale(e.zoom), offset = this._map._latLngBoundsToNewLayerBounds(this._bounds, e.zoom, e.center).min;
+          _animateZoom: function(e2) {
+            var scale2 = this._map.getZoomScale(e2.zoom), offset = this._map._latLngBoundsToNewLayerBounds(this._bounds, e2.zoom, e2.center).min;
             setTransform(this._image, offset, scale2);
           },
           _reset: function() {
@@ -6755,8 +6755,8 @@ var YasguiGeoTg = (() => {
             }
             this._containerWidth = this._container.offsetWidth;
           },
-          _animateZoom: function(e) {
-            var pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center), anchor = this._getAnchor();
+          _animateZoom: function(e2) {
+            var pos = this._map._latLngToNewLayerPoint(this._latlng, e2.zoom, e2.center), anchor = this._getAnchor();
             setPosition(this._container, pos.add(anchor));
           },
           _adjustPan: function() {
@@ -6902,29 +6902,29 @@ var YasguiGeoTg = (() => {
           getPopup: function() {
             return this._popup;
           },
-          _openPopup: function(e) {
+          _openPopup: function(e2) {
             if (!this._popup || !this._map) {
               return;
             }
-            stop(e);
-            var target = e.layer || e.target;
+            stop2(e2);
+            var target = e2.layer || e2.target;
             if (this._popup._source === target && !(target instanceof Path)) {
               if (this._map.hasLayer(this._popup)) {
                 this.closePopup();
               } else {
-                this.openPopup(e.latlng);
+                this.openPopup(e2.latlng);
               }
               return;
             }
             this._popup._source = target;
-            this.openPopup(e.latlng);
+            this.openPopup(e2.latlng);
           },
-          _movePopup: function(e) {
-            this._popup.setLatLng(e.latlng);
+          _movePopup: function(e2) {
+            this._popup.setLatLng(e2.latlng);
           },
-          _onKeyPress: function(e) {
-            if (e.originalEvent.keyCode === 13) {
-              this._openPopup(e);
+          _onKeyPress: function(e2) {
+            if (e2.originalEvent.keyCode === 13) {
+              this._openPopup(e2);
             }
           }
         });
@@ -7032,8 +7032,8 @@ var YasguiGeoTg = (() => {
               setOpacity(this._container, opacity);
             }
           },
-          _animateZoom: function(e) {
-            var pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center);
+          _animateZoom: function(e2) {
+            var pos = this._map._latLngToNewLayerPoint(this._latlng, e2.zoom, e2.center);
             this._setPosition(pos);
           },
           _getAnchor: function() {
@@ -7186,7 +7186,7 @@ var YasguiGeoTg = (() => {
               el.setAttribute("aria-describedby", this._tooltip._container.id);
             }
           },
-          _openTooltip: function(e) {
+          _openTooltip: function(e2) {
             if (!this._tooltip || !this._map) {
               return;
             }
@@ -7195,17 +7195,17 @@ var YasguiGeoTg = (() => {
               var that = this;
               this._map.once("moveend", function() {
                 that._openOnceFlag = false;
-                that._openTooltip(e);
+                that._openTooltip(e2);
               });
               return;
             }
-            this._tooltip._source = e.layer || e.target;
-            this.openTooltip(this._tooltip.options.sticky ? e.latlng : void 0);
+            this._tooltip._source = e2.layer || e2.target;
+            this.openTooltip(this._tooltip.options.sticky ? e2.latlng : void 0);
           },
-          _moveTooltip: function(e) {
-            var latlng = e.latlng, containerPoint, layerPoint;
-            if (this._tooltip.options.sticky && e.originalEvent) {
-              containerPoint = this._map.mouseEventToContainerPoint(e.originalEvent);
+          _moveTooltip: function(e2) {
+            var latlng = e2.latlng, containerPoint, layerPoint;
+            if (this._tooltip.options.sticky && e2.originalEvent) {
+              containerPoint = this._map.mouseEventToContainerPoint(e2.originalEvent);
               layerPoint = this._map.containerPointToLayerPoint(containerPoint);
               latlng = this._map.layerPointToLatLng(layerPoint);
             }
@@ -7605,12 +7605,12 @@ var YasguiGeoTg = (() => {
               }
             }
           },
-          _resetView: function(e) {
-            var animating = e && (e.pinch || e.flyTo);
+          _resetView: function(e2) {
+            var animating = e2 && (e2.pinch || e2.flyTo);
             this._setView(this._map.getCenter(), this._map.getZoom(), animating, animating);
           },
-          _animateZoom: function(e) {
-            this._setView(e.center, e.zoom, true, e.noUpdate);
+          _animateZoom: function(e2) {
+            this._setView(e2.center, e2.zoom, true, e2.noUpdate);
           },
           _clampZoom: function(zoom2) {
             var options = this.options;
@@ -8021,15 +8021,15 @@ var YasguiGeoTg = (() => {
               done(null, tile);
             }
           },
-          _tileOnError: function(done, tile, e) {
+          _tileOnError: function(done, tile, e2) {
             var errorUrl = this.options.errorTileUrl;
             if (errorUrl && tile.getAttribute("src") !== errorUrl) {
               tile.src = errorUrl;
             }
-            done(e, tile);
+            done(e2, tile);
           },
-          _onTileRemove: function(e) {
-            e.tile.onload = null;
+          _onTileRemove: function(e2) {
+            e2.tile.onload = null;
           },
           _getZoomForUrl: function() {
             var zoom2 = this._tileZoom, maxZoom = this.options.maxZoom, zoomReverse = this.options.zoomReverse, zoomOffset = this.options.zoomOffset;
@@ -8444,13 +8444,13 @@ var YasguiGeoTg = (() => {
             if (!this._drawing || layer._empty()) {
               return;
             }
-            var p = layer._point, ctx = this._ctx, r = Math.max(Math.round(layer._radius), 1), s2 = (Math.max(Math.round(layer._radiusY), 1) || r) / r;
+            var p = layer._point, ctx = this._ctx, r2 = Math.max(Math.round(layer._radius), 1), s2 = (Math.max(Math.round(layer._radiusY), 1) || r2) / r2;
             if (s2 !== 1) {
               ctx.save();
               ctx.scale(1, s2);
             }
             ctx.beginPath();
-            ctx.arc(p.x, p.y / s2, r, 0, Math.PI * 2, false);
+            ctx.arc(p.x, p.y / s2, r2, 0, Math.PI * 2, false);
             if (s2 !== 1) {
               ctx.restore();
             }
@@ -8477,35 +8477,35 @@ var YasguiGeoTg = (() => {
           },
           // Canvas obviously doesn't have mouse events for individual drawn objects,
           // so we emulate that by calculating what's under the mouse on mousemove/click manually
-          _onClick: function(e) {
-            var point = this._map.mouseEventToLayerPoint(e), layer, clickedLayer;
+          _onClick: function(e2) {
+            var point = this._map.mouseEventToLayerPoint(e2), layer, clickedLayer;
             for (var order = this._drawFirst; order; order = order.next) {
               layer = order.layer;
               if (layer.options.interactive && layer._containsPoint(point)) {
-                if (!(e.type === "click" || e.type === "preclick") || !this._map._draggableMoved(layer)) {
+                if (!(e2.type === "click" || e2.type === "preclick") || !this._map._draggableMoved(layer)) {
                   clickedLayer = layer;
                 }
               }
             }
-            this._fireEvent(clickedLayer ? [clickedLayer] : false, e);
+            this._fireEvent(clickedLayer ? [clickedLayer] : false, e2);
           },
-          _onMouseMove: function(e) {
+          _onMouseMove: function(e2) {
             if (!this._map || this._map.dragging.moving() || this._map._animatingZoom) {
               return;
             }
-            var point = this._map.mouseEventToLayerPoint(e);
-            this._handleMouseHover(e, point);
+            var point = this._map.mouseEventToLayerPoint(e2);
+            this._handleMouseHover(e2, point);
           },
-          _handleMouseOut: function(e) {
+          _handleMouseOut: function(e2) {
             var layer = this._hoveredLayer;
             if (layer) {
               removeClass(this._container, "leaflet-interactive");
-              this._fireEvent([layer], e, "mouseout");
+              this._fireEvent([layer], e2, "mouseout");
               this._hoveredLayer = null;
               this._mouseHoverThrottled = false;
             }
           },
-          _handleMouseHover: function(e, point) {
+          _handleMouseHover: function(e2, point) {
             if (this._mouseHoverThrottled) {
               return;
             }
@@ -8517,21 +8517,21 @@ var YasguiGeoTg = (() => {
               }
             }
             if (candidateHoveredLayer !== this._hoveredLayer) {
-              this._handleMouseOut(e);
+              this._handleMouseOut(e2);
               if (candidateHoveredLayer) {
                 addClass(this._container, "leaflet-interactive");
-                this._fireEvent([candidateHoveredLayer], e, "mouseover");
+                this._fireEvent([candidateHoveredLayer], e2, "mouseover");
                 this._hoveredLayer = candidateHoveredLayer;
               }
             }
-            this._fireEvent(this._hoveredLayer ? [this._hoveredLayer] : false, e);
+            this._fireEvent(this._hoveredLayer ? [this._hoveredLayer] : false, e2);
             this._mouseHoverThrottled = true;
             setTimeout(bind2(function() {
               this._mouseHoverThrottled = false;
             }, this), 32);
           },
-          _fireEvent: function(layers2, e, type) {
-            this._map._fireDOMEvent(e, type || e.type, layers2);
+          _fireEvent: function(layers2, e2, type) {
+            this._map._fireDOMEvent(e2, type || e2.type, layers2);
           },
           _bringToFront: function(layer) {
             var order = layer._order;
@@ -8589,7 +8589,7 @@ var YasguiGeoTg = (() => {
             return function(name) {
               return document.createElement("<lvml:" + name + ' class="lvml">');
             };
-          } catch (e) {
+          } catch (e2) {
           }
           return function(name) {
             return document.createElement("<" + name + ' xmlns="urn:schemas-microsoft.com:vml" class="lvml">');
@@ -8664,8 +8664,8 @@ var YasguiGeoTg = (() => {
             }
           },
           _updateCircle: function(layer) {
-            var p = layer._point.round(), r = Math.round(layer._radius), r2 = Math.round(layer._radiusY || r);
-            this._setPath(layer, layer._empty() ? "M0 0" : "AL " + p.x + "," + p.y + " " + r + "," + r2 + " 0," + 65535 * 360);
+            var p = layer._point.round(), r2 = Math.round(layer._radius), r22 = Math.round(layer._radiusY || r2);
+            this._setPath(layer, layer._empty() ? "M0 0" : "AL " + p.x + "," + p.y + " " + r2 + "," + r22 + " 0," + 65535 * 360);
           },
           _setPath: function(layer, path) {
             layer._path.v = path;
@@ -8771,8 +8771,8 @@ var YasguiGeoTg = (() => {
             this._setPath(layer, pointsToPath(layer._parts, closed));
           },
           _updateCircle: function(layer) {
-            var p = layer._point, r = Math.max(Math.round(layer._radius), 1), r2 = Math.max(Math.round(layer._radiusY), 1) || r, arc = "a" + r + "," + r2 + " 0 1,0 ";
-            var d3 = layer._empty() ? "M0 0" : "M" + (p.x - r) + "," + p.y + arc + r * 2 + ",0 " + arc + -r * 2 + ",0 ";
+            var p = layer._point, r2 = Math.max(Math.round(layer._radius), 1), r22 = Math.max(Math.round(layer._radiusY), 1) || r2, arc = "a" + r2 + "," + r22 + " 0 1,0 ";
+            var d3 = layer._empty() ? "M0 0" : "M" + (p.x - r2) + "," + p.y + arc + r2 * 2 + ",0 " + arc + -r2 * 2 + ",0 ";
             this._setPath(layer, d3);
           },
           _setPath: function(layer, path) {
@@ -8890,30 +8890,30 @@ var YasguiGeoTg = (() => {
               this._resetStateTimeout = 0;
             }
           },
-          _onMouseDown: function(e) {
-            if (!e.shiftKey || e.which !== 1 && e.button !== 1) {
+          _onMouseDown: function(e2) {
+            if (!e2.shiftKey || e2.which !== 1 && e2.button !== 1) {
               return false;
             }
             this._clearDeferredResetState();
             this._resetState();
             disableTextSelection();
             disableImageDrag();
-            this._startPoint = this._map.mouseEventToContainerPoint(e);
+            this._startPoint = this._map.mouseEventToContainerPoint(e2);
             on(document, {
-              contextmenu: stop,
+              contextmenu: stop2,
               mousemove: this._onMouseMove,
               mouseup: this._onMouseUp,
               keydown: this._onKeyDown
             }, this);
           },
-          _onMouseMove: function(e) {
+          _onMouseMove: function(e2) {
             if (!this._moved) {
               this._moved = true;
               this._box = create$1("div", "leaflet-zoom-box", this._container);
               addClass(this._container, "leaflet-crosshair");
               this._map.fire("boxzoomstart");
             }
-            this._point = this._map.mouseEventToContainerPoint(e);
+            this._point = this._map.mouseEventToContainerPoint(e2);
             var bounds = new Bounds(this._point, this._startPoint), size = bounds.getSize();
             setPosition(this._box, bounds.min);
             this._box.style.width = size.x + "px";
@@ -8927,14 +8927,14 @@ var YasguiGeoTg = (() => {
             enableTextSelection();
             enableImageDrag();
             off(document, {
-              contextmenu: stop,
+              contextmenu: stop2,
               mousemove: this._onMouseMove,
               mouseup: this._onMouseUp,
               keydown: this._onKeyDown
             }, this);
           },
-          _onMouseUp: function(e) {
-            if (e.which !== 1 && e.button !== 1) {
+          _onMouseUp: function(e2) {
+            if (e2.which !== 1 && e2.button !== 1) {
               return;
             }
             this._finish();
@@ -8949,8 +8949,8 @@ var YasguiGeoTg = (() => {
             );
             this._map.fitBounds(bounds).fire("boxzoomend", { boxZoomBounds: bounds });
           },
-          _onKeyDown: function(e) {
-            if (e.keyCode === 27) {
+          _onKeyDown: function(e2) {
+            if (e2.keyCode === 27) {
               this._finish();
               this._clearDeferredResetState();
               this._resetState();
@@ -8973,12 +8973,12 @@ var YasguiGeoTg = (() => {
           removeHooks: function() {
             this._map.off("dblclick", this._onDoubleClick, this);
           },
-          _onDoubleClick: function(e) {
-            var map = this._map, oldZoom = map.getZoom(), delta = map.options.zoomDelta, zoom2 = e.originalEvent.shiftKey ? oldZoom - delta : oldZoom + delta;
+          _onDoubleClick: function(e2) {
+            var map = this._map, oldZoom = map.getZoom(), delta = map.options.zoomDelta, zoom2 = e2.originalEvent.shiftKey ? oldZoom - delta : oldZoom + delta;
             if (map.options.doubleClickZoom === "center") {
               map.setZoom(zoom2);
             } else {
-              map.setZoomAround(e.containerPoint, zoom2);
+              map.setZoomAround(e2.containerPoint, zoom2);
             }
           }
         });
@@ -9070,14 +9070,14 @@ var YasguiGeoTg = (() => {
               this._times = [];
             }
           },
-          _onDrag: function(e) {
+          _onDrag: function(e2) {
             if (this._map.options.inertia) {
               var time = this._lastTime = +/* @__PURE__ */ new Date(), pos = this._lastPos = this._draggable._absPos || this._draggable._newPos;
               this._positions.push(pos);
               this._times.push(time);
               this._prunePositions(time);
             }
-            this._map.fire("move", e).fire("drag", e);
+            this._map.fire("move", e2).fire("drag", e2);
           },
           _prunePositions: function(time) {
             while (this._positions.length > 1 && time - this._times[0] > 50) {
@@ -9118,9 +9118,9 @@ var YasguiGeoTg = (() => {
             this._draggable._absPos = this._draggable._newPos.clone();
             this._draggable._newPos.x = newX;
           },
-          _onDragEnd: function(e) {
-            var map = this._map, options = map.options, noInertia = !options.inertia || e.noInertia || this._times.length < 2;
-            map.fire("dragend", e);
+          _onDragEnd: function(e2) {
+            var map = this._map, options = map.options, noInertia = !options.inertia || e2.noInertia || this._times.length < 2;
+            map.fire("dragend", e2);
             if (noInertia) {
               map.fire("moveend");
             } else {
@@ -9239,15 +9239,15 @@ var YasguiGeoTg = (() => {
           _removeHooks: function() {
             off(document, "keydown", this._onKeyDown, this);
           },
-          _onKeyDown: function(e) {
-            if (e.altKey || e.ctrlKey || e.metaKey) {
+          _onKeyDown: function(e2) {
+            if (e2.altKey || e2.ctrlKey || e2.metaKey) {
               return;
             }
-            var key = e.keyCode, map = this._map, offset;
+            var key = e2.keyCode, map = this._map, offset;
             if (key in this._panKeys) {
               if (!map._panAnim || !map._panAnim._inProgress) {
                 offset = this._panKeys[key];
-                if (e.shiftKey) {
+                if (e2.shiftKey) {
                   offset = toPoint2(offset).multiplyBy(3);
                 }
                 if (map.options.maxBounds) {
@@ -9261,13 +9261,13 @@ var YasguiGeoTg = (() => {
                 }
               }
             } else if (key in this._zoomKeys) {
-              map.setZoom(map.getZoom() + (e.shiftKey ? 3 : 1) * this._zoomKeys[key]);
+              map.setZoom(map.getZoom() + (e2.shiftKey ? 3 : 1) * this._zoomKeys[key]);
             } else if (key === 27 && map._popup && map._popup.options.closeOnEscapeKey) {
               map.closePopup();
             } else {
               return;
             }
-            stop(e);
+            stop2(e2);
           }
         });
         Map2.addInitHook("addHandler", "keyboard", Keyboard);
@@ -9295,18 +9295,18 @@ var YasguiGeoTg = (() => {
           removeHooks: function() {
             off(this._map._container, "wheel", this._onWheelScroll, this);
           },
-          _onWheelScroll: function(e) {
-            var delta = getWheelDelta(e);
+          _onWheelScroll: function(e2) {
+            var delta = getWheelDelta(e2);
             var debounce = this._map.options.wheelDebounceTime;
             this._delta += delta;
-            this._lastMousePos = this._map.mouseEventToContainerPoint(e);
+            this._lastMousePos = this._map.mouseEventToContainerPoint(e2);
             if (!this._startTime) {
               this._startTime = +/* @__PURE__ */ new Date();
             }
             var left = Math.max(debounce - (+/* @__PURE__ */ new Date() - this._startTime), 0);
             clearTimeout(this._timer);
             this._timer = setTimeout(bind2(this._performZoom, this), left);
-            stop(e);
+            stop2(e2);
           },
           _performZoom: function() {
             var map = this._map, zoom2 = map.getZoom(), snap = this._map.options.zoomSnap || 0;
@@ -9343,12 +9343,12 @@ var YasguiGeoTg = (() => {
           removeHooks: function() {
             off(this._map._container, "touchstart", this._onDown, this);
           },
-          _onDown: function(e) {
+          _onDown: function(e2) {
             clearTimeout(this._holdTimeout);
-            if (e.touches.length !== 1) {
+            if (e2.touches.length !== 1) {
               return;
             }
-            var first = e.touches[0];
+            var first = e2.touches[0];
             this._startPos = this._newPos = new Point2(first.clientX, first.clientY);
             this._holdTimeout = setTimeout(bind2(function() {
               this._cancel();
@@ -9371,28 +9371,28 @@ var YasguiGeoTg = (() => {
             off(document, "touchend touchcancel contextmenu", this._cancel, this);
             off(document, "touchmove", this._onMove, this);
           },
-          _onMove: function(e) {
-            var first = e.touches[0];
+          _onMove: function(e2) {
+            var first = e2.touches[0];
             this._newPos = new Point2(first.clientX, first.clientY);
           },
           _isTapValid: function() {
             return this._newPos.distanceTo(this._startPos) <= this._map.options.tapTolerance;
           },
-          _simulateEvent: function(type, e) {
+          _simulateEvent: function(type, e2) {
             var simulatedEvent = new MouseEvent(type, {
               bubbles: true,
               cancelable: true,
               view: window,
               // detail: 1,
-              screenX: e.screenX,
-              screenY: e.screenY,
-              clientX: e.clientX,
-              clientY: e.clientY
+              screenX: e2.screenX,
+              screenY: e2.screenY,
+              clientX: e2.clientX,
+              clientY: e2.clientY
               // button: 2,
               // buttons: 2
             });
             simulatedEvent._simulated = true;
-            e.target.dispatchEvent(simulatedEvent);
+            e2.target.dispatchEvent(simulatedEvent);
           }
         });
         Map2.addInitHook("addHandler", "tapHold", TapHold);
@@ -9418,12 +9418,12 @@ var YasguiGeoTg = (() => {
             removeClass(this._map._container, "leaflet-touch-zoom");
             off(this._map._container, "touchstart", this._onTouchStart, this);
           },
-          _onTouchStart: function(e) {
+          _onTouchStart: function(e2) {
             var map = this._map;
-            if (!e.touches || e.touches.length !== 2 || map._animatingZoom || this._zooming) {
+            if (!e2.touches || e2.touches.length !== 2 || map._animatingZoom || this._zooming) {
               return;
             }
-            var p1 = map.mouseEventToContainerPoint(e.touches[0]), p2 = map.mouseEventToContainerPoint(e.touches[1]);
+            var p1 = map.mouseEventToContainerPoint(e2.touches[0]), p2 = map.mouseEventToContainerPoint(e2.touches[1]);
             this._centerPoint = map.getSize()._divideBy(2);
             this._startLatLng = map.containerPointToLatLng(this._centerPoint);
             if (map.options.touchZoom !== "center") {
@@ -9436,13 +9436,13 @@ var YasguiGeoTg = (() => {
             map._stop();
             on(document, "touchmove", this._onTouchMove, this);
             on(document, "touchend touchcancel", this._onTouchEnd, this);
-            preventDefault(e);
+            preventDefault(e2);
           },
-          _onTouchMove: function(e) {
-            if (!e.touches || e.touches.length !== 2 || !this._zooming) {
+          _onTouchMove: function(e2) {
+            if (!e2.touches || e2.touches.length !== 2 || !this._zooming) {
               return;
             }
-            var map = this._map, p1 = map.mouseEventToContainerPoint(e.touches[0]), p2 = map.mouseEventToContainerPoint(e.touches[1]), scale2 = p1.distanceTo(p2) / this._startDist;
+            var map = this._map, p1 = map.mouseEventToContainerPoint(e2.touches[0]), p2 = map.mouseEventToContainerPoint(e2.touches[1]), scale2 = p1.distanceTo(p2) / this._startDist;
             this._zoom = map.getScaleZoom(scale2, this._startZoom);
             if (!map.options.bounceAtZoomLimits && (this._zoom < map.getMinZoom() && scale2 < 1 || this._zoom > map.getMaxZoom() && scale2 > 1)) {
               this._zoom = map._limitZoom(this._zoom);
@@ -9466,7 +9466,7 @@ var YasguiGeoTg = (() => {
             cancelAnimFrame(this._animRequest);
             var moveFn = bind2(map._move, map, this._center, this._zoom, { pinch: true, round: false }, void 0);
             this._animRequest = requestAnimFrame(moveFn, this, true);
-            preventDefault(e);
+            preventDefault(e2);
           },
           _onTouchEnd: function() {
             if (!this._moved || !this._zooming) {
@@ -9577,6 +9577,2090 @@ var YasguiGeoTg = (() => {
         };
         window.L = exports2;
       });
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/util.js
+  var require_util = __commonJS({
+    "node_modules/fast-xml-parser/src/util.js"(exports) {
+      "use strict";
+      var nameStartChar = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD";
+      var nameChar = nameStartChar + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040";
+      var nameRegexp = "[" + nameStartChar + "][" + nameChar + "]*";
+      var regexName = new RegExp("^" + nameRegexp + "$");
+      var getAllMatches = function(string, regex) {
+        const matches = [];
+        let match2 = regex.exec(string);
+        while (match2) {
+          const allmatches = [];
+          allmatches.startIndex = regex.lastIndex - match2[0].length;
+          const len = match2.length;
+          for (let index = 0; index < len; index++) {
+            allmatches.push(match2[index]);
+          }
+          matches.push(allmatches);
+          match2 = regex.exec(string);
+        }
+        return matches;
+      };
+      var isName = function(string) {
+        const match2 = regexName.exec(string);
+        return !(match2 === null || typeof match2 === "undefined");
+      };
+      exports.isExist = function(v) {
+        return typeof v !== "undefined";
+      };
+      exports.isEmptyObject = function(obj) {
+        return Object.keys(obj).length === 0;
+      };
+      exports.merge = function(target, a2, arrayMode) {
+        if (a2) {
+          const keys = Object.keys(a2);
+          const len = keys.length;
+          for (let i = 0; i < len; i++) {
+            if (arrayMode === "strict") {
+              target[keys[i]] = [a2[keys[i]]];
+            } else {
+              target[keys[i]] = a2[keys[i]];
+            }
+          }
+        }
+      };
+      exports.getValue = function(v) {
+        if (exports.isExist(v)) {
+          return v;
+        } else {
+          return "";
+        }
+      };
+      var DANGEROUS_PROPERTY_NAMES = [
+        // '__proto__',
+        // 'constructor',
+        // 'prototype',
+        "hasOwnProperty",
+        "toString",
+        "valueOf",
+        "__defineGetter__",
+        "__defineSetter__",
+        "__lookupGetter__",
+        "__lookupSetter__"
+      ];
+      var criticalProperties = ["__proto__", "constructor", "prototype"];
+      exports.isName = isName;
+      exports.getAllMatches = getAllMatches;
+      exports.nameRegexp = nameRegexp;
+      exports.DANGEROUS_PROPERTY_NAMES = DANGEROUS_PROPERTY_NAMES;
+      exports.criticalProperties = criticalProperties;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/validator.js
+  var require_validator = __commonJS({
+    "node_modules/fast-xml-parser/src/validator.js"(exports) {
+      "use strict";
+      var util = require_util();
+      var defaultOptions = {
+        allowBooleanAttributes: false,
+        //A tag can have attributes without any value
+        unpairedTags: []
+      };
+      exports.validate = function(xmlData, options) {
+        options = Object.assign({}, defaultOptions, options);
+        const tags = [];
+        let tagFound = false;
+        let reachedRoot = false;
+        if (xmlData[0] === "\uFEFF") {
+          xmlData = xmlData.substr(1);
+        }
+        for (let i = 0; i < xmlData.length; i++) {
+          if (xmlData[i] === "<" && xmlData[i + 1] === "?") {
+            i += 2;
+            i = readPI(xmlData, i);
+            if (i.err) return i;
+          } else if (xmlData[i] === "<") {
+            let tagStartPos = i;
+            i++;
+            if (xmlData[i] === "!") {
+              i = readCommentAndCDATA(xmlData, i);
+              continue;
+            } else {
+              let closingTag = false;
+              if (xmlData[i] === "/") {
+                closingTag = true;
+                i++;
+              }
+              let tagName = "";
+              for (; i < xmlData.length && xmlData[i] !== ">" && xmlData[i] !== " " && xmlData[i] !== "	" && xmlData[i] !== "\n" && xmlData[i] !== "\r"; i++) {
+                tagName += xmlData[i];
+              }
+              tagName = tagName.trim();
+              if (tagName[tagName.length - 1] === "/") {
+                tagName = tagName.substring(0, tagName.length - 1);
+                i--;
+              }
+              if (!validateTagName(tagName)) {
+                let msg;
+                if (tagName.trim().length === 0) {
+                  msg = "Invalid space after '<'.";
+                } else {
+                  msg = "Tag '" + tagName + "' is an invalid name.";
+                }
+                return getErrorObject("InvalidTag", msg, getLineNumberForPosition(xmlData, i));
+              }
+              const result = readAttributeStr(xmlData, i);
+              if (result === false) {
+                return getErrorObject("InvalidAttr", "Attributes for '" + tagName + "' have open quote.", getLineNumberForPosition(xmlData, i));
+              }
+              let attrStr = result.value;
+              i = result.index;
+              if (attrStr[attrStr.length - 1] === "/") {
+                const attrStrStart = i - attrStr.length;
+                attrStr = attrStr.substring(0, attrStr.length - 1);
+                const isValid = validateAttributeString(attrStr, options);
+                if (isValid === true) {
+                  tagFound = true;
+                } else {
+                  return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, attrStrStart + isValid.err.line));
+                }
+              } else if (closingTag) {
+                if (!result.tagClosed) {
+                  return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' doesn't have proper closing.", getLineNumberForPosition(xmlData, i));
+                } else if (attrStr.trim().length > 0) {
+                  return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, tagStartPos));
+                } else if (tags.length === 0) {
+                  return getErrorObject("InvalidTag", "Closing tag '" + tagName + "' has not been opened.", getLineNumberForPosition(xmlData, tagStartPos));
+                } else {
+                  const otg = tags.pop();
+                  if (tagName !== otg.tagName) {
+                    let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
+                    return getErrorObject(
+                      "InvalidTag",
+                      "Expected closing tag '" + otg.tagName + "' (opened in line " + openPos.line + ", col " + openPos.col + ") instead of closing tag '" + tagName + "'.",
+                      getLineNumberForPosition(xmlData, tagStartPos)
+                    );
+                  }
+                  if (tags.length == 0) {
+                    reachedRoot = true;
+                  }
+                }
+              } else {
+                const isValid = validateAttributeString(attrStr, options);
+                if (isValid !== true) {
+                  return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
+                }
+                if (reachedRoot === true) {
+                  return getErrorObject("InvalidXml", "Multiple possible root nodes found.", getLineNumberForPosition(xmlData, i));
+                } else if (options.unpairedTags.indexOf(tagName) !== -1) {
+                } else {
+                  tags.push({ tagName, tagStartPos });
+                }
+                tagFound = true;
+              }
+              for (i++; i < xmlData.length; i++) {
+                if (xmlData[i] === "<") {
+                  if (xmlData[i + 1] === "!") {
+                    i++;
+                    i = readCommentAndCDATA(xmlData, i);
+                    continue;
+                  } else if (xmlData[i + 1] === "?") {
+                    i = readPI(xmlData, ++i);
+                    if (i.err) return i;
+                  } else {
+                    break;
+                  }
+                } else if (xmlData[i] === "&") {
+                  const afterAmp = validateAmpersand(xmlData, i);
+                  if (afterAmp == -1)
+                    return getErrorObject("InvalidChar", "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
+                  i = afterAmp;
+                } else {
+                  if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
+                    return getErrorObject("InvalidXml", "Extra text at the end", getLineNumberForPosition(xmlData, i));
+                  }
+                }
+              }
+              if (xmlData[i] === "<") {
+                i--;
+              }
+            }
+          } else {
+            if (isWhiteSpace(xmlData[i])) {
+              continue;
+            }
+            return getErrorObject("InvalidChar", "char '" + xmlData[i] + "' is not expected.", getLineNumberForPosition(xmlData, i));
+          }
+        }
+        if (!tagFound) {
+          return getErrorObject("InvalidXml", "Start tag expected.", 1);
+        } else if (tags.length == 1) {
+          return getErrorObject("InvalidTag", "Unclosed tag '" + tags[0].tagName + "'.", getLineNumberForPosition(xmlData, tags[0].tagStartPos));
+        } else if (tags.length > 0) {
+          return getErrorObject("InvalidXml", "Invalid '" + JSON.stringify(tags.map((t) => t.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 });
+        }
+        return true;
+      };
+      function isWhiteSpace(char) {
+        return char === " " || char === "	" || char === "\n" || char === "\r";
+      }
+      function readPI(xmlData, i) {
+        const start2 = i;
+        for (; i < xmlData.length; i++) {
+          if (xmlData[i] == "?" || xmlData[i] == " ") {
+            const tagname = xmlData.substr(start2, i - start2);
+            if (i > 5 && tagname === "xml") {
+              return getErrorObject("InvalidXml", "XML declaration allowed only at the start of the document.", getLineNumberForPosition(xmlData, i));
+            } else if (xmlData[i] == "?" && xmlData[i + 1] == ">") {
+              i++;
+              break;
+            } else {
+              continue;
+            }
+          }
+        }
+        return i;
+      }
+      function readCommentAndCDATA(xmlData, i) {
+        if (xmlData.length > i + 5 && xmlData[i + 1] === "-" && xmlData[i + 2] === "-") {
+          for (i += 3; i < xmlData.length; i++) {
+            if (xmlData[i] === "-" && xmlData[i + 1] === "-" && xmlData[i + 2] === ">") {
+              i += 2;
+              break;
+            }
+          }
+        } else if (xmlData.length > i + 8 && xmlData[i + 1] === "D" && xmlData[i + 2] === "O" && xmlData[i + 3] === "C" && xmlData[i + 4] === "T" && xmlData[i + 5] === "Y" && xmlData[i + 6] === "P" && xmlData[i + 7] === "E") {
+          let angleBracketsCount = 1;
+          for (i += 8; i < xmlData.length; i++) {
+            if (xmlData[i] === "<") {
+              angleBracketsCount++;
+            } else if (xmlData[i] === ">") {
+              angleBracketsCount--;
+              if (angleBracketsCount === 0) {
+                break;
+              }
+            }
+          }
+        } else if (xmlData.length > i + 9 && xmlData[i + 1] === "[" && xmlData[i + 2] === "C" && xmlData[i + 3] === "D" && xmlData[i + 4] === "A" && xmlData[i + 5] === "T" && xmlData[i + 6] === "A" && xmlData[i + 7] === "[") {
+          for (i += 8; i < xmlData.length; i++) {
+            if (xmlData[i] === "]" && xmlData[i + 1] === "]" && xmlData[i + 2] === ">") {
+              i += 2;
+              break;
+            }
+          }
+        }
+        return i;
+      }
+      var doubleQuote = '"';
+      var singleQuote = "'";
+      function readAttributeStr(xmlData, i) {
+        let attrStr = "";
+        let startChar = "";
+        let tagClosed = false;
+        for (; i < xmlData.length; i++) {
+          if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
+            if (startChar === "") {
+              startChar = xmlData[i];
+            } else if (startChar !== xmlData[i]) {
+            } else {
+              startChar = "";
+            }
+          } else if (xmlData[i] === ">") {
+            if (startChar === "") {
+              tagClosed = true;
+              break;
+            }
+          }
+          attrStr += xmlData[i];
+        }
+        if (startChar !== "") {
+          return false;
+        }
+        return {
+          value: attrStr,
+          index: i,
+          tagClosed
+        };
+      }
+      var validAttrStrRegxp = new RegExp(`(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`, "g");
+      function validateAttributeString(attrStr, options) {
+        const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+        const attrNames = {};
+        for (let i = 0; i < matches.length; i++) {
+          if (matches[i][1].length === 0) {
+            return getErrorObject("InvalidAttr", "Attribute '" + matches[i][2] + "' has no space in starting.", getPositionFromMatch(matches[i]));
+          } else if (matches[i][3] !== void 0 && matches[i][4] === void 0) {
+            return getErrorObject("InvalidAttr", "Attribute '" + matches[i][2] + "' is without value.", getPositionFromMatch(matches[i]));
+          } else if (matches[i][3] === void 0 && !options.allowBooleanAttributes) {
+            return getErrorObject("InvalidAttr", "boolean attribute '" + matches[i][2] + "' is not allowed.", getPositionFromMatch(matches[i]));
+          }
+          const attrName = matches[i][2];
+          if (!validateAttrName(attrName)) {
+            return getErrorObject("InvalidAttr", "Attribute '" + attrName + "' is an invalid name.", getPositionFromMatch(matches[i]));
+          }
+          if (!attrNames.hasOwnProperty(attrName)) {
+            attrNames[attrName] = 1;
+          } else {
+            return getErrorObject("InvalidAttr", "Attribute '" + attrName + "' is repeated.", getPositionFromMatch(matches[i]));
+          }
+        }
+        return true;
+      }
+      function validateNumberAmpersand(xmlData, i) {
+        let re = /\d/;
+        if (xmlData[i] === "x") {
+          i++;
+          re = /[\da-fA-F]/;
+        }
+        for (; i < xmlData.length; i++) {
+          if (xmlData[i] === ";")
+            return i;
+          if (!xmlData[i].match(re))
+            break;
+        }
+        return -1;
+      }
+      function validateAmpersand(xmlData, i) {
+        i++;
+        if (xmlData[i] === ";")
+          return -1;
+        if (xmlData[i] === "#") {
+          i++;
+          return validateNumberAmpersand(xmlData, i);
+        }
+        let count = 0;
+        for (; i < xmlData.length; i++, count++) {
+          if (xmlData[i].match(/\w/) && count < 20)
+            continue;
+          if (xmlData[i] === ";")
+            break;
+          return -1;
+        }
+        return i;
+      }
+      function getErrorObject(code, message, lineNumber) {
+        return {
+          err: {
+            code,
+            msg: message,
+            line: lineNumber.line || lineNumber,
+            col: lineNumber.col
+          }
+        };
+      }
+      function validateAttrName(attrName) {
+        return util.isName(attrName);
+      }
+      function validateTagName(tagname) {
+        return util.isName(tagname);
+      }
+      function getLineNumberForPosition(xmlData, index) {
+        const lines = xmlData.substring(0, index).split(/\r?\n/);
+        return {
+          line: lines.length,
+          // column number is last line's length + 1, because column numbering starts at 1:
+          col: lines[lines.length - 1].length + 1
+        };
+      }
+      function getPositionFromMatch(match2) {
+        return match2.startIndex + match2[1].length;
+      }
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
+  var require_OptionsBuilder = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js"(exports) {
+      var { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require_util();
+      var defaultOnDangerousProperty = (name) => {
+        if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+          return "__" + name;
+        }
+        return name;
+      };
+      var defaultOptions = {
+        preserveOrder: false,
+        attributeNamePrefix: "@_",
+        attributesGroupName: false,
+        textNodeName: "#text",
+        ignoreAttributes: true,
+        removeNSPrefix: false,
+        // remove NS from tag name or attribute name if true
+        allowBooleanAttributes: false,
+        //a tag can have attributes without any value
+        //ignoreRootElement : false,
+        parseTagValue: true,
+        parseAttributeValue: false,
+        trimValues: true,
+        //Trim string values of tag and attributes
+        cdataPropName: false,
+        numberParseOptions: {
+          hex: true,
+          leadingZeros: true,
+          eNotation: true
+        },
+        tagValueProcessor: function(tagName, val) {
+          return val;
+        },
+        attributeValueProcessor: function(attrName, val) {
+          return val;
+        },
+        stopNodes: [],
+        //nested tags will not be parsed even for errors
+        alwaysCreateTextNode: false,
+        isArray: () => false,
+        commentPropName: false,
+        unpairedTags: [],
+        processEntities: true,
+        htmlEntities: false,
+        ignoreDeclaration: false,
+        ignorePiTags: false,
+        transformTagName: false,
+        transformAttributeName: false,
+        updateTag: function(tagName, jPath, attrs) {
+          return tagName;
+        },
+        // skipEmptyListItem: false
+        captureMetaData: false,
+        maxNestedTags: 100,
+        strictReservedNames: true,
+        onDangerousProperty: defaultOnDangerousProperty
+      };
+      function validatePropertyName(propertyName, optionName) {
+        if (typeof propertyName !== "string") {
+          return;
+        }
+        const normalized = propertyName.toLowerCase();
+        if (DANGEROUS_PROPERTY_NAMES.some((dangerous) => normalized === dangerous.toLowerCase())) {
+          throw new Error(
+            `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+          );
+        }
+        if (criticalProperties.some((dangerous) => normalized === dangerous.toLowerCase())) {
+          throw new Error(
+            `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+          );
+        }
+      }
+      function normalizeProcessEntities(value) {
+        if (typeof value === "boolean") {
+          return {
+            enabled: value,
+            // true or false
+            maxEntitySize: 1e4,
+            maxExpansionDepth: 10,
+            maxTotalExpansions: 1e3,
+            maxExpandedLength: 1e5,
+            allowedTags: null,
+            tagFilter: null
+          };
+        }
+        if (typeof value === "object" && value !== null) {
+          return {
+            enabled: value.enabled !== false,
+            maxEntitySize: Math.max(1, value.maxEntitySize ?? 1e4),
+            maxExpansionDepth: Math.max(1, value.maxExpansionDepth ?? 1e4),
+            maxTotalExpansions: Math.max(1, value.maxTotalExpansions ?? Infinity),
+            maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 1e5),
+            maxEntityCount: Math.max(1, value.maxEntityCount ?? 1e3),
+            allowedTags: value.allowedTags ?? null,
+            tagFilter: value.tagFilter ?? null
+          };
+        }
+        return normalizeProcessEntities(true);
+      }
+      var buildOptions = function(options) {
+        const built = Object.assign({}, defaultOptions, options);
+        const propertyNameOptions = [
+          { value: built.attributeNamePrefix, name: "attributeNamePrefix" },
+          { value: built.attributesGroupName, name: "attributesGroupName" },
+          { value: built.textNodeName, name: "textNodeName" },
+          { value: built.cdataPropName, name: "cdataPropName" },
+          { value: built.commentPropName, name: "commentPropName" }
+        ];
+        for (const { value, name } of propertyNameOptions) {
+          if (value) {
+            validatePropertyName(value, name);
+          }
+        }
+        if (built.onDangerousProperty === null) {
+          built.onDangerousProperty = defaultOnDangerousProperty;
+        }
+        built.processEntities = normalizeProcessEntities(built.processEntities);
+        return built;
+      };
+      exports.buildOptions = buildOptions;
+      exports.defaultOptions = defaultOptions;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/xmlNode.js
+  var require_xmlNode = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/xmlNode.js"(exports, module) {
+      "use strict";
+      var XmlNode = class {
+        constructor(tagname) {
+          this.tagname = tagname;
+          this.child = [];
+          this[":@"] = {};
+        }
+        add(key, val) {
+          if (key === "__proto__") key = "#__proto__";
+          this.child.push({ [key]: val });
+        }
+        addChild(node) {
+          if (node.tagname === "__proto__") node.tagname = "#__proto__";
+          if (node[":@"] && Object.keys(node[":@"]).length > 0) {
+            this.child.push({ [node.tagname]: node.child, [":@"]: node[":@"] });
+          } else {
+            this.child.push({ [node.tagname]: node.child });
+          }
+        }
+      };
+      module.exports = XmlNode;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js
+  var require_DocTypeReader = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/DocTypeReader.js"(exports, module) {
+      var util = require_util();
+      var DocTypeReader = class {
+        constructor(options) {
+          this.suppressValidationErr = !options;
+          this.options = options || {};
+        }
+        readDocType(xmlData, i) {
+          const entities = /* @__PURE__ */ Object.create(null);
+          let entityCount = 0;
+          if (xmlData[i + 3] === "O" && xmlData[i + 4] === "C" && xmlData[i + 5] === "T" && xmlData[i + 6] === "Y" && xmlData[i + 7] === "P" && xmlData[i + 8] === "E") {
+            i = i + 9;
+            let angleBracketsCount = 1;
+            let hasBody = false, comment2 = false;
+            let exp = "";
+            for (; i < xmlData.length; i++) {
+              if (xmlData[i] === "<" && !comment2) {
+                if (hasBody && hasSeq(xmlData, "!ENTITY", i)) {
+                  i += 7;
+                  let entityName, val;
+                  [entityName, val, i] = this.readEntityExp(xmlData, i + 1, this.suppressValidationErr);
+                  if (val.indexOf("&") === -1) {
+                    if (this.options.enabled !== false && this.options.maxEntityCount != null && entityCount >= this.options.maxEntityCount) {
+                      throw new Error(
+                        `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
+                      );
+                    }
+                    const escaped = entityName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                    entities[entityName] = {
+                      regx: RegExp(`&${escaped};`, "g"),
+                      val
+                    };
+                    entityCount++;
+                  }
+                } else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {
+                  i += 8;
+                  const { index } = this.readElementExp(xmlData, i + 1);
+                  i = index;
+                } else if (hasBody && hasSeq(xmlData, "!ATTLIST", i)) {
+                  i += 8;
+                } else if (hasBody && hasSeq(xmlData, "!NOTATION", i)) {
+                  i += 9;
+                  const { index } = this.readNotationExp(xmlData, i + 1, this.suppressValidationErr);
+                  i = index;
+                } else if (hasSeq(xmlData, "!--", i)) {
+                  comment2 = true;
+                } else {
+                  throw new Error(`Invalid DOCTYPE`);
+                }
+                angleBracketsCount++;
+                exp = "";
+              } else if (xmlData[i] === ">") {
+                if (comment2) {
+                  if (xmlData[i - 1] === "-" && xmlData[i - 2] === "-") {
+                    comment2 = false;
+                    angleBracketsCount--;
+                  }
+                } else {
+                  angleBracketsCount--;
+                }
+                if (angleBracketsCount === 0) {
+                  break;
+                }
+              } else if (xmlData[i] === "[") {
+                hasBody = true;
+              } else {
+                exp += xmlData[i];
+              }
+            }
+            if (angleBracketsCount !== 0) {
+              throw new Error(`Unclosed DOCTYPE`);
+            }
+          } else {
+            throw new Error(`Invalid Tag instead of DOCTYPE`);
+          }
+          return { entities, i };
+        }
+        readEntityExp(xmlData, i) {
+          i = skipWhitespace(xmlData, i);
+          let entityName = "";
+          while (i < xmlData.length && !/\s/.test(xmlData[i]) && xmlData[i] !== '"' && xmlData[i] !== "'") {
+            entityName += xmlData[i];
+            i++;
+          }
+          validateEntityName(entityName);
+          i = skipWhitespace(xmlData, i);
+          if (!this.suppressValidationErr) {
+            if (xmlData.substring(i, i + 6).toUpperCase() === "SYSTEM") {
+              throw new Error("External entities are not supported");
+            } else if (xmlData[i] === "%") {
+              throw new Error("Parameter entities are not supported");
+            }
+          }
+          let entityValue = "";
+          [i, entityValue] = this.readIdentifierVal(xmlData, i, "entity");
+          if (this.options.enabled !== false && this.options.maxEntitySize != null && entityValue.length > this.options.maxEntitySize) {
+            throw new Error(
+              `Entity "${entityName}" size (${entityValue.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`
+            );
+          }
+          i--;
+          return [entityName, entityValue, i];
+        }
+        readNotationExp(xmlData, i) {
+          i = skipWhitespace(xmlData, i);
+          let notationName = "";
+          while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+            notationName += xmlData[i];
+            i++;
+          }
+          !this.suppressValidationErr && validateEntityName(notationName);
+          i = skipWhitespace(xmlData, i);
+          const identifierType = xmlData.substring(i, i + 6).toUpperCase();
+          if (!this.suppressValidationErr && identifierType !== "SYSTEM" && identifierType !== "PUBLIC") {
+            throw new Error(`Expected SYSTEM or PUBLIC, found "${identifierType}"`);
+          }
+          i += identifierType.length;
+          i = skipWhitespace(xmlData, i);
+          let publicIdentifier = null;
+          let systemIdentifier = null;
+          if (identifierType === "PUBLIC") {
+            [i, publicIdentifier] = this.readIdentifierVal(xmlData, i, "publicIdentifier");
+            i = skipWhitespace(xmlData, i);
+            if (xmlData[i] === '"' || xmlData[i] === "'") {
+              [i, systemIdentifier] = this.readIdentifierVal(xmlData, i, "systemIdentifier");
+            }
+          } else if (identifierType === "SYSTEM") {
+            [i, systemIdentifier] = this.readIdentifierVal(xmlData, i, "systemIdentifier");
+            if (!this.suppressValidationErr && !systemIdentifier) {
+              throw new Error("Missing mandatory system identifier for SYSTEM notation");
+            }
+          }
+          return { notationName, publicIdentifier, systemIdentifier, index: --i };
+        }
+        readIdentifierVal(xmlData, i, type) {
+          let identifierVal = "";
+          const startChar = xmlData[i];
+          if (startChar !== '"' && startChar !== "'") {
+            throw new Error(`Expected quoted string, found "${startChar}"`);
+          }
+          i++;
+          while (i < xmlData.length && xmlData[i] !== startChar) {
+            identifierVal += xmlData[i];
+            i++;
+          }
+          if (xmlData[i] !== startChar) {
+            throw new Error(`Unterminated ${type} value`);
+          }
+          i++;
+          return [i, identifierVal];
+        }
+        readElementExp(xmlData, i) {
+          i = skipWhitespace(xmlData, i);
+          let elementName = "";
+          while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+            elementName += xmlData[i];
+            i++;
+          }
+          if (!this.suppressValidationErr && !util.isName(elementName)) {
+            throw new Error(`Invalid element name: "${elementName}"`);
+          }
+          i = skipWhitespace(xmlData, i);
+          let contentModel = "";
+          if (xmlData[i] === "E" && hasSeq(xmlData, "MPTY", i)) {
+            i += 4;
+          } else if (xmlData[i] === "A" && hasSeq(xmlData, "NY", i)) {
+            i += 2;
+          } else if (xmlData[i] === "(") {
+            i++;
+            while (i < xmlData.length && xmlData[i] !== ")") {
+              contentModel += xmlData[i];
+              i++;
+            }
+            if (xmlData[i] !== ")") {
+              throw new Error("Unterminated content model");
+            }
+          } else if (!this.suppressValidationErr) {
+            throw new Error(`Invalid Element Expression, found "${xmlData[i]}"`);
+          }
+          return {
+            elementName,
+            contentModel: contentModel.trim(),
+            index: i
+          };
+        }
+        readAttlistExp(xmlData, i) {
+          i = skipWhitespace(xmlData, i);
+          let elementName = "";
+          while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+            elementName += xmlData[i];
+            i++;
+          }
+          validateEntityName(elementName);
+          i = skipWhitespace(xmlData, i);
+          let attributeName = "";
+          while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+            attributeName += xmlData[i];
+            i++;
+          }
+          if (!validateEntityName(attributeName)) {
+            throw new Error(`Invalid attribute name: "${attributeName}"`);
+          }
+          i = skipWhitespace(xmlData, i);
+          let attributeType = "";
+          if (xmlData.substring(i, i + 8).toUpperCase() === "NOTATION") {
+            attributeType = "NOTATION";
+            i += 8;
+            i = skipWhitespace(xmlData, i);
+            if (xmlData[i] !== "(") {
+              throw new Error(`Expected '(', found "${xmlData[i]}"`);
+            }
+            i++;
+            let allowedNotations = [];
+            while (i < xmlData.length && xmlData[i] !== ")") {
+              let notation = "";
+              while (i < xmlData.length && xmlData[i] !== "|" && xmlData[i] !== ")") {
+                notation += xmlData[i];
+                i++;
+              }
+              notation = notation.trim();
+              if (!validateEntityName(notation)) {
+                throw new Error(`Invalid notation name: "${notation}"`);
+              }
+              allowedNotations.push(notation);
+              if (xmlData[i] === "|") {
+                i++;
+                i = skipWhitespace(xmlData, i);
+              }
+            }
+            if (xmlData[i] !== ")") {
+              throw new Error("Unterminated list of notations");
+            }
+            i++;
+            attributeType += " (" + allowedNotations.join("|") + ")";
+          } else {
+            while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+              attributeType += xmlData[i];
+              i++;
+            }
+            const validTypes = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
+            if (!this.suppressValidationErr && !validTypes.includes(attributeType.toUpperCase())) {
+              throw new Error(`Invalid attribute type: "${attributeType}"`);
+            }
+          }
+          i = skipWhitespace(xmlData, i);
+          let defaultValue = "";
+          if (xmlData.substring(i, i + 8).toUpperCase() === "#REQUIRED") {
+            defaultValue = "#REQUIRED";
+            i += 8;
+          } else if (xmlData.substring(i, i + 7).toUpperCase() === "#IMPLIED") {
+            defaultValue = "#IMPLIED";
+            i += 7;
+          } else {
+            [i, defaultValue] = this.readIdentifierVal(xmlData, i, "ATTLIST");
+          }
+          return {
+            elementName,
+            attributeName,
+            attributeType,
+            defaultValue,
+            index: i
+          };
+        }
+      };
+      var skipWhitespace = (data, index) => {
+        while (index < data.length && /\s/.test(data[index])) {
+          index++;
+        }
+        return index;
+      };
+      function hasSeq(data, seq, i) {
+        for (let j = 0; j < seq.length; j++) {
+          if (seq[j] !== data[i + j + 1]) return false;
+        }
+        return true;
+      }
+      function validateEntityName(name) {
+        if (util.isName(name))
+          return name;
+        else
+          throw new Error(`Invalid entity name ${name}`);
+      }
+      module.exports = DocTypeReader;
+    }
+  });
+
+  // node_modules/strnum/strnum.js
+  var require_strnum = __commonJS({
+    "node_modules/strnum/strnum.js"(exports, module) {
+      var hexRegex = /^[-+]?0x[a-fA-F0-9]+$/;
+      var numRegex = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/;
+      var consider = {
+        hex: true,
+        // oct: false,
+        leadingZeros: true,
+        decimalPoint: ".",
+        eNotation: true
+        //skipLike: /regex/
+      };
+      function toNumber2(str, options = {}) {
+        options = Object.assign({}, consider, options);
+        if (!str || typeof str !== "string") return str;
+        let trimmedStr = str.trim();
+        if (options.skipLike !== void 0 && options.skipLike.test(trimmedStr)) return str;
+        else if (str === "0") return 0;
+        else if (options.hex && hexRegex.test(trimmedStr)) {
+          return parse_int(trimmedStr, 16);
+        } else if (trimmedStr.search(/[eE]/) !== -1) {
+          const notation = trimmedStr.match(/^([-\+])?(0*)([0-9]*(\.[0-9]*)?[eE][-\+]?[0-9]+)$/);
+          if (notation) {
+            if (options.leadingZeros) {
+              trimmedStr = (notation[1] || "") + notation[3];
+            } else {
+              if (notation[2] === "0" && notation[3][0] === ".") {
+              } else {
+                return str;
+              }
+            }
+            return options.eNotation ? Number(trimmedStr) : str;
+          } else {
+            return str;
+          }
+        } else {
+          const match2 = numRegex.exec(trimmedStr);
+          if (match2) {
+            const sign = match2[1];
+            const leadingZeros = match2[2];
+            let numTrimmedByZeros = trimZeros(match2[3]);
+            if (!options.leadingZeros && leadingZeros.length > 0 && sign && trimmedStr[2] !== ".") return str;
+            else if (!options.leadingZeros && leadingZeros.length > 0 && !sign && trimmedStr[1] !== ".") return str;
+            else if (options.leadingZeros && leadingZeros === str) return 0;
+            else {
+              const num = Number(trimmedStr);
+              const numStr = "" + num;
+              if (numStr.search(/[eE]/) !== -1) {
+                if (options.eNotation) return num;
+                else return str;
+              } else if (trimmedStr.indexOf(".") !== -1) {
+                if (numStr === "0" && numTrimmedByZeros === "") return num;
+                else if (numStr === numTrimmedByZeros) return num;
+                else if (sign && numStr === "-" + numTrimmedByZeros) return num;
+                else return str;
+              }
+              if (leadingZeros) {
+                return numTrimmedByZeros === numStr || sign + numTrimmedByZeros === numStr ? num : str;
+              } else {
+                return trimmedStr === numStr || trimmedStr === sign + numStr ? num : str;
+              }
+            }
+          } else {
+            return str;
+          }
+        }
+      }
+      function trimZeros(numStr) {
+        if (numStr && numStr.indexOf(".") !== -1) {
+          numStr = numStr.replace(/0+$/, "");
+          if (numStr === ".") numStr = "0";
+          else if (numStr[0] === ".") numStr = "0" + numStr;
+          else if (numStr[numStr.length - 1] === ".") numStr = numStr.substr(0, numStr.length - 1);
+          return numStr;
+        }
+        return numStr;
+      }
+      function parse_int(numStr, base) {
+        if (parseInt) return parseInt(numStr, base);
+        else if (Number.parseInt) return Number.parseInt(numStr, base);
+        else if (window && window.parseInt) return window.parseInt(numStr, base);
+        else throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
+      }
+      module.exports = toNumber2;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/ignoreAttributes.js
+  var require_ignoreAttributes = __commonJS({
+    "node_modules/fast-xml-parser/src/ignoreAttributes.js"(exports, module) {
+      function getIgnoreAttributesFn(ignoreAttributes) {
+        if (typeof ignoreAttributes === "function") {
+          return ignoreAttributes;
+        }
+        if (Array.isArray(ignoreAttributes)) {
+          return (attrName) => {
+            for (const pattern of ignoreAttributes) {
+              if (typeof pattern === "string" && attrName === pattern) {
+                return true;
+              }
+              if (pattern instanceof RegExp && pattern.test(attrName)) {
+                return true;
+              }
+            }
+          };
+        }
+        return () => false;
+      }
+      module.exports = getIgnoreAttributesFn;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js
+  var require_OrderedObjParser = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js"(exports, module) {
+      "use strict";
+      var util = require_util();
+      var xmlNode = require_xmlNode();
+      var DocTypeReader = require_DocTypeReader();
+      var toNumber2 = require_strnum();
+      var getIgnoreAttributesFn = require_ignoreAttributes();
+      var OrderedObjParser = class {
+        constructor(options) {
+          this.options = options;
+          this.currentNode = null;
+          this.tagsNodeStack = [];
+          this.docTypeEntities = {};
+          this.lastEntities = {
+            "apos": { regex: /&(apos|#39|#x27);/g, val: "'" },
+            "gt": { regex: /&(gt|#62|#x3E);/g, val: ">" },
+            "lt": { regex: /&(lt|#60|#x3C);/g, val: "<" },
+            "quot": { regex: /&(quot|#34|#x22);/g, val: '"' }
+          };
+          this.ampEntity = { regex: /&(amp|#38|#x26);/g, val: "&" };
+          this.htmlEntities = {
+            "space": { regex: /&(nbsp|#160);/g, val: " " },
+            // "lt" : { regex: /&(lt|#60);/g, val: "<" },
+            // "gt" : { regex: /&(gt|#62);/g, val: ">" },
+            // "amp" : { regex: /&(amp|#38);/g, val: "&" },
+            // "quot" : { regex: /&(quot|#34);/g, val: "\"" },
+            // "apos" : { regex: /&(apos|#39);/g, val: "'" },
+            "cent": { regex: /&(cent|#162);/g, val: "\xA2" },
+            "pound": { regex: /&(pound|#163);/g, val: "\xA3" },
+            "yen": { regex: /&(yen|#165);/g, val: "\xA5" },
+            "euro": { regex: /&(euro|#8364);/g, val: "\u20AC" },
+            "copyright": { regex: /&(copy|#169);/g, val: "\xA9" },
+            "reg": { regex: /&(reg|#174);/g, val: "\xAE" },
+            "inr": { regex: /&(inr|#8377);/g, val: "\u20B9" },
+            "num_dec": { regex: /&#([0-9]{1,7});/g, val: (_, str) => fromCodePoint(str, 10, "&#") },
+            "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val: (_, str) => fromCodePoint(str, 16, "&#x") }
+          };
+          this.addExternalEntities = addExternalEntities;
+          this.parseXml = parseXml2;
+          this.parseTextData = parseTextData;
+          this.resolveNameSpace = resolveNameSpace;
+          this.buildAttributesMap = buildAttributesMap;
+          this.isItStopNode = isItStopNode;
+          this.replaceEntitiesValue = replaceEntitiesValue;
+          this.readStopNodeData = readStopNodeData;
+          this.saveTextToParentTag = saveTextToParentTag;
+          this.addChild = addChild;
+          this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
+          this.entityExpansionCount = 0;
+          this.currentExpandedLength = 0;
+          if (this.options.stopNodes && this.options.stopNodes.length > 0) {
+            this.stopNodesExact = /* @__PURE__ */ new Set();
+            this.stopNodesWildcard = /* @__PURE__ */ new Set();
+            for (let i = 0; i < this.options.stopNodes.length; i++) {
+              const stopNodeExp = this.options.stopNodes[i];
+              if (typeof stopNodeExp !== "string") continue;
+              if (stopNodeExp.startsWith("*.")) {
+                this.stopNodesWildcard.add(stopNodeExp.substring(2));
+              } else {
+                this.stopNodesExact.add(stopNodeExp);
+              }
+            }
+          }
+        }
+      };
+      function addExternalEntities(externalEntities) {
+        const entKeys = Object.keys(externalEntities);
+        for (let i = 0; i < entKeys.length; i++) {
+          const ent = entKeys[i];
+          const escaped = ent.replace(/[.\-+*:]/g, "\\.");
+          this.lastEntities[ent] = {
+            regex: new RegExp("&" + escaped + ";", "g"),
+            val: externalEntities[ent]
+          };
+        }
+      }
+      function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
+        if (val !== void 0) {
+          if (this.options.trimValues && !dontTrim) {
+            val = val.trim();
+          }
+          if (val.length > 0) {
+            if (!escapeEntities) val = this.replaceEntitiesValue(val, tagName, jPath);
+            const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+            if (newval === null || newval === void 0) {
+              return val;
+            } else if (typeof newval !== typeof val || newval !== val) {
+              return newval;
+            } else if (this.options.trimValues) {
+              return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+            } else {
+              const trimmedVal = val.trim();
+              if (trimmedVal === val) {
+                return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
+              } else {
+                return val;
+              }
+            }
+          }
+        }
+      }
+      function resolveNameSpace(tagname) {
+        if (this.options.removeNSPrefix) {
+          const tags = tagname.split(":");
+          const prefix = tagname.charAt(0) === "/" ? "/" : "";
+          if (tags[0] === "xmlns") {
+            return "";
+          }
+          if (tags.length === 2) {
+            tagname = prefix + tags[1];
+          }
+        }
+        return tagname;
+      }
+      var attrsRegx = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
+      function buildAttributesMap(attrStr, jPath, tagName) {
+        if (this.options.ignoreAttributes !== true && typeof attrStr === "string") {
+          const matches = util.getAllMatches(attrStr, attrsRegx);
+          const len = matches.length;
+          const attrs = {};
+          for (let i = 0; i < len; i++) {
+            const attrName = this.resolveNameSpace(matches[i][1]);
+            if (this.ignoreAttributesFn(attrName, jPath)) {
+              continue;
+            }
+            let oldVal = matches[i][4];
+            let aName = this.options.attributeNamePrefix + attrName;
+            if (attrName.length) {
+              if (this.options.transformAttributeName) {
+                aName = this.options.transformAttributeName(aName);
+              }
+              aName = sanitizeName(aName, this.options);
+              if (oldVal !== void 0) {
+                if (this.options.trimValues) {
+                  oldVal = oldVal.trim();
+                }
+                oldVal = this.replaceEntitiesValue(oldVal, tagName, jPath);
+                const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
+                if (newVal === null || newVal === void 0) {
+                  attrs[aName] = oldVal;
+                } else if (typeof newVal !== typeof oldVal || newVal !== oldVal) {
+                  attrs[aName] = newVal;
+                } else {
+                  attrs[aName] = parseValue(
+                    oldVal,
+                    this.options.parseAttributeValue,
+                    this.options.numberParseOptions
+                  );
+                }
+              } else if (this.options.allowBooleanAttributes) {
+                attrs[aName] = true;
+              }
+            }
+          }
+          if (!Object.keys(attrs).length) {
+            return;
+          }
+          if (this.options.attributesGroupName) {
+            const attrCollection = {};
+            attrCollection[this.options.attributesGroupName] = attrs;
+            return attrCollection;
+          }
+          return attrs;
+        }
+      }
+      var parseXml2 = function(xmlData) {
+        xmlData = xmlData.replace(/\r\n?/g, "\n");
+        const xmlObj = new xmlNode("!xml");
+        let currentNode = xmlObj;
+        let textData = "";
+        let jPath = "";
+        this.entityExpansionCount = 0;
+        this.currentExpandedLength = 0;
+        const docTypeReader = new DocTypeReader(this.options.processEntities);
+        for (let i = 0; i < xmlData.length; i++) {
+          const ch = xmlData[i];
+          if (ch === "<") {
+            if (xmlData[i + 1] === "/") {
+              const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.");
+              let tagName = xmlData.substring(i + 2, closeIndex).trim();
+              if (this.options.removeNSPrefix) {
+                const colonIndex = tagName.indexOf(":");
+                if (colonIndex !== -1) {
+                  tagName = tagName.substr(colonIndex + 1);
+                }
+              }
+              if (this.options.transformTagName) {
+                tagName = this.options.transformTagName(tagName);
+              }
+              if (currentNode) {
+                textData = this.saveTextToParentTag(textData, currentNode, jPath);
+              }
+              const lastTagName = jPath.substring(jPath.lastIndexOf(".") + 1);
+              if (tagName && this.options.unpairedTags.indexOf(tagName) !== -1) {
+                throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
+              }
+              let propIndex = 0;
+              if (lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1) {
+                propIndex = jPath.lastIndexOf(".", jPath.lastIndexOf(".") - 1);
+                this.tagsNodeStack.pop();
+              } else {
+                propIndex = jPath.lastIndexOf(".");
+              }
+              jPath = jPath.substring(0, propIndex);
+              currentNode = this.tagsNodeStack.pop();
+              textData = "";
+              i = closeIndex;
+            } else if (xmlData[i + 1] === "?") {
+              let tagData = readTagExp(xmlData, i, false, "?>");
+              if (!tagData) throw new Error("Pi Tag is not closed.");
+              textData = this.saveTextToParentTag(textData, currentNode, jPath);
+              if (this.options.ignoreDeclaration && tagData.tagName === "?xml" || this.options.ignorePiTags) {
+              } else {
+                const childNode = new xmlNode(tagData.tagName);
+                childNode.add(this.options.textNodeName, "");
+                if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
+                  childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
+                }
+                this.addChild(currentNode, childNode, jPath, i);
+              }
+              i = tagData.closeIndex + 1;
+            } else if (xmlData.substr(i + 1, 3) === "!--") {
+              const endIndex = findClosingIndex(xmlData, "-->", i + 4, "Comment is not closed.");
+              if (this.options.commentPropName) {
+                const comment2 = xmlData.substring(i + 4, endIndex - 2);
+                textData = this.saveTextToParentTag(textData, currentNode, jPath);
+                currentNode.add(this.options.commentPropName, [{ [this.options.textNodeName]: comment2 }]);
+              }
+              i = endIndex;
+            } else if (xmlData.substr(i + 1, 2) === "!D") {
+              const result = docTypeReader.readDocType(xmlData, i);
+              this.docTypeEntities = result.entities;
+              i = result.i;
+            } else if (xmlData.substr(i + 1, 2) === "![") {
+              const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
+              const tagExp = xmlData.substring(i + 9, closeIndex);
+              textData = this.saveTextToParentTag(textData, currentNode, jPath);
+              let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
+              if (val == void 0) val = "";
+              if (this.options.cdataPropName) {
+                currentNode.add(this.options.cdataPropName, [{ [this.options.textNodeName]: tagExp }]);
+              } else {
+                currentNode.add(this.options.textNodeName, val);
+              }
+              i = closeIndex + 2;
+            } else {
+              let result = readTagExp(xmlData, i, this.options.removeNSPrefix);
+              let tagName = result.tagName;
+              const rawTagName = result.rawTagName;
+              let tagExp = result.tagExp;
+              let attrExpPresent = result.attrExpPresent;
+              let closeIndex = result.closeIndex;
+              if (this.options.transformTagName) {
+                const newTagName = this.options.transformTagName(tagName);
+                if (tagExp === tagName) {
+                  tagExp = newTagName;
+                }
+                tagName = newTagName;
+              }
+              if (this.options.strictReservedNames && (tagName === this.options.commentPropName || tagName === this.options.cdataPropName || tagName === this.options.textNodeName || tagName === this.options.attributesGroupName)) {
+                throw new Error(`Invalid tag name: ${tagName}`);
+              }
+              if (currentNode && textData) {
+                if (currentNode.tagname !== "!xml") {
+                  textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
+                }
+              }
+              const lastTag = currentNode;
+              if (lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1) {
+                currentNode = this.tagsNodeStack.pop();
+                jPath = jPath.substring(0, jPath.lastIndexOf("."));
+              }
+              if (tagName !== xmlObj.tagname) {
+                jPath += jPath ? "." + tagName : tagName;
+              }
+              const startIndex = i;
+              if (this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, jPath, tagName)) {
+                let tagContent = "";
+                if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+                  if (tagName[tagName.length - 1] === "/") {
+                    tagName = tagName.substr(0, tagName.length - 1);
+                    jPath = jPath.substr(0, jPath.length - 1);
+                    tagExp = tagName;
+                  } else {
+                    tagExp = tagExp.substr(0, tagExp.length - 1);
+                  }
+                  i = result.closeIndex;
+                } else if (this.options.unpairedTags.indexOf(tagName) !== -1) {
+                  i = result.closeIndex;
+                } else {
+                  const result2 = this.readStopNodeData(xmlData, rawTagName, closeIndex + 1);
+                  if (!result2) throw new Error(`Unexpected end of ${rawTagName}`);
+                  i = result2.i;
+                  tagContent = result2.tagContent;
+                }
+                const childNode = new xmlNode(tagName);
+                if (tagName !== tagExp && attrExpPresent) {
+                  childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                }
+                if (tagContent) {
+                  tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
+                }
+                jPath = jPath.substr(0, jPath.lastIndexOf("."));
+                childNode.add(this.options.textNodeName, tagContent);
+                this.addChild(currentNode, childNode, jPath, startIndex);
+              } else {
+                if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+                  if (tagName[tagName.length - 1] === "/") {
+                    tagName = tagName.substr(0, tagName.length - 1);
+                    jPath = jPath.substr(0, jPath.length - 1);
+                    tagExp = tagName;
+                  } else {
+                    tagExp = tagExp.substr(0, tagExp.length - 1);
+                  }
+                  if (this.options.transformTagName) {
+                    const newTagName = this.options.transformTagName(tagName);
+                    if (tagExp === tagName) {
+                      tagExp = newTagName;
+                    }
+                    tagName = newTagName;
+                  }
+                  const childNode = new xmlNode(tagName);
+                  if (tagName !== tagExp && attrExpPresent) {
+                    childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                  }
+                  this.addChild(currentNode, childNode, jPath, startIndex);
+                  jPath = jPath.substr(0, jPath.lastIndexOf("."));
+                } else if (this.options.unpairedTags.indexOf(tagName) !== -1) {
+                  const childNode = new xmlNode(tagName);
+                  if (tagName !== tagExp && attrExpPresent) {
+                    childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
+                  }
+                  this.addChild(currentNode, childNode, jPath, startIndex);
+                  jPath = jPath.substr(0, jPath.lastIndexOf("."));
+                  i = result.closeIndex;
+                  continue;
+                } else {
+                  const childNode = new xmlNode(tagName);
+                  if (this.tagsNodeStack.length > this.options.maxNestedTags) {
+                    throw new Error("Maximum nested tags exceeded");
+                  }
+                  this.tagsNodeStack.push(currentNode);
+                  if (tagName !== tagExp && attrExpPresent) {
+                    childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+                  }
+                  this.addChild(currentNode, childNode, jPath);
+                  currentNode = childNode;
+                }
+                textData = "";
+                i = closeIndex;
+              }
+            }
+          } else {
+            textData += xmlData[i];
+          }
+        }
+        return xmlObj.child;
+      };
+      function addChild(currentNode, childNode, jPath, startIndex) {
+        if (!this.options.captureMetaData) startIndex = void 0;
+        const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"]);
+        if (result === false) {
+        } else if (typeof result === "string") {
+          childNode.tagname = result;
+          currentNode.addChild(childNode, startIndex);
+        } else {
+          currentNode.addChild(childNode, startIndex);
+        }
+      }
+      var replaceEntitiesValue = function(val, tagName, jPath) {
+        if (val.indexOf("&") === -1) {
+          return val;
+        }
+        const entityConfig = this.options.processEntities;
+        if (!entityConfig.enabled) {
+          return val;
+        }
+        if (entityConfig.allowedTags) {
+          if (!entityConfig.allowedTags.includes(tagName)) {
+            return val;
+          }
+        }
+        if (entityConfig.tagFilter) {
+          if (!entityConfig.tagFilter(tagName, jPath)) {
+            return val;
+          }
+        }
+        for (let entityName in this.docTypeEntities) {
+          const entity = this.docTypeEntities[entityName];
+          const matches = val.match(entity.regx);
+          if (matches) {
+            this.entityExpansionCount += matches.length;
+            if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+              throw new Error(
+                `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+              );
+            }
+            const lengthBefore = val.length;
+            val = val.replace(entity.regx, entity.val);
+            if (entityConfig.maxExpandedLength) {
+              this.currentExpandedLength += val.length - lengthBefore;
+              if (this.currentExpandedLength > entityConfig.maxExpandedLength) {
+                throw new Error(
+                  `Total expanded content size exceeded: ${this.currentExpandedLength} > ${entityConfig.maxExpandedLength}`
+                );
+              }
+            }
+          }
+        }
+        if (val.indexOf("&") === -1) return val;
+        for (const entityName of Object.keys(this.lastEntities)) {
+          const entity = this.lastEntities[entityName];
+          const matches = val.match(entity.regex);
+          if (matches) {
+            this.entityExpansionCount += matches.length;
+            if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+              throw new Error(
+                `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+              );
+            }
+          }
+          val = val.replace(entity.regex, entity.val);
+        }
+        if (val.indexOf("&") === -1) return val;
+        if (this.options.htmlEntities) {
+          for (const entityName of Object.keys(this.htmlEntities)) {
+            const entity = this.htmlEntities[entityName];
+            const matches = val.match(entity.regex);
+            if (matches) {
+              this.entityExpansionCount += matches.length;
+              if (entityConfig.maxTotalExpansions && this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+                throw new Error(
+                  `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+                );
+              }
+            }
+            val = val.replace(entity.regex, entity.val);
+          }
+        }
+        val = val.replace(this.ampEntity.regex, this.ampEntity.val);
+        return val;
+      };
+      function saveTextToParentTag(textData, parentNode, jPath, isLeafNode) {
+        if (textData) {
+          if (isLeafNode === void 0) isLeafNode = parentNode.child.length === 0;
+          textData = this.parseTextData(
+            textData,
+            parentNode.tagname,
+            jPath,
+            false,
+            parentNode[":@"] ? Object.keys(parentNode[":@"]).length !== 0 : false,
+            isLeafNode
+          );
+          if (textData !== void 0 && textData !== "")
+            parentNode.add(this.options.textNodeName, textData);
+          textData = "";
+        }
+        return textData;
+      }
+      function isItStopNode(stopNodesExact, stopNodesWildcard, jPath, currentTagName) {
+        if (stopNodesWildcard && stopNodesWildcard.has(currentTagName)) return true;
+        if (stopNodesExact && stopNodesExact.has(jPath)) return true;
+        return false;
+      }
+      function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
+        let attrBoundary;
+        let tagExp = "";
+        for (let index = i; index < xmlData.length; index++) {
+          let ch = xmlData[index];
+          if (attrBoundary) {
+            if (ch === attrBoundary) attrBoundary = "";
+          } else if (ch === '"' || ch === "'") {
+            attrBoundary = ch;
+          } else if (ch === closingChar[0]) {
+            if (closingChar[1]) {
+              if (xmlData[index + 1] === closingChar[1]) {
+                return {
+                  data: tagExp,
+                  index
+                };
+              }
+            } else {
+              return {
+                data: tagExp,
+                index
+              };
+            }
+          } else if (ch === "	") {
+            ch = " ";
+          }
+          tagExp += ch;
+        }
+      }
+      function findClosingIndex(xmlData, str, i, errMsg) {
+        const closingIndex = xmlData.indexOf(str, i);
+        if (closingIndex === -1) {
+          throw new Error(errMsg);
+        } else {
+          return closingIndex + str.length - 1;
+        }
+      }
+      function readTagExp(xmlData, i, removeNSPrefix, closingChar = ">") {
+        const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar);
+        if (!result) return;
+        let tagExp = result.data;
+        const closeIndex = result.index;
+        const separatorIndex = tagExp.search(/\s/);
+        let tagName = tagExp;
+        let attrExpPresent = true;
+        if (separatorIndex !== -1) {
+          tagName = tagExp.substring(0, separatorIndex);
+          tagExp = tagExp.substring(separatorIndex + 1).trimStart();
+        }
+        const rawTagName = tagName;
+        if (removeNSPrefix) {
+          const colonIndex = tagName.indexOf(":");
+          if (colonIndex !== -1) {
+            tagName = tagName.substr(colonIndex + 1);
+            attrExpPresent = tagName !== result.data.substr(colonIndex + 1);
+          }
+        }
+        return {
+          tagName,
+          tagExp,
+          closeIndex,
+          attrExpPresent,
+          rawTagName
+        };
+      }
+      function readStopNodeData(xmlData, tagName, i) {
+        const startIndex = i;
+        let openTagCount = 1;
+        for (; i < xmlData.length; i++) {
+          if (xmlData[i] === "<") {
+            if (xmlData[i + 1] === "/") {
+              const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
+              let closeTagName = xmlData.substring(i + 2, closeIndex).trim();
+              if (closeTagName === tagName) {
+                openTagCount--;
+                if (openTagCount === 0) {
+                  return {
+                    tagContent: xmlData.substring(startIndex, i),
+                    i: closeIndex
+                  };
+                }
+              }
+              i = closeIndex;
+            } else if (xmlData[i + 1] === "?") {
+              const closeIndex = findClosingIndex(xmlData, "?>", i + 1, "StopNode is not closed.");
+              i = closeIndex;
+            } else if (xmlData.substr(i + 1, 3) === "!--") {
+              const closeIndex = findClosingIndex(xmlData, "-->", i + 3, "StopNode is not closed.");
+              i = closeIndex;
+            } else if (xmlData.substr(i + 1, 2) === "![") {
+              const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
+              i = closeIndex;
+            } else {
+              const tagData = readTagExp(xmlData, i, ">");
+              if (tagData) {
+                const openTagName = tagData && tagData.tagName;
+                if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length - 1] !== "/") {
+                  openTagCount++;
+                }
+                i = tagData.closeIndex;
+              }
+            }
+          }
+        }
+      }
+      function parseValue(val, shouldParse, options) {
+        if (shouldParse && typeof val === "string") {
+          const newval = val.trim();
+          if (newval === "true") return true;
+          else if (newval === "false") return false;
+          else return toNumber2(val, options);
+        } else {
+          if (util.isExist(val)) {
+            return val;
+          } else {
+            return "";
+          }
+        }
+      }
+      function fromCodePoint(str, base, prefix) {
+        const codePoint = Number.parseInt(str, base);
+        if (codePoint >= 0 && codePoint <= 1114111) {
+          return String.fromCodePoint(codePoint);
+        } else {
+          return prefix + str + ";";
+        }
+      }
+      function sanitizeName(name, options) {
+        if (util.criticalProperties.includes(name)) {
+          throw new Error(`[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`);
+        } else if (util.DANGEROUS_PROPERTY_NAMES.includes(name)) {
+          return options.onDangerousProperty(name);
+        }
+        return name;
+      }
+      module.exports = OrderedObjParser;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/node2json.js
+  var require_node2json = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/node2json.js"(exports) {
+      "use strict";
+      function prettify(node, options) {
+        return compress(node, options);
+      }
+      function compress(arr, options, jPath) {
+        let text;
+        const compressedObj = {};
+        for (let i = 0; i < arr.length; i++) {
+          const tagObj = arr[i];
+          const property = propName(tagObj);
+          let newJpath = "";
+          if (jPath === void 0) newJpath = property;
+          else newJpath = jPath + "." + property;
+          if (property === options.textNodeName) {
+            if (text === void 0) text = tagObj[property];
+            else text += "" + tagObj[property];
+          } else if (property === void 0) {
+            continue;
+          } else if (tagObj[property]) {
+            let val = compress(tagObj[property], options, newJpath);
+            const isLeaf = isLeafTag(val, options);
+            if (tagObj[":@"]) {
+              assignAttributes(val, tagObj[":@"], newJpath, options);
+            } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== void 0 && !options.alwaysCreateTextNode) {
+              val = val[options.textNodeName];
+            } else if (Object.keys(val).length === 0) {
+              if (options.alwaysCreateTextNode) val[options.textNodeName] = "";
+              else val = "";
+            }
+            if (compressedObj[property] !== void 0 && compressedObj.hasOwnProperty(property)) {
+              if (!Array.isArray(compressedObj[property])) {
+                compressedObj[property] = [compressedObj[property]];
+              }
+              compressedObj[property].push(val);
+            } else {
+              if (options.isArray(property, newJpath, isLeaf)) {
+                compressedObj[property] = [val];
+              } else {
+                compressedObj[property] = val;
+              }
+            }
+          }
+        }
+        if (typeof text === "string") {
+          if (text.length > 0) compressedObj[options.textNodeName] = text;
+        } else if (text !== void 0) compressedObj[options.textNodeName] = text;
+        return compressedObj;
+      }
+      function propName(obj) {
+        const keys = Object.keys(obj);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (key !== ":@") return key;
+        }
+      }
+      function assignAttributes(obj, attrMap, jpath, options) {
+        if (attrMap) {
+          const keys = Object.keys(attrMap);
+          const len = keys.length;
+          for (let i = 0; i < len; i++) {
+            const atrrName = keys[i];
+            if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
+              obj[atrrName] = [attrMap[atrrName]];
+            } else {
+              obj[atrrName] = attrMap[atrrName];
+            }
+          }
+        }
+      }
+      function isLeafTag(obj, options) {
+        const { textNodeName } = options;
+        const propCount = Object.keys(obj).length;
+        if (propCount === 0) {
+          return true;
+        }
+        if (propCount === 1 && (obj[textNodeName] || typeof obj[textNodeName] === "boolean" || obj[textNodeName] === 0)) {
+          return true;
+        }
+        return false;
+      }
+      exports.prettify = prettify;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlparser/XMLParser.js
+  var require_XMLParser = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlparser/XMLParser.js"(exports, module) {
+      var { buildOptions } = require_OptionsBuilder();
+      var OrderedObjParser = require_OrderedObjParser();
+      var { prettify } = require_node2json();
+      var validator = require_validator();
+      var XMLParser2 = class {
+        constructor(options) {
+          this.externalEntities = {};
+          this.options = buildOptions(options);
+        }
+        /**
+         * Parse XML dats to JS object 
+         * @param {string|Buffer} xmlData 
+         * @param {boolean|Object} validationOption 
+         */
+        parse(xmlData, validationOption) {
+          if (typeof xmlData === "string") {
+          } else if (xmlData.toString) {
+            xmlData = xmlData.toString();
+          } else {
+            throw new Error("XML data is accepted in String or Bytes[] form.");
+          }
+          if (validationOption) {
+            if (validationOption === true) validationOption = {};
+            const result = validator.validate(xmlData, validationOption);
+            if (result !== true) {
+              throw Error(`${result.err.msg}:${result.err.line}:${result.err.col}`);
+            }
+          }
+          const orderedObjParser = new OrderedObjParser(this.options);
+          orderedObjParser.addExternalEntities(this.externalEntities);
+          const orderedResult = orderedObjParser.parseXml(xmlData);
+          if (this.options.preserveOrder || orderedResult === void 0) return orderedResult;
+          else return prettify(orderedResult, this.options);
+        }
+        /**
+         * Add Entity which is not by default supported by this library
+         * @param {string} key 
+         * @param {string} value 
+         */
+        addEntity(key, value) {
+          if (value.indexOf("&") !== -1) {
+            throw new Error("Entity value can't have '&'");
+          } else if (key.indexOf("&") !== -1 || key.indexOf(";") !== -1) {
+            throw new Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+          } else if (value === "&") {
+            throw new Error("An entity with value '&' is not permitted");
+          } else {
+            this.externalEntities[key] = value;
+          }
+        }
+      };
+      module.exports = XMLParser2;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js
+  var require_orderedJs2Xml = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlbuilder/orderedJs2Xml.js"(exports, module) {
+      var EOL = "\n";
+      function toXml(jArray, options) {
+        let indentation = "";
+        if (options.format && options.indentBy.length > 0) {
+          indentation = EOL;
+        }
+        return arrToStr(jArray, options, "", indentation);
+      }
+      function arrToStr(arr, options, jPath, indentation) {
+        let xmlStr = "";
+        let isPreviousElementTag = false;
+        if (!Array.isArray(arr)) {
+          if (arr !== void 0 && arr !== null) {
+            let text = arr.toString();
+            text = replaceEntitiesValue(text, options);
+            return text;
+          }
+          return "";
+        }
+        for (let i = 0; i < arr.length; i++) {
+          const tagObj = arr[i];
+          const tagName = propName(tagObj);
+          if (tagName === void 0) continue;
+          let newJPath = "";
+          if (jPath.length === 0) newJPath = tagName;
+          else newJPath = `${jPath}.${tagName}`;
+          if (tagName === options.textNodeName) {
+            let tagText = tagObj[tagName];
+            if (!isStopNode(newJPath, options)) {
+              tagText = options.tagValueProcessor(tagName, tagText);
+              tagText = replaceEntitiesValue(tagText, options);
+            }
+            if (isPreviousElementTag) {
+              xmlStr += indentation;
+            }
+            xmlStr += tagText;
+            isPreviousElementTag = false;
+            continue;
+          } else if (tagName === options.cdataPropName) {
+            if (isPreviousElementTag) {
+              xmlStr += indentation;
+            }
+            xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
+            isPreviousElementTag = false;
+            continue;
+          } else if (tagName === options.commentPropName) {
+            xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
+            isPreviousElementTag = true;
+            continue;
+          } else if (tagName[0] === "?") {
+            const attStr2 = attr_to_str(tagObj[":@"], options);
+            const tempInd = tagName === "?xml" ? "" : indentation;
+            let piTextNodeName = tagObj[tagName][0][options.textNodeName];
+            piTextNodeName = piTextNodeName.length !== 0 ? " " + piTextNodeName : "";
+            xmlStr += tempInd + `<${tagName}${piTextNodeName}${attStr2}?>`;
+            isPreviousElementTag = true;
+            continue;
+          }
+          let newIdentation = indentation;
+          if (newIdentation !== "") {
+            newIdentation += options.indentBy;
+          }
+          const attStr = attr_to_str(tagObj[":@"], options);
+          const tagStart = indentation + `<${tagName}${attStr}`;
+          const tagValue = arrToStr(tagObj[tagName], options, newJPath, newIdentation);
+          if (options.unpairedTags.indexOf(tagName) !== -1) {
+            if (options.suppressUnpairedNode) xmlStr += tagStart + ">";
+            else xmlStr += tagStart + "/>";
+          } else if ((!tagValue || tagValue.length === 0) && options.suppressEmptyNode) {
+            xmlStr += tagStart + "/>";
+          } else if (tagValue && tagValue.endsWith(">")) {
+            xmlStr += tagStart + `>${tagValue}${indentation}</${tagName}>`;
+          } else {
+            xmlStr += tagStart + ">";
+            if (tagValue && indentation !== "" && (tagValue.includes("/>") || tagValue.includes("</"))) {
+              xmlStr += indentation + options.indentBy + tagValue + indentation;
+            } else {
+              xmlStr += tagValue;
+            }
+            xmlStr += `</${tagName}>`;
+          }
+          isPreviousElementTag = true;
+        }
+        return xmlStr;
+      }
+      function propName(obj) {
+        const keys = Object.keys(obj);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+          if (key !== ":@") return key;
+        }
+      }
+      function attr_to_str(attrMap, options) {
+        let attrStr = "";
+        if (attrMap && !options.ignoreAttributes) {
+          for (let attr in attrMap) {
+            if (!Object.prototype.hasOwnProperty.call(attrMap, attr)) continue;
+            let attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
+            attrVal = replaceEntitiesValue(attrVal, options);
+            if (attrVal === true && options.suppressBooleanAttributes) {
+              attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}`;
+            } else {
+              attrStr += ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
+            }
+          }
+        }
+        return attrStr;
+      }
+      function isStopNode(jPath, options) {
+        jPath = jPath.substr(0, jPath.length - options.textNodeName.length - 1);
+        let tagName = jPath.substr(jPath.lastIndexOf(".") + 1);
+        for (let index in options.stopNodes) {
+          if (options.stopNodes[index] === jPath || options.stopNodes[index] === "*." + tagName) return true;
+        }
+        return false;
+      }
+      function replaceEntitiesValue(textValue, options) {
+        if (textValue && textValue.length > 0 && options.processEntities) {
+          for (let i = 0; i < options.entities.length; i++) {
+            const entity = options.entities[i];
+            textValue = textValue.replace(entity.regex, entity.val);
+          }
+        }
+        return textValue;
+      }
+      module.exports = toXml;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js
+  var require_json2xml = __commonJS({
+    "node_modules/fast-xml-parser/src/xmlbuilder/json2xml.js"(exports, module) {
+      "use strict";
+      var buildFromOrderedJs = require_orderedJs2Xml();
+      var getIgnoreAttributesFn = require_ignoreAttributes();
+      var defaultOptions = {
+        attributeNamePrefix: "@_",
+        attributesGroupName: false,
+        textNodeName: "#text",
+        ignoreAttributes: true,
+        cdataPropName: false,
+        format: false,
+        indentBy: "  ",
+        suppressEmptyNode: false,
+        suppressUnpairedNode: true,
+        suppressBooleanAttributes: true,
+        tagValueProcessor: function(key, a2) {
+          return a2;
+        },
+        attributeValueProcessor: function(attrName, a2) {
+          return a2;
+        },
+        preserveOrder: false,
+        commentPropName: false,
+        unpairedTags: [],
+        entities: [
+          { regex: new RegExp("&", "g"), val: "&amp;" },
+          //it must be on top
+          { regex: new RegExp(">", "g"), val: "&gt;" },
+          { regex: new RegExp("<", "g"), val: "&lt;" },
+          { regex: new RegExp("'", "g"), val: "&apos;" },
+          { regex: new RegExp('"', "g"), val: "&quot;" }
+        ],
+        processEntities: true,
+        stopNodes: [],
+        // transformTagName: false,
+        // transformAttributeName: false,
+        oneListGroup: false
+      };
+      function Builder2(options) {
+        this.options = Object.assign({}, defaultOptions, options);
+        if (this.options.ignoreAttributes === true || this.options.attributesGroupName) {
+          this.isAttribute = function() {
+            return false;
+          };
+        } else {
+          this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
+          this.attrPrefixLen = this.options.attributeNamePrefix.length;
+          this.isAttribute = isAttribute;
+        }
+        this.processTextOrObjNode = processTextOrObjNode;
+        if (this.options.format) {
+          this.indentate = indentate;
+          this.tagEndChar = ">\n";
+          this.newLine = "\n";
+        } else {
+          this.indentate = function() {
+            return "";
+          };
+          this.tagEndChar = ">";
+          this.newLine = "";
+        }
+      }
+      Builder2.prototype.build = function(jObj) {
+        if (this.options.preserveOrder) {
+          return buildFromOrderedJs(jObj, this.options);
+        } else {
+          if (Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1) {
+            jObj = {
+              [this.options.arrayNodeName]: jObj
+            };
+          }
+          return this.j2x(jObj, 0, []).val;
+        }
+      };
+      Builder2.prototype.j2x = function(jObj, level, ajPath) {
+        let attrStr = "";
+        let val = "";
+        const jPath = ajPath.join(".");
+        for (let key in jObj) {
+          if (!Object.prototype.hasOwnProperty.call(jObj, key)) continue;
+          if (typeof jObj[key] === "undefined") {
+            if (this.isAttribute(key)) {
+              val += "";
+            }
+          } else if (jObj[key] === null) {
+            if (this.isAttribute(key)) {
+              val += "";
+            } else if (key === this.options.cdataPropName) {
+              val += "";
+            } else if (key[0] === "?") {
+              val += this.indentate(level) + "<" + key + "?" + this.tagEndChar;
+            } else {
+              val += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
+            }
+          } else if (jObj[key] instanceof Date) {
+            val += this.buildTextValNode(jObj[key], key, "", level);
+          } else if (typeof jObj[key] !== "object") {
+            const attr = this.isAttribute(key);
+            if (attr && !this.ignoreAttributesFn(attr, jPath)) {
+              attrStr += this.buildAttrPairStr(attr, "" + jObj[key]);
+            } else if (!attr) {
+              if (key === this.options.textNodeName) {
+                let newval = this.options.tagValueProcessor(key, "" + jObj[key]);
+                val += this.replaceEntitiesValue(newval);
+              } else {
+                val += this.buildTextValNode(jObj[key], key, "", level);
+              }
+            }
+          } else if (Array.isArray(jObj[key])) {
+            const arrLen = jObj[key].length;
+            let listTagVal = "";
+            let listTagAttr = "";
+            for (let j = 0; j < arrLen; j++) {
+              const item = jObj[key][j];
+              if (typeof item === "undefined") {
+              } else if (item === null) {
+                if (key[0] === "?") val += this.indentate(level) + "<" + key + "?" + this.tagEndChar;
+                else val += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
+              } else if (typeof item === "object") {
+                if (this.options.oneListGroup) {
+                  const result = this.j2x(item, level + 1, ajPath.concat(key));
+                  listTagVal += result.val;
+                  if (this.options.attributesGroupName && item.hasOwnProperty(this.options.attributesGroupName)) {
+                    listTagAttr += result.attrStr;
+                  }
+                } else {
+                  listTagVal += this.processTextOrObjNode(item, key, level, ajPath);
+                }
+              } else {
+                if (this.options.oneListGroup) {
+                  let textValue = this.options.tagValueProcessor(key, item);
+                  textValue = this.replaceEntitiesValue(textValue);
+                  listTagVal += textValue;
+                } else {
+                  listTagVal += this.buildTextValNode(item, key, "", level);
+                }
+              }
+            }
+            if (this.options.oneListGroup) {
+              listTagVal = this.buildObjectNode(listTagVal, key, listTagAttr, level);
+            }
+            val += listTagVal;
+          } else {
+            if (this.options.attributesGroupName && key === this.options.attributesGroupName) {
+              const Ks = Object.keys(jObj[key]);
+              const L3 = Ks.length;
+              for (let j = 0; j < L3; j++) {
+                attrStr += this.buildAttrPairStr(Ks[j], "" + jObj[key][Ks[j]]);
+              }
+            } else {
+              val += this.processTextOrObjNode(jObj[key], key, level, ajPath);
+            }
+          }
+        }
+        return { attrStr, val };
+      };
+      Builder2.prototype.buildAttrPairStr = function(attrName, val) {
+        val = this.options.attributeValueProcessor(attrName, "" + val);
+        val = this.replaceEntitiesValue(val);
+        if (this.options.suppressBooleanAttributes && val === "true") {
+          return " " + attrName;
+        } else return " " + attrName + '="' + val + '"';
+      };
+      function processTextOrObjNode(object, key, level, ajPath) {
+        const result = this.j2x(object, level + 1, ajPath.concat(key));
+        if (object[this.options.textNodeName] !== void 0 && Object.keys(object).length === 1) {
+          return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level);
+        } else {
+          return this.buildObjectNode(result.val, key, result.attrStr, level);
+        }
+      }
+      Builder2.prototype.buildObjectNode = function(val, key, attrStr, level) {
+        if (val === "") {
+          if (key[0] === "?") return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
+          else {
+            return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
+          }
+        } else {
+          let tagEndExp = "</" + key + this.tagEndChar;
+          let piClosingChar = "";
+          if (key[0] === "?") {
+            piClosingChar = "?";
+            tagEndExp = "";
+          }
+          if ((attrStr || attrStr === "") && val.indexOf("<") === -1) {
+            return this.indentate(level) + "<" + key + attrStr + piClosingChar + ">" + val + tagEndExp;
+          } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
+            return this.indentate(level) + `<!--${val}-->` + this.newLine;
+          } else {
+            return this.indentate(level) + "<" + key + attrStr + piClosingChar + this.tagEndChar + val + this.indentate(level) + tagEndExp;
+          }
+        }
+      };
+      Builder2.prototype.closeTag = function(key) {
+        let closeTag = "";
+        if (this.options.unpairedTags.indexOf(key) !== -1) {
+          if (!this.options.suppressUnpairedNode) closeTag = "/";
+        } else if (this.options.suppressEmptyNode) {
+          closeTag = "/";
+        } else {
+          closeTag = `></${key}`;
+        }
+        return closeTag;
+      };
+      Builder2.prototype.buildTextValNode = function(val, key, attrStr, level) {
+        if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
+          return this.indentate(level) + `<![CDATA[${val}]]>` + this.newLine;
+        } else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
+          return this.indentate(level) + `<!--${val}-->` + this.newLine;
+        } else if (key[0] === "?") {
+          return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
+        } else {
+          let textValue = this.options.tagValueProcessor(key, val);
+          textValue = this.replaceEntitiesValue(textValue);
+          if (textValue === "") {
+            return this.indentate(level) + "<" + key + attrStr + this.closeTag(key) + this.tagEndChar;
+          } else {
+            return this.indentate(level) + "<" + key + attrStr + ">" + textValue + "</" + key + this.tagEndChar;
+          }
+        }
+      };
+      Builder2.prototype.replaceEntitiesValue = function(textValue) {
+        if (textValue && textValue.length > 0 && this.options.processEntities) {
+          for (let i = 0; i < this.options.entities.length; i++) {
+            const entity = this.options.entities[i];
+            textValue = textValue.replace(entity.regex, entity.val);
+          }
+        }
+        return textValue;
+      };
+      function indentate(level) {
+        return this.options.indentBy.repeat(level);
+      }
+      function isAttribute(name) {
+        if (name.startsWith(this.options.attributeNamePrefix) && name !== this.options.textNodeName) {
+          return name.substr(this.attrPrefixLen);
+        } else {
+          return false;
+        }
+      }
+      module.exports = Builder2;
+    }
+  });
+
+  // node_modules/fast-xml-parser/src/fxp.js
+  var require_fxp = __commonJS({
+    "node_modules/fast-xml-parser/src/fxp.js"(exports, module) {
+      "use strict";
+      var validator = require_validator();
+      var XMLParser2 = require_XMLParser();
+      var XMLBuilder = require_json2xml();
+      module.exports = {
+        XMLParser: XMLParser2,
+        XMLValidator: validator,
+        XMLBuilder
+      };
     }
   });
 
@@ -10706,8 +12790,8 @@ var YasguiGeoTg = (() => {
             let result;
             try {
               result = callback(child, i);
-            } catch (e) {
-              throw child.addToError(e);
+            } catch (e2) {
+              throw child.addToError(e2);
             }
             if (result !== false && child.walk) {
               result = child.walk(callback);
@@ -11421,7 +13505,7 @@ var YasguiGeoTg = (() => {
       var Root2 = require_root();
       var Rule2 = require_rule();
       function fromJSON2(json, inputs) {
-        if (Array.isArray(json)) return json.map((n) => fromJSON2(n));
+        if (Array.isArray(json)) return json.map((n2) => fromJSON2(n2));
         let { inputs: ownInputs, ...defaults } = json;
         if (ownInputs) {
           inputs = [];
@@ -11437,7 +13521,7 @@ var YasguiGeoTg = (() => {
           }
         }
         if (defaults.nodes) {
-          defaults.nodes = json.nodes.map((n) => fromJSON2(n, inputs));
+          defaults.nodes = json.nodes.map((n2) => fromJSON2(n2, inputs));
         }
         if (defaults.source) {
           let { inputId, ...source } = defaults.source;
@@ -11813,7 +13897,7 @@ var YasguiGeoTg = (() => {
         let css = input.css.valueOf();
         let ignore = options.ignoreErrors;
         let code, content, escape, next, quote;
-        let currentToken, escaped, escapePos, n, prev;
+        let currentToken, escaped, escapePos, n2, prev;
         let length = css.length;
         let pos = 0;
         let buffer = [];
@@ -11860,8 +13944,8 @@ var YasguiGeoTg = (() => {
             }
             case OPEN_PARENTHESES: {
               prev = buffer.length ? buffer.pop()[1] : "";
-              n = css.charCodeAt(pos + 1);
-              if (prev === "url" && n !== SINGLE_QUOTE && n !== DOUBLE_QUOTE && n !== SPACE && n !== NEWLINE && n !== TAB && n !== FEED && n !== CR) {
+              n2 = css.charCodeAt(pos + 1);
+              if (prev === "url" && n2 !== SINGLE_QUOTE && n2 !== DOUBLE_QUOTE && n2 !== SPACE && n2 !== NEWLINE && n2 !== TAB && n2 !== FEED && n2 !== CR) {
                 next = pos;
                 do {
                   escaped = false;
@@ -12540,24 +14624,24 @@ var YasguiGeoTg = (() => {
       var Parser2 = require_parser();
       function parse3(css, opts) {
         let input = new Input2(css, opts);
-        let parser2 = new Parser2(input);
+        let parser = new Parser2(input);
         try {
-          parser2.parse();
-        } catch (e) {
+          parser.parse();
+        } catch (e2) {
           if (false) {
-            if (e.name === "CssSyntaxError" && opts && opts.from) {
+            if (e2.name === "CssSyntaxError" && opts && opts.from) {
               if (/\.scss$/i.test(opts.from)) {
-                e.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
+                e2.message += "\nYou tried to parse SCSS with the standard CSS parser; try again with the postcss-scss parser";
               } else if (/\.sass/i.test(opts.from)) {
-                e.message += "\nYou tried to parse Sass with the standard CSS parser; try again with the postcss-sass parser";
+                e2.message += "\nYou tried to parse Sass with the standard CSS parser; try again with the postcss-sass parser";
               } else if (/\.less$/i.test(opts.from)) {
-                e.message += "\nYou tried to parse Less with the standard CSS parser; try again with the postcss-less parser";
+                e2.message += "\nYou tried to parse Less with the standard CSS parser; try again with the postcss-less parser";
               }
             }
           }
-          throw e;
+          throw e2;
         }
-        return parser2.root;
+        return parser.root;
       }
       module.exports = parse3;
       parse3.default = parse3;
@@ -12790,12 +14874,12 @@ var YasguiGeoTg = (() => {
               opts.map.prev = css.map;
             }
           } else {
-            let parser2 = parse3;
-            if (opts.syntax) parser2 = opts.syntax.parse;
-            if (opts.parser) parser2 = opts.parser;
-            if (parser2.parse) parser2 = parser2.parse;
+            let parser = parse3;
+            if (opts.syntax) parser = opts.syntax.parse;
+            if (opts.parser) parser = opts.parser;
+            if (parser.parse) parser = parser.parse;
             try {
-              root2 = parser2(css, opts);
+              root2 = parser(css, opts);
             } catch (error) {
               this.processed = true;
               this.error = error;
@@ -12918,9 +15002,9 @@ var YasguiGeoTg = (() => {
                 if (isPromise(promise)) {
                   try {
                     await promise;
-                  } catch (e) {
+                  } catch (e2) {
                     let node = stack[stack.length - 1].node;
-                    throw this.handleError(e, node);
+                    throw this.handleError(e2, node);
                   }
                 }
               }
@@ -12937,8 +15021,8 @@ var YasguiGeoTg = (() => {
                   } else {
                     await visitor(root2, this.helpers);
                   }
-                } catch (e) {
-                  throw this.handleError(e);
+                } catch (e2) {
+                  throw this.handleError(e2);
                 }
               }
             }
@@ -13034,8 +15118,8 @@ var YasguiGeoTg = (() => {
             let promise;
             try {
               promise = visitor(node, this.helpers);
-            } catch (e) {
-              throw this.handleError(e, node.proxyOf);
+            } catch (e2) {
+              throw this.handleError(e2, node.proxyOf);
             }
             if (node.type !== "root" && node.type !== "document" && !node.parent) {
               return true;
@@ -13062,8 +15146,8 @@ var YasguiGeoTg = (() => {
             this.result.lastPlugin = plugin2;
             try {
               return visitor(node.toProxy(), this.helpers);
-            } catch (e) {
-              throw this.handleError(e, node);
+            } catch (e2) {
+              throw this.handleError(e2, node);
             }
           }
           if (visit.iterator !== 0) {
@@ -13162,9 +15246,9 @@ var YasguiGeoTg = (() => {
             return this._root;
           }
           let root2;
-          let parser2 = parse3;
+          let parser = parse3;
           try {
-            root2 = parser2(this._css, this._opts);
+            root2 = parser(this._css, this._opts);
           } catch (error) {
             this.error = error;
           }
@@ -13812,11 +15896,11 @@ var YasguiGeoTg = (() => {
                   end++;
                 }
             }
-          } catch (e) {
-            if (e instanceof ParseError) {
-              throw e;
+          } catch (e2) {
+            if (e2 instanceof ParseError) {
+              throw e2;
             }
-            errorHandler.error("element parse error: " + e);
+            errorHandler.error("element parse error: " + e2);
             end = -1;
           }
           if (end > start2) {
@@ -14078,8 +16162,8 @@ var YasguiGeoTg = (() => {
         return pos < elStartEnd;
       }
       function _copy(source, target) {
-        for (var n in source) {
-          target[n] = source[n];
+        for (var n2 in source) {
+          target[n2] = source[n2];
         }
       }
       function parseDCC(source, start2, domBuilder, errorHandler) {
@@ -14525,9 +16609,9 @@ var YasguiGeoTg = (() => {
           while (el) {
             var map = el._nsMap;
             if (map) {
-              for (var n in map) {
-                if (map[n] == namespaceURI) {
-                  return n;
+              for (var n2 in map) {
+                if (map[n2] == namespaceURI) {
+                  return n2;
                 }
               }
             }
@@ -15197,11 +17281,11 @@ var YasguiGeoTg = (() => {
       }
       function cloneNode(doc, node, deep) {
         var node2 = new node.constructor();
-        for (var n in node) {
-          var v = node[n];
+        for (var n2 in node) {
+          var v = node[n2];
           if (typeof v != "object") {
-            if (v != node2[n]) {
-              node2[n] = v;
+            if (v != node2[n2]) {
+              node2[n2] = v;
             }
           }
         }
@@ -15287,7 +17371,7 @@ var YasguiGeoTg = (() => {
             object["$$" + key] = value;
           };
         }
-      } catch (e) {
+      } catch (e2) {
       }
       var getTextContent;
       exports.Node = Node2;
@@ -15300,10 +17384,10 @@ var YasguiGeoTg = (() => {
   // node_modules/xmldom/lib/dom-parser.js
   var require_dom_parser = __commonJS({
     "node_modules/xmldom/lib/dom-parser.js"(exports) {
-      function DOMParser2(options) {
+      function DOMParser(options) {
         this.options = options || { locator: {} };
       }
-      DOMParser2.prototype.parseFromString = function(source, mimeType) {
+      DOMParser.prototype.parseFromString = function(source, mimeType) {
         var options = this.options;
         var sax2 = new XMLReader();
         var domBuilder = options.domBuilder || new DOMHandler();
@@ -15496,7 +17580,7 @@ var YasguiGeoTg = (() => {
       var ParseError = sax.ParseError;
       var DOMImplementation = exports.DOMImplementation = require_dom().DOMImplementation;
       exports.XMLSerializer = require_dom().XMLSerializer;
-      exports.DOMParser = DOMParser2;
+      exports.DOMParser = DOMParser;
       exports.__DOMHandler = DOMHandler;
     }
   });
@@ -16230,8 +18314,8 @@ var YasguiGeoTg = (() => {
     throw new Error('unable to parse string "' + this.text + '". State is ' + this.state);
   };
   function parseString(txt) {
-    var parser2 = new Parser(txt);
-    return parser2.output();
+    var parser = new Parser(txt);
+    return parser.output();
   }
 
   // node_modules/wkt-parser/process.js
@@ -17092,25 +19176,25 @@ var YasguiGeoTg = (() => {
       return true;
     }
     projStore[len] = proj;
-    proj.names.forEach(function(n) {
-      names3[n.toLowerCase()] = len;
+    proj.names.forEach(function(n2) {
+      names3[n2.toLowerCase()] = len;
     });
     return this;
   }
-  function getNormalizedProjName(n) {
-    return n.replace(/[-\(\)\s]+/g, " ").trim().replace(/ /g, "_");
+  function getNormalizedProjName(n2) {
+    return n2.replace(/[-\(\)\s]+/g, " ").trim().replace(/ /g, "_");
   }
   function get(name) {
     if (!name) {
       return false;
     }
-    var n = name.toLowerCase();
-    if (typeof names3[n] !== "undefined" && projStore[names3[n]]) {
-      return projStore[names3[n]];
+    var n2 = name.toLowerCase();
+    if (typeof names3[n2] !== "undefined" && projStore[names3[n2]]) {
+      return projStore[names3[n2]];
     }
-    n = getNormalizedProjName(n);
-    if (n in names3 && projStore[names3[n]]) {
-      return projStore[names3[n]];
+    n2 = getNormalizedProjName(n2);
+    if (n2 in names3 && projStore[names3[n2]]) {
+      return projStore[names3[n2]];
     }
   }
   function start() {
@@ -17354,18 +19438,18 @@ var YasguiGeoTg = (() => {
     var a22 = a2 * a2;
     var b22 = b2 * b2;
     var es = (a22 - b22) / a22;
-    var e = 0;
+    var e2 = 0;
     if (R_A) {
       a2 *= 1 - es * (SIXTH + es * (RA4 + es * RA6));
       a22 = a2 * a2;
       es = 0;
     } else {
-      e = Math.sqrt(es);
+      e2 = Math.sqrt(es);
     }
     var ep2 = (a22 - b22) / b22;
     return {
       es,
-      e,
+      e: e2,
       ep2
     };
   }
@@ -18726,9 +20810,9 @@ var YasguiGeoTg = (() => {
       includeErrorFields = false;
     }
     var view = new DataView(data);
-    var isLittleEndian = detectLittleEndian(view);
-    var header = readHeader(view, isLittleEndian);
-    var subgrids = readSubgrids(view, header, isLittleEndian, includeErrorFields);
+    var isLittleEndian2 = detectLittleEndian(view);
+    var header = readHeader(view, isLittleEndian2);
+    var subgrids = readSubgrids(view, header, isLittleEndian2, includeErrorFields);
     var nadgrid2 = { header, subgrids };
     loadedNadgrids[key] = nadgrid2;
     return nadgrid2;
@@ -18812,27 +20896,27 @@ var YasguiGeoTg = (() => {
     }
     return true;
   }
-  function readHeader(view, isLittleEndian) {
+  function readHeader(view, isLittleEndian2) {
     return {
-      nFields: view.getInt32(8, isLittleEndian),
-      nSubgridFields: view.getInt32(24, isLittleEndian),
-      nSubgrids: view.getInt32(40, isLittleEndian),
+      nFields: view.getInt32(8, isLittleEndian2),
+      nSubgridFields: view.getInt32(24, isLittleEndian2),
+      nSubgrids: view.getInt32(40, isLittleEndian2),
       shiftType: decodeString(view, 56, 56 + 8).trim(),
-      fromSemiMajorAxis: view.getFloat64(120, isLittleEndian),
-      fromSemiMinorAxis: view.getFloat64(136, isLittleEndian),
-      toSemiMajorAxis: view.getFloat64(152, isLittleEndian),
-      toSemiMinorAxis: view.getFloat64(168, isLittleEndian)
+      fromSemiMajorAxis: view.getFloat64(120, isLittleEndian2),
+      fromSemiMinorAxis: view.getFloat64(136, isLittleEndian2),
+      toSemiMajorAxis: view.getFloat64(152, isLittleEndian2),
+      toSemiMinorAxis: view.getFloat64(168, isLittleEndian2)
     };
   }
   function decodeString(view, start2, end) {
     return String.fromCharCode.apply(null, new Uint8Array(view.buffer.slice(start2, end)));
   }
-  function readSubgrids(view, header, isLittleEndian, includeErrorFields) {
+  function readSubgrids(view, header, isLittleEndian2, includeErrorFields) {
     var gridOffset = 176;
     var grids = [];
     for (var i = 0; i < header.nSubgrids; i++) {
-      var subHeader = readGridHeader(view, gridOffset, isLittleEndian);
-      var nodes = readGridNodes(view, gridOffset, subHeader, isLittleEndian, includeErrorFields);
+      var subHeader = readGridHeader(view, gridOffset, isLittleEndian2);
+      var nodes = readGridNodes(view, gridOffset, subHeader, isLittleEndian2, includeErrorFields);
       var lngColumnCount = Math.round(
         1 + (subHeader.upperLongitude - subHeader.lowerLongitude) / subHeader.longitudeInterval
       );
@@ -18855,24 +20939,24 @@ var YasguiGeoTg = (() => {
     return grids;
   }
   function mapNodes(nodes) {
-    return nodes.map(function(r) {
-      return [secondsToRadians(r.longitudeShift), secondsToRadians(r.latitudeShift)];
+    return nodes.map(function(r2) {
+      return [secondsToRadians(r2.longitudeShift), secondsToRadians(r2.latitudeShift)];
     });
   }
-  function readGridHeader(view, offset, isLittleEndian) {
+  function readGridHeader(view, offset, isLittleEndian2) {
     return {
       name: decodeString(view, offset + 8, offset + 16).trim(),
       parent: decodeString(view, offset + 24, offset + 24 + 8).trim(),
-      lowerLatitude: view.getFloat64(offset + 72, isLittleEndian),
-      upperLatitude: view.getFloat64(offset + 88, isLittleEndian),
-      lowerLongitude: view.getFloat64(offset + 104, isLittleEndian),
-      upperLongitude: view.getFloat64(offset + 120, isLittleEndian),
-      latitudeInterval: view.getFloat64(offset + 136, isLittleEndian),
-      longitudeInterval: view.getFloat64(offset + 152, isLittleEndian),
-      gridNodeCount: view.getInt32(offset + 168, isLittleEndian)
+      lowerLatitude: view.getFloat64(offset + 72, isLittleEndian2),
+      upperLatitude: view.getFloat64(offset + 88, isLittleEndian2),
+      lowerLongitude: view.getFloat64(offset + 104, isLittleEndian2),
+      upperLongitude: view.getFloat64(offset + 120, isLittleEndian2),
+      latitudeInterval: view.getFloat64(offset + 136, isLittleEndian2),
+      longitudeInterval: view.getFloat64(offset + 152, isLittleEndian2),
+      gridNodeCount: view.getInt32(offset + 168, isLittleEndian2)
     };
   }
-  function readGridNodes(view, offset, gridHeader, isLittleEndian, includeErrorFields) {
+  function readGridNodes(view, offset, gridHeader, isLittleEndian2, includeErrorFields) {
     var nodesOffset = offset + 176;
     var gridRecordLength = 16;
     if (includeErrorFields === false) {
@@ -18881,12 +20965,12 @@ var YasguiGeoTg = (() => {
     var gridShiftRecords = [];
     for (var i = 0; i < gridHeader.gridNodeCount; i++) {
       var record = {
-        latitudeShift: view.getFloat32(nodesOffset + i * gridRecordLength, isLittleEndian),
-        longitudeShift: view.getFloat32(nodesOffset + i * gridRecordLength + 4, isLittleEndian)
+        latitudeShift: view.getFloat32(nodesOffset + i * gridRecordLength, isLittleEndian2),
+        longitudeShift: view.getFloat32(nodesOffset + i * gridRecordLength + 4, isLittleEndian2)
       };
       if (includeErrorFields !== false) {
-        record.latitudeAccuracy = view.getFloat32(nodesOffset + i * gridRecordLength + 8, isLittleEndian);
-        record.longitudeAccuracy = view.getFloat32(nodesOffset + i * gridRecordLength + 12, isLittleEndian);
+        record.latitudeAccuracy = view.getFloat32(nodesOffset + i * gridRecordLength + 8, isLittleEndian2);
+        record.longitudeAccuracy = view.getFloat32(nodesOffset + i * gridRecordLength + 12, isLittleEndian2);
       }
       gridShiftRecords.push(record);
     }
@@ -19896,11 +21980,11 @@ var YasguiGeoTg = (() => {
       accuracy: accuracyBonus
     };
   }
-  function getEastingFromChar(e, set) {
+  function getEastingFromChar(e2, set) {
     var curCol = SET_ORIGIN_COLUMN_LETTERS.charCodeAt(set - 1);
     var eastingValue = 1e5;
     var rewindMarker = false;
-    while (curCol !== e.charCodeAt(0)) {
+    while (curCol !== e2.charCodeAt(0)) {
       curCol++;
       if (curCol === I) {
         curCol++;
@@ -19910,7 +21994,7 @@ var YasguiGeoTg = (() => {
       }
       if (curCol > Z) {
         if (rewindMarker) {
-          throw "Bad character: " + e;
+          throw "Bad character: " + e2;
         }
         curCol = A;
         rewindMarker = true;
@@ -19919,14 +22003,14 @@ var YasguiGeoTg = (() => {
     }
     return eastingValue;
   }
-  function getNorthingFromChar(n, set) {
-    if (n > "V") {
-      throw "MGRSPoint given invalid Northing " + n;
+  function getNorthingFromChar(n2, set) {
+    if (n2 > "V") {
+      throw "MGRSPoint given invalid Northing " + n2;
     }
     var curRow = SET_ORIGIN_ROW_LETTERS.charCodeAt(set - 1);
     var northingValue = 0;
     var rewindMarker = false;
-    while (curRow !== n.charCodeAt(0)) {
+    while (curRow !== n2.charCodeAt(0)) {
       curRow++;
       if (curRow === I) {
         curRow++;
@@ -19936,7 +22020,7 @@ var YasguiGeoTg = (() => {
       }
       if (curRow > V) {
         if (rewindMarker) {
-          throw "Bad character: " + n;
+          throw "Bad character: " + n2;
         }
         curRow = A;
         rewindMarker = true;
@@ -20215,9 +22299,9 @@ var YasguiGeoTg = (() => {
 
   // node_modules/proj4/lib/common/sinh.js
   function sinh_default(x3) {
-    var r = Math.exp(x3);
-    r = (r - 1 / r) / 2;
-    return r;
+    var r2 = Math.exp(x3);
+    r2 = (r2 - 1 / r2) / 2;
+    return r2;
   }
 
   // node_modules/proj4/lib/common/hypot.js
@@ -20260,13 +22344,13 @@ var YasguiGeoTg = (() => {
 
   // node_modules/proj4/lib/common/clens.js
   function clens_default(pp, arg_r) {
-    var r = 2 * Math.cos(arg_r);
+    var r2 = 2 * Math.cos(arg_r);
     var i = pp.length - 1;
     var hr1 = pp[i];
     var hr2 = 0;
     var hr;
     while (--i >= 0) {
-      hr = -hr2 + r * hr1 + pp[i];
+      hr = -hr2 + r2 * hr1 + pp[i];
       hr2 = hr1;
       hr1 = hr;
     }
@@ -20275,9 +22359,9 @@ var YasguiGeoTg = (() => {
 
   // node_modules/proj4/lib/common/cosh.js
   function cosh_default(x3) {
-    var r = Math.exp(x3);
-    r = (r + 1 / r) / 2;
-    return r;
+    var r2 = Math.exp(x3);
+    r2 = (r2 + 1 / r2) / 2;
+    return r2;
   }
 
   // node_modules/proj4/lib/common/clens_cmplx.js
@@ -20286,7 +22370,7 @@ var YasguiGeoTg = (() => {
     var cos_arg_r = Math.cos(arg_r);
     var sinh_arg_i = sinh_default(arg_i);
     var cosh_arg_i = cosh_default(arg_i);
-    var r = 2 * cos_arg_r * cosh_arg_i;
+    var r2 = 2 * cos_arg_r * cosh_arg_i;
     var i = -2 * sin_arg_r * sinh_arg_i;
     var j = pp.length - 1;
     var hr = pp[j];
@@ -20300,12 +22384,12 @@ var YasguiGeoTg = (() => {
       hi2 = hi1;
       hr1 = hr;
       hi1 = hi;
-      hr = -hr2 + r * hr1 - i * hi1 + pp[j];
-      hi = -hi2 + i * hr1 + r * hi1;
+      hr = -hr2 + r2 * hr1 - i * hi1 + pp[j];
+      hi = -hi2 + i * hr1 + r2 * hi1;
     }
-    r = sin_arg_r * cosh_arg_i;
+    r2 = sin_arg_r * cosh_arg_i;
     i = cos_arg_r * sinh_arg_i;
-    return [r * hr - i * hi, r * hi + i * hr];
+    return [r2 * hr - i * hi, r2 * hi + i * hr];
   }
 
   // node_modules/proj4/lib/projections/etmerc.js
@@ -20327,41 +22411,41 @@ var YasguiGeoTg = (() => {
     this.utg = [];
     this.gtu = [];
     var f3 = this.es / (1 + Math.sqrt(1 - this.es));
-    var n = f3 / (2 - f3);
-    var np = n;
-    this.cgb[0] = n * (2 + n * (-2 / 3 + n * (-2 + n * (116 / 45 + n * (26 / 45 + n * (-2854 / 675))))));
-    this.cbg[0] = n * (-2 + n * (2 / 3 + n * (4 / 3 + n * (-82 / 45 + n * (32 / 45 + n * (4642 / 4725))))));
-    np = np * n;
-    this.cgb[1] = np * (7 / 3 + n * (-8 / 5 + n * (-227 / 45 + n * (2704 / 315 + n * (2323 / 945)))));
-    this.cbg[1] = np * (5 / 3 + n * (-16 / 15 + n * (-13 / 9 + n * (904 / 315 + n * (-1522 / 945)))));
-    np = np * n;
-    this.cgb[2] = np * (56 / 15 + n * (-136 / 35 + n * (-1262 / 105 + n * (73814 / 2835))));
-    this.cbg[2] = np * (-26 / 15 + n * (34 / 21 + n * (8 / 5 + n * (-12686 / 2835))));
-    np = np * n;
-    this.cgb[3] = np * (4279 / 630 + n * (-332 / 35 + n * (-399572 / 14175)));
-    this.cbg[3] = np * (1237 / 630 + n * (-12 / 5 + n * (-24832 / 14175)));
-    np = np * n;
-    this.cgb[4] = np * (4174 / 315 + n * (-144838 / 6237));
-    this.cbg[4] = np * (-734 / 315 + n * (109598 / 31185));
-    np = np * n;
+    var n2 = f3 / (2 - f3);
+    var np = n2;
+    this.cgb[0] = n2 * (2 + n2 * (-2 / 3 + n2 * (-2 + n2 * (116 / 45 + n2 * (26 / 45 + n2 * (-2854 / 675))))));
+    this.cbg[0] = n2 * (-2 + n2 * (2 / 3 + n2 * (4 / 3 + n2 * (-82 / 45 + n2 * (32 / 45 + n2 * (4642 / 4725))))));
+    np = np * n2;
+    this.cgb[1] = np * (7 / 3 + n2 * (-8 / 5 + n2 * (-227 / 45 + n2 * (2704 / 315 + n2 * (2323 / 945)))));
+    this.cbg[1] = np * (5 / 3 + n2 * (-16 / 15 + n2 * (-13 / 9 + n2 * (904 / 315 + n2 * (-1522 / 945)))));
+    np = np * n2;
+    this.cgb[2] = np * (56 / 15 + n2 * (-136 / 35 + n2 * (-1262 / 105 + n2 * (73814 / 2835))));
+    this.cbg[2] = np * (-26 / 15 + n2 * (34 / 21 + n2 * (8 / 5 + n2 * (-12686 / 2835))));
+    np = np * n2;
+    this.cgb[3] = np * (4279 / 630 + n2 * (-332 / 35 + n2 * (-399572 / 14175)));
+    this.cbg[3] = np * (1237 / 630 + n2 * (-12 / 5 + n2 * (-24832 / 14175)));
+    np = np * n2;
+    this.cgb[4] = np * (4174 / 315 + n2 * (-144838 / 6237));
+    this.cbg[4] = np * (-734 / 315 + n2 * (109598 / 31185));
+    np = np * n2;
     this.cgb[5] = np * (601676 / 22275);
     this.cbg[5] = np * (444337 / 155925);
-    np = Math.pow(n, 2);
-    this.Qn = this.k0 / (1 + n) * (1 + np * (1 / 4 + np * (1 / 64 + np / 256)));
-    this.utg[0] = n * (-0.5 + n * (2 / 3 + n * (-37 / 96 + n * (1 / 360 + n * (81 / 512 + n * (-96199 / 604800))))));
-    this.gtu[0] = n * (0.5 + n * (-2 / 3 + n * (5 / 16 + n * (41 / 180 + n * (-127 / 288 + n * (7891 / 37800))))));
-    this.utg[1] = np * (-1 / 48 + n * (-1 / 15 + n * (437 / 1440 + n * (-46 / 105 + n * (1118711 / 3870720)))));
-    this.gtu[1] = np * (13 / 48 + n * (-3 / 5 + n * (557 / 1440 + n * (281 / 630 + n * (-1983433 / 1935360)))));
-    np = np * n;
-    this.utg[2] = np * (-17 / 480 + n * (37 / 840 + n * (209 / 4480 + n * (-5569 / 90720))));
-    this.gtu[2] = np * (61 / 240 + n * (-103 / 140 + n * (15061 / 26880 + n * (167603 / 181440))));
-    np = np * n;
-    this.utg[3] = np * (-4397 / 161280 + n * (11 / 504 + n * (830251 / 7257600)));
-    this.gtu[3] = np * (49561 / 161280 + n * (-179 / 168 + n * (6601661 / 7257600)));
-    np = np * n;
-    this.utg[4] = np * (-4583 / 161280 + n * (108847 / 3991680));
-    this.gtu[4] = np * (34729 / 80640 + n * (-3418889 / 1995840));
-    np = np * n;
+    np = Math.pow(n2, 2);
+    this.Qn = this.k0 / (1 + n2) * (1 + np * (1 / 4 + np * (1 / 64 + np / 256)));
+    this.utg[0] = n2 * (-0.5 + n2 * (2 / 3 + n2 * (-37 / 96 + n2 * (1 / 360 + n2 * (81 / 512 + n2 * (-96199 / 604800))))));
+    this.gtu[0] = n2 * (0.5 + n2 * (-2 / 3 + n2 * (5 / 16 + n2 * (41 / 180 + n2 * (-127 / 288 + n2 * (7891 / 37800))))));
+    this.utg[1] = np * (-1 / 48 + n2 * (-1 / 15 + n2 * (437 / 1440 + n2 * (-46 / 105 + n2 * (1118711 / 3870720)))));
+    this.gtu[1] = np * (13 / 48 + n2 * (-3 / 5 + n2 * (557 / 1440 + n2 * (281 / 630 + n2 * (-1983433 / 1935360)))));
+    np = np * n2;
+    this.utg[2] = np * (-17 / 480 + n2 * (37 / 840 + n2 * (209 / 4480 + n2 * (-5569 / 90720))));
+    this.gtu[2] = np * (61 / 240 + n2 * (-103 / 140 + n2 * (15061 / 26880 + n2 * (167603 / 181440))));
+    np = np * n2;
+    this.utg[3] = np * (-4397 / 161280 + n2 * (11 / 504 + n2 * (830251 / 7257600)));
+    this.gtu[3] = np * (49561 / 161280 + n2 * (-179 / 168 + n2 * (6601661 / 7257600)));
+    np = np * n2;
+    this.utg[4] = np * (-4583 / 161280 + n2 * (108847 / 3991680));
+    this.gtu[4] = np * (34729 / 80640 + n2 * (-3418889 / 1995840));
+    np = np * n2;
     this.utg[5] = np * (-20648693 / 638668800);
     this.gtu[5] = np * (212378941 / 319334400);
     var Z2 = gatg_default(this.cbg, this.lat0);
@@ -20721,14 +22805,14 @@ var YasguiGeoTg = (() => {
     var invF = this.rf;
     var flattening = 1 / invF;
     var e2 = 2 * flattening - Math.pow(flattening, 2);
-    var e = this.e = Math.sqrt(e2);
+    var e3 = this.e = Math.sqrt(e2);
     this.R = this.k0 * semiMajorAxis * Math.sqrt(1 - e2) / (1 - e2 * Math.pow(sinPhy0, 2));
     this.alpha = Math.sqrt(1 + e2 / (1 - e2) * Math.pow(Math.cos(phy0), 4));
     this.b0 = Math.asin(sinPhy0 / this.alpha);
     var k1 = Math.log(Math.tan(Math.PI / 4 + this.b0 / 2));
     var k2 = Math.log(Math.tan(Math.PI / 4 + phy0 / 2));
-    var k3 = Math.log((1 + e * sinPhy0) / (1 - e * sinPhy0));
-    this.K = k1 - this.alpha * k2 + this.alpha * e / 2 * k3;
+    var k3 = Math.log((1 + e3 * sinPhy0) / (1 - e3 * sinPhy0));
+    this.K = k1 - this.alpha * k2 + this.alpha * e3 / 2 * k3;
   }
   function forward8(p) {
     var Sa1 = Math.log(Math.tan(Math.PI / 4 - p.y / 2));
@@ -21185,8 +23269,8 @@ var YasguiGeoTg = (() => {
   }
 
   // node_modules/proj4/lib/common/gN.js
-  function gN_default(a2, e, sinphi) {
-    var temp = e * sinphi;
+  function gN_default(a2, e2, sinphi) {
+    var temp = e2 * sinphi;
     return a2 / Math.sqrt(1 - temp * temp);
   }
 
@@ -21989,7 +24073,7 @@ var YasguiGeoTg = (() => {
     this.D[9] = -13e-4;
   }
   function forward19(p) {
-    var n;
+    var n2;
     var lon = p.x;
     var lat = p.y;
     var delta_lat = lat - this.lat0;
@@ -21998,9 +24082,9 @@ var YasguiGeoTg = (() => {
     var d_lambda = delta_lon;
     var d_phi_n = 1;
     var d_psi = 0;
-    for (n = 1; n <= 10; n++) {
+    for (n2 = 1; n2 <= 10; n2++) {
       d_phi_n = d_phi_n * d_phi;
-      d_psi = d_psi + this.A[n] * d_phi_n;
+      d_psi = d_psi + this.A[n2] * d_phi_n;
     }
     var th_re = d_psi;
     var th_im = d_lambda;
@@ -22010,20 +24094,20 @@ var YasguiGeoTg = (() => {
     var th_n_im1;
     var z_re = 0;
     var z_im = 0;
-    for (n = 1; n <= 6; n++) {
+    for (n2 = 1; n2 <= 6; n2++) {
       th_n_re1 = th_n_re * th_re - th_n_im * th_im;
       th_n_im1 = th_n_im * th_re + th_n_re * th_im;
       th_n_re = th_n_re1;
       th_n_im = th_n_im1;
-      z_re = z_re + this.B_re[n] * th_n_re - this.B_im[n] * th_n_im;
-      z_im = z_im + this.B_im[n] * th_n_re + this.B_re[n] * th_n_im;
+      z_re = z_re + this.B_re[n2] * th_n_re - this.B_im[n2] * th_n_im;
+      z_im = z_im + this.B_im[n2] * th_n_re + this.B_re[n2] * th_n_im;
     }
     p.x = z_im * this.a + this.x0;
     p.y = z_re * this.a + this.y0;
     return p;
   }
   function inverse19(p) {
-    var n;
+    var n2;
     var x3 = p.x;
     var y3 = p.y;
     var delta_x = x3 - this.x0;
@@ -22036,13 +24120,13 @@ var YasguiGeoTg = (() => {
     var z_n_im1;
     var th_re = 0;
     var th_im = 0;
-    for (n = 1; n <= 6; n++) {
+    for (n2 = 1; n2 <= 6; n2++) {
       z_n_re1 = z_n_re * z_re - z_n_im * z_im;
       z_n_im1 = z_n_im * z_re + z_n_re * z_im;
       z_n_re = z_n_re1;
       z_n_im = z_n_im1;
-      th_re = th_re + this.C_re[n] * z_n_re - this.C_im[n] * z_n_im;
-      th_im = th_im + this.C_im[n] * z_n_re + this.C_re[n] * z_n_im;
+      th_re = th_re + this.C_re[n2] * z_n_re - this.C_im[n2] * z_n_im;
+      th_im = th_im + this.C_im[n2] * z_n_re + this.C_re[n2] * z_n_im;
     }
     for (var i = 0; i < this.iterations; i++) {
       var th_n_re = th_re;
@@ -22051,25 +24135,25 @@ var YasguiGeoTg = (() => {
       var th_n_im1;
       var num_re = z_re;
       var num_im = z_im;
-      for (n = 2; n <= 6; n++) {
+      for (n2 = 2; n2 <= 6; n2++) {
         th_n_re1 = th_n_re * th_re - th_n_im * th_im;
         th_n_im1 = th_n_im * th_re + th_n_re * th_im;
         th_n_re = th_n_re1;
         th_n_im = th_n_im1;
-        num_re = num_re + (n - 1) * (this.B_re[n] * th_n_re - this.B_im[n] * th_n_im);
-        num_im = num_im + (n - 1) * (this.B_im[n] * th_n_re + this.B_re[n] * th_n_im);
+        num_re = num_re + (n2 - 1) * (this.B_re[n2] * th_n_re - this.B_im[n2] * th_n_im);
+        num_im = num_im + (n2 - 1) * (this.B_im[n2] * th_n_re + this.B_re[n2] * th_n_im);
       }
       th_n_re = 1;
       th_n_im = 0;
       var den_re = this.B_re[1];
       var den_im = this.B_im[1];
-      for (n = 2; n <= 6; n++) {
+      for (n2 = 2; n2 <= 6; n2++) {
         th_n_re1 = th_n_re * th_re - th_n_im * th_im;
         th_n_im1 = th_n_im * th_re + th_n_re * th_im;
         th_n_re = th_n_re1;
         th_n_im = th_n_im1;
-        den_re = den_re + n * (this.B_re[n] * th_n_re - this.B_im[n] * th_n_im);
-        den_im = den_im + n * (this.B_im[n] * th_n_re + this.B_re[n] * th_n_im);
+        den_re = den_re + n2 * (this.B_re[n2] * th_n_re - this.B_im[n2] * th_n_im);
+        den_im = den_im + n2 * (this.B_im[n2] * th_n_re + this.B_re[n2] * th_n_im);
       }
       var den2 = den_re * den_re + den_im * den_im;
       th_re = (num_re * den_re + num_im * den_im) / den2;
@@ -22079,9 +24163,9 @@ var YasguiGeoTg = (() => {
     var d_lambda = th_im;
     var d_psi_n = 1;
     var d_phi = 0;
-    for (n = 1; n <= 9; n++) {
+    for (n2 = 1; n2 <= 9; n2++) {
       d_psi_n = d_psi_n * d_psi;
-      d_phi = d_phi + this.D[n] * d_psi_n;
+      d_phi = d_phi + this.D[n2] * d_psi_n;
     }
     var lat = this.lat0 + d_phi * SEC_TO_RAD * 1e5;
     var lon = this.long0 + d_lambda;
@@ -22816,7 +24900,7 @@ var YasguiGeoTg = (() => {
         theta = lon > 0 ? -lon + SPI : -lon - SPI;
       }
     } else {
-      var q, r, s2;
+      var q, r2, s2;
       var sinlat, coslat;
       var sinlon, coslon;
       if (this.face === FACE_ENUM.RIGHT) {
@@ -22831,19 +24915,19 @@ var YasguiGeoTg = (() => {
       sinlon = Math.sin(lon);
       coslon = Math.cos(lon);
       q = coslat * coslon;
-      r = coslat * sinlon;
+      r2 = coslat * sinlon;
       s2 = sinlat;
       if (this.face === FACE_ENUM.FRONT) {
         phi = Math.acos(q);
-        theta = qsc_fwd_equat_face_theta(phi, s2, r, area);
+        theta = qsc_fwd_equat_face_theta(phi, s2, r2, area);
       } else if (this.face === FACE_ENUM.RIGHT) {
-        phi = Math.acos(r);
+        phi = Math.acos(r2);
         theta = qsc_fwd_equat_face_theta(phi, s2, -q, area);
       } else if (this.face === FACE_ENUM.BACK) {
         phi = Math.acos(-q);
-        theta = qsc_fwd_equat_face_theta(phi, s2, -r, area);
+        theta = qsc_fwd_equat_face_theta(phi, s2, -r2, area);
       } else if (this.face === FACE_ENUM.LEFT) {
-        phi = Math.acos(-r);
+        phi = Math.acos(-r2);
         theta = qsc_fwd_equat_face_theta(phi, s2, q, area);
       } else {
         phi = theta = 0;
@@ -22925,7 +25009,7 @@ var YasguiGeoTg = (() => {
         lp.lam = theta < 0 ? -theta - SPI : -theta + SPI;
       }
     } else {
-      var q, r, s2;
+      var q, r2, s2;
       q = cosphi;
       t = q * q;
       if (t >= 1) {
@@ -22935,36 +25019,36 @@ var YasguiGeoTg = (() => {
       }
       t += s2 * s2;
       if (t >= 1) {
-        r = 0;
+        r2 = 0;
       } else {
-        r = Math.sqrt(1 - t);
+        r2 = Math.sqrt(1 - t);
       }
       if (area.value === AREA_ENUM.AREA_1) {
-        t = r;
-        r = -s2;
+        t = r2;
+        r2 = -s2;
         s2 = t;
       } else if (area.value === AREA_ENUM.AREA_2) {
-        r = -r;
+        r2 = -r2;
         s2 = -s2;
       } else if (area.value === AREA_ENUM.AREA_3) {
-        t = r;
-        r = s2;
+        t = r2;
+        r2 = s2;
         s2 = -t;
       }
       if (this.face === FACE_ENUM.RIGHT) {
         t = q;
-        q = -r;
-        r = t;
+        q = -r2;
+        r2 = t;
       } else if (this.face === FACE_ENUM.BACK) {
         q = -q;
-        r = -r;
+        r2 = -r2;
       } else if (this.face === FACE_ENUM.LEFT) {
         t = q;
-        q = r;
-        r = -t;
+        q = r2;
+        r2 = -t;
       }
       lp.phi = Math.acos(-s2) - HALF_PI;
-      lp.lam = Math.atan2(r, q);
+      lp.lam = Math.atan2(r2, q);
       if (this.face === FACE_ENUM.RIGHT) {
         lp.lam = qsc_shift_lon_origin(lp.lam, -HALF_PI);
       } else if (this.face === FACE_ENUM.BACK) {
@@ -23292,7 +25376,7 @@ var YasguiGeoTg = (() => {
   function inverse30(p) {
     p.x /= this.a;
     p.y /= this.a;
-    var r = { x: p.x, y: p.y };
+    var r2 = { x: p.x, y: p.y };
     var bm, bq, yt;
     yt = 1 / (this.pn1 - p.y * this.sw);
     bm = this.pn1 * p.x * yt;
@@ -23301,8 +25385,8 @@ var YasguiGeoTg = (() => {
     p.y = bq * this.cg - bm * this.sg;
     var rh = hypot_default(p.x, p.y);
     if (Math.abs(rh) < EPSLN) {
-      r.x = 0;
-      r.y = p.y;
+      r2.x = 0;
+      r2.y = p.y;
     } else {
       var cosz, sinz;
       sinz = 1 - rh * rh * this.pfact;
@@ -23310,27 +25394,27 @@ var YasguiGeoTg = (() => {
       cosz = Math.sqrt(1 - sinz * sinz);
       switch (this.mode) {
         case mode.OBLIQ:
-          r.y = Math.asin(cosz * this.sinph0 + p.y * sinz * this.cosph0 / rh);
-          p.y = (cosz - this.sinph0 * Math.sin(r.y)) * rh;
+          r2.y = Math.asin(cosz * this.sinph0 + p.y * sinz * this.cosph0 / rh);
+          p.y = (cosz - this.sinph0 * Math.sin(r2.y)) * rh;
           p.x *= sinz * this.cosph0;
           break;
         case mode.EQUIT:
-          r.y = Math.asin(p.y * sinz / rh);
+          r2.y = Math.asin(p.y * sinz / rh);
           p.y = cosz * rh;
           p.x *= sinz;
           break;
         case mode.N_POLE:
-          r.y = Math.asin(cosz);
+          r2.y = Math.asin(cosz);
           p.y = -p.y;
           break;
         case mode.S_POLE:
-          r.y = -Math.asin(cosz);
+          r2.y = -Math.asin(cosz);
           break;
       }
-      r.x = Math.atan2(p.x, p.y);
+      r2.x = Math.atan2(p.x, p.y);
     }
-    p.x = r.x + this.long0;
-    p.y = r.y;
+    p.x = r2.x + this.long0;
+    p.y = r2.y;
     return p;
   }
   var names32 = ["Tilted_Perspective", "tpers"];
@@ -23375,10 +25459,10 @@ var YasguiGeoTg = (() => {
     lon = lon - this.long0;
     if (this.shape === "ellipse") {
       lat = Math.atan(this.radius_p2 * Math.tan(lat));
-      var r = this.radius_p / hypot_default(this.radius_p * Math.cos(lat), Math.sin(lat));
-      v_x = r * Math.cos(lon) * Math.cos(lat);
-      v_y = r * Math.sin(lon) * Math.cos(lat);
-      v_z = r * Math.sin(lat);
+      var r2 = this.radius_p / hypot_default(this.radius_p * Math.cos(lat), Math.sin(lat));
+      v_x = r2 * Math.cos(lon) * Math.cos(lat);
+      v_y = r2 * Math.sin(lon) * Math.cos(lat);
+      v_z = r2 * Math.sin(lat);
       if ((this.radius_g - v_x) * v_x - v_y * v_y - v_z * v_z * this.radius_p_inv2 < 0) {
         p.x = Number.NaN;
         p.y = Number.NaN;
@@ -23910,8 +25994,8 @@ var YasguiGeoTg = (() => {
 
   // node_modules/betterknown/dist/betterknown.mjs
   var d = Object.defineProperty;
-  var M2 = (t, e, n) => e in t ? d(t, e, { enumerable: true, configurable: true, writable: true, value: n }) : t[e] = n;
-  var u = (t, e, n) => (M2(t, typeof e != "symbol" ? e + "" : e, n), n);
+  var M2 = (t, e2, n2) => e2 in t ? d(t, e2, { enumerable: true, configurable: true, writable: true, value: n2 }) : t[e2] = n2;
+  var u = (t, e2, n2) => (M2(t, typeof e2 != "symbol" ? e2 + "" : e2, n2), n2);
   var f = [
     "Point",
     "LineString",
@@ -23924,37 +26008,37 @@ var YasguiGeoTg = (() => {
   var g = ["ZM", "Z", "M"];
   var c = "EMPTY";
   var G = class {
-    constructor(e) {
+    constructor(e2) {
       u(this, "value");
       u(this, "position");
-      this.value = e.toUpperCase(), this.position = 0;
+      this.value = e2.toUpperCase(), this.position = 0;
     }
-    match(e) {
+    match(e2) {
       this.skipWhitespaces();
-      for (const n of e) {
-        const r = n.toUpperCase();
-        if (this.value.startsWith(r, this.position))
-          return this.position += r.length, n;
+      for (const n2 of e2) {
+        const r2 = n2.toUpperCase();
+        if (this.value.startsWith(r2, this.position))
+          return this.position += r2.length, n2;
       }
       return null;
     }
-    matchRegex(e) {
+    matchRegex(e2) {
       this.skipWhitespaces();
-      for (const n of e) {
-        const r = this.value.substring(this.position).match(n);
-        if (r)
-          return this.position += r[0].length, r;
+      for (const n2 of e2) {
+        const r2 = this.value.substring(this.position).match(n2);
+        if (r2)
+          return this.position += r2[0].length, r2;
       }
       return null;
     }
-    isMatch(e) {
-      return this.skipWhitespaces(), this.value.startsWith(e, this.position) ? (this.position += e.length, true) : false;
+    isMatch(e2) {
+      return this.skipWhitespaces(), this.value.startsWith(e2, this.position) ? (this.position += e2.length, true) : false;
     }
     matchType() {
-      const e = this.match(f);
-      if (!e)
+      const e2 = this.match(f);
+      if (!e2)
         throw new Error("Expected geometry type");
-      return e;
+      return e2;
     }
     matchDimension() {
       switch (this.match(g)) {
@@ -23976,143 +26060,143 @@ var YasguiGeoTg = (() => {
       if (!this.isMatch(")"))
         throw new Error("Expected group end");
     }
-    matchCoordinate(e) {
-      let n;
-      if (e.hasZ && e.hasM ? n = this.matchRegex([/^(\S*)\s+(\S*)\s+(\S*)\s+([^\s,)]*)/i]) : e.hasZ || e.hasM ? n = this.matchRegex([/^(\S*)\s+(\S*)\s+([^\s,)]*)/i]) : n = this.matchRegex([/^(\S*)\s+([^\s,)]*)/i]), !n)
+    matchCoordinate(e2) {
+      let n2;
+      if (e2.hasZ && e2.hasM ? n2 = this.matchRegex([/^(\S*)\s+(\S*)\s+(\S*)\s+([^\s,)]*)/i]) : e2.hasZ || e2.hasM ? n2 = this.matchRegex([/^(\S*)\s+(\S*)\s+([^\s,)]*)/i]) : n2 = this.matchRegex([/^(\S*)\s+([^\s,)]*)/i]), !n2)
         throw new Error("Expected coordinates");
-      const r = e.hasZ && e.hasM ? [
-        parseFloat(n[1]),
-        parseFloat(n[2]),
-        parseFloat(n[3]),
-        parseFloat(n[4])
-      ] : e.hasZ ? [parseFloat(n[1]), parseFloat(n[2]), parseFloat(n[3])] : e.hasM ? [
-        parseFloat(n[1]),
-        parseFloat(n[2])
-      ] : [parseFloat(n[1]), parseFloat(n[2])];
-      if (!e.srid || e.srid === 4326)
-        return r;
-      if (e.srid === "http://www.opengis.net/def/crs/epsg/0/4326")
-        return r.length === 3 ? [r[1], r[0], r[2]] : [r[1], r[0]];
-      if (!e.proj)
+      const r2 = e2.hasZ && e2.hasM ? [
+        parseFloat(n2[1]),
+        parseFloat(n2[2]),
+        parseFloat(n2[3]),
+        parseFloat(n2[4])
+      ] : e2.hasZ ? [parseFloat(n2[1]), parseFloat(n2[2]), parseFloat(n2[3])] : e2.hasM ? [
+        parseFloat(n2[1]),
+        parseFloat(n2[2])
+      ] : [parseFloat(n2[1]), parseFloat(n2[2])];
+      if (!e2.srid || e2.srid === 4326)
+        return r2;
+      if (e2.srid === "http://www.opengis.net/def/crs/epsg/0/4326")
+        return r2.length === 3 ? [r2[1], r2[0], r2[2]] : [r2[1], r2[0]];
+      if (!e2.proj)
         throw new Error(
-          `EWKT data in an unknown SRID (${e.srid}) was provided, but a proj function was not`
+          `EWKT data in an unknown SRID (${e2.srid}) was provided, but a proj function was not`
         );
-      return e.proj(
-        typeof e.srid == "string" ? e.srid : `EPSG:${e.srid}`,
+      return e2.proj(
+        typeof e2.srid == "string" ? e2.srid : `EPSG:${e2.srid}`,
         "EPSG:4326",
-        r
+        r2
       );
     }
-    matchCoordinates(e) {
-      const n = [];
+    matchCoordinates(e2) {
+      const n2 = [];
       do {
-        const r = this.isMatch("(");
-        n.push(this.matchCoordinate(e)), r && this.expectGroupEnd();
+        const r2 = this.isMatch("(");
+        n2.push(this.matchCoordinate(e2)), r2 && this.expectGroupEnd();
       } while (this.isMatch(","));
-      return n;
+      return n2;
     }
     skipWhitespaces() {
       for (; this.position < this.value.length && this.value[this.position] === " "; )
         this.position++;
     }
   };
-  var E = (t, e) => {
+  var E = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "Point", coordinates: [] };
+      return e2.emptyAsNull ? null : { type: "Point", coordinates: [] };
     t.expectGroupStart();
-    const n = t.matchCoordinate(e);
+    const n2 = t.matchCoordinate(e2);
     return t.expectGroupEnd(), {
       type: "Point",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var m = (t, e) => {
+  var m = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "LineString", coordinates: [] };
+      return e2.emptyAsNull ? null : { type: "LineString", coordinates: [] };
     t.expectGroupStart();
-    const n = t.matchCoordinates(e);
+    const n2 = t.matchCoordinates(e2);
     return t.expectGroupEnd(), {
       type: "LineString",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var y = (t, e) => {
+  var y = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "Polygon", coordinates: [] };
-    const n = [];
-    for (t.expectGroupStart(), t.expectGroupStart(), n.push(t.matchCoordinates(e)), t.expectGroupEnd(); t.isMatch(","); )
-      t.expectGroupStart(), n.push(t.matchCoordinates(e)), t.expectGroupEnd();
+      return e2.emptyAsNull ? null : { type: "Polygon", coordinates: [] };
+    const n2 = [];
+    for (t.expectGroupStart(), t.expectGroupStart(), n2.push(t.matchCoordinates(e2)), t.expectGroupEnd(); t.isMatch(","); )
+      t.expectGroupStart(), n2.push(t.matchCoordinates(e2)), t.expectGroupEnd();
     return t.expectGroupEnd(), {
       type: "Polygon",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var S = (t, e) => {
+  var S = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "MultiPoint", coordinates: [] };
+      return e2.emptyAsNull ? null : { type: "MultiPoint", coordinates: [] };
     t.expectGroupStart();
-    const n = t.matchCoordinates(e);
+    const n2 = t.matchCoordinates(e2);
     return t.expectGroupEnd(), {
       type: "MultiPoint",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var x = (t, e) => {
+  var x = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "MultiLineString", coordinates: [] };
+      return e2.emptyAsNull ? null : { type: "MultiLineString", coordinates: [] };
     t.expectGroupStart();
-    const n = [];
+    const n2 = [];
     do
-      t.expectGroupStart(), n.push(t.matchCoordinates(e)), t.expectGroupEnd();
+      t.expectGroupStart(), n2.push(t.matchCoordinates(e2)), t.expectGroupEnd();
     while (t.isMatch(","));
     return t.expectGroupEnd(), {
       type: "MultiLineString",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var P = (t, e) => {
+  var P = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "MultiPolygon", coordinates: [] };
+      return e2.emptyAsNull ? null : { type: "MultiPolygon", coordinates: [] };
     t.expectGroupStart();
-    const n = [];
+    const n2 = [];
     do {
       t.expectGroupStart();
-      const r = [], s2 = [];
-      for (t.expectGroupStart(), r.push.apply(r, t.matchCoordinates(e)), t.expectGroupEnd(); t.isMatch(","); )
-        t.expectGroupStart(), s2.push(t.matchCoordinates(e)), t.expectGroupEnd();
-      n.push([r, ...s2]), t.expectGroupEnd();
+      const r2 = [], s2 = [];
+      for (t.expectGroupStart(), r2.push.apply(r2, t.matchCoordinates(e2)), t.expectGroupEnd(); t.isMatch(","); )
+        t.expectGroupStart(), s2.push(t.matchCoordinates(e2)), t.expectGroupEnd();
+      n2.push([r2, ...s2]), t.expectGroupEnd();
     } while (t.isMatch(","));
     return t.expectGroupEnd(), {
       type: "MultiPolygon",
-      coordinates: n
+      coordinates: n2
     };
   };
-  var T = (t, e) => {
+  var T = (t, e2) => {
     if (t.isMatch(c))
-      return e.emptyAsNull ? null : { type: "GeometryCollection", geometries: [] };
+      return e2.emptyAsNull ? null : { type: "GeometryCollection", geometries: [] };
     t.expectGroupStart();
-    const n = [];
+    const n2 = [];
     do {
-      const r = l(t, e);
-      r && n.push(r);
+      const r2 = l(t, e2);
+      r2 && n2.push(r2);
     } while (t.isMatch(","));
     return t.expectGroupEnd(), {
       type: "GeometryCollection",
-      geometries: n
+      geometries: n2
     };
   };
-  function l(t, e) {
-    let n = null;
-    const r = t.matchRegex([/^SRID=(\d+);/i]);
-    if (r)
-      n = parseInt(r[1], 10);
+  function l(t, e2) {
+    let n2 = null;
+    const r2 = t.matchRegex([/^SRID=(\d+);/i]);
+    if (r2)
+      n2 = parseInt(r2[1], 10);
     else {
       const p = t.matchRegex([/^<([^>]+)>/i]);
-      p && (n = p[1].toLowerCase());
+      p && (n2 = p[1].toLowerCase());
     }
     const s2 = t.matchType(), h2 = t.matchDimension(), i = {
-      ...e,
-      srid: n,
+      ...e2,
+      srid: n2,
       hasZ: h2.hasZ,
       hasM: h2.hasM
     };
@@ -24133,10 +26217,10 @@ var YasguiGeoTg = (() => {
         return T(t, i);
     }
   }
-  function R(t, e = {
+  function R(t, e2 = {
     emptyAsNull: true
   }) {
-    return l(new G(t), e);
+    return l(new G(t), e2);
   }
 
   // node_modules/@erikmichelson/open-location-code-ts/dist/open-location-code.esm.js
@@ -24167,25 +26251,25 @@ var YasguiGeoTg = (() => {
     get longitudeCenter() {
       return Math.min(this.longitudeLo + (this.longitudeHi - this.longitudeLo) / 2, A5);
     }
-    constructor(n, r, e, o, i) {
-      this.latitudeLo = n, this.longitudeLo = r, this.latitudeHi = e, this.longitudeHi = o, this.codeLength = i;
+    constructor(n2, r2, e2, o2, i) {
+      this.latitudeLo = n2, this.longitudeLo = r2, this.latitudeHi = e2, this.longitudeHi = o2, this.codeLength = i;
     }
   };
   function S2(t) {
     if (!t) return false;
-    let n = t.indexOf("+");
-    if (n === -1 || n !== t.lastIndexOf("+") || t.length === 1 || n > 8 || n % 2 === 1) return false;
-    let r = t.indexOf("0");
-    if (r > -1) {
-      let o = t.match(new RegExp(`(${"0"}+)`, "g"));
-      if (n < 8 || r === 0 || !o || o.length > 1 || o[0].length % 2 === 1 || o[0].length > 6 || t.charAt(t.length - 1) !== "+") return false;
+    let n2 = t.indexOf("+");
+    if (n2 === -1 || n2 !== t.lastIndexOf("+") || t.length === 1 || n2 > 8 || n2 % 2 === 1) return false;
+    let r2 = t.indexOf("0");
+    if (r2 > -1) {
+      let o2 = t.match(new RegExp(`(${"0"}+)`, "g"));
+      if (n2 < 8 || r2 === 0 || !o2 || o2.length > 1 || o2[0].length % 2 === 1 || o2[0].length > 6 || t.charAt(t.length - 1) !== "+") return false;
     }
-    return t.length - n - 1 === 1 ? false : (t = t.replace(new RegExp(`\\${"+"}+`), "").replace(new RegExp(`${"0"}+`), ""), new RegExp(`^[${s}\\${"+"}]+$`, "i").test(t));
+    return t.length - n2 - 1 === 1 ? false : (t = t.replace(new RegExp(`\\${"+"}+`), "").replace(new RegExp(`${"0"}+`), ""), new RegExp(`^[${s}\\${"+"}]+$`, "i").test(t));
   }
   function G2(t) {
     if (!S2(t)) return false;
-    let n = t.indexOf("+");
-    return n >= 0 && n < 8;
+    let n2 = t.indexOf("+");
+    return n2 >= 0 && n2 < 8;
   }
   function P2(t) {
     return !(!S2(t) || G2(t) || s.indexOf(t.charAt(0).toUpperCase()) * a >= E2 * 2 || t.length > 1 && s.indexOf(t.charAt(1).toUpperCase()) * a >= A5 * 2);
@@ -24193,215 +26277,6196 @@ var YasguiGeoTg = (() => {
   function U(t) {
     if (!P2(t)) throw new Error(`IllegalArgumentException: Passed Plus Code is not a valid full code: ${t}`);
     t = t.replace("+", "").replace(/0/g, "").toLocaleUpperCase("en-US");
-    let n = -E2 * R2, r = -A5 * R2, e = 0, o = 0, i = Math.min(t.length, u2), l2 = y2;
-    for (let N = 0; N < i; N += 2) n += s.indexOf(t.charAt(N)) * l2, r += s.indexOf(t.charAt(N + 1)) * l2, N < i - 2 && (l2 /= a);
+    let n2 = -E2 * R2, r2 = -A5 * R2, e2 = 0, o2 = 0, i = Math.min(t.length, u2), l2 = y2;
+    for (let N = 0; N < i; N += 2) n2 += s.indexOf(t.charAt(N)) * l2, r2 += s.indexOf(t.charAt(N + 1)) * l2, N < i - 2 && (l2 /= a);
     let _ = l2 / R2, I2 = l2 / R2;
     if (t.length > u2) {
       let N = d2, w = B;
       i = Math.min(t.length, m2);
       for (let L3 = u2; L3 < i; L3++) {
         let $2 = s.indexOf(t.charAt(L3)), Q = Math.floor($2 / f2), q = $2 % f2;
-        e += Q * N, o += q * w, L3 < i - 1 && (N /= b, w /= f2);
+        e2 += Q * N, o2 += q * w, L3 < i - 1 && (N /= b, w /= f2);
       }
       _ = N / x2, I2 = w / h;
     }
-    let T2 = n / R2 + e / x2, X = r / R2 + o / h;
+    let T2 = n2 / R2 + e2 / x2, X = r2 / R2 + o2 / h;
     return new c2(T2, X, T2 + _, X + I2, Math.min(t.length, m2));
   }
 
-  // node_modules/gml2geojson/src/index.js
-  var parser = new DOMParser();
-  var GEONODENAMES = ["geometryproperty", "shape", "the_geom"];
-  function parseGML(str) {
-    const geojson = {
-      type: "FeatureCollection",
-      features: []
-    };
-    const xmlDoc = parser.parseFromString(str, "text/xml");
-    const featureCollectionEle = xmlDoc.children[0];
-    if (!featureCollectionEle || !featureCollectionEle.nodeName || getNodeName(featureCollectionEle).indexOf("featurecollection") === -1) {
-      return geojson;
+  // node_modules/@npm9912/s-gml/dist/index.browser.js
+  var import_fast_xml_parser = __toESM(require_fxp(), 1);
+  var GeoJsonBuilder = class {
+    buildPoint(gml) {
+      return { type: "Point", coordinates: gml.coordinates };
     }
-    let i = 0;
-    const features = [];
-    while (featureCollectionEle.children.item(i)) {
-      const featureEle = featureCollectionEle.children.item(i);
-      const nodeName = getNodeName(featureEle);
-      if (nodeName.indexOf("featuremember") > -1 && featureEle.children[0]) {
-        features.push(featureEle.children[0]);
+    buildLineString(gml) {
+      return { type: "LineString", coordinates: gml.coordinates };
+    }
+    buildPolygon(gml) {
+      return { type: "Polygon", coordinates: gml.coordinates };
+    }
+    buildMultiPoint(gml) {
+      return { type: "MultiPoint", coordinates: gml.coordinates };
+    }
+    buildMultiLineString(gml) {
+      return { type: "MultiLineString", coordinates: gml.coordinates };
+    }
+    buildMultiPolygon(gml) {
+      return { type: "MultiPolygon", coordinates: gml.coordinates };
+    }
+    buildLinearRing(gml) {
+      return {
+        type: "LineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildEnvelope(gml) {
+      return {
+        type: "Feature",
+        bbox: gml.bbox,
+        properties: { type: "Envelope" },
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [gml.bbox[0], gml.bbox[1]],
+              [gml.bbox[2], gml.bbox[1]],
+              [gml.bbox[2], gml.bbox[3]],
+              [gml.bbox[0], gml.bbox[3]],
+              [gml.bbox[0], gml.bbox[1]]
+            ]
+          ]
+        }
+      };
+    }
+    buildBox(gml) {
+      return this.buildEnvelope({
+        type: "Envelope",
+        bbox: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    buildCurve(gml) {
+      return {
+        type: "LineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildSurface(gml) {
+      return {
+        type: "MultiPolygon",
+        coordinates: gml.patches.map((patch) => patch.coordinates)
+      };
+    }
+    buildRectifiedGridCoverage(gml) {
+      let geometry = null;
+      let bbox;
+      if (gml.boundedBy) {
+        bbox = gml.boundedBy.bbox;
+        geometry = {
+          type: "Polygon",
+          coordinates: [
+            [
+              [bbox[0], bbox[1]],
+              [bbox[2], bbox[1]],
+              [bbox[2], bbox[3]],
+              [bbox[0], bbox[3]],
+              [bbox[0], bbox[1]]
+            ]
+          ]
+        };
       }
-      i++;
+      const properties = {
+        coverageType: "RectifiedGridCoverage",
+        grid: {
+          dimension: gml.domainSet.dimension,
+          srsName: gml.domainSet.srsName,
+          limits: gml.domainSet.limits,
+          axisLabels: gml.domainSet.axisLabels,
+          origin: gml.domainSet.origin,
+          offsetVectors: gml.domainSet.offsetVectors
+        }
+      };
+      if (gml.rangeType) {
+        properties.rangeType = gml.rangeType;
+      }
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file;
+      }
+      const feature = {
+        type: "Feature",
+        geometry: geometry || { type: "Point", coordinates: gml.domainSet.origin },
+        properties
+      };
+      if (gml.id) {
+        feature.id = gml.id;
+      }
+      if (bbox && bbox.length === 4) {
+        feature.bbox = bbox;
+      }
+      return feature;
     }
-    for (let i2 = 0, len = features.length; i2 < len; i2++) {
-      const f3 = features[i2];
-      const properties = getFeatureEleProperties(f3);
-      const geometry = getFeatureEleGeometry(f3, properties.isShape);
-      if (!geometry || !properties) {
-        continue;
+    buildGridCoverage(gml) {
+      let geometry = null;
+      let bbox;
+      if (gml.boundedBy) {
+        bbox = gml.boundedBy.bbox;
+        geometry = {
+          type: "Polygon",
+          coordinates: [
+            [
+              [bbox[0], bbox[1]],
+              [bbox[2], bbox[1]],
+              [bbox[2], bbox[3]],
+              [bbox[0], bbox[3]],
+              [bbox[0], bbox[1]]
+            ]
+          ]
+        };
+      }
+      const properties = {
+        coverageType: "GridCoverage",
+        grid: {
+          dimension: gml.domainSet.dimension,
+          limits: gml.domainSet.limits,
+          axisLabels: gml.domainSet.axisLabels
+        }
+      };
+      if (gml.rangeType) {
+        properties.rangeType = gml.rangeType;
+      }
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file;
+      }
+      const feature = {
+        type: "Feature",
+        geometry: geometry || { type: "Point", coordinates: [0, 0] },
+        properties
+      };
+      if (gml.id) {
+        feature.id = gml.id;
+      }
+      if (bbox && bbox.length === 4) {
+        feature.bbox = bbox;
+      }
+      return feature;
+    }
+    buildReferenceableGridCoverage(gml) {
+      let geometry = null;
+      let bbox;
+      if (gml.boundedBy) {
+        bbox = gml.boundedBy.bbox;
+        geometry = {
+          type: "Polygon",
+          coordinates: [
+            [
+              [bbox[0], bbox[1]],
+              [bbox[2], bbox[1]],
+              [bbox[2], bbox[3]],
+              [bbox[0], bbox[3]],
+              [bbox[0], bbox[1]]
+            ]
+          ]
+        };
+      }
+      const properties = {
+        coverageType: "ReferenceableGridCoverage",
+        grid: {
+          dimension: gml.domainSet.dimension,
+          limits: gml.domainSet.limits,
+          axisLabels: gml.domainSet.axisLabels
+        }
+      };
+      if (gml.rangeType) {
+        properties.rangeType = gml.rangeType;
+      }
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file;
+      }
+      const feature = {
+        type: "Feature",
+        geometry: geometry || { type: "Point", coordinates: [0, 0] },
+        properties
+      };
+      if (gml.id) {
+        feature.id = gml.id;
+      }
+      if (bbox && bbox.length === 4) {
+        feature.bbox = bbox;
+      }
+      return feature;
+    }
+    buildMultiPointCoverage(gml) {
+      const geometry = this.buildMultiPoint(gml.domainSet);
+      let bbox;
+      if (gml.boundedBy) {
+        bbox = gml.boundedBy.bbox;
+      }
+      const properties = {
+        coverageType: "MultiPointCoverage",
+        points: {
+          count: gml.domainSet.coordinates.length,
+          srsName: gml.domainSet.srsName
+        }
+      };
+      if (gml.rangeType) {
+        properties.rangeType = gml.rangeType;
+      }
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file;
       }
       const feature = {
         type: "Feature",
         geometry,
         properties
       };
-      geojson.features.push(feature);
+      if (gml.id) {
+        feature.id = gml.id;
+      }
+      if (bbox && bbox.length === 4) {
+        feature.bbox = bbox;
+      }
+      return feature;
     }
-    return geojson;
-  }
-  function getFeatureEleGeometry(featureEle, isShape) {
-    const children = featureEle.children || [];
-    let type;
-    let coordinates = [];
-    let parseFeture = false;
-    for (let i = 0, len = children.length; i < len; i++) {
-      if (parseFeture) {
-        break;
+    buildFeature(gml) {
+      const geometryResult = this.buildGeometry(gml.geometry);
+      let geometry;
+      let properties = { ...gml.properties };
+      if (geometryResult.type === "Feature") {
+        const featureGeometry = geometryResult;
+        geometry = featureGeometry.geometry;
+        properties = { ...featureGeometry.properties, ...properties };
+      } else {
+        geometry = geometryResult;
       }
-      const node = children[i];
-      const nodeName = getNodeName(node);
-      if (!isGeoAttribute(nodeName)) {
-        continue;
+      const feature = {
+        type: "Feature",
+        geometry,
+        properties
+      };
+      if (gml.id) {
+        feature.id = gml.id;
       }
-      if (node.children[0]) {
-        type = node.children[0].nodeName.split("gml:")[1] || "";
-        if (!type) {
-          return;
-        }
+      if (gml.boundedBy) {
+        feature.bbox = gml.boundedBy.bbox;
       }
-      if (node.children[0] && node.children[0].children[0]) {
-        const nodeName2 = getNodeName(node.children[0].children[0]);
-        let geoNodes = node.children;
-        if (isMulti(nodeName2)) {
-          geoNodes = flatMultiGeoNodes(geoNodes);
-        }
-        if (!geoNodes.length) {
-          return;
-        }
-        for (let j = 0, len1 = geoNodes.length; j < len1; j++) {
-          const geoNode = geoNodes[j];
-          let coords = parseGeoCoordinates(geoNode.children, isShape);
-          if (!geoIsPolygon(type)) {
-            coords = coords[0];
+      return feature;
+    }
+    buildFeatureCollection(gml) {
+      const featureCollection = {
+        type: "FeatureCollection",
+        features: gml.features.map((feature) => this.buildFeature(feature))
+      };
+      if (gml.bounds) {
+        featureCollection.bbox = gml.bounds.bbox;
+      }
+      return featureCollection;
+    }
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
+      }
+    }
+  };
+  var CisJsonBuilder = class {
+    buildPoint(gml) {
+      return {
+        type: "Point",
+        pos: gml.coordinates,
+        srsName: gml.srsName
+      };
+    }
+    buildLineString(gml) {
+      return {
+        type: "LineString",
+        posList: gml.coordinates.flat(),
+        srsName: gml.srsName
+      };
+    }
+    buildPolygon(gml) {
+      return {
+        type: "Polygon",
+        exterior: gml.coordinates[0],
+        interior: gml.coordinates.slice(1),
+        srsName: gml.srsName
+      };
+    }
+    buildMultiPoint(gml) {
+      return {
+        type: "MultiPoint",
+        pointMember: gml.coordinates.map((coords) => ({
+          Point: { pos: coords }
+        })),
+        srsName: gml.srsName
+      };
+    }
+    buildMultiLineString(gml) {
+      return {
+        type: "MultiLineString",
+        lineStringMember: gml.coordinates.map((coords) => ({
+          LineString: { posList: coords.flat() }
+        })),
+        srsName: gml.srsName
+      };
+    }
+    buildMultiPolygon(gml) {
+      return {
+        type: "MultiPolygon",
+        polygonMember: gml.coordinates.map((coords) => ({
+          Polygon: {
+            exterior: coords[0],
+            interior: coords.slice(1)
           }
-          coordinates.push(coords);
-          parseFeture = true;
+        })),
+        srsName: gml.srsName
+      };
+    }
+    buildLinearRing(gml) {
+      return {
+        type: "LinearRing",
+        posList: gml.coordinates.flat(),
+        srsName: gml.srsName
+      };
+    }
+    buildEnvelope(gml) {
+      return {
+        type: "Envelope",
+        lowerCorner: [gml.bbox[0], gml.bbox[1]],
+        upperCorner: [gml.bbox[2], gml.bbox[3]],
+        srsName: gml.srsName
+      };
+    }
+    buildBox(gml) {
+      return {
+        type: "Box",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName
+      };
+    }
+    buildCurve(gml) {
+      return {
+        type: "Curve",
+        segments: {
+          LineStringSegment: {
+            posList: gml.coordinates.flat()
+          }
+        },
+        srsName: gml.srsName
+      };
+    }
+    buildSurface(gml) {
+      return {
+        type: "Surface",
+        patches: gml.patches.map((patch) => ({
+          PolygonPatch: {
+            exterior: patch.coordinates[0],
+            interior: patch.coordinates.slice(1)
+          }
+        })),
+        srsName: gml.srsName
+      };
+    }
+    buildRectifiedGridCoverage(gml) {
+      const coverage = {
+        "@context": "http://www.opengis.net/cis/1.1/json",
+        type: "CoverageByDomainAndRangeType",
+        id: gml.id
+      };
+      if (gml.boundedBy) {
+        coverage.boundedBy = {
+          Envelope: this.buildEnvelope(gml.boundedBy)
+        };
+      }
+      coverage.domainSet = {
+        type: "GeneralGrid",
+        id: gml.domainSet.id,
+        srsName: gml.domainSet.srsName,
+        axisLabels: gml.domainSet.axisLabels || ["x", "y"],
+        axis: this.buildRectifiedGridAxes(gml)
+      };
+      if (gml.rangeType && gml.rangeType.field) {
+        coverage.rangeType = {
+          type: "DataRecord",
+          field: gml.rangeType.field.map((f3) => ({
+            name: f3.name,
+            definition: f3.description,
+            uom: f3.uom ? { code: f3.uom } : void 0,
+            dataType: f3.dataType
+          }))
+        };
+      }
+      if (gml.rangeSet.file) {
+        coverage.rangeSet = {
+          type: "DataBlock",
+          dataReference: {
+            type: "FileReference",
+            fileURL: gml.rangeSet.file.fileName,
+            fileStructure: gml.rangeSet.file.fileStructure
+          }
+        };
+      }
+      return coverage;
+    }
+    buildGridCoverage(gml) {
+      const coverage = {
+        "@context": "http://www.opengis.net/cis/1.1/json",
+        type: "CoverageByDomainAndRangeType",
+        id: gml.id
+      };
+      if (gml.boundedBy) {
+        coverage.boundedBy = {
+          Envelope: this.buildEnvelope(gml.boundedBy)
+        };
+      }
+      coverage.domainSet = {
+        type: "Grid",
+        id: gml.domainSet.id,
+        axisLabels: gml.domainSet.axisLabels || ["x", "y"],
+        limits: {
+          GridEnvelope: {
+            low: gml.domainSet.limits.low,
+            high: gml.domainSet.limits.high
+          }
         }
-        if (coordinates.length === 1 && type.indexOf("Multi") === -1) {
-          coordinates = coordinates[0];
-        }
+      };
+      if (gml.rangeType && gml.rangeType.field) {
+        coverage.rangeType = {
+          type: "DataRecord",
+          field: gml.rangeType.field.map((f3) => ({
+            name: f3.name,
+            definition: f3.description,
+            uom: f3.uom ? { code: f3.uom } : void 0,
+            dataType: f3.dataType
+          }))
+        };
+      }
+      if (gml.rangeSet.file) {
+        coverage.rangeSet = {
+          type: "DataBlock",
+          dataReference: {
+            type: "FileReference",
+            fileURL: gml.rangeSet.file.fileName,
+            fileStructure: gml.rangeSet.file.fileStructure
+          }
+        };
+      }
+      return coverage;
+    }
+    buildReferenceableGridCoverage(gml) {
+      return this.buildGridCoverage({
+        ...gml,
+        type: "GridCoverage"
+      });
+    }
+    buildMultiPointCoverage(gml) {
+      const coverage = {
+        "@context": "http://www.opengis.net/cis/1.1/json",
+        type: "CoverageByDomainAndRangeType",
+        id: gml.id
+      };
+      if (gml.boundedBy) {
+        coverage.boundedBy = {
+          Envelope: this.buildEnvelope(gml.boundedBy)
+        };
+      }
+      coverage.domainSet = this.buildMultiPoint(gml.domainSet);
+      if (gml.rangeType && gml.rangeType.field) {
+        coverage.rangeType = {
+          type: "DataRecord",
+          field: gml.rangeType.field.map((f3) => ({
+            name: f3.name,
+            definition: f3.description,
+            uom: f3.uom ? { code: f3.uom } : void 0,
+            dataType: f3.dataType
+          }))
+        };
+      }
+      if (gml.rangeSet.file) {
+        coverage.rangeSet = {
+          type: "DataBlock",
+          dataReference: {
+            type: "FileReference",
+            fileURL: gml.rangeSet.file.fileName,
+            fileStructure: gml.rangeSet.file.fileStructure
+          }
+        };
+      }
+      return coverage;
+    }
+    buildFeature(gml) {
+      return {
+        type: "Feature",
+        id: gml.id,
+        geometry: this.buildGeometry(gml.geometry),
+        properties: gml.properties,
+        boundedBy: gml.boundedBy ? this.buildEnvelope(gml.boundedBy) : void 0
+      };
+    }
+    buildFeatureCollection(gml) {
+      return {
+        type: "FeatureCollection",
+        features: gml.features.map((f3) => this.buildFeature(f3)),
+        boundedBy: gml.bounds ? this.buildEnvelope(gml.bounds) : void 0
+      };
+    }
+    buildRectifiedGridAxes(gml) {
+      const axes = [];
+      const numAxes = gml.domainSet.dimension;
+      const labels = gml.domainSet.axisLabels || [];
+      for (let i = 0; i < numAxes; i++) {
+        axes.push({
+          type: "RegularAxis",
+          axisLabel: labels[i] || `axis${i}`,
+          lowerBound: gml.domainSet.limits.low[i],
+          upperBound: gml.domainSet.limits.high[i],
+          uomLabel: "GridSpacing",
+          resolution: Math.abs(gml.domainSet.offsetVectors[i]?.[i] || 1)
+        });
+      }
+      return axes;
+    }
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
       }
     }
-    if (!type || !coordinates.length) {
+  };
+  var CoverageJsonBuilder = class {
+    // For simple geometries, fallback to GeoJSON-like output
+    buildPoint(gml) {
+      return {
+        type: "Point",
+        coordinates: gml.coordinates
+      };
+    }
+    buildLineString(gml) {
+      return {
+        type: "LineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildPolygon(gml) {
+      return {
+        type: "Polygon",
+        coordinates: gml.coordinates
+      };
+    }
+    buildMultiPoint(gml) {
+      return {
+        type: "MultiPoint",
+        coordinates: gml.coordinates
+      };
+    }
+    buildMultiLineString(gml) {
+      return {
+        type: "MultiLineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildMultiPolygon(gml) {
+      return {
+        type: "MultiPolygon",
+        coordinates: gml.coordinates
+      };
+    }
+    buildLinearRing(gml) {
+      return {
+        type: "LineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildEnvelope(gml) {
+      return {
+        type: "Polygon",
+        coordinates: [[
+          [gml.bbox[0], gml.bbox[1]],
+          [gml.bbox[2], gml.bbox[1]],
+          [gml.bbox[2], gml.bbox[3]],
+          [gml.bbox[0], gml.bbox[3]],
+          [gml.bbox[0], gml.bbox[1]]
+        ]]
+      };
+    }
+    buildBox(gml) {
+      return this.buildEnvelope({
+        type: "Envelope",
+        bbox: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    buildCurve(gml) {
+      return {
+        type: "LineString",
+        coordinates: gml.coordinates
+      };
+    }
+    buildSurface(gml) {
+      return {
+        type: "MultiPolygon",
+        coordinates: gml.patches.map((patch) => patch.coordinates)
+      };
+    }
+    buildRectifiedGridCoverage(gml) {
+      const coverage = {
+        type: "Coverage",
+        domain: this.buildGridDomain(gml),
+        parameters: this.buildParameters(gml),
+        ranges: this.buildRanges(gml)
+      };
+      if (gml.domainSet.srsName) {
+        coverage.domain.referencing = [{
+          coordinates: gml.domainSet.axisLabels || ["x", "y"],
+          system: {
+            type: "GeographicCRS",
+            id: gml.domainSet.srsName
+          }
+        }];
+      }
+      return coverage;
+    }
+    buildGridCoverage(gml) {
+      return {
+        type: "Coverage",
+        domain: {
+          type: "Domain",
+          domainType: "Grid",
+          axes: this.buildSimpleGridAxes(gml)
+        },
+        parameters: this.buildParameters(gml),
+        ranges: this.buildRanges(gml)
+      };
+    }
+    buildReferenceableGridCoverage(gml) {
+      return this.buildGridCoverage({
+        ...gml,
+        type: "GridCoverage"
+      });
+    }
+    buildMultiPointCoverage(gml) {
+      const coverage = {
+        type: "Coverage",
+        domain: {
+          type: "Domain",
+          domainType: "PointSeries",
+          axes: {
+            composite: {
+              dataType: "tuple",
+              coordinates: ["x", "y"],
+              values: gml.domainSet.coordinates
+            }
+          }
+        },
+        parameters: {},
+        ranges: {}
+      };
+      if (gml.domainSet.srsName) {
+        coverage.domain.referencing = [{
+          coordinates: ["x", "y"],
+          system: {
+            type: "GeographicCRS",
+            id: gml.domainSet.srsName
+          }
+        }];
+      }
+      if (gml.rangeType && gml.rangeType.field) {
+        gml.rangeType.field.forEach((field) => {
+          coverage.parameters[field.name] = {
+            type: "Parameter",
+            description: field.description ? { en: field.description } : void 0,
+            unit: field.uom ? { symbol: field.uom } : void 0,
+            observedProperty: {
+              label: { en: field.name }
+            }
+          };
+        });
+      } else {
+        coverage.parameters.value = {
+          type: "Parameter",
+          observedProperty: {
+            label: { en: "Value" }
+          }
+        };
+      }
+      if (gml.rangeSet.file) {
+        const paramNames = Object.keys(coverage.parameters);
+        paramNames.forEach((name) => {
+          coverage.ranges[name] = {
+            type: "NdArray",
+            dataType: "float",
+            axisNames: ["composite"],
+            shape: [gml.domainSet.coordinates.length],
+            values: []
+            // Reference to external file
+          };
+        });
+      } else {
+        const paramNames = Object.keys(coverage.parameters);
+        paramNames.forEach((name) => {
+          coverage.ranges[name] = {
+            type: "NdArray",
+            dataType: "float",
+            axisNames: ["composite"],
+            shape: [gml.domainSet.coordinates.length],
+            values: []
+            // Would be populated with actual data
+          };
+        });
+      }
+      return coverage;
+    }
+    buildFeature(gml) {
+      return {
+        type: "Feature",
+        id: gml.id,
+        geometry: this.buildGeometry(gml.geometry),
+        properties: gml.properties
+      };
+    }
+    buildFeatureCollection(gml) {
+      return {
+        type: "FeatureCollection",
+        features: gml.features.map((f3) => this.buildFeature(f3))
+      };
+    }
+    buildGridDomain(gml) {
+      const domain = {
+        type: "Domain",
+        domainType: "Grid",
+        axes: {}
+      };
+      const labels = gml.domainSet.axisLabels || ["x", "y"];
+      const numAxes = gml.domainSet.dimension;
+      for (let i = 0; i < numAxes; i++) {
+        const label = labels[i];
+        const low = gml.domainSet.limits.low[i];
+        const high = gml.domainSet.limits.high[i];
+        const origin = gml.domainSet.origin[i];
+        const offset = gml.domainSet.offsetVectors[i]?.[i] || 1;
+        domain.axes[label] = {
+          start: origin,
+          stop: origin + (high - low) * offset,
+          num: high - low + 1
+        };
+      }
+      return domain;
+    }
+    buildSimpleGridAxes(gml) {
+      const axes = {};
+      const labels = gml.domainSet.axisLabels || ["x", "y"];
+      const numAxes = gml.domainSet.dimension;
+      for (let i = 0; i < numAxes; i++) {
+        const label = labels[i];
+        const low = gml.domainSet.limits.low[i];
+        const high = gml.domainSet.limits.high[i];
+        axes[label] = {
+          start: low,
+          stop: high,
+          num: high - low + 1
+        };
+      }
+      return axes;
+    }
+    buildParameters(gml) {
+      const parameters = {};
+      if (gml.rangeType && gml.rangeType.field) {
+        gml.rangeType.field.forEach((field) => {
+          parameters[field.name] = {
+            type: "Parameter",
+            description: field.description ? { en: field.description } : void 0,
+            unit: field.uom ? { symbol: field.uom } : void 0,
+            observedProperty: {
+              label: { en: field.name }
+            }
+          };
+        });
+      } else {
+        parameters.value = {
+          type: "Parameter",
+          observedProperty: {
+            label: { en: "Value" }
+          }
+        };
+      }
+      return parameters;
+    }
+    buildRanges(gml) {
+      const ranges = {};
+      if (gml.type === "MultiPointCoverage") {
+        const paramNames = Object.keys(this.buildParameters(gml));
+        paramNames.forEach((name) => {
+          ranges[name] = {
+            type: "NdArray",
+            dataType: "float",
+            axisNames: ["composite"],
+            shape: [gml.domainSet.coordinates.length],
+            values: []
+          };
+        });
+        return ranges;
+      }
+      if (gml.rangeSet.file) {
+        if (gml.rangeType && gml.rangeType.field) {
+          gml.rangeType.field.forEach((field) => {
+            ranges[field.name] = {
+              type: "TiledNdArray",
+              dataType: field.dataType || "float",
+              axisNames: "axisLabels" in gml.domainSet && gml.domainSet.axisLabels ? gml.domainSet.axisLabels : ["x", "y"],
+              shape: [
+                gml.domainSet.limits.high[0] - gml.domainSet.limits.low[0] + 1,
+                gml.domainSet.limits.high[1] - gml.domainSet.limits.low[1] + 1
+              ],
+              tileSets: [{
+                tileShape: null,
+                urlTemplate: gml.rangeSet.file?.fileName || ""
+              }]
+            };
+          });
+        } else {
+          ranges.value = {
+            type: "TiledNdArray",
+            dataType: "float",
+            axisNames: "axisLabels" in gml.domainSet && gml.domainSet.axisLabels ? gml.domainSet.axisLabels : ["x", "y"],
+            urlTemplate: gml.rangeSet.file?.fileName || ""
+          };
+        }
+      } else {
+        const paramNames = Object.keys(this.buildParameters(gml));
+        paramNames.forEach((name) => {
+          ranges[name] = {
+            type: "NdArray",
+            dataType: "float",
+            axisNames: gml.domainSet.axisLabels || ["x", "y"],
+            shape: [
+              gml.domainSet.limits.high[0] - gml.domainSet.limits.low[0] + 1,
+              gml.domainSet.limits.high[1] - gml.domainSet.limits.low[1] + 1
+            ],
+            values: []
+            // Would be populated with actual data
+          };
+        });
+      }
+      return ranges;
+    }
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
+      }
+    }
+  };
+  var CsvBuilder = class {
+    /**
+     * Convert Point to WKT
+     */
+    buildPoint(gml) {
+      const [x3, y3, z] = gml.coordinates;
+      if (z !== void 0) {
+        return `POINT Z (${x3} ${y3} ${z})`;
+      }
+      return `POINT (${x3} ${y3})`;
+    }
+    /**
+     * Convert LineString to WKT
+     */
+    buildLineString(gml) {
+      const coords = gml.coordinates.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+      const hasZ = gml.coordinates.some((c3) => c3[2] !== void 0);
+      return hasZ ? `LINESTRING Z (${coords})` : `LINESTRING (${coords})`;
+    }
+    /**
+     * Convert Polygon to WKT
+     */
+    buildPolygon(gml) {
+      const hasZ = gml.coordinates[0]?.some((c3) => c3[2] !== void 0);
+      const rings = gml.coordinates.map((ring) => {
+        const coords = ring.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+        return `(${coords})`;
+      }).join(", ");
+      return hasZ ? `POLYGON Z (${rings})` : `POLYGON (${rings})`;
+    }
+    /**
+     * Convert MultiPoint to WKT
+     */
+    buildMultiPoint(gml) {
+      const hasZ = gml.coordinates.some((c3) => c3[2] !== void 0);
+      const coords = gml.coordinates.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+      return hasZ ? `MULTIPOINT Z (${coords})` : `MULTIPOINT (${coords})`;
+    }
+    /**
+     * Convert MultiLineString to WKT
+     */
+    buildMultiLineString(gml) {
+      const hasZ = gml.coordinates[0]?.some((c3) => c3[2] !== void 0);
+      const lines = gml.coordinates.map((line) => {
+        const coords = line.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+        return `(${coords})`;
+      }).join(", ");
+      return hasZ ? `MULTILINESTRING Z (${lines})` : `MULTILINESTRING (${lines})`;
+    }
+    /**
+     * Convert MultiPolygon to WKT
+     */
+    buildMultiPolygon(gml) {
+      const hasZ = gml.coordinates[0]?.[0]?.some((c3) => c3[2] !== void 0);
+      const polygons = gml.coordinates.map((polygon) => {
+        const rings = polygon.map((ring) => {
+          const coords = ring.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+          return `(${coords})`;
+        }).join(", ");
+        return `(${rings})`;
+      }).join(", ");
+      return hasZ ? `MULTIPOLYGON Z (${polygons})` : `MULTIPOLYGON (${polygons})`;
+    }
+    /**
+     * Convert LinearRing to WKT (as LineString)
+     */
+    buildLinearRing(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Envelope to CSV row with WKT Polygon
+     */
+    buildEnvelope(gml) {
+      const [minX, minY, maxX, maxY] = gml.bbox;
+      const wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      return {
+        type: "CSV",
+        headers: ["geometry", "type", "minX", "minY", "maxX", "maxY", "srsName"],
+        rows: [{
+          geometry: wkt,
+          type: "Envelope",
+          minX,
+          minY,
+          maxX,
+          maxY,
+          srsName: gml.srsName || ""
+        }]
+      };
+    }
+    /**
+     * Convert Box to CSV row
+     */
+    buildBox(gml) {
+      return this.buildEnvelope({
+        type: "Envelope",
+        bbox: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Curve to WKT LineString
+     */
+    buildCurve(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Surface to WKT MultiPolygon
+     */
+    buildSurface(gml) {
+      return this.buildMultiPolygon({
+        type: "MultiPolygon",
+        coordinates: gml.patches.map((p) => p.coordinates),
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert RectifiedGridCoverage to CSV row
+     */
+    buildRectifiedGridCoverage(gml) {
+      const properties = {
+        id: gml.id,
+        type: "RectifiedGridCoverage",
+        dimension: gml.domainSet.dimension,
+        srsName: gml.domainSet.srsName,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1],
+        originX: gml.domainSet.origin[0],
+        originY: gml.domainSet.origin[1],
+        offsetVector1X: gml.domainSet.offsetVectors[0][0],
+        offsetVector1Y: gml.domainSet.offsetVectors[0][1],
+        offsetVector2X: gml.domainSet.offsetVectors[1][0],
+        offsetVector2Y: gml.domainSet.offsetVectors[1][1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      }
+      properties.geometry = wkt;
+      return {
+        type: "CSV",
+        headers: Object.keys(properties),
+        rows: [properties]
+      };
+    }
+    /**
+     * Convert GridCoverage to CSV row
+     */
+    buildGridCoverage(gml) {
+      const properties = {
+        id: gml.id,
+        type: "GridCoverage",
+        dimension: gml.domainSet.dimension,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      }
+      properties.geometry = wkt;
+      return {
+        type: "CSV",
+        headers: Object.keys(properties),
+        rows: [properties]
+      };
+    }
+    /**
+     * Convert ReferenceableGridCoverage to CSV row
+     */
+    buildReferenceableGridCoverage(gml) {
+      const properties = {
+        id: gml.id,
+        type: "ReferenceableGridCoverage",
+        dimension: gml.domainSet.dimension,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      }
+      properties.geometry = wkt;
+      return {
+        type: "CSV",
+        headers: Object.keys(properties),
+        rows: [properties]
+      };
+    }
+    /**
+     * Convert MultiPointCoverage to CSV row
+     */
+    buildMultiPointCoverage(gml) {
+      const wkt = this.buildMultiPoint(gml.domainSet);
+      const properties = {
+        id: gml.id,
+        type: "MultiPointCoverage",
+        geometry: wkt,
+        pointCount: gml.domainSet.coordinates.length,
+        srsName: gml.domainSet.srsName
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      return {
+        type: "CSV",
+        headers: Object.keys(properties),
+        rows: [properties]
+      };
+    }
+    /**
+     * Convert Feature to CSV row
+     */
+    buildFeature(gml) {
+      const geometryWkt = this.buildGeometry(gml.geometry);
+      const row = {
+        id: gml.id,
+        geometry: geometryWkt,
+        ...gml.properties
+      };
+      if (gml.boundedBy) {
+        row.bbox = gml.boundedBy.bbox.join(",");
+      }
+      const headers = ["id", "geometry", ...Object.keys(gml.properties)];
+      if (gml.boundedBy) {
+        headers.push("bbox");
+      }
+      return {
+        type: "CSV",
+        headers,
+        rows: [row]
+      };
+    }
+    /**
+     * Convert FeatureCollection to CSV string
+     */
+    buildFeatureCollection(gml) {
+      if (gml.features.length === 0) {
+        return "id,geometry\n";
+      }
+      const allKeys = /* @__PURE__ */ new Set(["id", "geometry"]);
+      gml.features.forEach((feature) => {
+        Object.keys(feature.properties).forEach((key) => allKeys.add(key));
+        if (feature.boundedBy) {
+          allKeys.add("bbox");
+        }
+      });
+      const headers = Array.from(allKeys);
+      const rows = gml.features.map((feature) => {
+        const featureOutput = this.buildFeature(feature);
+        return featureOutput.rows[0];
+      });
+      return this.toCsvString(headers, rows);
+    }
+    /**
+     * Helper: Convert geometry to WKT
+     */
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
+      }
+    }
+    /**
+     * Helper: Convert headers and rows to CSV string
+     */
+    toCsvString(headers, rows) {
+      const escapeCsv = (value) => {
+        if (value === null || value === void 0)
+          return "";
+        const str = String(value);
+        if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      };
+      const headerLine = headers.map((h2) => escapeCsv(h2)).join(",");
+      const dataLines = rows.map((row) => headers.map((h2) => escapeCsv(row[h2])).join(",")).join("\n");
+      return `${headerLine}
+${dataLines}`;
+    }
+  };
+  var KmlBuilder = class {
+    /**
+     * Convert Point to KML Point
+     */
+    buildPoint(gml) {
+      const [lon, lat, alt] = gml.coordinates;
+      const coords = alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`;
+      return `<Point><coordinates>${coords}</coordinates></Point>`;
+    }
+    /**
+     * Convert LineString to KML LineString
+     */
+    buildLineString(gml) {
+      const coords = gml.coordinates.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+      return `<LineString><coordinates>${coords}</coordinates></LineString>`;
+    }
+    /**
+     * Convert Polygon to KML Polygon
+     */
+    buildPolygon(gml) {
+      const outerRing = gml.coordinates[0];
+      const innerRings = gml.coordinates.slice(1);
+      const outerCoords = outerRing.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+      let kml2 = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${outerCoords}</coordinates></LinearRing></outerBoundaryIs>`;
+      for (const ring of innerRings) {
+        const innerCoords = ring.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+        kml2 += `<innerBoundaryIs><LinearRing><coordinates>${innerCoords}</coordinates></LinearRing></innerBoundaryIs>`;
+      }
+      kml2 += "</Polygon>";
+      return kml2;
+    }
+    /**
+     * Convert MultiPoint to KML MultiGeometry with Points
+     */
+    buildMultiPoint(gml) {
+      const points = gml.coordinates.map(([lon, lat, alt]) => {
+        const coords = alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`;
+        return `<Point><coordinates>${coords}</coordinates></Point>`;
+      }).join("");
+      return `<MultiGeometry>${points}</MultiGeometry>`;
+    }
+    /**
+     * Convert MultiLineString to KML MultiGeometry with LineStrings
+     */
+    buildMultiLineString(gml) {
+      const lines = gml.coordinates.map((line) => {
+        const coords = line.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+        return `<LineString><coordinates>${coords}</coordinates></LineString>`;
+      }).join("");
+      return `<MultiGeometry>${lines}</MultiGeometry>`;
+    }
+    /**
+     * Convert MultiPolygon to KML MultiGeometry with Polygons
+     */
+    buildMultiPolygon(gml) {
+      const polygons = gml.coordinates.map((polyCoords) => {
+        const outerRing = polyCoords[0];
+        const innerRings = polyCoords.slice(1);
+        const outerCoords = outerRing.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+        let poly = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${outerCoords}</coordinates></LinearRing></outerBoundaryIs>`;
+        for (const ring of innerRings) {
+          const innerCoords = ring.map(([lon, lat, alt]) => alt !== void 0 ? `${lon},${lat},${alt}` : `${lon},${lat}`).join(" ");
+          poly += `<innerBoundaryIs><LinearRing><coordinates>${innerCoords}</coordinates></LinearRing></innerBoundaryIs>`;
+        }
+        poly += "</Polygon>";
+        return poly;
+      }).join("");
+      return `<MultiGeometry>${polygons}</MultiGeometry>`;
+    }
+    /**
+     * Convert LinearRing to KML LineString
+     */
+    buildLinearRing(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Envelope to KML Placemark with Polygon
+     */
+    buildEnvelope(gml) {
+      const [minLon, minLat, maxLon, maxLat] = gml.bbox;
+      const coords = `${minLon},${minLat} ${maxLon},${minLat} ${maxLon},${maxLat} ${minLon},${maxLat} ${minLon},${minLat}`;
+      return `<Placemark>
+  <name>Envelope</name>
+  <Polygon>
+    <outerBoundaryIs>
+      <LinearRing>
+        <coordinates>${coords}</coordinates>
+      </LinearRing>
+    </outerBoundaryIs>
+  </Polygon>
+</Placemark>`;
+    }
+    /**
+     * Convert Box to KML Placemark
+     */
+    buildBox(gml) {
+      return this.buildEnvelope({
+        type: "Envelope",
+        bbox: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Curve to KML LineString
+     */
+    buildCurve(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Surface to KML MultiGeometry with Polygons
+     */
+    buildSurface(gml) {
+      return this.buildMultiPolygon({
+        type: "MultiPolygon",
+        coordinates: gml.patches.map((p) => p.coordinates),
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert RectifiedGridCoverage to KML Placemark
+     */
+    buildRectifiedGridCoverage(gml) {
+      let geometry = "";
+      let description = "";
+      if (gml.boundedBy) {
+        const [minLon, minLat, maxLon, maxLat] = gml.boundedBy.bbox;
+        const coords = `${minLon},${minLat} ${maxLon},${minLat} ${maxLon},${maxLat} ${minLon},${maxLat} ${minLon},${minLat}`;
+        geometry = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>`;
+      }
+      description += `<![CDATA[
+<table>
+<tr><th>Type</th><td>RectifiedGridCoverage</td></tr>
+<tr><th>Dimension</th><td>${gml.domainSet.dimension}</td></tr>
+<tr><th>SRS</th><td>${gml.domainSet.srsName || "N/A"}</td></tr>
+<tr><th>Grid Limits</th><td>Low: ${gml.domainSet.limits.low.join(", ")}, High: ${gml.domainSet.limits.high.join(", ")}</td></tr>
+<tr><th>Origin</th><td>${gml.domainSet.origin.join(", ")}</td></tr>`;
+      if (gml.rangeSet.file) {
+        description += `<tr><th>Data File</th><td>${this.escapeXml(gml.rangeSet.file.fileName)}</td></tr>`;
+        if (gml.rangeSet.file.fileStructure) {
+          description += `<tr><th>File Structure</th><td>${this.escapeXml(gml.rangeSet.file.fileStructure)}</td></tr>`;
+        }
+      }
+      if (gml.rangeType?.field) {
+        description += `<tr><th>Bands</th><td>${gml.rangeType.field.map((f3) => this.escapeXml(f3.name)).join(", ")}</td></tr>`;
+      }
+      description += "</table>]]>";
+      return `<Placemark>
+  <name>${this.escapeXml(gml.id || "RectifiedGridCoverage")}</name>
+  <description>${description}</description>
+  ${geometry}
+</Placemark>`;
+    }
+    /**
+     * Convert GridCoverage to KML Placemark
+     */
+    buildGridCoverage(gml) {
+      let geometry = "";
+      let description = "";
+      if (gml.boundedBy) {
+        const [minLon, minLat, maxLon, maxLat] = gml.boundedBy.bbox;
+        const coords = `${minLon},${minLat} ${maxLon},${minLat} ${maxLon},${maxLat} ${minLon},${maxLat} ${minLon},${minLat}`;
+        geometry = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>`;
+      }
+      description += `<![CDATA[
+<table>
+<tr><th>Type</th><td>GridCoverage</td></tr>
+<tr><th>Dimension</th><td>${gml.domainSet.dimension}</td></tr>
+<tr><th>Grid Limits</th><td>Low: ${gml.domainSet.limits.low.join(", ")}, High: ${gml.domainSet.limits.high.join(", ")}</td></tr>`;
+      if (gml.rangeSet.file) {
+        description += `<tr><th>Data File</th><td>${this.escapeXml(gml.rangeSet.file.fileName)}</td></tr>`;
+      }
+      if (gml.rangeType?.field) {
+        description += `<tr><th>Bands</th><td>${gml.rangeType.field.map((f3) => this.escapeXml(f3.name)).join(", ")}</td></tr>`;
+      }
+      description += "</table>]]>";
+      return `<Placemark>
+  <name>${this.escapeXml(gml.id || "GridCoverage")}</name>
+  <description>${description}</description>
+  ${geometry}
+</Placemark>`;
+    }
+    /**
+     * Convert ReferenceableGridCoverage to KML Placemark
+     */
+    buildReferenceableGridCoverage(gml) {
+      let geometry = "";
+      let description = "";
+      if (gml.boundedBy) {
+        const [minLon, minLat, maxLon, maxLat] = gml.boundedBy.bbox;
+        const coords = `${minLon},${minLat} ${maxLon},${minLat} ${maxLon},${maxLat} ${minLon},${maxLat} ${minLon},${minLat}`;
+        geometry = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>`;
+      }
+      description += `<![CDATA[
+<table>
+<tr><th>Type</th><td>ReferenceableGridCoverage</td></tr>
+<tr><th>Dimension</th><td>${gml.domainSet.dimension}</td></tr>
+<tr><th>Grid Limits</th><td>Low: ${gml.domainSet.limits.low.join(", ")}, High: ${gml.domainSet.limits.high.join(", ")}</td></tr>`;
+      if (gml.rangeSet.file) {
+        description += `<tr><th>Data File</th><td>${this.escapeXml(gml.rangeSet.file.fileName)}</td></tr>`;
+      }
+      if (gml.rangeType?.field) {
+        description += `<tr><th>Bands</th><td>${gml.rangeType.field.map((f3) => this.escapeXml(f3.name)).join(", ")}</td></tr>`;
+      }
+      description += "</table>]]>";
+      return `<Placemark>
+  <name>${this.escapeXml(gml.id || "ReferenceableGridCoverage")}</name>
+  <description>${description}</description>
+  ${geometry}
+</Placemark>`;
+    }
+    /**
+     * Convert MultiPointCoverage to KML Placemark
+     */
+    buildMultiPointCoverage(gml) {
+      const geometry = this.buildMultiPoint(gml.domainSet);
+      let description = `<![CDATA[
+<table>
+<tr><th>Type</th><td>MultiPointCoverage</td></tr>
+<tr><th>Point Count</th><td>${gml.domainSet.coordinates.length}</td></tr>
+<tr><th>SRS</th><td>${gml.domainSet.srsName || "N/A"}</td></tr>`;
+      if (gml.rangeSet.file) {
+        description += `<tr><th>Data File</th><td>${this.escapeXml(gml.rangeSet.file.fileName)}</td></tr>`;
+      }
+      if (gml.rangeType?.field) {
+        description += `<tr><th>Bands</th><td>${gml.rangeType.field.map((f3) => this.escapeXml(f3.name)).join(", ")}</td></tr>`;
+      }
+      description += "</table>]]>";
+      return `<Placemark>
+  <name>${this.escapeXml(gml.id || "MultiPointCoverage")}</name>
+  <description>${description}</description>
+  ${geometry}
+</Placemark>`;
+    }
+    /**
+     * Convert Feature to KML Placemark
+     */
+    buildFeature(gml) {
+      const geometry = this.buildGeometry(gml.geometry);
+      let description = "";
+      if (Object.keys(gml.properties).length > 0) {
+        description = "<![CDATA[<table>";
+        for (const [key, value] of Object.entries(gml.properties)) {
+          description += `<tr><th>${this.escapeXml(key)}</th><td>${this.escapeXml(String(value))}</td></tr>`;
+        }
+        description += "</table>]]>";
+      }
+      const name = gml.properties.name || gml.properties.title || gml.id || "Feature";
+      return `<Placemark>
+  <name>${this.escapeXml(name)}</name>
+  ${description ? `<description>${description}</description>` : ""}
+  ${geometry}
+</Placemark>`;
+    }
+    /**
+     * Convert FeatureCollection to KML Document
+     */
+    buildFeatureCollection(gml) {
+      const placemarks = gml.features.map((feature) => this.buildFeature(feature)).join("\n");
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>GML Feature Collection</name>
+  <description>Converted from GML ${gml.version}</description>
+  ${placemarks}
+</Document>
+</kml>`;
+    }
+    /**
+     * Helper: Convert geometry to KML
+     */
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
+      }
+    }
+    /**
+     * Helper: Escape XML special characters
+     */
+    escapeXml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+    }
+  };
+  var WktBuilder = class {
+    /**
+     * Convert Point to WKT
+     */
+    buildPoint(gml) {
+      const [x3, y3, z] = gml.coordinates;
+      if (z !== void 0) {
+        return `POINT Z (${x3} ${y3} ${z})`;
+      }
+      return `POINT (${x3} ${y3})`;
+    }
+    /**
+     * Convert LineString to WKT
+     */
+    buildLineString(gml) {
+      const coords = gml.coordinates.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+      const hasZ = gml.coordinates.some((c3) => c3[2] !== void 0);
+      return hasZ ? `LINESTRING Z (${coords})` : `LINESTRING (${coords})`;
+    }
+    /**
+     * Convert Polygon to WKT
+     */
+    buildPolygon(gml) {
+      const hasZ = gml.coordinates[0]?.some((c3) => c3[2] !== void 0);
+      const rings = gml.coordinates.map((ring) => {
+        const coords = ring.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+        return `(${coords})`;
+      }).join(", ");
+      return hasZ ? `POLYGON Z (${rings})` : `POLYGON (${rings})`;
+    }
+    /**
+     * Convert MultiPoint to WKT
+     */
+    buildMultiPoint(gml) {
+      const hasZ = gml.coordinates.some((c3) => c3[2] !== void 0);
+      const coords = gml.coordinates.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+      return hasZ ? `MULTIPOINT Z (${coords})` : `MULTIPOINT (${coords})`;
+    }
+    /**
+     * Convert MultiLineString to WKT
+     */
+    buildMultiLineString(gml) {
+      const hasZ = gml.coordinates[0]?.some((c3) => c3[2] !== void 0);
+      const lines = gml.coordinates.map((line) => {
+        const coords = line.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+        return `(${coords})`;
+      }).join(", ");
+      return hasZ ? `MULTILINESTRING Z (${lines})` : `MULTILINESTRING (${lines})`;
+    }
+    /**
+     * Convert MultiPolygon to WKT
+     */
+    buildMultiPolygon(gml) {
+      const hasZ = gml.coordinates[0]?.[0]?.some((c3) => c3[2] !== void 0);
+      const polygons = gml.coordinates.map((polygon) => {
+        const rings = polygon.map((ring) => {
+          const coords = ring.map(([x3, y3, z]) => z !== void 0 ? `${x3} ${y3} ${z}` : `${x3} ${y3}`).join(", ");
+          return `(${coords})`;
+        }).join(", ");
+        return `(${rings})`;
+      }).join(", ");
+      return hasZ ? `MULTIPOLYGON Z (${polygons})` : `MULTIPOLYGON (${polygons})`;
+    }
+    /**
+     * Convert LinearRing to WKT (as LineString)
+     */
+    buildLinearRing(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Envelope to WKT Feature with Polygon
+     */
+    buildEnvelope(gml) {
+      const [minX, minY, maxX, maxY] = gml.bbox;
+      const wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      return {
+        wkt,
+        properties: {
+          type: "Envelope",
+          minX,
+          minY,
+          maxX,
+          maxY,
+          srsName: gml.srsName
+        }
+      };
+    }
+    /**
+     * Convert Box to WKT Feature
+     */
+    buildBox(gml) {
+      return this.buildEnvelope({
+        type: "Envelope",
+        bbox: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Curve to WKT LineString
+     */
+    buildCurve(gml) {
+      return this.buildLineString({
+        type: "LineString",
+        coordinates: gml.coordinates,
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert Surface to WKT MultiPolygon
+     */
+    buildSurface(gml) {
+      return this.buildMultiPolygon({
+        type: "MultiPolygon",
+        coordinates: gml.patches.map((p) => p.coordinates),
+        srsName: gml.srsName,
+        version: gml.version
+      });
+    }
+    /**
+     * Convert RectifiedGridCoverage to WKT Feature
+     */
+    buildRectifiedGridCoverage(gml) {
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      } else {
+        const [x3, y3] = gml.domainSet.origin;
+        wkt = `POINT (${x3} ${y3})`;
+      }
+      const properties = {
+        type: "RectifiedGridCoverage",
+        dimension: gml.domainSet.dimension,
+        srsName: gml.domainSet.srsName,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1],
+        originX: gml.domainSet.origin[0],
+        originY: gml.domainSet.origin[1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      return {
+        wkt,
+        properties,
+        id: gml.id
+      };
+    }
+    /**
+     * Convert GridCoverage to WKT Feature
+     */
+    buildGridCoverage(gml) {
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      } else {
+        wkt = "POINT (0 0)";
+      }
+      const properties = {
+        type: "GridCoverage",
+        dimension: gml.domainSet.dimension,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      return {
+        wkt,
+        properties,
+        id: gml.id
+      };
+    }
+    /**
+     * Convert ReferenceableGridCoverage to WKT Feature
+     */
+    buildReferenceableGridCoverage(gml) {
+      let wkt = "";
+      if (gml.boundedBy) {
+        const [minX, minY, maxX, maxY] = gml.boundedBy.bbox;
+        wkt = `POLYGON ((${minX} ${minY}, ${maxX} ${minY}, ${maxX} ${maxY}, ${minX} ${maxY}, ${minX} ${minY}))`;
+      } else {
+        wkt = "POINT (0 0)";
+      }
+      const properties = {
+        type: "ReferenceableGridCoverage",
+        dimension: gml.domainSet.dimension,
+        gridLowX: gml.domainSet.limits.low[0],
+        gridLowY: gml.domainSet.limits.low[1],
+        gridHighX: gml.domainSet.limits.high[0],
+        gridHighY: gml.domainSet.limits.high[1]
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      return {
+        wkt,
+        properties,
+        id: gml.id
+      };
+    }
+    /**
+     * Convert MultiPointCoverage to WKT Feature
+     */
+    buildMultiPointCoverage(gml) {
+      const wkt = this.buildMultiPoint(gml.domainSet);
+      const properties = {
+        type: "MultiPointCoverage",
+        pointCount: gml.domainSet.coordinates.length,
+        srsName: gml.domainSet.srsName
+      };
+      if (gml.rangeSet.file) {
+        properties.dataFile = gml.rangeSet.file.fileName;
+        properties.fileStructure = gml.rangeSet.file.fileStructure;
+      }
+      if (gml.rangeType?.field) {
+        properties.bands = gml.rangeType.field.map((f3) => f3.name).join(";");
+      }
+      return {
+        wkt,
+        properties,
+        id: gml.id
+      };
+    }
+    /**
+     * Convert Feature to WKT Feature
+     */
+    buildFeature(gml) {
+      const geometryResult = this.buildGeometry(gml.geometry);
+      let wkt;
+      let properties = { ...gml.properties };
+      if (typeof geometryResult === "string") {
+        wkt = geometryResult;
+      } else {
+        wkt = geometryResult.wkt;
+        properties = { ...geometryResult.properties, ...properties };
+      }
+      const feature = {
+        wkt,
+        properties
+      };
+      if (gml.id) {
+        feature.id = gml.id;
+      }
+      if (gml.boundedBy) {
+        properties.bbox = gml.boundedBy.bbox.join(",");
+      }
+      return feature;
+    }
+    /**
+     * Convert FeatureCollection to WKT Collection
+     */
+    buildFeatureCollection(gml) {
+      return {
+        features: gml.features.map((feature) => this.buildFeature(feature))
+      };
+    }
+    /**
+     * Helper: Convert geometry to WKT
+     */
+    buildGeometry(gml) {
+      switch (gml.type) {
+        case "Point":
+          return this.buildPoint(gml);
+        case "LineString":
+          return this.buildLineString(gml);
+        case "Polygon":
+          return this.buildPolygon(gml);
+        case "LinearRing":
+          return this.buildLinearRing(gml);
+        case "Envelope":
+          return this.buildEnvelope(gml);
+        case "Box":
+          return this.buildBox(gml);
+        case "Curve":
+          return this.buildCurve(gml);
+        case "Surface":
+          return this.buildSurface(gml);
+        case "MultiPoint":
+          return this.buildMultiPoint(gml);
+        case "MultiLineString":
+          return this.buildMultiLineString(gml);
+        case "MultiPolygon":
+          return this.buildMultiPolygon(gml);
+        default:
+          throw new Error(`Unsupported geometry type: ${gml.type}`);
+      }
+    }
+  };
+  var magicbytes = new Uint8Array([102, 103, 98, 3, 102, 103, 98, 0]);
+  var SIZEOF_SHORT = 2;
+  var SIZEOF_INT = 4;
+  var FILE_IDENTIFIER_LENGTH = 4;
+  var SIZE_PREFIX_LENGTH = 4;
+  var int32 = new Int32Array(2);
+  var float32 = new Float32Array(int32.buffer);
+  var float64 = new Float64Array(int32.buffer);
+  var isLittleEndian = new Uint16Array(new Uint8Array([1, 0]).buffer)[0] === 1;
+  var Encoding;
+  (function(Encoding2) {
+    Encoding2[Encoding2["UTF8_BYTES"] = 1] = "UTF8_BYTES";
+    Encoding2[Encoding2["UTF16_STRING"] = 2] = "UTF16_STRING";
+  })(Encoding || (Encoding = {}));
+  var ByteBuffer = class _ByteBuffer {
+    /**
+     * Create a new ByteBuffer with a given array of bytes (`Uint8Array`)
+     */
+    constructor(bytes_) {
+      this.bytes_ = bytes_;
+      this.position_ = 0;
+      this.text_decoder_ = new TextDecoder();
+    }
+    /**
+     * Create and allocate a new ByteBuffer with a given size.
+     */
+    static allocate(byte_size) {
+      return new _ByteBuffer(new Uint8Array(byte_size));
+    }
+    clear() {
+      this.position_ = 0;
+    }
+    /**
+     * Get the underlying `Uint8Array`.
+     */
+    bytes() {
+      return this.bytes_;
+    }
+    /**
+     * Get the buffer's position.
+     */
+    position() {
+      return this.position_;
+    }
+    /**
+     * Set the buffer's position.
+     */
+    setPosition(position) {
+      this.position_ = position;
+    }
+    /**
+     * Get the buffer's capacity.
+     */
+    capacity() {
+      return this.bytes_.length;
+    }
+    readInt8(offset) {
+      return this.readUint8(offset) << 24 >> 24;
+    }
+    readUint8(offset) {
+      return this.bytes_[offset];
+    }
+    readInt16(offset) {
+      return this.readUint16(offset) << 16 >> 16;
+    }
+    readUint16(offset) {
+      return this.bytes_[offset] | this.bytes_[offset + 1] << 8;
+    }
+    readInt32(offset) {
+      return this.bytes_[offset] | this.bytes_[offset + 1] << 8 | this.bytes_[offset + 2] << 16 | this.bytes_[offset + 3] << 24;
+    }
+    readUint32(offset) {
+      return this.readInt32(offset) >>> 0;
+    }
+    readInt64(offset) {
+      return BigInt.asIntN(64, BigInt(this.readUint32(offset)) + (BigInt(this.readUint32(offset + 4)) << BigInt(32)));
+    }
+    readUint64(offset) {
+      return BigInt.asUintN(64, BigInt(this.readUint32(offset)) + (BigInt(this.readUint32(offset + 4)) << BigInt(32)));
+    }
+    readFloat32(offset) {
+      int32[0] = this.readInt32(offset);
+      return float32[0];
+    }
+    readFloat64(offset) {
+      int32[isLittleEndian ? 0 : 1] = this.readInt32(offset);
+      int32[isLittleEndian ? 1 : 0] = this.readInt32(offset + 4);
+      return float64[0];
+    }
+    writeInt8(offset, value) {
+      this.bytes_[offset] = value;
+    }
+    writeUint8(offset, value) {
+      this.bytes_[offset] = value;
+    }
+    writeInt16(offset, value) {
+      this.bytes_[offset] = value;
+      this.bytes_[offset + 1] = value >> 8;
+    }
+    writeUint16(offset, value) {
+      this.bytes_[offset] = value;
+      this.bytes_[offset + 1] = value >> 8;
+    }
+    writeInt32(offset, value) {
+      this.bytes_[offset] = value;
+      this.bytes_[offset + 1] = value >> 8;
+      this.bytes_[offset + 2] = value >> 16;
+      this.bytes_[offset + 3] = value >> 24;
+    }
+    writeUint32(offset, value) {
+      this.bytes_[offset] = value;
+      this.bytes_[offset + 1] = value >> 8;
+      this.bytes_[offset + 2] = value >> 16;
+      this.bytes_[offset + 3] = value >> 24;
+    }
+    writeInt64(offset, value) {
+      this.writeInt32(offset, Number(BigInt.asIntN(32, value)));
+      this.writeInt32(offset + 4, Number(BigInt.asIntN(32, value >> BigInt(32))));
+    }
+    writeUint64(offset, value) {
+      this.writeUint32(offset, Number(BigInt.asUintN(32, value)));
+      this.writeUint32(offset + 4, Number(BigInt.asUintN(32, value >> BigInt(32))));
+    }
+    writeFloat32(offset, value) {
+      float32[0] = value;
+      this.writeInt32(offset, int32[0]);
+    }
+    writeFloat64(offset, value) {
+      float64[0] = value;
+      this.writeInt32(offset, int32[isLittleEndian ? 0 : 1]);
+      this.writeInt32(offset + 4, int32[isLittleEndian ? 1 : 0]);
+    }
+    /**
+     * Return the file identifier.   Behavior is undefined for FlatBuffers whose
+     * schema does not include a file_identifier (likely points at padding or the
+     * start of a the root vtable).
+     */
+    getBufferIdentifier() {
+      if (this.bytes_.length < this.position_ + SIZEOF_INT + FILE_IDENTIFIER_LENGTH) {
+        throw new Error("FlatBuffers: ByteBuffer is too short to contain an identifier.");
+      }
+      let result = "";
+      for (let i = 0; i < FILE_IDENTIFIER_LENGTH; i++) {
+        result += String.fromCharCode(this.readInt8(this.position_ + SIZEOF_INT + i));
+      }
+      return result;
+    }
+    /**
+     * Look up a field in the vtable, return an offset into the object, or 0 if the
+     * field is not present.
+     */
+    __offset(bb_pos, vtable_offset) {
+      const vtable = bb_pos - this.readInt32(bb_pos);
+      return vtable_offset < this.readInt16(vtable) ? this.readInt16(vtable + vtable_offset) : 0;
+    }
+    /**
+     * Initialize any Table-derived type to point to the union at the given offset.
+     */
+    __union(t, offset) {
+      t.bb_pos = offset + this.readInt32(offset);
+      t.bb = this;
+      return t;
+    }
+    /**
+     * Create a JavaScript string from UTF-8 data stored inside the FlatBuffer.
+     * This allocates a new string and converts to wide chars upon each access.
+     *
+     * To avoid the conversion to string, pass Encoding.UTF8_BYTES as the
+     * "optionalEncoding" argument. This is useful for avoiding conversion when
+     * the data will just be packaged back up in another FlatBuffer later on.
+     *
+     * @param offset
+     * @param opt_encoding Defaults to UTF16_STRING
+     */
+    __string(offset, opt_encoding) {
+      offset += this.readInt32(offset);
+      const length = this.readInt32(offset);
+      offset += SIZEOF_INT;
+      const utf8bytes = this.bytes_.subarray(offset, offset + length);
+      if (opt_encoding === Encoding.UTF8_BYTES)
+        return utf8bytes;
+      else
+        return this.text_decoder_.decode(utf8bytes);
+    }
+    /**
+     * Handle unions that can contain string as its member, if a Table-derived type then initialize it,
+     * if a string then return a new one
+     *
+     * WARNING: strings are immutable in JS so we can't change the string that the user gave us, this
+     * makes the behaviour of __union_with_string different compared to __union
+     */
+    __union_with_string(o2, offset) {
+      if (typeof o2 === "string") {
+        return this.__string(offset);
+      }
+      return this.__union(o2, offset);
+    }
+    /**
+     * Retrieve the relative offset stored at "offset"
+     */
+    __indirect(offset) {
+      return offset + this.readInt32(offset);
+    }
+    /**
+     * Get the start of data of a vector whose offset is stored at "offset" in this object.
+     */
+    __vector(offset) {
+      return offset + this.readInt32(offset) + SIZEOF_INT;
+    }
+    /**
+     * Get the length of a vector whose offset is stored at "offset" in this object.
+     */
+    __vector_len(offset) {
+      return this.readInt32(offset + this.readInt32(offset));
+    }
+    __has_identifier(ident) {
+      if (ident.length != FILE_IDENTIFIER_LENGTH) {
+        throw new Error("FlatBuffers: file identifier must be length " + FILE_IDENTIFIER_LENGTH);
+      }
+      for (let i = 0; i < FILE_IDENTIFIER_LENGTH; i++) {
+        if (ident.charCodeAt(i) != this.readInt8(this.position() + SIZEOF_INT + i)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    /**
+     * A helper function for generating list for obj api
+     */
+    createScalarList(listAccessor, listLength) {
+      const ret = [];
+      for (let i = 0; i < listLength; ++i) {
+        const val = listAccessor(i);
+        if (val !== null) {
+          ret.push(val);
+        }
+      }
+      return ret;
+    }
+    /**
+     * A helper function for generating list for obj api
+     * @param listAccessor function that accepts an index and return data at that index
+     * @param listLength listLength
+     * @param res result list
+     */
+    createObjList(listAccessor, listLength) {
+      const ret = [];
+      for (let i = 0; i < listLength; ++i) {
+        const val = listAccessor(i);
+        if (val !== null) {
+          ret.push(val.unpack());
+        }
+      }
+      return ret;
+    }
+  };
+  var Builder = class _Builder {
+    /**
+     * Create a FlatBufferBuilder.
+     */
+    constructor(opt_initial_size) {
+      this.minalign = 1;
+      this.vtable = null;
+      this.vtable_in_use = 0;
+      this.isNested = false;
+      this.object_start = 0;
+      this.vtables = [];
+      this.vector_num_elems = 0;
+      this.force_defaults = false;
+      this.string_maps = null;
+      this.text_encoder = new TextEncoder();
+      let initial_size;
+      if (!opt_initial_size) {
+        initial_size = 1024;
+      } else {
+        initial_size = opt_initial_size;
+      }
+      this.bb = ByteBuffer.allocate(initial_size);
+      this.space = initial_size;
+    }
+    clear() {
+      this.bb.clear();
+      this.space = this.bb.capacity();
+      this.minalign = 1;
+      this.vtable = null;
+      this.vtable_in_use = 0;
+      this.isNested = false;
+      this.object_start = 0;
+      this.vtables = [];
+      this.vector_num_elems = 0;
+      this.force_defaults = false;
+      this.string_maps = null;
+    }
+    /**
+     * In order to save space, fields that are set to their default value
+     * don't get serialized into the buffer. Forcing defaults provides a
+     * way to manually disable this optimization.
+     *
+     * @param forceDefaults true always serializes default values
+     */
+    forceDefaults(forceDefaults) {
+      this.force_defaults = forceDefaults;
+    }
+    /**
+     * Get the ByteBuffer representing the FlatBuffer. Only call this after you've
+     * called finish(). The actual data starts at the ByteBuffer's current position,
+     * not necessarily at 0.
+     */
+    dataBuffer() {
+      return this.bb;
+    }
+    /**
+     * Get the bytes representing the FlatBuffer. Only call this after you've
+     * called finish().
+     */
+    asUint8Array() {
+      return this.bb.bytes().subarray(this.bb.position(), this.bb.position() + this.offset());
+    }
+    /**
+     * Prepare to write an element of `size` after `additional_bytes` have been
+     * written, e.g. if you write a string, you need to align such the int length
+     * field is aligned to 4 bytes, and the string data follows it directly. If all
+     * you need to do is alignment, `additional_bytes` will be 0.
+     *
+     * @param size This is the of the new element to write
+     * @param additional_bytes The padding size
+     */
+    prep(size, additional_bytes) {
+      if (size > this.minalign) {
+        this.minalign = size;
+      }
+      const align_size = ~(this.bb.capacity() - this.space + additional_bytes) + 1 & size - 1;
+      while (this.space < align_size + size + additional_bytes) {
+        const old_buf_size = this.bb.capacity();
+        this.bb = _Builder.growByteBuffer(this.bb);
+        this.space += this.bb.capacity() - old_buf_size;
+      }
+      this.pad(align_size);
+    }
+    pad(byte_size) {
+      for (let i = 0; i < byte_size; i++) {
+        this.bb.writeInt8(--this.space, 0);
+      }
+    }
+    writeInt8(value) {
+      this.bb.writeInt8(this.space -= 1, value);
+    }
+    writeInt16(value) {
+      this.bb.writeInt16(this.space -= 2, value);
+    }
+    writeInt32(value) {
+      this.bb.writeInt32(this.space -= 4, value);
+    }
+    writeInt64(value) {
+      this.bb.writeInt64(this.space -= 8, value);
+    }
+    writeFloat32(value) {
+      this.bb.writeFloat32(this.space -= 4, value);
+    }
+    writeFloat64(value) {
+      this.bb.writeFloat64(this.space -= 8, value);
+    }
+    /**
+     * Add an `int8` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `int8` to add the buffer.
+     */
+    addInt8(value) {
+      this.prep(1, 0);
+      this.writeInt8(value);
+    }
+    /**
+     * Add an `int16` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `int16` to add the buffer.
+     */
+    addInt16(value) {
+      this.prep(2, 0);
+      this.writeInt16(value);
+    }
+    /**
+     * Add an `int32` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `int32` to add the buffer.
+     */
+    addInt32(value) {
+      this.prep(4, 0);
+      this.writeInt32(value);
+    }
+    /**
+     * Add an `int64` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `int64` to add the buffer.
+     */
+    addInt64(value) {
+      this.prep(8, 0);
+      this.writeInt64(value);
+    }
+    /**
+     * Add a `float32` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `float32` to add the buffer.
+     */
+    addFloat32(value) {
+      this.prep(4, 0);
+      this.writeFloat32(value);
+    }
+    /**
+     * Add a `float64` to the buffer, properly aligned, and grows the buffer (if necessary).
+     * @param value The `float64` to add the buffer.
+     */
+    addFloat64(value) {
+      this.prep(8, 0);
+      this.writeFloat64(value);
+    }
+    addFieldInt8(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addInt8(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldInt16(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addInt16(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldInt32(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addInt32(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldInt64(voffset, value, defaultValue) {
+      if (this.force_defaults || value !== defaultValue) {
+        this.addInt64(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldFloat32(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addFloat32(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldFloat64(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addFloat64(value);
+        this.slot(voffset);
+      }
+    }
+    addFieldOffset(voffset, value, defaultValue) {
+      if (this.force_defaults || value != defaultValue) {
+        this.addOffset(value);
+        this.slot(voffset);
+      }
+    }
+    /**
+     * Structs are stored inline, so nothing additional is being added. `d` is always 0.
+     */
+    addFieldStruct(voffset, value, defaultValue) {
+      if (value != defaultValue) {
+        this.nested(value);
+        this.slot(voffset);
+      }
+    }
+    /**
+     * Structures are always stored inline, they need to be created right
+     * where they're used.  You'll get this assertion failure if you
+     * created it elsewhere.
+     */
+    nested(obj) {
+      if (obj != this.offset()) {
+        throw new TypeError("FlatBuffers: struct must be serialized inline.");
+      }
+    }
+    /**
+     * Should not be creating any other object, string or vector
+     * while an object is being constructed
+     */
+    notNested() {
+      if (this.isNested) {
+        throw new TypeError("FlatBuffers: object serialization must not be nested.");
+      }
+    }
+    /**
+     * Set the current vtable at `voffset` to the current location in the buffer.
+     */
+    slot(voffset) {
+      if (this.vtable !== null)
+        this.vtable[voffset] = this.offset();
+    }
+    /**
+     * @returns Offset relative to the end of the buffer.
+     */
+    offset() {
+      return this.bb.capacity() - this.space;
+    }
+    /**
+     * Doubles the size of the backing ByteBuffer and copies the old data towards
+     * the end of the new buffer (since we build the buffer backwards).
+     *
+     * @param bb The current buffer with the existing data
+     * @returns A new byte buffer with the old data copied
+     * to it. The data is located at the end of the buffer.
+     *
+     * uint8Array.set() formally takes {Array<number>|ArrayBufferView}, so to pass
+     * it a uint8Array we need to suppress the type check:
+     * @suppress {checkTypes}
+     */
+    static growByteBuffer(bb) {
+      const old_buf_size = bb.capacity();
+      if (old_buf_size & 3221225472) {
+        throw new Error("FlatBuffers: cannot grow buffer beyond 2 gigabytes.");
+      }
+      const new_buf_size = old_buf_size << 1;
+      const nbb = ByteBuffer.allocate(new_buf_size);
+      nbb.setPosition(new_buf_size - old_buf_size);
+      nbb.bytes().set(bb.bytes(), new_buf_size - old_buf_size);
+      return nbb;
+    }
+    /**
+     * Adds on offset, relative to where it will be written.
+     *
+     * @param offset The offset to add.
+     */
+    addOffset(offset) {
+      this.prep(SIZEOF_INT, 0);
+      this.writeInt32(this.offset() - offset + SIZEOF_INT);
+    }
+    /**
+     * Start encoding a new object in the buffer.  Users will not usually need to
+     * call this directly. The FlatBuffers compiler will generate helper methods
+     * that call this method internally.
+     */
+    startObject(numfields) {
+      this.notNested();
+      if (this.vtable == null) {
+        this.vtable = [];
+      }
+      this.vtable_in_use = numfields;
+      for (let i = 0; i < numfields; i++) {
+        this.vtable[i] = 0;
+      }
+      this.isNested = true;
+      this.object_start = this.offset();
+    }
+    /**
+     * Finish off writing the object that is under construction.
+     *
+     * @returns The offset to the object inside `dataBuffer`
+     */
+    endObject() {
+      if (this.vtable == null || !this.isNested) {
+        throw new Error("FlatBuffers: endObject called without startObject");
+      }
+      this.addInt32(0);
+      const vtableloc = this.offset();
+      let i = this.vtable_in_use - 1;
+      for (; i >= 0 && this.vtable[i] == 0; i--) {
+      }
+      const trimmed_size = i + 1;
+      for (; i >= 0; i--) {
+        this.addInt16(this.vtable[i] != 0 ? vtableloc - this.vtable[i] : 0);
+      }
+      const standard_fields = 2;
+      this.addInt16(vtableloc - this.object_start);
+      const len = (trimmed_size + standard_fields) * SIZEOF_SHORT;
+      this.addInt16(len);
+      let existing_vtable = 0;
+      const vt1 = this.space;
+      outer_loop: for (i = 0; i < this.vtables.length; i++) {
+        const vt2 = this.bb.capacity() - this.vtables[i];
+        if (len == this.bb.readInt16(vt2)) {
+          for (let j = SIZEOF_SHORT; j < len; j += SIZEOF_SHORT) {
+            if (this.bb.readInt16(vt1 + j) != this.bb.readInt16(vt2 + j)) {
+              continue outer_loop;
+            }
+          }
+          existing_vtable = this.vtables[i];
+          break;
+        }
+      }
+      if (existing_vtable) {
+        this.space = this.bb.capacity() - vtableloc;
+        this.bb.writeInt32(this.space, existing_vtable - vtableloc);
+      } else {
+        this.vtables.push(this.offset());
+        this.bb.writeInt32(this.bb.capacity() - vtableloc, this.offset() - vtableloc);
+      }
+      this.isNested = false;
+      return vtableloc;
+    }
+    /**
+     * Finalize a buffer, poiting to the given `root_table`.
+     */
+    finish(root_table, opt_file_identifier, opt_size_prefix) {
+      const size_prefix = opt_size_prefix ? SIZE_PREFIX_LENGTH : 0;
+      if (opt_file_identifier) {
+        const file_identifier = opt_file_identifier;
+        this.prep(this.minalign, SIZEOF_INT + FILE_IDENTIFIER_LENGTH + size_prefix);
+        if (file_identifier.length != FILE_IDENTIFIER_LENGTH) {
+          throw new TypeError("FlatBuffers: file identifier must be length " + FILE_IDENTIFIER_LENGTH);
+        }
+        for (let i = FILE_IDENTIFIER_LENGTH - 1; i >= 0; i--) {
+          this.writeInt8(file_identifier.charCodeAt(i));
+        }
+      }
+      this.prep(this.minalign, SIZEOF_INT + size_prefix);
+      this.addOffset(root_table);
+      if (size_prefix) {
+        this.addInt32(this.bb.capacity() - this.space);
+      }
+      this.bb.setPosition(this.space);
+    }
+    /**
+     * Finalize a size prefixed buffer, pointing to the given `root_table`.
+     */
+    finishSizePrefixed(root_table, opt_file_identifier) {
+      this.finish(root_table, opt_file_identifier, true);
+    }
+    /**
+     * This checks a required field has been set in a given table that has
+     * just been constructed.
+     */
+    requiredField(table, field) {
+      const table_start = this.bb.capacity() - table;
+      const vtable_start = table_start - this.bb.readInt32(table_start);
+      const ok = field < this.bb.readInt16(vtable_start) && this.bb.readInt16(vtable_start + field) != 0;
+      if (!ok) {
+        throw new TypeError("FlatBuffers: field " + field + " must be set");
+      }
+    }
+    /**
+     * Start a new array/vector of objects.  Users usually will not call
+     * this directly. The FlatBuffers compiler will create a start/end
+     * method for vector types in generated code.
+     *
+     * @param elem_size The size of each element in the array
+     * @param num_elems The number of elements in the array
+     * @param alignment The alignment of the array
+     */
+    startVector(elem_size, num_elems, alignment) {
+      this.notNested();
+      this.vector_num_elems = num_elems;
+      this.prep(SIZEOF_INT, elem_size * num_elems);
+      this.prep(alignment, elem_size * num_elems);
+    }
+    /**
+     * Finish off the creation of an array and all its elements. The array must be
+     * created with `startVector`.
+     *
+     * @returns The offset at which the newly created array
+     * starts.
+     */
+    endVector() {
+      this.writeInt32(this.vector_num_elems);
+      return this.offset();
+    }
+    /**
+     * Encode the string `s` in the buffer using UTF-8. If the string passed has
+     * already been seen, we return the offset of the already written string
+     *
+     * @param s The string to encode
+     * @return The offset in the buffer where the encoded string starts
+     */
+    createSharedString(s2) {
+      if (!s2) {
+        return 0;
+      }
+      if (!this.string_maps) {
+        this.string_maps = /* @__PURE__ */ new Map();
+      }
+      if (this.string_maps.has(s2)) {
+        return this.string_maps.get(s2);
+      }
+      const offset = this.createString(s2);
+      this.string_maps.set(s2, offset);
+      return offset;
+    }
+    /**
+     * Encode the string `s` in the buffer using UTF-8. If a Uint8Array is passed
+     * instead of a string, it is assumed to contain valid UTF-8 encoded data.
+     *
+     * @param s The string to encode
+     * @return The offset in the buffer where the encoded string starts
+     */
+    createString(s2) {
+      if (s2 === null || s2 === void 0) {
+        return 0;
+      }
+      let utf8;
+      if (s2 instanceof Uint8Array) {
+        utf8 = s2;
+      } else {
+        utf8 = this.text_encoder.encode(s2);
+      }
+      this.addInt8(0);
+      this.startVector(1, utf8.length, 1);
+      this.bb.setPosition(this.space -= utf8.length);
+      this.bb.bytes().set(utf8, this.space);
+      return this.endVector();
+    }
+    /**
+     * Create a byte vector.
+     *
+     * @param v The bytes to add
+     * @returns The offset in the buffer where the byte vector starts
+     */
+    createByteVector(v) {
+      if (v === null || v === void 0) {
+        return 0;
+      }
+      this.startVector(1, v.length, 1);
+      this.bb.setPosition(this.space -= v.length);
+      this.bb.bytes().set(v, this.space);
+      return this.endVector();
+    }
+    /**
+     * A helper function to pack an object
+     *
+     * @returns offset of obj
+     */
+    createObjectOffset(obj) {
+      if (obj === null) {
+        return 0;
+      }
+      if (typeof obj === "string") {
+        return this.createString(obj);
+      } else {
+        return obj.pack(this);
+      }
+    }
+    /**
+     * A helper function to pack a list of object
+     *
+     * @returns list of offsets of each non null object
+     */
+    createObjectOffsetList(list2) {
+      const ret = [];
+      for (let i = 0; i < list2.length; ++i) {
+        const val = list2[i];
+        if (val !== null) {
+          ret.push(this.createObjectOffset(val));
+        } else {
+          throw new TypeError("FlatBuffers: Argument for createObjectOffsetList cannot contain null.");
+        }
+      }
+      return ret;
+    }
+    createStructOffsetList(list2, startFunc) {
+      startFunc(this, list2.length);
+      this.createObjectOffsetList(list2.slice().reverse());
+      return this.endVector();
+    }
+  };
+  var o;
+  var ColumnType = ((o = {})[o.Byte = 0] = "Byte", o[o.UByte = 1] = "UByte", o[o.Bool = 2] = "Bool", o[o.Short = 3] = "Short", o[o.UShort = 4] = "UShort", o[o.Int = 5] = "Int", o[o.UInt = 6] = "UInt", o[o.Long = 7] = "Long", o[o.ULong = 8] = "ULong", o[o.Float = 9] = "Float", o[o.Double = 10] = "Double", o[o.String = 11] = "String", o[o.Json = 12] = "Json", o[o.DateTime = 13] = "DateTime", o[o.Binary = 14] = "Binary", o);
+  var Column = class _Column {
+    bb = null;
+    bb_pos = 0;
+    __init(t, s2) {
+      return this.bb_pos = t, this.bb = s2, this;
+    }
+    static getRootAsColumn(t, s2) {
+      return (s2 || new _Column()).__init(t.readInt32(t.position()) + t.position(), t);
+    }
+    static getSizePrefixedRootAsColumn(s2, i) {
+      return s2.setPosition(s2.position() + SIZE_PREFIX_LENGTH), (i || new _Column()).__init(s2.readInt32(s2.position()) + s2.position(), s2);
+    }
+    name(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 4);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    type() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? this.bb.readUint8(this.bb_pos + t) : ColumnType.Byte;
+    }
+    title(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 8);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    description(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 10);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    width() {
+      let t = this.bb.__offset(this.bb_pos, 12);
+      return t ? this.bb.readInt32(this.bb_pos + t) : -1;
+    }
+    precision() {
+      let t = this.bb.__offset(this.bb_pos, 14);
+      return t ? this.bb.readInt32(this.bb_pos + t) : -1;
+    }
+    scale() {
+      let t = this.bb.__offset(this.bb_pos, 16);
+      return t ? this.bb.readInt32(this.bb_pos + t) : -1;
+    }
+    nullable() {
+      let t = this.bb.__offset(this.bb_pos, 18);
+      return !t || !!this.bb.readInt8(this.bb_pos + t);
+    }
+    unique() {
+      let t = this.bb.__offset(this.bb_pos, 20);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    primaryKey() {
+      let t = this.bb.__offset(this.bb_pos, 22);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    metadata(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 24);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    static startColumn(t) {
+      t.startObject(11);
+    }
+    static addName(t, s2) {
+      t.addFieldOffset(0, s2, 0);
+    }
+    static addType(t, i) {
+      t.addFieldInt8(1, i, ColumnType.Byte);
+    }
+    static addTitle(t, s2) {
+      t.addFieldOffset(2, s2, 0);
+    }
+    static addDescription(t, s2) {
+      t.addFieldOffset(3, s2, 0);
+    }
+    static addWidth(t, s2) {
+      t.addFieldInt32(4, s2, -1);
+    }
+    static addPrecision(t, s2) {
+      t.addFieldInt32(5, s2, -1);
+    }
+    static addScale(t, s2) {
+      t.addFieldInt32(6, s2, -1);
+    }
+    static addNullable(t, s2) {
+      t.addFieldInt8(7, +s2, 1);
+    }
+    static addUnique(t, s2) {
+      t.addFieldInt8(8, +s2, 0);
+    }
+    static addPrimaryKey(t, s2) {
+      t.addFieldInt8(9, +s2, 0);
+    }
+    static addMetadata(t, s2) {
+      t.addFieldOffset(10, s2, 0);
+    }
+    static endColumn(t) {
+      let s2 = t.endObject();
+      return t.requiredField(s2, 4), s2;
+    }
+    static createColumn(t, s2, i, e2, b2, d3, n2, a2, o2, l2, r2, _) {
+      return _Column.startColumn(t), _Column.addName(t, s2), _Column.addType(t, i), _Column.addTitle(t, e2), _Column.addDescription(t, b2), _Column.addWidth(t, d3), _Column.addPrecision(t, n2), _Column.addScale(t, a2), _Column.addNullable(t, o2), _Column.addUnique(t, l2), _Column.addPrimaryKey(t, r2), _Column.addMetadata(t, _), _Column.endColumn(t);
+    }
+  };
+  var r;
+  var GeometryType = ((r = {})[r.Unknown = 0] = "Unknown", r[r.Point = 1] = "Point", r[r.LineString = 2] = "LineString", r[r.Polygon = 3] = "Polygon", r[r.MultiPoint = 4] = "MultiPoint", r[r.MultiLineString = 5] = "MultiLineString", r[r.MultiPolygon = 6] = "MultiPolygon", r[r.GeometryCollection = 7] = "GeometryCollection", r[r.CircularString = 8] = "CircularString", r[r.CompoundCurve = 9] = "CompoundCurve", r[r.CurvePolygon = 10] = "CurvePolygon", r[r.MultiCurve = 11] = "MultiCurve", r[r.MultiSurface = 12] = "MultiSurface", r[r.Curve = 13] = "Curve", r[r.Surface = 14] = "Surface", r[r.PolyhedralSurface = 15] = "PolyhedralSurface", r[r.TIN = 16] = "TIN", r[r.Triangle = 17] = "Triangle", r);
+  var Geometry = class _Geometry {
+    bb = null;
+    bb_pos = 0;
+    __init(t, e2) {
+      return this.bb_pos = t, this.bb = e2, this;
+    }
+    static getRootAsGeometry(t, e2) {
+      return (e2 || new _Geometry()).__init(t.readInt32(t.position()) + t.position(), t);
+    }
+    static getSizePrefixedRootAsGeometry(e2, s2) {
+      return e2.setPosition(e2.position() + SIZE_PREFIX_LENGTH), (s2 || new _Geometry()).__init(e2.readInt32(e2.position()) + e2.position(), e2);
+    }
+    ends(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 4);
+      return e2 ? this.bb.readUint32(this.bb.__vector(this.bb_pos + e2) + 4 * t) : 0;
+    }
+    endsLength() {
+      let t = this.bb.__offset(this.bb_pos, 4);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    endsArray() {
+      let t = this.bb.__offset(this.bb_pos, 4);
+      return t ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    xy(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 6);
+      return e2 ? this.bb.readFloat64(this.bb.__vector(this.bb_pos + e2) + 8 * t) : 0;
+    }
+    xyLength() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    xyArray() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? new Float64Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    z(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 8);
+      return e2 ? this.bb.readFloat64(this.bb.__vector(this.bb_pos + e2) + 8 * t) : 0;
+    }
+    zLength() {
+      let t = this.bb.__offset(this.bb_pos, 8);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    zArray() {
+      let t = this.bb.__offset(this.bb_pos, 8);
+      return t ? new Float64Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    m(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 10);
+      return e2 ? this.bb.readFloat64(this.bb.__vector(this.bb_pos + e2) + 8 * t) : 0;
+    }
+    mLength() {
+      let t = this.bb.__offset(this.bb_pos, 10);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    mArray() {
+      let t = this.bb.__offset(this.bb_pos, 10);
+      return t ? new Float64Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    t(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 12);
+      return e2 ? this.bb.readFloat64(this.bb.__vector(this.bb_pos + e2) + 8 * t) : 0;
+    }
+    tLength() {
+      let t = this.bb.__offset(this.bb_pos, 12);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    tArray() {
+      let t = this.bb.__offset(this.bb_pos, 12);
+      return t ? new Float64Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    tm(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 14);
+      return e2 ? this.bb.readUint64(this.bb.__vector(this.bb_pos + e2) + 8 * t) : BigInt(0);
+    }
+    tmLength() {
+      let t = this.bb.__offset(this.bb_pos, 14);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    type() {
+      let t = this.bb.__offset(this.bb_pos, 16);
+      return t ? this.bb.readUint8(this.bb_pos + t) : GeometryType.Unknown;
+    }
+    parts(t, e2) {
+      let s2 = this.bb.__offset(this.bb_pos, 18);
+      return s2 ? (e2 || new _Geometry()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + s2) + 4 * t), this.bb) : null;
+    }
+    partsLength() {
+      let t = this.bb.__offset(this.bb_pos, 18);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    static startGeometry(t) {
+      t.startObject(8);
+    }
+    static addEnds(t, e2) {
+      t.addFieldOffset(0, e2, 0);
+    }
+    static createEndsVector(t, e2) {
+      t.startVector(4, e2.length, 4);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addInt32(e2[s2]);
+      return t.endVector();
+    }
+    static startEndsVector(t, e2) {
+      t.startVector(4, e2, 4);
+    }
+    static addXy(t, e2) {
+      t.addFieldOffset(1, e2, 0);
+    }
+    static createXyVector(t, e2) {
+      t.startVector(8, e2.length, 8);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addFloat64(e2[s2]);
+      return t.endVector();
+    }
+    static startXyVector(t, e2) {
+      t.startVector(8, e2, 8);
+    }
+    static addZ(t, e2) {
+      t.addFieldOffset(2, e2, 0);
+    }
+    static createZVector(t, e2) {
+      t.startVector(8, e2.length, 8);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addFloat64(e2[s2]);
+      return t.endVector();
+    }
+    static startZVector(t, e2) {
+      t.startVector(8, e2, 8);
+    }
+    static addM(t, e2) {
+      t.addFieldOffset(3, e2, 0);
+    }
+    static createMVector(t, e2) {
+      t.startVector(8, e2.length, 8);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addFloat64(e2[s2]);
+      return t.endVector();
+    }
+    static startMVector(t, e2) {
+      t.startVector(8, e2, 8);
+    }
+    static addT(t, e2) {
+      t.addFieldOffset(4, e2, 0);
+    }
+    static createTVector(t, e2) {
+      t.startVector(8, e2.length, 8);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addFloat64(e2[s2]);
+      return t.endVector();
+    }
+    static startTVector(t, e2) {
+      t.startVector(8, e2, 8);
+    }
+    static addTm(t, e2) {
+      t.addFieldOffset(5, e2, 0);
+    }
+    static createTmVector(t, e2) {
+      t.startVector(8, e2.length, 8);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addInt64(e2[s2]);
+      return t.endVector();
+    }
+    static startTmVector(t, e2) {
+      t.startVector(8, e2, 8);
+    }
+    static addType(t, s2) {
+      t.addFieldInt8(6, s2, GeometryType.Unknown);
+    }
+    static addParts(t, e2) {
+      t.addFieldOffset(7, e2, 0);
+    }
+    static createPartsVector(t, e2) {
+      t.startVector(4, e2.length, 4);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addOffset(e2[s2]);
+      return t.endVector();
+    }
+    static startPartsVector(t, e2) {
+      t.startVector(4, e2, 4);
+    }
+    static endGeometry(t) {
+      return t.endObject();
+    }
+    static createGeometry(t, e2, s2, b2, r2, o2, i, _, h2) {
+      return _Geometry.startGeometry(t), _Geometry.addEnds(t, e2), _Geometry.addXy(t, s2), _Geometry.addZ(t, b2), _Geometry.addM(t, r2), _Geometry.addT(t, o2), _Geometry.addTm(t, i), _Geometry.addType(t, _), _Geometry.addParts(t, h2), _Geometry.endGeometry(t);
+    }
+  };
+  var Feature = class _Feature {
+    bb = null;
+    bb_pos = 0;
+    __init(t, e2) {
+      return this.bb_pos = t, this.bb = e2, this;
+    }
+    static getRootAsFeature(t, e2) {
+      return (e2 || new _Feature()).__init(t.readInt32(t.position()) + t.position(), t);
+    }
+    static getSizePrefixedRootAsFeature(e2, s2) {
+      return e2.setPosition(e2.position() + SIZE_PREFIX_LENGTH), (s2 || new _Feature()).__init(e2.readInt32(e2.position()) + e2.position(), e2);
+    }
+    geometry(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 4);
+      return e2 ? (t || new Geometry()).__init(this.bb.__indirect(this.bb_pos + e2), this.bb) : null;
+    }
+    properties(t) {
+      let e2 = this.bb.__offset(this.bb_pos, 6);
+      return e2 ? this.bb.readUint8(this.bb.__vector(this.bb_pos + e2) + t) : 0;
+    }
+    propertiesLength() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    propertiesArray() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    columns(t, s2) {
+      let r2 = this.bb.__offset(this.bb_pos, 8);
+      return r2 ? (s2 || new Column()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + r2) + 4 * t), this.bb) : null;
+    }
+    columnsLength() {
+      let t = this.bb.__offset(this.bb_pos, 8);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    static startFeature(t) {
+      t.startObject(3);
+    }
+    static addGeometry(t, e2) {
+      t.addFieldOffset(0, e2, 0);
+    }
+    static addProperties(t, e2) {
+      t.addFieldOffset(1, e2, 0);
+    }
+    static createPropertiesVector(t, e2) {
+      t.startVector(1, e2.length, 1);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addInt8(e2[s2]);
+      return t.endVector();
+    }
+    static startPropertiesVector(t, e2) {
+      t.startVector(1, e2, 1);
+    }
+    static addColumns(t, e2) {
+      t.addFieldOffset(2, e2, 0);
+    }
+    static createColumnsVector(t, e2) {
+      t.startVector(4, e2.length, 4);
+      for (let s2 = e2.length - 1; s2 >= 0; s2--) t.addOffset(e2[s2]);
+      return t.endVector();
+    }
+    static startColumnsVector(t, e2) {
+      t.startVector(4, e2, 4);
+    }
+    static endFeature(t) {
+      return t.endObject();
+    }
+    static finishFeatureBuffer(t, e2) {
+      t.finish(e2);
+    }
+    static finishSizePrefixedFeatureBuffer(t, e2) {
+      t.finish(e2, void 0, true);
+    }
+    static createFeature(t, e2, s2, r2) {
+      return _Feature.startFeature(t), _Feature.addGeometry(t, e2), _Feature.addProperties(t, s2), _Feature.addColumns(t, r2), _Feature.endFeature(t);
+    }
+  };
+  function buildGeometry(t, r2) {
+    let o2, n2, a2, { xy: l2, z: y3, m: d3, ends: i, parts: u3, type: f3 } = r2;
+    if (u3) {
+      let r3 = u3.map((e2) => buildGeometry(t, e2)), o3 = Geometry.createPartsVector(t, r3);
+      return Geometry.startGeometry(t), Geometry.addParts(t, o3), Geometry.addType(t, f3), Geometry.endGeometry(t);
+    }
+    let g2 = Geometry.createXyVector(t, l2);
+    return y3 && (o2 = Geometry.createZVector(t, y3)), d3 && (n2 = Geometry.createMVector(t, d3)), i && (a2 = Geometry.createEndsVector(t, i)), Geometry.startGeometry(t), a2 && Geometry.addEnds(t, a2), Geometry.addXy(t, g2), o2 && Geometry.addZ(t, o2), n2 && Geometry.addM(t, n2), Geometry.addType(t, f3), Geometry.endGeometry(t);
+  }
+  function flat(e2, t, r2) {
+    if (0 !== e2.length) if (Array.isArray(e2[0])) for (let o2 of e2) flat(o2, t, r2);
+    else 2 === e2.length ? t.push(...e2) : (t.push(e2[0], e2[1]), r2.push(e2[2]));
+  }
+  function toGeometryType(e2) {
+    return e2 ? GeometryType[e2] : GeometryType.Unknown;
+  }
+  var n = new TextEncoder();
+  new TextDecoder();
+  function buildFeature(s2, o2, i) {
+    let l2 = i.columns, c3 = new Builder(), g2 = 0, b2 = 1024, f3 = new Uint8Array(1024), u3 = new DataView(f3.buffer), k = (e2) => {
+      if (g2 + e2 < b2) return;
+      let t = new Uint8Array(b2 = Math.max(b2 + e2, 2 * b2));
+      t.set(f3), u3 = new DataView((f3 = t).buffer);
+    };
+    if (l2) for (let e2 = 0; e2 < l2.length; e2++) {
+      let r2 = l2[e2], a2 = o2[r2.name];
+      if (null !== a2) switch (k(2), u3.setUint16(g2, e2, true), g2 += 2, r2.type) {
+        case ColumnType.Bool:
+          k(1), u3.setUint8(g2, a2), g2 += 1;
+          break;
+        case ColumnType.Short:
+          k(2), u3.setInt16(g2, a2, true), g2 += 2;
+          break;
+        case ColumnType.UShort:
+          k(2), u3.setUint16(g2, a2, true), g2 += 2;
+          break;
+        case ColumnType.Int:
+          k(4), u3.setInt32(g2, a2, true), g2 += 4;
+          break;
+        case ColumnType.UInt:
+          k(4), u3.setUint32(g2, a2, true), g2 += 4;
+          break;
+        case ColumnType.Long:
+          k(8), u3.setBigInt64(g2, BigInt(a2), true), g2 += 8;
+          break;
+        case ColumnType.Float:
+          k(4), u3.setFloat32(g2, a2, true), g2 += 4;
+          break;
+        case ColumnType.Double:
+          k(8), u3.setFloat64(g2, a2, true), g2 += 8;
+          break;
+        case ColumnType.DateTime:
+        case ColumnType.String: {
+          let e3 = n.encode(a2);
+          k(4), u3.setUint32(g2, e3.length, true), g2 += 4, k(e3.length), f3.set(e3, g2), g2 += e3.length;
+          break;
+        }
+        case ColumnType.Json: {
+          let e3 = n.encode(JSON.stringify(a2));
+          k(4), u3.setUint32(g2, e3.length, true), g2 += 4, k(e3.length), f3.set(e3, g2), g2 += e3.length;
+          break;
+        }
+        case ColumnType.Binary:
+          k(4), u3.setUint32(g2, a2.length, true), g2 += 4, k(a2.length), f3.set(a2, g2), g2 += a2.length;
+          break;
+        default:
+          throw Error(`Unknown type ${r2.type}`);
+      }
+    }
+    let U2 = 0;
+    g2 > 0 && (U2 = Feature.createPropertiesVector(c3, f3.slice(0, g2)));
+    let p = buildGeometry(c3, s2);
+    Feature.startFeature(c3), Feature.addGeometry(c3, p), U2 && Feature.addProperties(c3, U2);
+    let y3 = Feature.endFeature(c3);
+    return c3.finishSizePrefixed(y3), c3.asUint8Array();
+  }
+  var Crs = class _Crs {
+    bb = null;
+    bb_pos = 0;
+    __init(t, s2) {
+      return this.bb_pos = t, this.bb = s2, this;
+    }
+    static getRootAsCrs(t, s2) {
+      return (s2 || new _Crs()).__init(t.readInt32(t.position()) + t.position(), t);
+    }
+    static getSizePrefixedRootAsCrs(s2, i) {
+      return s2.setPosition(s2.position() + SIZE_PREFIX_LENGTH), (i || new _Crs()).__init(s2.readInt32(s2.position()) + s2.position(), s2);
+    }
+    org(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 4);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    code() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? this.bb.readInt32(this.bb_pos + t) : 0;
+    }
+    name(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 8);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    description(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 10);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    wkt(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 12);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    codeString(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 14);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    static startCrs(t) {
+      t.startObject(6);
+    }
+    static addOrg(t, s2) {
+      t.addFieldOffset(0, s2, 0);
+    }
+    static addCode(t, s2) {
+      t.addFieldInt32(1, s2, 0);
+    }
+    static addName(t, s2) {
+      t.addFieldOffset(2, s2, 0);
+    }
+    static addDescription(t, s2) {
+      t.addFieldOffset(3, s2, 0);
+    }
+    static addWkt(t, s2) {
+      t.addFieldOffset(4, s2, 0);
+    }
+    static addCodeString(t, s2) {
+      t.addFieldOffset(5, s2, 0);
+    }
+    static endCrs(t) {
+      return t.endObject();
+    }
+    static createCrs(t, s2, i, e2, r2, b2, d3) {
+      return _Crs.startCrs(t), _Crs.addOrg(t, s2), _Crs.addCode(t, i), _Crs.addName(t, e2), _Crs.addDescription(t, r2), _Crs.addWkt(t, b2), _Crs.addCodeString(t, d3), _Crs.endCrs(t);
+    }
+  };
+  var Header = class _Header {
+    bb = null;
+    bb_pos = 0;
+    __init(t, s2) {
+      return this.bb_pos = t, this.bb = s2, this;
+    }
+    static getRootAsHeader(t, s2) {
+      return (s2 || new _Header()).__init(t.readInt32(t.position()) + t.position(), t);
+    }
+    static getSizePrefixedRootAsHeader(s2, e2) {
+      return s2.setPosition(s2.position() + SIZE_PREFIX_LENGTH), (e2 || new _Header()).__init(s2.readInt32(s2.position()) + s2.position(), s2);
+    }
+    name(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 4);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    envelope(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 6);
+      return s2 ? this.bb.readFloat64(this.bb.__vector(this.bb_pos + s2) + 8 * t) : 0;
+    }
+    envelopeLength() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    envelopeArray() {
+      let t = this.bb.__offset(this.bb_pos, 6);
+      return t ? new Float64Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + t), this.bb.__vector_len(this.bb_pos + t)) : null;
+    }
+    geometryType() {
+      let t = this.bb.__offset(this.bb_pos, 8);
+      return t ? this.bb.readUint8(this.bb_pos + t) : GeometryType.Unknown;
+    }
+    hasZ() {
+      let t = this.bb.__offset(this.bb_pos, 10);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    hasM() {
+      let t = this.bb.__offset(this.bb_pos, 12);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    hasT() {
+      let t = this.bb.__offset(this.bb_pos, 14);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    hasTm() {
+      let t = this.bb.__offset(this.bb_pos, 16);
+      return !!t && !!this.bb.readInt8(this.bb_pos + t);
+    }
+    columns(t, e2) {
+      let i = this.bb.__offset(this.bb_pos, 18);
+      return i ? (e2 || new Column()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + i) + 4 * t), this.bb) : null;
+    }
+    columnsLength() {
+      let t = this.bb.__offset(this.bb_pos, 18);
+      return t ? this.bb.__vector_len(this.bb_pos + t) : 0;
+    }
+    featuresCount() {
+      let t = this.bb.__offset(this.bb_pos, 20);
+      return t ? this.bb.readUint64(this.bb_pos + t) : BigInt("0");
+    }
+    indexNodeSize() {
+      let t = this.bb.__offset(this.bb_pos, 22);
+      return t ? this.bb.readUint16(this.bb_pos + t) : 16;
+    }
+    crs(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 24);
+      return s2 ? (t || new Crs()).__init(this.bb.__indirect(this.bb_pos + s2), this.bb) : null;
+    }
+    title(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 26);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    description(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 28);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    metadata(t) {
+      let s2 = this.bb.__offset(this.bb_pos, 30);
+      return s2 ? this.bb.__string(this.bb_pos + s2, t) : null;
+    }
+    static startHeader(t) {
+      t.startObject(14);
+    }
+    static addName(t, s2) {
+      t.addFieldOffset(0, s2, 0);
+    }
+    static addEnvelope(t, s2) {
+      t.addFieldOffset(1, s2, 0);
+    }
+    static createEnvelopeVector(t, s2) {
+      t.startVector(8, s2.length, 8);
+      for (let e2 = s2.length - 1; e2 >= 0; e2--) t.addFloat64(s2[e2]);
+      return t.endVector();
+    }
+    static startEnvelopeVector(t, s2) {
+      t.startVector(8, s2, 8);
+    }
+    static addGeometryType(t, s2) {
+      t.addFieldInt8(2, s2, GeometryType.Unknown);
+    }
+    static addHasZ(t, s2) {
+      t.addFieldInt8(3, +s2, 0);
+    }
+    static addHasM(t, s2) {
+      t.addFieldInt8(4, +s2, 0);
+    }
+    static addHasT(t, s2) {
+      t.addFieldInt8(5, +s2, 0);
+    }
+    static addHasTm(t, s2) {
+      t.addFieldInt8(6, +s2, 0);
+    }
+    static addColumns(t, s2) {
+      t.addFieldOffset(7, s2, 0);
+    }
+    static createColumnsVector(t, s2) {
+      t.startVector(4, s2.length, 4);
+      for (let e2 = s2.length - 1; e2 >= 0; e2--) t.addOffset(s2[e2]);
+      return t.endVector();
+    }
+    static startColumnsVector(t, s2) {
+      t.startVector(4, s2, 4);
+    }
+    static addFeaturesCount(t, s2) {
+      t.addFieldInt64(8, s2, BigInt("0"));
+    }
+    static addIndexNodeSize(t, s2) {
+      t.addFieldInt16(9, s2, 16);
+    }
+    static addCrs(t, s2) {
+      t.addFieldOffset(10, s2, 0);
+    }
+    static addTitle(t, s2) {
+      t.addFieldOffset(11, s2, 0);
+    }
+    static addDescription(t, s2) {
+      t.addFieldOffset(12, s2, 0);
+    }
+    static addMetadata(t, s2) {
+      t.addFieldOffset(13, s2, 0);
+    }
+    static endHeader(t) {
+      return t.endObject();
+    }
+    static finishHeaderBuffer(t, s2) {
+      t.finish(s2);
+    }
+    static finishSizePrefixedHeaderBuffer(t, s2) {
+      t.finish(s2, void 0, true);
+    }
+  };
+  var e = class _e {
+    static global = new _e();
+    _extraRequestThreshold = 262144;
+    extraRequestThreshold() {
+      return this._extraRequestThreshold;
+    }
+    setExtraRequestThreshold(e2) {
+      if (e2 < 0) throw Error("extraRequestThreshold cannot be negative");
+      this._extraRequestThreshold = e2;
+    }
+  };
+  var extendStatics = function(d3, b2) {
+    extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d4, b3) {
+      d4.__proto__ = b3;
+    } || function(d4, b3) {
+      for (var p in b3) if (b3.hasOwnProperty(p)) d4[p] = b3[p];
+    };
+    return extendStatics(d3, b2);
+  };
+  function __extends(d3, b2) {
+    extendStatics(d3, b2);
+    function __() {
+      this.constructor = d3;
+    }
+    d3.prototype = b2 === null ? Object.create(b2) : (__.prototype = b2.prototype, new __());
+  }
+  function __awaiter(thisArg, _arguments, P3, generator) {
+    function adopt(value) {
+      return value instanceof P3 ? value : new P3(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P3 || (P3 = Promise))(function(resolve, reject2) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e2) {
+          reject2(e2);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e2) {
+          reject2(e2);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, [])).next());
+    });
+  }
+  function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    }, trys: [], ops: [] }, f3, y3, t, g2;
+    return g2 = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g2[Symbol.iterator] = function() {
+      return this;
+    }), g2;
+    function verb(n2) {
+      return function(v) {
+        return step([n2, v]);
+      };
+    }
+    function step(op) {
+      if (f3) throw new TypeError("Generator is already executing.");
+      while (_) try {
+        if (f3 = 1, y3 && (t = op[0] & 2 ? y3["return"] : op[0] ? y3["throw"] || ((t = y3["return"]) && t.call(y3), 0) : y3.next) && !(t = t.call(y3, op[1])).done) return t;
+        if (y3 = 0, t) op = [op[0] & 2, t.value];
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+          case 4:
+            _.label++;
+            return { value: op[1], done: false };
+          case 5:
+            _.label++;
+            y3 = op[1];
+            op = [0];
+            continue;
+          case 7:
+            op = _.ops.pop();
+            _.trys.pop();
+            continue;
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+              _.ops.push(op);
+              break;
+            }
+            if (t[2]) _.ops.pop();
+            _.trys.pop();
+            continue;
+        }
+        op = body.call(thisArg, _);
+      } catch (e2) {
+        op = [6, e2];
+        y3 = 0;
+      } finally {
+        f3 = t = 0;
+      }
+      if (op[0] & 5) throw op[1];
+      return { value: op[0] ? op[1] : void 0, done: true };
+    }
+  }
+  function __values(o2) {
+    var s2 = typeof Symbol === "function" && Symbol.iterator, m3 = s2 && o2[s2], i = 0;
+    if (m3) return m3.call(o2);
+    if (o2 && typeof o2.length === "number") return {
+      next: function() {
+        if (o2 && i >= o2.length) o2 = void 0;
+        return { value: o2 && o2[i++], done: !o2 };
+      }
+    };
+    throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  }
+  function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+  }
+  function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g2 = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i;
+    function verb(n2) {
+      if (g2[n2]) i[n2] = function(v) {
+        return new Promise(function(a2, b2) {
+          q.push([n2, v, a2, b2]) > 1 || resume(n2, v);
+        });
+      };
+    }
+    function resume(n2, v) {
+      try {
+        step(g2[n2](v));
+      } catch (e2) {
+        settle(q[0][3], e2);
+      }
+    }
+    function step(r2) {
+      r2.value instanceof __await ? Promise.resolve(r2.value.v).then(fulfill, reject2) : settle(q[0][2], r2);
+    }
+    function fulfill(value) {
+      resume("next", value);
+    }
+    function reject2(value) {
+      resume("throw", value);
+    }
+    function settle(f3, v) {
+      if (f3(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+    }
+  }
+  var RepeaterOverflowError = (
+    /** @class */
+    function(_super) {
+      __extends(RepeaterOverflowError2, _super);
+      function RepeaterOverflowError2(message) {
+        var _this = _super.call(this, message) || this;
+        Object.defineProperty(_this, "name", {
+          value: "RepeaterOverflowError",
+          enumerable: false
+        });
+        if (typeof Object.setPrototypeOf === "function") {
+          Object.setPrototypeOf(_this, _this.constructor.prototype);
+        } else {
+          _this.__proto__ = _this.constructor.prototype;
+        }
+        if (typeof Error.captureStackTrace === "function") {
+          Error.captureStackTrace(_this, _this.constructor);
+        }
+        return _this;
+      }
+      return RepeaterOverflowError2;
+    }(Error)
+  );
+  (function() {
+    function FixedBuffer(capacity) {
+      if (capacity < 0) {
+        throw new RangeError("Capacity may not be less than 0");
+      }
+      this._c = capacity;
+      this._q = [];
+    }
+    Object.defineProperty(FixedBuffer.prototype, "empty", {
+      get: function() {
+        return this._q.length === 0;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(FixedBuffer.prototype, "full", {
+      get: function() {
+        return this._q.length >= this._c;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    FixedBuffer.prototype.add = function(value) {
+      if (this.full) {
+        throw new Error("Buffer full");
+      } else {
+        this._q.push(value);
+      }
+    };
+    FixedBuffer.prototype.remove = function() {
+      if (this.empty) {
+        throw new Error("Buffer empty");
+      }
+      return this._q.shift();
+    };
+    return FixedBuffer;
+  })();
+  (function() {
+    function SlidingBuffer(capacity) {
+      if (capacity < 1) {
+        throw new RangeError("Capacity may not be less than 1");
+      }
+      this._c = capacity;
+      this._q = [];
+    }
+    Object.defineProperty(SlidingBuffer.prototype, "empty", {
+      get: function() {
+        return this._q.length === 0;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(SlidingBuffer.prototype, "full", {
+      get: function() {
+        return false;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    SlidingBuffer.prototype.add = function(value) {
+      while (this._q.length >= this._c) {
+        this._q.shift();
+      }
+      this._q.push(value);
+    };
+    SlidingBuffer.prototype.remove = function() {
+      if (this.empty) {
+        throw new Error("Buffer empty");
+      }
+      return this._q.shift();
+    };
+    return SlidingBuffer;
+  })();
+  (function() {
+    function DroppingBuffer(capacity) {
+      if (capacity < 1) {
+        throw new RangeError("Capacity may not be less than 1");
+      }
+      this._c = capacity;
+      this._q = [];
+    }
+    Object.defineProperty(DroppingBuffer.prototype, "empty", {
+      get: function() {
+        return this._q.length === 0;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(DroppingBuffer.prototype, "full", {
+      get: function() {
+        return false;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    DroppingBuffer.prototype.add = function(value) {
+      if (this._q.length < this._c) {
+        this._q.push(value);
+      }
+    };
+    DroppingBuffer.prototype.remove = function() {
+      if (this.empty) {
+        throw new Error("Buffer empty");
+      }
+      return this._q.shift();
+    };
+    return DroppingBuffer;
+  })();
+  function swallow(value) {
+    if (value != null && typeof value.then === "function") {
+      value.then(NOOP, NOOP);
+    }
+  }
+  var Initial = 0;
+  var Started = 1;
+  var Stopped = 2;
+  var Done = 3;
+  var Rejected = 4;
+  var MAX_QUEUE_LENGTH = 1024;
+  var NOOP = function() {
+  };
+  function consumeExecution(r2) {
+    var err = r2.err;
+    var execution = Promise.resolve(r2.execution).then(function(value) {
+      if (err != null) {
+        throw err;
+      }
+      return value;
+    });
+    r2.err = void 0;
+    r2.execution = execution.then(function() {
+      return void 0;
+    }, function() {
+      return void 0;
+    });
+    return r2.pending === void 0 ? execution : r2.pending.then(function() {
+      return execution;
+    });
+  }
+  function createIteration(r2, value) {
+    var done = r2.state >= Done;
+    return Promise.resolve(value).then(function(value2) {
+      if (!done && r2.state >= Rejected) {
+        return consumeExecution(r2).then(function(value3) {
+          return {
+            value: value3,
+            done: true
+          };
+        });
+      }
+      return { value: value2, done };
+    });
+  }
+  function stop(r2, err) {
+    var e_1, _a;
+    if (r2.state >= Stopped) {
       return;
     }
-    return {
-      type,
-      coordinates
-    };
-  }
-  function getFeatureEleProperties(featureEle) {
-    const children = featureEle.children || [];
-    const properties = {};
-    let isShape = false;
-    for (let i = 0, len = children.length; i < len; i++) {
-      const node = children[i];
-      const nodeName = getNodeName(node);
-      if (isGeoAttribute(nodeName) && node.children.length) {
-        if (nodeName.indexOf("shape") > -1) {
-          isShape = true;
+    r2.state = Stopped;
+    r2.onnext();
+    r2.onstop();
+    if (r2.err == null) {
+      r2.err = err;
+    }
+    if (r2.pushes.length === 0 && (typeof r2.buffer === "undefined" || r2.buffer.empty)) {
+      finish(r2);
+    } else {
+      try {
+        for (var _b = __values(r2.pushes), _d = _b.next(); !_d.done; _d = _b.next()) {
+          var push_1 = _d.value;
+          push_1.resolve();
         }
-        continue;
-      }
-      const key = getNodeName(node, false).split(":")[1];
-      if (!key) {
-        continue;
-      }
-      const value = node.textContent || "";
-      properties[key] = value;
-    }
-    properties.isShape = isShape;
-    return properties;
-  }
-  function flatMultiGeoNodes(nodes) {
-    const geoNodes = [];
-    for (let i = 0, len = nodes.length; i < len; i++) {
-      const children = nodes[i].children;
-      for (let j = 0, len1 = children.length; j < len1; j++) {
-        geoNodes.push(children[j].children[0]);
+      } catch (e_1_1) {
+        e_1 = { error: e_1_1 };
+      } finally {
+        try {
+          if (_d && !_d.done && (_a = _b.return)) _a.call(_b);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
       }
     }
-    return geoNodes;
   }
-  function isMulti(nodeName) {
-    return nodeName.indexOf("member") > -1;
+  function finish(r2) {
+    var e_2, _a;
+    if (r2.state >= Done) {
+      return;
+    }
+    if (r2.state < Stopped) {
+      stop(r2);
+    }
+    r2.state = Done;
+    r2.buffer = void 0;
+    try {
+      for (var _b = __values(r2.nexts), _d = _b.next(); !_d.done; _d = _b.next()) {
+        var next = _d.value;
+        var execution = r2.pending === void 0 ? consumeExecution(r2) : r2.pending.then(function() {
+          return consumeExecution(r2);
+        });
+        next.resolve(createIteration(r2, execution));
+      }
+    } catch (e_2_1) {
+      e_2 = { error: e_2_1 };
+    } finally {
+      try {
+        if (_d && !_d.done && (_a = _b.return)) _a.call(_b);
+      } finally {
+        if (e_2) throw e_2.error;
+      }
+    }
+    r2.pushes = [];
+    r2.nexts = [];
   }
-  function isGeoAttribute(nodeName) {
-    for (let i = 0, len = GEONODENAMES.length; i < len; i++) {
-      if (nodeName.indexOf(GEONODENAMES[i]) > -1) {
+  function reject(r2) {
+    if (r2.state >= Rejected) {
+      return;
+    }
+    if (r2.state < Done) {
+      finish(r2);
+    }
+    r2.state = Rejected;
+  }
+  function push(r2, value) {
+    swallow(value);
+    if (r2.pushes.length >= MAX_QUEUE_LENGTH) {
+      throw new RepeaterOverflowError("No more than " + MAX_QUEUE_LENGTH + " pending calls to push are allowed on a single repeater.");
+    } else if (r2.state >= Stopped) {
+      return Promise.resolve(void 0);
+    }
+    var valueP = r2.pending === void 0 ? Promise.resolve(value) : r2.pending.then(function() {
+      return value;
+    });
+    valueP = valueP.catch(function(err) {
+      if (r2.state < Stopped) {
+        r2.err = err;
+      }
+      reject(r2);
+      return void 0;
+    });
+    var nextP;
+    if (r2.nexts.length) {
+      var next_1 = r2.nexts.shift();
+      next_1.resolve(createIteration(r2, valueP));
+      if (r2.nexts.length) {
+        nextP = Promise.resolve(r2.nexts[0].value);
+      } else if (typeof r2.buffer !== "undefined" && !r2.buffer.full) {
+        nextP = Promise.resolve(void 0);
+      } else {
+        nextP = new Promise(function(resolve) {
+          return r2.onnext = resolve;
+        });
+      }
+    } else if (typeof r2.buffer !== "undefined" && !r2.buffer.full) {
+      r2.buffer.add(valueP);
+      nextP = Promise.resolve(void 0);
+    } else {
+      nextP = new Promise(function(resolve) {
+        return r2.pushes.push({ resolve, value: valueP });
+      });
+    }
+    var floating = true;
+    var next = {};
+    var unhandled = nextP.catch(function(err) {
+      if (floating) {
+        throw err;
+      }
+      return void 0;
+    });
+    next.then = function(onfulfilled, onrejected) {
+      floating = false;
+      return Promise.prototype.then.call(nextP, onfulfilled, onrejected);
+    };
+    next.catch = function(onrejected) {
+      floating = false;
+      return Promise.prototype.catch.call(nextP, onrejected);
+    };
+    next.finally = nextP.finally.bind(nextP);
+    r2.pending = valueP.then(function() {
+      return unhandled;
+    }).catch(function(err) {
+      r2.err = err;
+      reject(r2);
+    });
+    return next;
+  }
+  function createStop(r2) {
+    var stop1 = stop.bind(null, r2);
+    var stopP = new Promise(function(resolve) {
+      return r2.onstop = resolve;
+    });
+    stop1.then = stopP.then.bind(stopP);
+    stop1.catch = stopP.catch.bind(stopP);
+    stop1.finally = stopP.finally.bind(stopP);
+    return stop1;
+  }
+  function execute(r2) {
+    if (r2.state >= Started) {
+      return;
+    }
+    r2.state = Started;
+    var push1 = push.bind(null, r2);
+    var stop1 = createStop(r2);
+    r2.execution = new Promise(function(resolve) {
+      return resolve(r2.executor(push1, stop1));
+    });
+    r2.execution.catch(function() {
+      return stop(r2);
+    });
+  }
+  var records = /* @__PURE__ */ new WeakMap();
+  var Repeater = (
+    /** @class */
+    function() {
+      function Repeater2(executor, buffer) {
+        records.set(this, {
+          executor,
+          buffer,
+          err: void 0,
+          state: Initial,
+          pushes: [],
+          nexts: [],
+          pending: void 0,
+          execution: void 0,
+          onnext: NOOP,
+          onstop: NOOP
+        });
+      }
+      Repeater2.prototype.next = function(value) {
+        swallow(value);
+        var r2 = records.get(this);
+        if (r2 === void 0) {
+          throw new Error("WeakMap error");
+        }
+        if (r2.nexts.length >= MAX_QUEUE_LENGTH) {
+          throw new RepeaterOverflowError("No more than " + MAX_QUEUE_LENGTH + " pending calls to next are allowed on a single repeater.");
+        }
+        if (r2.state <= Initial) {
+          execute(r2);
+        }
+        r2.onnext(value);
+        if (typeof r2.buffer !== "undefined" && !r2.buffer.empty) {
+          var result = createIteration(r2, r2.buffer.remove());
+          if (r2.pushes.length) {
+            var push_2 = r2.pushes.shift();
+            r2.buffer.add(push_2.value);
+            r2.onnext = push_2.resolve;
+          }
+          return result;
+        } else if (r2.pushes.length) {
+          var push_3 = r2.pushes.shift();
+          r2.onnext = push_3.resolve;
+          return createIteration(r2, push_3.value);
+        } else if (r2.state >= Stopped) {
+          finish(r2);
+          return createIteration(r2, consumeExecution(r2));
+        }
+        return new Promise(function(resolve) {
+          return r2.nexts.push({ resolve, value });
+        });
+      };
+      Repeater2.prototype.return = function(value) {
+        swallow(value);
+        var r2 = records.get(this);
+        if (r2 === void 0) {
+          throw new Error("WeakMap error");
+        }
+        finish(r2);
+        r2.execution = Promise.resolve(r2.execution).then(function() {
+          return value;
+        });
+        return createIteration(r2, consumeExecution(r2));
+      };
+      Repeater2.prototype.throw = function(err) {
+        var r2 = records.get(this);
+        if (r2 === void 0) {
+          throw new Error("WeakMap error");
+        }
+        if (r2.state <= Initial || r2.state >= Stopped || typeof r2.buffer !== "undefined" && !r2.buffer.empty) {
+          finish(r2);
+          if (r2.err == null) {
+            r2.err = err;
+          }
+          return createIteration(r2, consumeExecution(r2));
+        }
+        return this.next(Promise.reject(err));
+      };
+      Repeater2.prototype[Symbol.asyncIterator] = function() {
+        return this;
+      };
+      Repeater2.race = race;
+      Repeater2.merge = merge;
+      Repeater2.zip = zip;
+      Repeater2.latest = latest;
+      return Repeater2;
+    }()
+  );
+  function getIterators(values, options) {
+    var e_3, _a;
+    var iters = [];
+    var _loop_1 = function(value2) {
+      if (value2 != null && typeof value2[Symbol.asyncIterator] === "function") {
+        iters.push(value2[Symbol.asyncIterator]());
+      } else if (value2 != null && typeof value2[Symbol.iterator] === "function") {
+        iters.push(value2[Symbol.iterator]());
+      } else {
+        iters.push(function valueToAsyncIterator() {
+          return __asyncGenerator(this, arguments, function valueToAsyncIterator_1() {
+            return __generator(this, function(_a2) {
+              switch (_a2.label) {
+                case 0:
+                  if (!options.yieldValues) return [3, 3];
+                  return [4, __await(value2)];
+                case 1:
+                  return [4, _a2.sent()];
+                case 2:
+                  _a2.sent();
+                  _a2.label = 3;
+                case 3:
+                  if (!options.returnValues) return [3, 5];
+                  return [4, __await(value2)];
+                case 4:
+                  return [2, _a2.sent()];
+                case 5:
+                  return [
+                    2
+                    /*return*/
+                  ];
+              }
+            });
+          });
+        }());
+      }
+    };
+    try {
+      for (var values_1 = __values(values), values_1_1 = values_1.next(); !values_1_1.done; values_1_1 = values_1.next()) {
+        var value = values_1_1.value;
+        _loop_1(value);
+      }
+    } catch (e_3_1) {
+      e_3 = { error: e_3_1 };
+    } finally {
+      try {
+        if (values_1_1 && !values_1_1.done && (_a = values_1.return)) _a.call(values_1);
+      } finally {
+        if (e_3) throw e_3.error;
+      }
+    }
+    return iters;
+  }
+  function race(contenders) {
+    var _this = this;
+    var iters = getIterators(contenders, { returnValues: true });
+    return new Repeater(function(push2, stop2) {
+      return __awaiter(_this, void 0, void 0, function() {
+        var advance, stopped, finalIteration, iteration, i_1, _loop_2;
+        return __generator(this, function(_a) {
+          switch (_a.label) {
+            case 0:
+              if (!iters.length) {
+                stop2();
+                return [
+                  2
+                  /*return*/
+                ];
+              }
+              stopped = false;
+              stop2.then(function() {
+                advance();
+                stopped = true;
+              });
+              _a.label = 1;
+            case 1:
+              _a.trys.push([1, , 5, 7]);
+              iteration = void 0;
+              i_1 = 0;
+              _loop_2 = function() {
+                var j, iters_1, iters_1_1, iter;
+                var e_4, _a2;
+                return __generator(this, function(_b) {
+                  switch (_b.label) {
+                    case 0:
+                      j = i_1;
+                      try {
+                        for (iters_1 = (e_4 = void 0, __values(iters)), iters_1_1 = iters_1.next(); !iters_1_1.done; iters_1_1 = iters_1.next()) {
+                          iter = iters_1_1.value;
+                          Promise.resolve(iter.next()).then(function(iteration2) {
+                            if (iteration2.done) {
+                              stop2();
+                              if (finalIteration === void 0) {
+                                finalIteration = iteration2;
+                              }
+                            } else if (i_1 === j) {
+                              i_1++;
+                              advance(iteration2);
+                            }
+                          }, function(err) {
+                            return stop2(err);
+                          });
+                        }
+                      } catch (e_4_1) {
+                        e_4 = { error: e_4_1 };
+                      } finally {
+                        try {
+                          if (iters_1_1 && !iters_1_1.done && (_a2 = iters_1.return)) _a2.call(iters_1);
+                        } finally {
+                          if (e_4) throw e_4.error;
+                        }
+                      }
+                      return [4, new Promise(function(resolve) {
+                        return advance = resolve;
+                      })];
+                    case 1:
+                      iteration = _b.sent();
+                      if (!(iteration !== void 0)) return [3, 3];
+                      return [4, push2(iteration.value)];
+                    case 2:
+                      _b.sent();
+                      _b.label = 3;
+                    case 3:
+                      return [
+                        2
+                        /*return*/
+                      ];
+                  }
+                });
+              };
+              _a.label = 2;
+            case 2:
+              if (!!stopped) return [3, 4];
+              return [5, _loop_2()];
+            case 3:
+              _a.sent();
+              return [3, 2];
+            case 4:
+              return [2, finalIteration && finalIteration.value];
+            case 5:
+              stop2();
+              return [4, Promise.race(iters.map(function(iter) {
+                return iter.return && iter.return();
+              }))];
+            case 6:
+              _a.sent();
+              return [
+                7
+                /*endfinally*/
+              ];
+            case 7:
+              return [
+                2
+                /*return*/
+              ];
+          }
+        });
+      });
+    });
+  }
+  function merge(contenders) {
+    var _this = this;
+    var iters = getIterators(contenders, { yieldValues: true });
+    return new Repeater(function(push2, stop2) {
+      return __awaiter(_this, void 0, void 0, function() {
+        var advances, stopped, finalIteration;
+        var _this2 = this;
+        return __generator(this, function(_a) {
+          switch (_a.label) {
+            case 0:
+              if (!iters.length) {
+                stop2();
+                return [
+                  2
+                  /*return*/
+                ];
+              }
+              advances = [];
+              stopped = false;
+              stop2.then(function() {
+                var e_5, _a2;
+                stopped = true;
+                try {
+                  for (var advances_1 = __values(advances), advances_1_1 = advances_1.next(); !advances_1_1.done; advances_1_1 = advances_1.next()) {
+                    var advance = advances_1_1.value;
+                    advance();
+                  }
+                } catch (e_5_1) {
+                  e_5 = { error: e_5_1 };
+                } finally {
+                  try {
+                    if (advances_1_1 && !advances_1_1.done && (_a2 = advances_1.return)) _a2.call(advances_1);
+                  } finally {
+                    if (e_5) throw e_5.error;
+                  }
+                }
+              });
+              _a.label = 1;
+            case 1:
+              _a.trys.push([1, , 3, 4]);
+              return [4, Promise.all(iters.map(function(iter, i) {
+                return __awaiter(_this2, void 0, void 0, function() {
+                  var iteration, _a2;
+                  return __generator(this, function(_b) {
+                    switch (_b.label) {
+                      case 0:
+                        _b.trys.push([0, , 6, 9]);
+                        _b.label = 1;
+                      case 1:
+                        if (!!stopped) return [3, 5];
+                        Promise.resolve(iter.next()).then(function(iteration2) {
+                          return advances[i](iteration2);
+                        }, function(err) {
+                          return stop2(err);
+                        });
+                        return [4, new Promise(function(resolve) {
+                          advances[i] = resolve;
+                        })];
+                      case 2:
+                        iteration = _b.sent();
+                        if (!(iteration !== void 0)) return [3, 4];
+                        if (iteration.done) {
+                          finalIteration = iteration;
+                          return [
+                            2
+                            /*return*/
+                          ];
+                        }
+                        return [4, push2(iteration.value)];
+                      case 3:
+                        _b.sent();
+                        _b.label = 4;
+                      case 4:
+                        return [3, 1];
+                      case 5:
+                        return [3, 9];
+                      case 6:
+                        _a2 = iter.return;
+                        if (!_a2) return [3, 8];
+                        return [4, iter.return()];
+                      case 7:
+                        _a2 = _b.sent();
+                        _b.label = 8;
+                      case 8:
+                        return [
+                          7
+                          /*endfinally*/
+                        ];
+                      case 9:
+                        return [
+                          2
+                          /*return*/
+                        ];
+                    }
+                  });
+                });
+              }))];
+            case 2:
+              _a.sent();
+              return [2, finalIteration && finalIteration.value];
+            case 3:
+              stop2();
+              return [
+                7
+                /*endfinally*/
+              ];
+            case 4:
+              return [
+                2
+                /*return*/
+              ];
+          }
+        });
+      });
+    });
+  }
+  function zip(contenders) {
+    var _this = this;
+    var iters = getIterators(contenders, { returnValues: true });
+    return new Repeater(function(push2, stop2) {
+      return __awaiter(_this, void 0, void 0, function() {
+        var advance, stopped, iterations, values;
+        return __generator(this, function(_a) {
+          switch (_a.label) {
+            case 0:
+              if (!iters.length) {
+                stop2();
+                return [2, []];
+              }
+              stopped = false;
+              stop2.then(function() {
+                advance();
+                stopped = true;
+              });
+              _a.label = 1;
+            case 1:
+              _a.trys.push([1, , 6, 8]);
+              _a.label = 2;
+            case 2:
+              if (!!stopped) return [3, 5];
+              Promise.all(iters.map(function(iter) {
+                return iter.next();
+              })).then(function(iterations2) {
+                return advance(iterations2);
+              }, function(err) {
+                return stop2(err);
+              });
+              return [4, new Promise(function(resolve) {
+                return advance = resolve;
+              })];
+            case 3:
+              iterations = _a.sent();
+              if (iterations === void 0) {
+                return [
+                  2
+                  /*return*/
+                ];
+              }
+              values = iterations.map(function(iteration) {
+                return iteration.value;
+              });
+              if (iterations.some(function(iteration) {
+                return iteration.done;
+              })) {
+                return [2, values];
+              }
+              return [4, push2(values)];
+            case 4:
+              _a.sent();
+              return [3, 2];
+            case 5:
+              return [3, 8];
+            case 6:
+              stop2();
+              return [4, Promise.all(iters.map(function(iter) {
+                return iter.return && iter.return();
+              }))];
+            case 7:
+              _a.sent();
+              return [
+                7
+                /*endfinally*/
+              ];
+            case 8:
+              return [
+                2
+                /*return*/
+              ];
+          }
+        });
+      });
+    });
+  }
+  function latest(contenders) {
+    var _this = this;
+    var iters = getIterators(contenders, {
+      yieldValues: true,
+      returnValues: true
+    });
+    return new Repeater(function(push2, stop2) {
+      return __awaiter(_this, void 0, void 0, function() {
+        var advance, advances, stopped, iterations_1, values_2;
+        var _this2 = this;
+        return __generator(this, function(_a) {
+          switch (_a.label) {
+            case 0:
+              if (!iters.length) {
+                stop2();
+                return [2, []];
+              }
+              advances = [];
+              stopped = false;
+              stop2.then(function() {
+                var e_6, _a2;
+                advance();
+                try {
+                  for (var advances_2 = __values(advances), advances_2_1 = advances_2.next(); !advances_2_1.done; advances_2_1 = advances_2.next()) {
+                    var advance1 = advances_2_1.value;
+                    advance1();
+                  }
+                } catch (e_6_1) {
+                  e_6 = { error: e_6_1 };
+                } finally {
+                  try {
+                    if (advances_2_1 && !advances_2_1.done && (_a2 = advances_2.return)) _a2.call(advances_2);
+                  } finally {
+                    if (e_6) throw e_6.error;
+                  }
+                }
+                stopped = true;
+              });
+              _a.label = 1;
+            case 1:
+              _a.trys.push([1, , 5, 7]);
+              Promise.all(iters.map(function(iter) {
+                return iter.next();
+              })).then(function(iterations) {
+                return advance(iterations);
+              }, function(err) {
+                return stop2(err);
+              });
+              return [4, new Promise(function(resolve) {
+                return advance = resolve;
+              })];
+            case 2:
+              iterations_1 = _a.sent();
+              if (iterations_1 === void 0) {
+                return [
+                  2
+                  /*return*/
+                ];
+              }
+              values_2 = iterations_1.map(function(iteration) {
+                return iteration.value;
+              });
+              if (iterations_1.every(function(iteration) {
+                return iteration.done;
+              })) {
+                return [2, values_2];
+              }
+              return [4, push2(values_2.slice())];
+            case 3:
+              _a.sent();
+              return [4, Promise.all(iters.map(function(iter, i) {
+                return __awaiter(_this2, void 0, void 0, function() {
+                  var iteration;
+                  return __generator(this, function(_a2) {
+                    switch (_a2.label) {
+                      case 0:
+                        if (iterations_1[i].done) {
+                          return [2, iterations_1[i].value];
+                        }
+                        _a2.label = 1;
+                      case 1:
+                        if (!!stopped) return [3, 4];
+                        Promise.resolve(iter.next()).then(function(iteration2) {
+                          return advances[i](iteration2);
+                        }, function(err) {
+                          return stop2(err);
+                        });
+                        return [4, new Promise(function(resolve) {
+                          return advances[i] = resolve;
+                        })];
+                      case 2:
+                        iteration = _a2.sent();
+                        if (iteration === void 0) {
+                          return [2, iterations_1[i].value];
+                        } else if (iteration.done) {
+                          return [2, iteration.value];
+                        }
+                        values_2[i] = iteration.value;
+                        return [4, push2(values_2.slice())];
+                      case 3:
+                        _a2.sent();
+                        return [3, 1];
+                      case 4:
+                        return [
+                          2
+                          /*return*/
+                        ];
+                    }
+                  });
+                });
+              }))];
+            case 4:
+              return [2, _a.sent()];
+            case 5:
+              stop2();
+              return [4, Promise.all(iters.map(function(iter) {
+                return iter.return && iter.return();
+              }))];
+            case 6:
+              _a.sent();
+              return [
+                7
+                /*endfinally*/
+              ];
+            case 7:
+              return [
+                2
+                /*return*/
+              ];
+          }
+        });
+      });
+    });
+  }
+  function inferGeometryType(t) {
+    let r2;
+    for (let f3 of t) {
+      if (r2 === GeometryType.Unknown) break;
+      let t2 = f3.getGeometry ? toGeometryType(f3.getGeometry().getType()) : toGeometryType(f3.geometry.type);
+      void 0 === r2 ? r2 = t2 : r2 !== t2 && (r2 = GeometryType.Unknown);
+    }
+    if (void 0 === r2) throw Error("Could not infer geometry type for collection of features.");
+    return r2;
+  }
+  function buildHeader(t, r2 = 0) {
+    let n2, o2 = new Builder(), i = 0;
+    t.columns && (i = Header.createColumnsVector(o2, t.columns.map((e2) => function(e3, t2) {
+      let r3 = e3.createString(t2.name);
+      return Column.startColumn(e3), Column.addName(e3, r3), Column.addType(e3, t2.type), Column.endColumn(e3);
+    }(o2, e2))));
+    let f3 = o2.createString("L1");
+    r2 && (Crs.startCrs(o2), Crs.addCode(o2, r2), n2 = Crs.endCrs(o2)), Header.startHeader(o2), n2 && Header.addCrs(o2, n2), Header.addFeaturesCount(o2, BigInt(t.featuresCount)), Header.addGeometryType(o2, t.geometryType), Header.addIndexNodeSize(o2, 0), i && Header.addColumns(o2, i), Header.addName(o2, f3);
+    let s2 = Header.endHeader(o2);
+    return o2.finishSizePrefixed(s2), o2.asUint8Array();
+  }
+  function mapColumn(e2, t) {
+    return { name: t, type: function(e3) {
+      if ("boolean" == typeof e3) return ColumnType.Bool;
+      if ("number" == typeof e3) return e3 % 1 == 0 ? ColumnType.Int : ColumnType.Double;
+      if ("string" == typeof e3 || null === e3) return ColumnType.String;
+      if (e3 instanceof Uint8Array) return ColumnType.Binary;
+      if ("object" == typeof e3) return ColumnType.Json;
+      throw Error(`Unknown type (value '${e3}')`);
+    }(e2[t]), title: null, description: null, width: -1, precision: -1, scale: -1, nullable: true, unique: false, primary_key: false };
+  }
+  function parseGeometry(e2) {
+    let r2, n2, i = e2.coordinates, a2 = [], l2 = [], p = toGeometryType(e2.type), s2 = 0;
+    switch (e2.type) {
+      case "Point":
+      case "MultiPoint":
+      case "LineString":
+        flat(i, a2, l2);
+        break;
+      case "MultiLineString":
+      case "Polygon":
+        flat(i, a2, l2), i.length > 1 && (r2 = i.map((e3) => s2 += e3.length));
+        break;
+      case "MultiPolygon":
+        n2 = i.map((e3) => ({ type: "Polygon", coordinates: e3 })).map(parseGeometry);
+    }
+    return { xy: a2, z: l2.length > 0 ? l2 : void 0, ends: r2, type: p, parts: n2 };
+  }
+  function parseGC(e2) {
+    let t = toGeometryType(e2.type), r2 = [];
+    for (let t2 = 0; t2 < e2.geometries.length; t2++) {
+      let o2 = e2.geometries[t2];
+      "GeometryCollection" === o2.type ? r2.push(parseGC(o2)) : r2.push(parseGeometry(o2));
+    }
+    return { type: t, parts: r2 };
+  }
+  function serialize$1(n2, i = 0) {
+    let l2 = function(e2) {
+      let t = e2.features[0].properties, r2 = null;
+      return t && (r2 = Object.keys(t).map((e3) => mapColumn(t, e3))), { geometryType: inferGeometryType(e2.features), columns: r2, envelope: null, featuresCount: e2.features.length, indexNodeSize: 0, crs: null, title: null, description: null, metadata: null };
+    }(n2), a2 = buildHeader(l2, i), f3 = n2.features.map((e2) => buildFeature("GeometryCollection" === e2.geometry.type ? parseGC(e2.geometry) : parseGeometry(e2.geometry), e2.properties, l2)), p = f3.map((e2) => e2.length).reduce((e2, t) => e2 + t), c3 = new Uint8Array(magicbytes.length + a2.length + p);
+    c3.set(a2, magicbytes.length);
+    let g2 = magicbytes.length + a2.length;
+    for (let e2 of f3) c3.set(e2, g2), g2 += e2.length;
+    return c3.set(magicbytes), c3;
+  }
+  function serialize(e2, i = 0) {
+    return serialize$1(e2, i);
+  }
+  var FlatGeobufBuilder = class {
+    geoJsonBuilder;
+    constructor() {
+      this.geoJsonBuilder = new GeoJsonBuilder();
+    }
+    buildPoint(gml) {
+      return this.geoJsonBuilder.buildPoint(gml);
+    }
+    buildLineString(gml) {
+      return this.geoJsonBuilder.buildLineString(gml);
+    }
+    buildPolygon(gml) {
+      return this.geoJsonBuilder.buildPolygon(gml);
+    }
+    buildMultiPoint(gml) {
+      return this.geoJsonBuilder.buildMultiPoint(gml);
+    }
+    buildMultiLineString(gml) {
+      return this.geoJsonBuilder.buildMultiLineString(gml);
+    }
+    buildMultiPolygon(gml) {
+      return this.geoJsonBuilder.buildMultiPolygon(gml);
+    }
+    buildLinearRing(gml) {
+      return this.geoJsonBuilder.buildLinearRing(gml);
+    }
+    buildEnvelope(gml) {
+      return this.geoJsonBuilder.buildEnvelope(gml);
+    }
+    buildBox(gml) {
+      return this.geoJsonBuilder.buildBox(gml);
+    }
+    buildCurve(gml) {
+      return this.geoJsonBuilder.buildCurve(gml);
+    }
+    buildSurface(gml) {
+      return this.geoJsonBuilder.buildSurface(gml);
+    }
+    buildRectifiedGridCoverage(gml) {
+      return this.geoJsonBuilder.buildRectifiedGridCoverage(gml);
+    }
+    buildGridCoverage(gml) {
+      return this.geoJsonBuilder.buildGridCoverage(gml);
+    }
+    buildReferenceableGridCoverage(gml) {
+      return this.geoJsonBuilder.buildReferenceableGridCoverage(gml);
+    }
+    buildMultiPointCoverage(gml) {
+      return this.geoJsonBuilder.buildMultiPointCoverage(gml);
+    }
+    buildFeature(gml) {
+      return this.geoJsonBuilder.buildFeature(gml);
+    }
+    buildFeatureCollection(gml) {
+      return this.geoJsonBuilder.buildFeatureCollection(gml);
+    }
+    /**
+     * Convert GeoJSON FeatureCollection to FlatGeobuf binary format
+     *
+     * @param featureCollection GeoJSON FeatureCollection
+     * @returns Uint8Array containing the FlatGeobuf binary data
+     */
+    toFlatGeobuf(featureCollection) {
+      try {
+        return serialize(featureCollection);
+      } catch (error) {
+        throw new Error(`Failed to serialize to FlatGeobuf: ${error.message}`);
+      }
+    }
+  };
+  function throwUnsupportedInBrowser(feature) {
+    throw new Error(`${feature} is not available in the browser build of @npm9912/s-gml.`);
+  }
+  function getBuilder(format) {
+    switch (format) {
+      case "geojson":
+        return new GeoJsonBuilder();
+      case "cis-json":
+      case "json-coverage":
+        return new CisJsonBuilder();
+      case "coveragejson":
+      case "covjson":
+        return new CoverageJsonBuilder();
+      case "csv":
+        return new CsvBuilder();
+      case "kml":
+        return new KmlBuilder();
+      case "wkt":
+        return new WktBuilder();
+      case "flatgeobuf":
+      case "fgb":
+        return new FlatGeobufBuilder();
+      case "shapefile":
+      case "shp":
+        return throwUnsupportedInBrowser("Shapefile export");
+      case "geopackage":
+      case "gpkg":
+        return throwUnsupportedInBrowser("GeoPackage export");
+      default:
+        throw new Error(`Unsupported target format: ${format}. Supported in browsers: geojson, cis-json, coveragejson, csv, kml, wkt, flatgeobuf`);
+    }
+  }
+  var OwsExceptionError = class _OwsExceptionError extends Error {
+    report;
+    constructor(report) {
+      const firstException = report.exceptions[0];
+      const message = firstException ? `OWS Exception [${firstException.exceptionCode}]: ${firstException.exceptionText.join(", ")}` : "OWS Exception Report received";
+      super(message);
+      this.name = "OwsExceptionError";
+      this.report = report;
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, _OwsExceptionError);
+      }
+    }
+    /**
+     * Get all exception messages as a formatted string
+     */
+    getAllMessages() {
+      return this.report.exceptions.map((ex) => {
+        const locator = ex.locator ? ` [${ex.locator}]` : "";
+        return `${ex.exceptionCode}${locator}: ${ex.exceptionText.join(", ")}`;
+      }).join("\n");
+    }
+  };
+  function isOwsExceptionReport(xml) {
+    return xml.includes("<ows:ExceptionReport") || xml.includes("<ExceptionReport");
+  }
+  function parseOwsExceptionReport(xml) {
+    const parser = new import_fast_xml_parser.XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: "@_",
+      textNodeName: "#text",
+      parseAttributeValue: true
+    });
+    const parsed = parser.parse(xml);
+    const reportKey = Object.keys(parsed).find((key) => key === "ows:ExceptionReport" || key === "ExceptionReport");
+    if (!reportKey) {
+      throw new Error("Not a valid OWS Exception Report");
+    }
+    const report = parsed[reportKey];
+    const version = report["@_version"] || "1.0.0";
+    const exceptionKey = Object.keys(report).find((key) => key === "ows:Exception" || key === "Exception");
+    if (!exceptionKey) {
+      return { version, exceptions: [] };
+    }
+    const exceptionData = report[exceptionKey];
+    const exceptionArray = Array.isArray(exceptionData) ? exceptionData : [exceptionData];
+    const exceptions = exceptionArray.map((ex) => {
+      const exceptionCode = ex["@_exceptionCode"] || "Unknown";
+      const locator = ex["@_locator"];
+      const textKey = Object.keys(ex).find((key) => key === "ows:ExceptionText" || key === "ExceptionText");
+      let exceptionText = [];
+      if (textKey) {
+        const textData = ex[textKey];
+        if (Array.isArray(textData)) {
+          exceptionText = textData.map((t) => typeof t === "string" ? t : t["#text"] || "");
+        } else if (typeof textData === "string") {
+          exceptionText = [textData];
+        } else if (textData && textData["#text"]) {
+          exceptionText = [textData["#text"]];
+        }
+      }
+      return {
+        exceptionCode,
+        locator,
+        exceptionText
+      };
+    });
+    return { version, exceptions };
+  }
+  function throwOwsException(xml) {
+    const report = parseOwsExceptionReport(xml);
+    throw new OwsExceptionError(report);
+  }
+  var xmlParser = new import_fast_xml_parser.XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "",
+    attributesGroupName: "$",
+    textNodeName: "_",
+    trimValues: false,
+    allowBooleanAttributes: true,
+    parseAttributeValue: false,
+    parseTagValue: false,
+    removeNSPrefix: false
+  });
+  async function parseXml(xml) {
+    if (isOwsExceptionReport(xml)) {
+      throwOwsException(xml);
+    }
+    const parsed = xmlParser.parse(xml);
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Invalid XML: parsing failed");
+    }
+    annotateLocalNames(parsed);
+    return parsed;
+  }
+  function annotateLocalNames(node, key) {
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        annotateLocalNames(item, key);
+      }
+      return;
+    }
+    if (!node || typeof node !== "object")
+      return;
+    if (key) {
+      defineLocalName(node, key);
+    }
+    for (const [childKey, childValue] of Object.entries(node)) {
+      if (childKey === "$" || childKey === "_" || childKey === "#name")
+        continue;
+      annotateLocalNames(childValue, childKey);
+    }
+  }
+  function defineLocalName(target, qualifiedName) {
+    const parts = qualifiedName.split(":");
+    const localName = parts[parts.length - 1];
+    Object.defineProperty(target, "#name", {
+      value: localName,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+  }
+  function detectGmlVersion(doc) {
+    const namespace = findGmlNamespace(doc);
+    if (!namespace)
+      throw new Error("No GML namespace found");
+    if (namespace.includes("3.2"))
+      return "3.2";
+    if (namespace.includes("3.1"))
+      return "3.1";
+    if (namespace.includes("3.0"))
+      return "3.0";
+    if (namespace.includes("2.1.2"))
+      return "2.1.2";
+    if (namespace === "http://www.opengis.net/gml") {
+      if (hasGml212Elements(doc))
+        return "2.1.2";
+      return "3.2";
+    }
+    return "3.2";
+  }
+  function hasGml212Elements(node) {
+    if (!node || typeof node !== "object")
+      return false;
+    for (const [key, value] of Object.entries(node)) {
+      if (key === "gml:coordinates" || key === "gml:outerBoundaryIs" || key === "gml:innerBoundaryIs") {
         return true;
+      }
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          if (hasGml212Elements(item))
+            return true;
+        }
+      } else if (typeof value === "object") {
+        if (hasGml212Elements(value))
+          return true;
       }
     }
     return false;
   }
-  function parseGeoCoordinates(coordNodes, isShape) {
-    const coordiantes = [];
-    for (let i = 0, len = coordNodes.length; i < len; i++) {
-      const coordNode = findCoordsNode(coordNodes[i]);
-      coordiantes.push(parseCoordiantes(coordNode.textContent, isShape));
+  function findGmlNamespace(node) {
+    if (!node || typeof node !== "object")
+      return void 0;
+    if (node.$ && typeof node.$["xmlns:gml"] === "string") {
+      return node.$["xmlns:gml"];
     }
-    return coordiantes;
+    for (const [key, value] of Object.entries(node)) {
+      if (key === "$" || key === "_")
+        continue;
+      if (key.startsWith("xmlns:") && key.endsWith("gml") && typeof value === "string") {
+        return value;
+      }
+      const child = value;
+      if (Array.isArray(child)) {
+        for (const item of child) {
+          const result = findGmlNamespace(item);
+          if (result)
+            return result;
+        }
+      } else if (typeof child === "object") {
+        const result = findGmlNamespace(child);
+        if (result)
+          return result;
+      }
+    }
+    return void 0;
   }
-  function parseCoordiantes(text, isShape) {
-    if (!text) {
-      return;
+  function parseCoordinates(coords, version, srsDimension = 2) {
+    if (version === "2.1.2") {
+      return coords.trim().split(" ").map((point) => point.split(",").map(Number));
+    } else {
+      const flatCoords = coords.trim().split(" ").map(Number);
+      const result = [];
+      for (let i = 0; i < flatCoords.length; i += srsDimension) {
+        result.push(flatCoords.slice(i, i + srsDimension));
+      }
+      return srsDimension > 2 ? result : result.flat();
     }
-    const split = " ";
-    const coords = text.split(split);
-    let [c1, c22] = coords;
-    if (c1.indexOf(",") > -1) {
+  }
+  function generateGml(gmlObject, outputVersion, prettyPrint = false) {
+    if (isGmlFeatureCollection(gmlObject)) {
+      return generateFeatureCollection(gmlObject, outputVersion, prettyPrint);
+    }
+    if (isGmlFeature(gmlObject)) {
+      return generateFeature(gmlObject, outputVersion, prettyPrint);
+    }
+    return generateGeometry(gmlObject, outputVersion, prettyPrint);
+  }
+  function generateGeometry(geometry, outputVersion, prettyPrint) {
+    switch (geometry.type) {
+      case "Point":
+        return generatePoint(geometry, outputVersion, prettyPrint);
+      case "LineString":
+        return generateLineString(geometry, outputVersion, prettyPrint);
+      case "Polygon":
+        return generatePolygon(geometry, outputVersion, prettyPrint);
+      case "LinearRing":
+        return generateLinearRing(geometry, outputVersion, prettyPrint);
+      case "Envelope":
+        return generateEnvelope(geometry, outputVersion, prettyPrint);
+      case "Box":
+        return generateBox(geometry, outputVersion, prettyPrint);
+      case "Curve":
+        return generateCurve(geometry, outputVersion, prettyPrint);
+      case "Surface":
+        return generateSurface(geometry, outputVersion, prettyPrint);
+      case "MultiPoint":
+        return generateMultiPoint(geometry, outputVersion, prettyPrint);
+      case "MultiLineString":
+        return generateMultiLineString(geometry, outputVersion, prettyPrint);
+      case "MultiPolygon":
+        return generateMultiPolygon(geometry, outputVersion, prettyPrint);
+      default:
+        throw new Error("Unsupported GML type for conversion.");
+    }
+  }
+  function generateFeature(feature, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const idAttr = feature.id ? ` gml:id="${feature.id}"` : "";
+    xml.push(0, "<gml:featureMember>");
+    xml.push(1, `<gml:Feature${idAttr} ${namespace}>`);
+    if (feature.boundedBy) {
+      xml.push(2, "<gml:boundedBy>");
+      appendXml(xml, generateEnvelope(feature.boundedBy, version, prettyPrint), 3);
+      xml.push(2, "</gml:boundedBy>");
+    }
+    for (const [key, value] of Object.entries(feature.properties ?? {})) {
+      xml.push(2, `<${key}>${serializePropertyValue(value)}</${key}>`);
+    }
+    xml.push(1, "<gml:geometry>");
+    appendXml(xml, generateGeometry(feature.geometry, version, prettyPrint), 2);
+    xml.push(1, "</gml:geometry>");
+    xml.push(1, "</gml:Feature>");
+    xml.push(0, "</gml:featureMember>");
+    return xml.toString();
+  }
+  function generateFeatureCollection(featureCollection, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    xml.push(0, `<gml:FeatureCollection ${namespace}>`);
+    if (featureCollection.bounds) {
+      xml.push(1, "<gml:boundedBy>");
+      appendXml(xml, generateEnvelope(featureCollection.bounds, version, prettyPrint), 2);
+      xml.push(1, "</gml:boundedBy>");
+    }
+    for (const feature of featureCollection.features) {
+      appendXml(xml, generateFeature(feature, version, prettyPrint), 1);
+    }
+    xml.push(0, "</gml:FeatureCollection>");
+    return xml.toString();
+  }
+  function generatePoint(point, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = point.srsName ? ` srsName="${point.srsName}"` : "";
+    const coords = formatCoordinateList([point.coordinates], version);
+    const tag = version === "2.1.2" ? "coordinates" : "pos";
+    xml.push(0, `<gml:Point${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:${tag}>${coords}</gml:${tag}>`);
+    xml.push(0, "</gml:Point>");
+    return xml.toString();
+  }
+  function generateLineString(lineString, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = lineString.srsName ? ` srsName="${lineString.srsName}"` : "";
+    const coords = formatCoordinateList(lineString.coordinates, version);
+    const tag = version === "2.1.2" ? "coordinates" : "posList";
+    xml.push(0, `<gml:LineString${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:${tag}>${coords}</gml:${tag}>`);
+    xml.push(0, "</gml:LineString>");
+    return xml.toString();
+  }
+  function generateLinearRing(linearRing, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = linearRing.srsName ? ` srsName="${linearRing.srsName}"` : "";
+    const coords = formatCoordinateList(linearRing.coordinates, version);
+    const tag = version === "2.1.2" ? "coordinates" : "posList";
+    xml.push(0, `<gml:LinearRing${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:${tag}>${coords}</gml:${tag}>`);
+    xml.push(0, "</gml:LinearRing>");
+    return xml.toString();
+  }
+  function generatePolygon(polygon, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = polygon.srsName ? ` srsName="${polygon.srsName}"` : "";
+    const exteriorTag = version === "2.1.2" ? "outerBoundaryIs" : "exterior";
+    const interiorTag = version === "2.1.2" ? "innerBoundaryIs" : "interior";
+    const ringTag = version === "2.1.2" ? "coordinates" : "posList";
+    const [exterior, ...interiors] = polygon.coordinates;
+    if (!exterior) {
+      throw new Error("Invalid polygon: missing exterior ring");
+    }
+    xml.push(0, `<gml:Polygon${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:${exteriorTag}>`);
+    xml.push(2, "<gml:LinearRing>");
+    xml.push(3, `<gml:${ringTag}>${formatCoordinateList(exterior, version)}</gml:${ringTag}>`);
+    xml.push(2, "</gml:LinearRing>");
+    xml.push(1, `</gml:${exteriorTag}>`);
+    for (const ring of interiors) {
+      xml.push(1, `<gml:${interiorTag}>`);
+      xml.push(2, "<gml:LinearRing>");
+      xml.push(3, `<gml:${ringTag}>${formatCoordinateList(ring, version)}</gml:${ringTag}>`);
+      xml.push(2, "</gml:LinearRing>");
+      xml.push(1, `</gml:${interiorTag}>`);
+    }
+    xml.push(0, "</gml:Polygon>");
+    return xml.toString();
+  }
+  function generateEnvelope(envelope, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = envelope.srsName ? ` srsName="${envelope.srsName}"` : "";
+    const [minX, minY, maxX, maxY] = envelope.bbox;
+    xml.push(0, `<gml:Envelope${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:lowerCorner>${minX} ${minY}</gml:lowerCorner>`);
+    xml.push(1, `<gml:upperCorner>${maxX} ${maxY}</gml:upperCorner>`);
+    xml.push(0, "</gml:Envelope>");
+    return xml.toString();
+  }
+  function generateBox(box, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = box.srsName ? ` srsName="${box.srsName}"` : "";
+    const [minX, minY, maxX, maxY] = box.coordinates;
+    const coordText = version === "2.1.2" ? `${minX},${minY} ${maxX},${maxY}` : `${minX} ${minY} ${maxX} ${maxY}`;
+    xml.push(0, `<gml:Box${srsAttr} ${namespace}>`);
+    xml.push(1, `<gml:coordinates>${coordText}</gml:coordinates>`);
+    xml.push(0, "</gml:Box>");
+    return xml.toString();
+  }
+  function generateCurve(curve, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = curve.srsName ? ` srsName="${curve.srsName}"` : "";
+    const tag = version === "2.1.2" ? "coordinates" : "posList";
+    const coords = formatCoordinateList(curve.coordinates, version);
+    xml.push(0, `<gml:Curve${srsAttr} ${namespace}>`);
+    xml.push(1, "<gml:segments>");
+    xml.push(2, "<gml:LineStringSegment>");
+    xml.push(3, `<gml:${tag}>${coords}</gml:${tag}>`);
+    xml.push(2, "</gml:LineStringSegment>");
+    xml.push(1, "</gml:segments>");
+    xml.push(0, "</gml:Curve>");
+    return xml.toString();
+  }
+  function generateSurface(surface, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const srsAttr = surface.srsName ? ` srsName="${surface.srsName}"` : "";
+    xml.push(0, `<gml:Surface${srsAttr} ${namespace}>`);
+    xml.push(1, "<gml:patches>");
+    for (const patch of surface.patches) {
+      xml.push(2, "<gml:PolygonPatch>");
+      appendXml(xml, generatePolygon(patch, version, prettyPrint), 3);
+      xml.push(2, "</gml:PolygonPatch>");
+    }
+    xml.push(1, "</gml:patches>");
+    xml.push(0, "</gml:Surface>");
+    return xml.toString();
+  }
+  function generateMultiPoint(multiPoint, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    xml.push(0, `<gml:MultiPoint ${namespace}>`);
+    for (const coords of multiPoint.coordinates) {
+      xml.push(1, "<gml:pointMember>");
+      const point = {
+        coordinates: coords,
+        srsName: multiPoint.srsName,
+        version: multiPoint.version
+      };
+      appendXml(xml, generatePoint(point, version, prettyPrint), 2);
+      xml.push(1, "</gml:pointMember>");
+    }
+    xml.push(0, "</gml:MultiPoint>");
+    return xml.toString();
+  }
+  function generateMultiLineString(multiLineString, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    const tag = version === "2.1.2" ? "coordinates" : "posList";
+    xml.push(0, `<gml:MultiLineString ${namespace}>`);
+    for (const line of multiLineString.coordinates) {
+      xml.push(1, "<gml:lineStringMember>");
+      xml.push(2, "<gml:LineString>");
+      xml.push(3, `<gml:${tag}>${formatCoordinateList(line, version)}</gml:${tag}>`);
+      xml.push(2, "</gml:LineString>");
+      xml.push(1, "</gml:lineStringMember>");
+    }
+    xml.push(0, "</gml:MultiLineString>");
+    return xml.toString();
+  }
+  function generateMultiPolygon(multiPolygon, version, prettyPrint) {
+    const xml = createXmlBuilder(prettyPrint);
+    const namespace = getNamespace(version);
+    xml.push(0, `<gml:MultiPolygon ${namespace}>`);
+    for (const polygonCoords of multiPolygon.coordinates) {
+      xml.push(1, "<gml:polygonMember>");
+      const polygon = {
+        coordinates: polygonCoords,
+        srsName: multiPolygon.srsName,
+        version: multiPolygon.version
+      };
+      appendXml(xml, generatePolygon(polygon, version, prettyPrint), 2);
+      xml.push(1, "</gml:polygonMember>");
+    }
+    xml.push(0, "</gml:MultiPolygon>");
+    return xml.toString();
+  }
+  function createXmlBuilder(prettyPrint) {
+    const indentUnit = prettyPrint ? "  " : "";
+    const newline = prettyPrint ? "\n" : "";
+    const lines = [];
+    return {
+      push(level, text) {
+        lines.push(`${indentUnit.repeat(level)}${text}`);
+      },
+      toString() {
+        return lines.join(newline);
+      },
+      get newline() {
+        return newline;
+      }
+    };
+  }
+  function appendXml(target, xml, level) {
+    const lines = xml.split(/\r?\n/);
+    for (const line of lines) {
+      target.push(level, line);
+    }
+  }
+  function formatCoordinateList(coordinates, version) {
+    const pairSeparator = version === "2.1.2" ? "," : " ";
+    return coordinates.map((tuple) => tuple.join(pairSeparator)).join(" ");
+  }
+  function serializePropertyValue(value) {
+    if (value === void 0 || value === null)
+      return "";
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+  function getNamespace(version) {
+    return version === "2.1.2" ? 'xmlns:gml="http://www.opengis.net/gml"' : 'xmlns:gml="http://www.opengis.net/gml/3.2"';
+  }
+  function isObject(value) {
+    return typeof value === "object" && value !== null;
+  }
+  function isGmlFeatureCollection(value) {
+    return isObject(value) && value.type === "FeatureCollection";
+  }
+  function isGmlFeature(value) {
+    return isObject(value) && "geometry" in value && "properties" in value;
+  }
+  var GEOMETRY_ELEMENT_NAMES = /* @__PURE__ */ new Set([
+    "Point",
+    "LineString",
+    "Polygon",
+    "LinearRing",
+    "Envelope",
+    "Box",
+    "Curve",
+    "Surface",
+    "MultiPoint",
+    "MultiLineString",
+    "MultiPolygon"
+  ]);
+  var GmlParser$1 = class GmlParser {
+    /**
+     * Builder-Instanz zur Transformation von GML in das Zielformat.
+     * @private
+     */
+    builder;
+    /**
+     * Erstellt eine neue GmlParser-Instanz.
+     *
+     * @param targetFormat - Output-Format oder custom Builder-Instanz.
+     *                       Unterstützte Formate: 'geojson', 'shapefile', 'geopackage',
+     *                       'flatgeobuf', 'csv', 'kml', 'wkt', 'cis-json', 'coveragejson'
+     *
+     * @example
+     * ```typescript
+     * // GeoJSON (Standard)
+     * const parser1 = new GmlParser();
+     * const parser2 = new GmlParser('geojson');
+     *
+     * // Andere Formate
+     * const csvParser = new GmlParser('csv');
+     * const kmlParser = new GmlParser('kml');
+     *
+     * // Custom Builder
+     * const customParser = new GmlParser(new MyBuilder());
+     * ```
+     *
+     * @public
+     */
+    constructor(targetFormat = "geojson", builderFactory) {
+      this.builder = typeof targetFormat === "string" ? builderFactory(targetFormat) : targetFormat;
+    }
+    /**
+     * Parsed ein GML-Dokument und konvertiert es in das konfigurierte Zielformat.
+     *
+     * Unterstützt alle GML-Geometrien (Point, LineString, Polygon, Multi*, Curve, Surface, etc.),
+     * Features, FeatureCollections und Coverages (RectifiedGrid, Grid, ReferenceableGrid, MultiPoint).
+     *
+     * @param xml - GML XML-String zum Parsen
+     * @returns Promise mit Geometry, Feature oder FeatureCollection im konfigurierten Zielformat
+     *
+     * @throws {OwsExceptionError} - Bei WFS/WCS Exception Reports
+     * @throws {Error} - Bei ungültigem oder nicht unterstütztem GML
+     *
+     * @example
+     * ```typescript
+     * const parser = new GmlParser();
+     *
+     * // Point parsen
+     * const point = await parser.parse(`
+     *   <gml:Point xmlns:gml="http://www.opengis.net/gml/3.2">
+     *     <gml:pos>10.0 20.0</gml:pos>
+     *   </gml:Point>
+     * `);
+     * // { type: 'Point', coordinates: [10, 20] }
+     *
+     * // FeatureCollection parsen
+     * const fc = await parser.parse(wfsResponse);
+     * // { type: 'FeatureCollection', features: [...] }
+     *
+     * // Coverage parsen
+     * const coverage = await parser.parse(wcsCoverageXml);
+     * // { type: 'Feature', properties: { coverageType: 'RectifiedGridCoverage', ... } }
+     * ```
+     *
+     * @public
+     */
+    async parse(xml) {
+      const doc = await parseXml(xml);
+      const version = detectGmlVersion(doc);
+      const gmlObject = this.parseGml(doc, version);
+      return this.toGeoJson(gmlObject);
+    }
+    /**
+     * Lädt und parsed ein GML-Dokument von einer URL.
+     *
+     * Nützlich für das direkte Laden von WFS GetFeature oder WCS GetCoverage Responses.
+     *
+     * @param url - URL zum GML-Dokument (z.B. WFS GetFeature Request)
+     * @returns Promise mit Geometry, Feature oder FeatureCollection
+     *
+     * @throws {Error} - Bei HTTP-Fehlern (404, 500, etc.)
+     * @throws {OwsExceptionError} - Bei WFS/WCS Exception Reports
+     *
+     * @example
+     * ```typescript
+     * const parser = new GmlParser();
+     *
+     * // WFS GetFeature laden
+     * const features = await parser.parseFromUrl(
+     *   'https://example.com/wfs?service=WFS&request=GetFeature&typeName=water_areas'
+     * );
+     *
+     * // WCS GetCoverage laden
+     * const coverage = await parser.parseFromUrl(
+     *   'https://example.com/wcs?service=WCS&request=GetCoverage&coverageId=DEM'
+     * );
+     * ```
+     *
+     * @public
+     */
+    async parseFromUrl(url) {
+      const xml = await this.fetchXml(url);
+      return this.parse(xml);
+    }
+    /**
+     * Konvertiert ein GML-Dokument zwischen verschiedenen GML-Versionen.
+     *
+     * Unterstützt Konvertierung zwischen GML 2.1.2 und 3.2.
+     *
+     * @param xml - GML XML-String zum Konvertieren
+     * @param options - Konvertierungs-Optionen
+     * @returns Promise mit konvertiertem GML XML-String
+     *
+     * @throws {Error} - Bei nicht unterstützten Versionen oder ungültigem GML
+     *
+     * @example
+     * ```typescript
+     * const parser = new GmlParser();
+     *
+     * // GML 3.2 → 2.1.2 konvertieren
+     * const gml32 = `<gml:Point xmlns:gml="http://www.opengis.net/gml/3.2">
+     *   <gml:pos>10 20</gml:pos>
+     * </gml:Point>`;
+     *
+     * const gml212 = await parser.convert(gml32, {
+     *   outputVersion: '2.1.2',
+     *   prettyPrint: true
+     * });
+     * // <gml:Point xmlns:gml="http://www.opengis.net/gml">
+     * //   <gml:coordinates>10,20</gml:coordinates>
+     * // </gml:Point>
+     * ```
+     *
+     * @public
+     */
+    async convert(xml, options) {
+      const { outputVersion, prettyPrint = false } = options;
+      const doc = await parseXml(xml);
+      const inputVersion = options.inputVersion || detectGmlVersion(doc);
+      const gmlObject = this.parseGml(doc, inputVersion);
+      if ("domainSet" in gmlObject) {
+        throw new Error("Coverage types cannot be converted with convert(). Use CoverageGenerator instead.");
+      }
+      return generateGml(gmlObject, outputVersion, prettyPrint);
+    }
+    /**
+     * Lädt ein GML-Dokument von einer URL und konvertiert es zu einer anderen Version.
+     *
+     * @param url - URL zum GML-Dokument
+     * @param options - Konvertierungs-Optionen
+     * @returns Promise mit konvertiertem GML XML-String
+     *
+     * @throws {Error} - Bei HTTP-Fehlern oder Konvertierungs-Fehlern
+     *
+     * @example
+     * ```typescript
+     * const parser = new GmlParser();
+     *
+     * const gml212 = await parser.convertFromUrl(
+     *   'https://example.com/data.gml',
+     *   { outputVersion: '2.1.2', prettyPrint: true }
+     * );
+     * ```
+     *
+     * @public
+     */
+    async convertFromUrl(url, options) {
+      const xml = await this.fetchXml(url);
+      return this.convert(xml, options);
+    }
+    async fetchXml(url) {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch GML from ${url} (${response.status} ${response.statusText})`);
+      }
+      return await response.text();
+    }
+    /**
+     * Konvertiert ein bereits geparsten GML-Objekt zurück zu GML XML.
+     *
+     * Nützlich für Round-Trip-Konvertierungen oder Modifikationen von GML-Daten.
+     *
+     * @param gmlObject - Geparste GML-Geometrie, Feature oder FeatureCollection
+     * @param options - Output-Optionen (Version, Formatierung)
+     * @returns Promise mit GML XML-String
+     *
+     * @example
+     * ```typescript
+     * const parser = new GmlParser();
+     *
+     * // GML parsen
+     * const doc = await parseXml(gmlXml);
+     * const version = detectGmlVersion(doc);
+     * const gmlObject = parser.parseGml(doc, version);
+     *
+     * // Zurück zu XML konvertieren
+     * const xml = await parser.convertGeometry(gmlObject, {
+     *   outputVersion: '2.1.2',
+     *   prettyPrint: true
+     * });
+     * ```
+     *
+     * @public
+     */
+    async convertGeometry(gmlObject, options) {
+      return generateGml(gmlObject, options.outputVersion, options.prettyPrint);
+    }
+    parseGml(doc, version) {
+      const collectionNode = this.findFeatureCollectionNode(doc);
+      if (collectionNode) {
+        return this.parseFeatureCollection(collectionNode, version);
+      }
+      const entry = this.findFirstGmlEntry(doc);
+      if (!entry)
+        throw new Error("No GML geometry found");
+      return this.parseElement(entry.key, entry.value, version);
+    }
+    parseElement(key, value, version) {
+      const element = this.normalizeElement(value);
+      const name = this.getLocalName(key, element);
+      switch (name) {
+        case "featureMember":
+          return this.parseFeatureMember(element, version);
+        case "Point":
+          return this.parsePoint(element, version);
+        case "LineString":
+          return this.parseLineString(element, version);
+        case "Polygon":
+          return this.parsePolygon(element, version);
+        case "LinearRing":
+          return this.parseLinearRing(element, version);
+        case "Envelope":
+          return this.parseEnvelope(element, version);
+        case "Box":
+          return this.parseBox(element, version);
+        case "Curve":
+          return this.parseCurve(element, version);
+        case "Surface":
+          return this.parseSurface(element, version);
+        case "MultiSurface":
+          return this.parseMultiSurface(element, version);
+        case "MultiPoint":
+          return this.parseMultiPoint(element, version);
+        case "MultiLineString":
+          return this.parseMultiLineString(element, version);
+        case "MultiPolygon":
+          return this.parseMultiPolygon(element, version);
+        case "FeatureCollection":
+          return this.parseFeatureCollection(element, version);
+        case "RectifiedGridCoverage":
+        case "GMLJP2RectifiedGridCoverage":
+          return this.parseRectifiedGridCoverage(element, version);
+        case "GridCoverage":
+          return this.parseGridCoverage(element, version);
+        case "ReferenceableGridCoverage":
+          return this.parseReferenceableGridCoverage(element, version);
+        case "MultiPointCoverage":
+          return this.parseMultiPointCoverage(element, version);
+        default:
+          throw new Error(`Unsupported GML element: ${name}`);
+      }
+    }
+    parsePoint(element, version) {
+      const srsName = element.$?.srsName;
+      const srsDimension = this.parseDimension(element.$?.srsDimension);
+      const source = version === "2.1.2" ? this.getText(element["gml:coordinates"]) : this.getText(element["gml:pos"]);
+      if (typeof source !== "string")
+        throw new Error("Invalid GML Point");
+      const tuples = this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+      const [coordinates] = tuples;
+      if (!coordinates)
+        throw new Error("Invalid GML Point");
+      return { type: "Point", coordinates, srsName, version };
+    }
+    parseLineString(element, version) {
+      const srsName = element.$?.srsName;
+      const srsDimension = this.parseDimension(element.$?.srsDimension);
+      const source = version === "2.1.2" ? this.getText(element["gml:coordinates"]) : this.getText(element["gml:posList"]);
+      if (typeof source !== "string")
+        throw new Error("Invalid GML LineString");
+      const coordinates = this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+      return { type: "LineString", coordinates, srsName, version };
+    }
+    parsePolygon(element, version) {
+      const srsName = element.$?.srsName;
+      const srsDimension = this.parseDimension(element.$?.srsDimension);
+      const coordinates = this.extractPolygonCoordinates(element, version, srsDimension);
+      return { type: "Polygon", coordinates, srsName, version };
+    }
+    parseLinearRing(element, version) {
+      const srsName = element.$?.srsName;
+      const srsDimension = this.parseDimension(element.$?.srsDimension);
+      const source = version === "2.1.2" ? this.getText(element["gml:coordinates"]) : this.getText(element["gml:posList"]);
+      if (typeof source !== "string")
+        throw new Error("Invalid GML LinearRing");
+      const coordinates = this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+      return { type: "LinearRing", coordinates, srsName, version };
+    }
+    parseEnvelope(element, version) {
+      const lower = this.getText(element["gml:lowerCorner"]);
+      const upper = this.getText(element["gml:upperCorner"]);
+      if (typeof lower !== "string" || typeof upper !== "string")
+        throw new Error("Invalid GML Envelope");
+      const lowerVals = lower.trim().split(/\s+/).map(Number);
+      const upperVals = upper.trim().split(/\s+/).map(Number);
+      if (lowerVals.length < 2 || upperVals.length < 2)
+        throw new Error("Invalid GML Envelope");
+      const bbox = [lowerVals[0], lowerVals[1], upperVals[0], upperVals[1]];
+      return { type: "Envelope", bbox, srsName: element.$?.srsName, version };
+    }
+    parseBox(element, version) {
+      const coordinatesText = this.getText(element["gml:coordinates"]);
+      if (typeof coordinatesText !== "string")
+        throw new Error("Invalid GML Box");
+      const text = coordinatesText.trim();
+      let x1, y1, x22, y22;
+      if (text.includes(",")) {
+        const tuples = text.split(/\s+/);
+        if (tuples.length < 2)
+          throw new Error("Invalid GML Box");
+        const lower = tuples[0].split(",").map(Number);
+        const upper = tuples[1].split(",").map(Number);
+        if (lower.length < 2 || upper.length < 2 || lower.some(isNaN) || upper.some(isNaN)) {
+          throw new Error("Invalid GML Box");
+        }
+        [x1, y1] = lower;
+        [x22, y22] = upper;
+      } else {
+        const values = text.split(/\s+/).map(Number);
+        if (values.length < 4 || values.some(isNaN))
+          throw new Error("Invalid GML Box");
+        [x1, y1, x22, y22] = values;
+      }
+      return { type: "Box", coordinates: [x1, y1, x22, y22], srsName: element.$?.srsName, version };
+    }
+    parseCurve(element, version) {
+      const segmentNodes = this.ensureArray(element["gml:segments"]?.["gml:LineStringSegment"]);
+      if (!segmentNodes.length)
+        throw new Error("Invalid GML Curve");
+      const coordinates = segmentNodes.map((segment) => {
+        const srsDimension = this.parseDimension(segment.$?.srsDimension) || this.parseDimension(element.$?.srsDimension);
+        const source = this.getText(segment["gml:posList"]) ?? this.getText(segment["gml:coordinates"]);
+        if (typeof source !== "string")
+          throw new Error("Invalid GML LineStringSegment");
+        return this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+      }).flat();
+      return { type: "Curve", coordinates, srsName: element.$?.srsName, version };
+    }
+    parseSurface(element, version) {
+      const patchNodes = this.ensureArray(element["gml:patches"]?.["gml:PolygonPatch"]);
+      if (!patchNodes.length)
+        throw new Error("Invalid GML Surface");
+      const patches = patchNodes.map((patch) => {
+        const polygon = this.parsePolygon(patch, version);
+        return polygon;
+      });
+      return { type: "Surface", patches, srsName: element.$?.srsName, version };
+    }
+    parseMultiSurface(element, version) {
+      const srsName = element.$?.srsName;
+      const polygons = [];
+      const surfaceMembers = this.ensureArray(element["gml:surfaceMember"]);
+      surfaceMembers.forEach((member) => {
+        const surfaceNode = this.normalizeElement(member["gml:Surface"] ?? member["gml:Polygon"]);
+        if (!surfaceNode)
+          return;
+        if (surfaceNode["#name"] === "Polygon" || surfaceNode["gml:exterior"]) {
+          polygons.push(this.parsePolygon(surfaceNode, version).coordinates);
+        } else {
+          const surface = this.parseSurface(surfaceNode, version);
+          surface.patches.forEach((patch) => polygons.push(patch.coordinates));
+        }
+      });
+      const surfaceMembersContainer = element["gml:surfaceMembers"];
+      if (surfaceMembersContainer) {
+        const containerEntries = this.ensureArray(surfaceMembersContainer);
+        containerEntries.forEach((container) => {
+          const surfaceNodes = this.ensureArray(container["gml:Surface"]);
+          surfaceNodes.forEach((node) => {
+            const surface = this.parseSurface(node, version);
+            surface.patches.forEach((patch) => polygons.push(patch.coordinates));
+          });
+          const polygonNodes = this.ensureArray(container["gml:Polygon"]);
+          polygonNodes.forEach((node) => {
+            polygons.push(this.parsePolygon(node, version).coordinates);
+          });
+        });
+      }
+      return { type: "MultiPolygon", coordinates: polygons, srsName, version };
+    }
+    parseMultiPoint(element, version) {
+      const srsName = element.$?.srsName;
+      if (version === "2.1.2") {
+        const srsDimension = this.parseDimension(element.$?.srsDimension);
+        const source = this.getText(element["gml:coordinates"]);
+        if (typeof source !== "string")
+          throw new Error("Invalid GML MultiPoint");
+        const coordinates2 = this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+        return { type: "MultiPoint", coordinates: coordinates2, srsName, version };
+      }
+      const memberNodes = this.ensureArray(element["gml:pointMember"]);
+      const membersContainer = element["gml:pointMembers"];
+      if (memberNodes.length === 0 && !membersContainer) {
+        throw new Error("Invalid GML MultiPoint");
+      }
       const coordinates = [];
-      for (let i = 0, len = coords.length; i < len; i++) {
-        const c3 = coords[i];
-        let [lng, lat] = c3.split(",");
-        lng = trim(lng);
-        lat = trim(lat);
-        coordinates.push([lng, lat]);
+      memberNodes.forEach((member) => {
+        const pointNode = this.normalizeElement(member["gml:Point"]);
+        if (!pointNode)
+          return;
+        coordinates.push(this.parsePoint(pointNode, version).coordinates);
+      });
+      if (membersContainer) {
+        const containerEntries = this.ensureArray(membersContainer);
+        containerEntries.forEach((container) => {
+          const pointNodes = this.ensureArray(container["gml:Point"]);
+          pointNodes.forEach((node) => {
+            coordinates.push(this.parsePoint(node, version).coordinates);
+          });
+        });
       }
-      return coordinates.length > 1 ? coordinates : coordinates[0];
-    } else {
-      c1 = trim(c1);
-      c22 = trim(c22);
-      if (isShape) {
-        return [c22, c1];
+      return { type: "MultiPoint", coordinates, srsName, version };
+    }
+    parseMultiLineString(element, version) {
+      const srsName = element.$?.srsName;
+      if (version === "2.1.2") {
+        const srsDimension = this.parseDimension(element.$?.srsDimension);
+        const source = this.getText(element["gml:coordinates"]);
+        if (typeof source !== "string")
+          throw new Error("Invalid GML MultiLineString");
+        const lines = this.toCoordinateTuples(parseCoordinates(source, version, srsDimension), srsDimension);
+        return { type: "MultiLineString", coordinates: [lines], srsName, version };
       }
-      return [c1, c22];
+      const lineStrings = [];
+      const members = this.ensureArray(element["gml:lineStringMember"]);
+      const membersContainer = element["gml:lineStringMembers"];
+      if (members.length === 0 && !membersContainer) {
+        throw new Error("Invalid GML MultiLineString");
+      }
+      members.forEach((member) => {
+        const lineNode = this.normalizeElement(member["gml:LineString"]);
+        if (!lineNode)
+          return;
+        lineStrings.push(this.parseLineString(lineNode, version).coordinates);
+      });
+      if (membersContainer) {
+        const containerEntries = this.ensureArray(membersContainer);
+        containerEntries.forEach((container) => {
+          const lineNodes = this.ensureArray(container["gml:LineString"]);
+          lineNodes.forEach((lineNode) => {
+            lineStrings.push(this.parseLineString(lineNode, version).coordinates);
+          });
+        });
+      }
+      return { type: "MultiLineString", coordinates: lineStrings, srsName, version };
     }
-  }
-  function trim(str) {
-    const BLANK = " ";
-    while (str.indexOf(BLANK) > -1) {
-      str = str.replace(BLANK, "");
+    parseMultiPolygon(element, version) {
+      const srsName = element.$?.srsName;
+      const polygons = [];
+      const members = this.ensureArray(element["gml:polygonMember"]);
+      members.forEach((member) => {
+        const polygonNode = this.normalizeElement(member["gml:Polygon"]);
+        if (!polygonNode)
+          return;
+        polygons.push(this.parsePolygon(polygonNode, version).coordinates);
+      });
+      const membersContainer = element["gml:polygonMembers"];
+      if (membersContainer) {
+        const containerEntries = this.ensureArray(membersContainer);
+        containerEntries.forEach((container) => {
+          const polygonNodes = this.ensureArray(container["gml:Polygon"]);
+          polygonNodes.forEach((node) => {
+            polygons.push(this.parsePolygon(node, version).coordinates);
+          });
+        });
+      }
+      return { type: "MultiPolygon", coordinates: polygons, srsName, version };
     }
-    return parseFloat(str);
-  }
-  function findCoordsNode(node) {
-    let nodeName = getNodeName(node);
-    while (nodeName.indexOf(":coordinates") === -1 && nodeName.indexOf(":pos") === -1) {
-      node = node.children[0];
-      nodeName = getNodeName(node);
+    parseRectifiedGridCoverage(element, version) {
+      const id = element.$?.["gml:id"];
+      let boundedBy;
+      const boundedByNode = element["gml:boundedBy"];
+      if (boundedByNode && !boundedByNode["gml:null"]) {
+        const envelopeNode = boundedByNode["gml:Envelope"] ?? boundedByNode;
+        boundedBy = this.parseEnvelope(this.normalizeElement(envelopeNode), version);
+      }
+      const domainSetNode = element["gml:domainSet"] || element["gmlcov:domainSet"];
+      if (!domainSetNode)
+        throw new Error("Invalid RectifiedGridCoverage: missing domainSet");
+      const rectifiedGridNode = domainSetNode["gml:RectifiedGrid"];
+      if (!rectifiedGridNode)
+        throw new Error("Invalid RectifiedGridCoverage: missing RectifiedGrid");
+      const gridElement = this.normalizeElement(rectifiedGridNode);
+      const dimension = parseInt(gridElement.$?.dimension, 10) || 2;
+      const srsName = gridElement.$?.srsName;
+      const limitsNode = gridElement["gml:limits"] || gridElement["gml:gridLimits"];
+      const gridEnvelopeNode = limitsNode?.["gml:GridEnvelope"];
+      if (!gridEnvelopeNode)
+        throw new Error("Invalid RectifiedGridCoverage: missing GridEnvelope");
+      const lowText = this.getText(gridEnvelopeNode["gml:low"]);
+      const highText = this.getText(gridEnvelopeNode["gml:high"]);
+      if (typeof lowText !== "string" || typeof highText !== "string") {
+        throw new Error("Invalid GridEnvelope");
+      }
+      const low = lowText.trim().split(/\s+/).map(Number);
+      const high = highText.trim().split(/\s+/).map(Number);
+      const axisLabelsText = this.getText(gridElement["gml:axisLabels"]);
+      const axisLabels = axisLabelsText?.trim().split(/\s+/);
+      const originNode = gridElement["gml:origin"];
+      const pointNode = originNode?.["gml:Point"];
+      if (!pointNode)
+        throw new Error("Invalid RectifiedGridCoverage: missing origin");
+      const posText = this.getText(pointNode["gml:pos"]);
+      if (typeof posText !== "string")
+        throw new Error("Invalid origin Point");
+      const origin = posText.trim().split(/\s+/).map(Number);
+      const offsetVectorNodes = this.ensureArray(gridElement["gml:offsetVector"]);
+      const offsetVectors = offsetVectorNodes.map((node) => {
+        const text = this.getText(node);
+        if (typeof text !== "string")
+          throw new Error("Invalid offsetVector");
+        return text.trim().split(/\s+/).map(Number);
+      });
+      const domainSet = {
+        id: gridElement.$?.["gml:id"],
+        dimension,
+        srsName,
+        limits: { low, high },
+        axisLabels,
+        origin,
+        offsetVectors
+      };
+      const rangeSetNode = element["gml:rangeSet"] || element["gmlcov:rangeSet"];
+      const rangeSet = {};
+      if (rangeSetNode) {
+        const fileNode = rangeSetNode["gml:File"];
+        if (fileNode) {
+          const fileName = this.getText(fileNode["gml:fileName"]);
+          const fileStructure = this.getText(fileNode["gml:fileStructure"]);
+          if (fileName) {
+            rangeSet.file = {
+              fileName,
+              fileStructure: fileStructure || void 0
+            };
+          }
+        }
+      }
+      const rangeTypeNode = element["gml:rangeType"] || element["gmlcov:rangeType"];
+      let rangeType = void 0;
+      if (rangeTypeNode) {
+        const dataRecordNode = rangeTypeNode["swe:DataRecord"];
+        if (dataRecordNode) {
+          const fieldNodes = this.ensureArray(dataRecordNode["swe:field"]);
+          rangeType = {
+            field: fieldNodes.map((fieldNode) => ({
+              name: fieldNode.$?.name,
+              dataType: this.getText(fieldNode["swe:Quantity"]?.["swe:dataType"]),
+              uom: fieldNode["swe:Quantity"]?.$?.uom,
+              description: this.getText(fieldNode["swe:Quantity"]?.["swe:description"])
+            }))
+          };
+        }
+      }
+      return {
+        type: "RectifiedGridCoverage",
+        id,
+        boundedBy,
+        domainSet,
+        rangeSet,
+        rangeType,
+        version
+      };
     }
-    return node;
-  }
-  function getNodeName(node, lowerCase = true) {
-    if (lowerCase) {
-      return (node.nodeName || "").toLocaleLowerCase();
-    } else {
-      return node.nodeName || "";
+    parseGridCoverage(element, version) {
+      const id = element.$?.["gml:id"];
+      let boundedBy;
+      const boundedByNode = element["gml:boundedBy"];
+      if (boundedByNode && !boundedByNode["gml:null"]) {
+        const envelopeNode = boundedByNode["gml:Envelope"] ?? boundedByNode;
+        boundedBy = this.parseEnvelope(this.normalizeElement(envelopeNode), version);
+      }
+      const domainSetNode = element["gml:domainSet"] || element["gmlcov:domainSet"];
+      if (!domainSetNode)
+        throw new Error("Invalid GridCoverage: missing domainSet");
+      const gridNode = domainSetNode["gml:Grid"];
+      if (!gridNode)
+        throw new Error("Invalid GridCoverage: missing Grid");
+      const gridElement = this.normalizeElement(gridNode);
+      const dimension = parseInt(gridElement.$?.dimension, 10) || 2;
+      const limitsNode = gridElement["gml:limits"] || gridElement["gml:gridLimits"];
+      const gridEnvelopeNode = limitsNode?.["gml:GridEnvelope"];
+      if (!gridEnvelopeNode)
+        throw new Error("Invalid GridCoverage: missing GridEnvelope");
+      const lowText = this.getText(gridEnvelopeNode["gml:low"]);
+      const highText = this.getText(gridEnvelopeNode["gml:high"]);
+      if (typeof lowText !== "string" || typeof highText !== "string") {
+        throw new Error("Invalid GridEnvelope");
+      }
+      const low = lowText.trim().split(/\s+/).map(Number);
+      const high = highText.trim().split(/\s+/).map(Number);
+      const axisLabelsText = this.getText(gridElement["gml:axisLabels"]);
+      const axisLabels = axisLabelsText?.trim().split(/\s+/);
+      const domainSet = {
+        id: gridElement.$?.["gml:id"],
+        dimension,
+        limits: { low, high },
+        axisLabels
+      };
+      const rangeSetNode = element["gml:rangeSet"] || element["gmlcov:rangeSet"];
+      const rangeSet = {};
+      if (rangeSetNode) {
+        const fileNode = rangeSetNode["gml:File"];
+        if (fileNode) {
+          const fileName = this.getText(fileNode["gml:fileName"]);
+          const fileStructure = this.getText(fileNode["gml:fileStructure"]);
+          if (fileName) {
+            rangeSet.file = {
+              fileName,
+              fileStructure: fileStructure || void 0
+            };
+          }
+        }
+      }
+      const rangeTypeNode = element["gml:rangeType"] || element["gmlcov:rangeType"];
+      let rangeType = void 0;
+      if (rangeTypeNode) {
+        const dataRecordNode = rangeTypeNode["swe:DataRecord"];
+        if (dataRecordNode) {
+          const fieldNodes = this.ensureArray(dataRecordNode["swe:field"]);
+          rangeType = {
+            field: fieldNodes.map((fieldNode) => ({
+              name: fieldNode.$?.name,
+              dataType: this.getText(fieldNode["swe:Quantity"]?.["swe:dataType"]),
+              uom: fieldNode["swe:Quantity"]?.$?.uom,
+              description: this.getText(fieldNode["swe:Quantity"]?.["swe:description"])
+            }))
+          };
+        }
+      }
+      return {
+        type: "GridCoverage",
+        id,
+        boundedBy,
+        domainSet,
+        rangeSet,
+        rangeType,
+        version
+      };
     }
-  }
-  function geoIsPolygon(type) {
-    return type.indexOf("Polygon") > -1;
-  }
+    parseReferenceableGridCoverage(element, version) {
+      const gridCoverage = this.parseGridCoverage(element, version);
+      return {
+        ...gridCoverage,
+        type: "ReferenceableGridCoverage"
+      };
+    }
+    parseMultiPointCoverage(element, version) {
+      const id = element.$?.["gml:id"];
+      let boundedBy;
+      const boundedByNode = element["gml:boundedBy"];
+      if (boundedByNode && !boundedByNode["gml:null"]) {
+        const envelopeNode = boundedByNode["gml:Envelope"] ?? boundedByNode;
+        boundedBy = this.parseEnvelope(this.normalizeElement(envelopeNode), version);
+      }
+      const domainSetNode = element["gml:domainSet"] || element["gmlcov:domainSet"];
+      if (!domainSetNode)
+        throw new Error("Invalid MultiPointCoverage: missing domainSet");
+      const multiPointNode = domainSetNode["gml:MultiPoint"];
+      if (!multiPointNode)
+        throw new Error("Invalid MultiPointCoverage: missing MultiPoint");
+      const domainSet = this.parseMultiPoint(this.normalizeElement(multiPointNode), version);
+      const rangeSetNode = element["gml:rangeSet"] || element["gmlcov:rangeSet"];
+      const rangeSet = {};
+      if (rangeSetNode) {
+        const fileNode = rangeSetNode["gml:File"];
+        if (fileNode) {
+          const fileName = this.getText(fileNode["gml:fileName"]);
+          const fileStructure = this.getText(fileNode["gml:fileStructure"]);
+          if (fileName) {
+            rangeSet.file = {
+              fileName,
+              fileStructure: fileStructure || void 0
+            };
+          }
+        }
+      }
+      const rangeTypeNode = element["gml:rangeType"] || element["gmlcov:rangeType"];
+      let rangeType = void 0;
+      if (rangeTypeNode) {
+        const dataRecordNode = rangeTypeNode["swe:DataRecord"];
+        if (dataRecordNode) {
+          const fieldNodes = this.ensureArray(dataRecordNode["swe:field"]);
+          rangeType = {
+            field: fieldNodes.map((fieldNode) => ({
+              name: fieldNode.$?.name,
+              dataType: this.getText(fieldNode["swe:Quantity"]?.["swe:dataType"]),
+              uom: fieldNode["swe:Quantity"]?.$?.uom,
+              description: this.getText(fieldNode["swe:Quantity"]?.["swe:description"])
+            }))
+          };
+        }
+      }
+      return {
+        type: "MultiPointCoverage",
+        id,
+        boundedBy,
+        domainSet,
+        rangeSet,
+        rangeType,
+        version
+      };
+    }
+    parseFeatureCollection(element, version) {
+      const features = [];
+      const featureMembers = this.ensureArray(element["gml:featureMember"]);
+      featureMembers.forEach((member) => {
+        features.push(this.parseFeatureMember(member, version));
+      });
+      const wfsMembers = this.ensureArray(element["wfs:member"]);
+      wfsMembers.forEach((member) => {
+        features.push(this.parseFeatureMember(member, version));
+      });
+      const featureMembersContainer = element["gml:featureMembers"];
+      if (featureMembersContainer) {
+        const containers = this.ensureArray(featureMembersContainer);
+        containers.forEach((container) => {
+          for (const [key, value] of Object.entries(container)) {
+            if (key.startsWith("gml:") || key === "$" || key === "_" || key === "#name")
+              continue;
+            const featureElements = this.ensureArray(value);
+            featureElements.forEach((featureElement) => {
+              const feature = this.parseFeatureElement(key, featureElement, version);
+              features.push(feature);
+            });
+          }
+        });
+      }
+      const boundsNode = element["gml:boundedBy"];
+      let bounds;
+      if (boundsNode && !boundsNode["gml:null"]) {
+        const envelopeNode = boundsNode["gml:Envelope"] ?? boundsNode;
+        bounds = this.parseEnvelope(this.normalizeElement(envelopeNode), version);
+      }
+      return { type: "FeatureCollection", features, bounds, version };
+    }
+    parseFeatureMember(member, version) {
+      const entry = Object.entries(member).find(([key]) => !key.startsWith("$"));
+      if (!entry)
+        throw new Error("Invalid GML featureMember");
+      return this.parseFeatureElement(entry[0], entry[1], version);
+    }
+    parseFeatureElement(name, element, version) {
+      const geometryNode = this.findGeometryNode(element);
+      if (!geometryNode)
+        throw new Error(`No geometry found for feature ${name}`);
+      const geometry = this.parseElement(geometryNode.key, geometryNode.value, version);
+      const properties = this.extractFeatureProperties(element, geometryNode.featurePropertyKey ?? geometryNode.key);
+      const feature = {
+        id: element.$?.["gml:id"] || element.$?.["fid"],
+        geometry,
+        properties,
+        version
+      };
+      const boundedByNode = element["gml:boundedBy"];
+      if (boundedByNode && !boundedByNode["gml:null"]) {
+        const envelopeNode = boundedByNode["gml:Envelope"] ?? boundedByNode;
+        feature.boundedBy = this.parseEnvelope(this.normalizeElement(envelopeNode), version);
+      }
+      return feature;
+    }
+    extractPolygonCoordinates(element, version, srsDimension) {
+      if (version === "2.1.2") {
+        const outerText = this.getText(element["gml:outerBoundaryIs"]?.["gml:LinearRing"]?.["gml:coordinates"]);
+        if (typeof outerText !== "string")
+          throw new Error("Invalid GML Polygon");
+        const exteriorRing2 = this.toCoordinateTuples(parseCoordinates(outerText, version, srsDimension), srsDimension);
+        const innerBoundaries = this.ensureArray(element["gml:innerBoundaryIs"]);
+        const interiorRings2 = innerBoundaries.map((interior) => {
+          const text = this.getText(interior["gml:LinearRing"]?.["gml:coordinates"]);
+          if (typeof text !== "string")
+            return [];
+          return this.toCoordinateTuples(parseCoordinates(text, version, srsDimension), srsDimension);
+        }).filter((ring) => ring.length > 0);
+        return [exteriorRing2, ...interiorRings2];
+      }
+      const exteriorText = this.getText(element["gml:exterior"]?.["gml:LinearRing"]?.["gml:posList"]);
+      if (typeof exteriorText !== "string")
+        throw new Error("Invalid GML Polygon");
+      const exteriorRing = this.toCoordinateTuples(parseCoordinates(exteriorText, version, srsDimension), srsDimension);
+      const interiors = this.ensureArray(element["gml:interior"]);
+      const interiorRings = interiors.map((interior) => {
+        const text = this.getText(interior["gml:LinearRing"]?.["gml:posList"]);
+        if (typeof text !== "string")
+          return [];
+        return this.toCoordinateTuples(parseCoordinates(text, version, srsDimension), srsDimension);
+      }).filter((ring) => ring.length > 0);
+      return [exteriorRing, ...interiorRings];
+    }
+    toGeoJson(gmlObject) {
+      if (this.isFeatureCollection(gmlObject)) {
+        return this.builder.buildFeatureCollection(gmlObject);
+      }
+      if (this.isFeature(gmlObject)) {
+        return this.builder.buildFeature(gmlObject);
+      }
+      if (this.isCoverage(gmlObject)) {
+        return this.coverageToGeoJson(gmlObject);
+      }
+      return this.geometryToGeoJson(gmlObject);
+    }
+    geometryToGeoJson(geometry) {
+      switch (geometry.type) {
+        case "Point":
+          return this.builder.buildPoint(geometry);
+        case "LineString":
+          return this.builder.buildLineString(geometry);
+        case "Polygon":
+          return this.builder.buildPolygon(geometry);
+        case "LinearRing":
+          return this.builder.buildLinearRing(geometry);
+        case "Envelope":
+          return this.builder.buildEnvelope(geometry);
+        case "Box":
+          return this.builder.buildBox(geometry);
+        case "Curve":
+          return this.builder.buildCurve(geometry);
+        case "Surface":
+          return this.builder.buildSurface(geometry);
+        case "MultiPoint":
+          return this.builder.buildMultiPoint(geometry);
+        case "MultiLineString":
+          return this.builder.buildMultiLineString(geometry);
+        case "MultiPolygon":
+          return this.builder.buildMultiPolygon(geometry);
+        default:
+          throw new Error(`Unsupported geometry type: ${geometry.type}`);
+      }
+    }
+    findFirstGmlEntry(node) {
+      if (!node || typeof node !== "object")
+        return void 0;
+      for (const [key, value] of Object.entries(node)) {
+        if (key === "$" || key === "_")
+          continue;
+        if (key.startsWith("gml:")) {
+          return { key, value };
+        }
+      }
+      for (const [key, value] of Object.entries(node)) {
+        if (key === "$" || key === "_")
+          continue;
+        if (!value)
+          continue;
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            const result = this.findFirstGmlEntry(item);
+            if (result)
+              return result;
+          }
+        } else if (typeof value === "object") {
+          const result = this.findFirstGmlEntry(value);
+          if (result)
+            return result;
+        }
+      }
+      return void 0;
+    }
+    findFeatureCollectionNode(node) {
+      if (!node || typeof node !== "object")
+        return void 0;
+      for (const [key, value] of Object.entries(node)) {
+        if (key === "$" || key === "_")
+          continue;
+        if (key.endsWith("FeatureCollection")) {
+          return this.normalizeElement(value);
+        }
+      }
+      for (const [key, value] of Object.entries(node)) {
+        if (key === "$" || key === "_")
+          continue;
+        if (!value)
+          continue;
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            const result = this.findFeatureCollectionNode(item);
+            if (result)
+              return result;
+          }
+        } else if (typeof value === "object") {
+          const result = this.findFeatureCollectionNode(value);
+          if (result)
+            return result;
+        }
+      }
+      return void 0;
+    }
+    findGeometryNode(featureElement) {
+      for (const [key, value] of Object.entries(featureElement)) {
+        if (key === "$" || key === "#name")
+          continue;
+        const result = this.searchGeometry(value, key);
+        if (result) {
+          return result;
+        }
+      }
+      return null;
+    }
+    searchGeometry(node, featurePropertyKey) {
+      if (!node)
+        return null;
+      if (Array.isArray(node)) {
+        for (const item of node) {
+          const result = this.searchGeometry(item, featurePropertyKey);
+          if (result)
+            return result;
+        }
+        return null;
+      }
+      if (typeof node !== "object")
+        return null;
+      if (featurePropertyKey && featurePropertyKey.startsWith("gml:")) {
+        const name = this.getLocalName(featurePropertyKey, node);
+        if (GEOMETRY_ELEMENT_NAMES.has(name)) {
+          return { key: featurePropertyKey, value: node, featurePropertyKey };
+        }
+      }
+      for (const [key, value] of Object.entries(node)) {
+        if (key.startsWith("gml:")) {
+          const name = this.getLocalName(key, value);
+          if (GEOMETRY_ELEMENT_NAMES.has(name)) {
+            return { key, value, featurePropertyKey };
+          }
+        }
+        const result = this.searchGeometry(value, featurePropertyKey);
+        if (result)
+          return result;
+      }
+      return null;
+    }
+    extractFeatureProperties(featureElement, geometryPropertyKey) {
+      const properties = {};
+      if (featureElement.$) {
+        for (const [key, value] of Object.entries(featureElement.$)) {
+          if (key !== "gml:id") {
+            properties[key] = this.normalizePropertyValue(value);
+          }
+        }
+      }
+      for (const [key, value] of Object.entries(featureElement)) {
+        if (key === "$" || key === "#name" || key === "_")
+          continue;
+        if (geometryPropertyKey && key === geometryPropertyKey)
+          continue;
+        if (key.startsWith("gml:"))
+          continue;
+        properties[key] = this.normalizePropertyValue(value);
+      }
+      return properties;
+    }
+    normalizePropertyValue(value) {
+      if (value === null || value === void 0)
+        return value;
+      if (Array.isArray(value)) {
+        return value.map((item) => this.normalizePropertyValue(item));
+      }
+      const text = this.getText(value);
+      if (text !== void 0) {
+        return text.trim();
+      }
+      if (typeof value === "object") {
+        return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, this.normalizePropertyValue(val)]));
+      }
+      if (typeof value === "string") {
+        return value.trim();
+      }
+      return value;
+    }
+    getText(value) {
+      if (value === null || value === void 0)
+        return void 0;
+      if (typeof value === "string")
+        return value;
+      if (typeof value === "number" || typeof value === "boolean")
+        return String(value);
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const result = this.getText(item);
+          if (result !== void 0)
+            return result;
+        }
+        return void 0;
+      }
+      if (typeof value === "object") {
+        if (typeof value._ === "string")
+          return value._;
+      }
+      return void 0;
+    }
+    parseDimension(value) {
+      const parsed = value ? parseInt(value, 10) : NaN;
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : 2;
+    }
+    ensureArray(value) {
+      if (value === void 0 || value === null)
+        return [];
+      return Array.isArray(value) ? value : [value];
+    }
+    toCoordinateTuples(coords, dimension) {
+      if (Array.isArray(coords) && Array.isArray(coords[0])) {
+        return coords;
+      }
+      const flat2 = coords;
+      const tuples = [];
+      for (let i = 0; i < flat2.length; i += dimension) {
+        tuples.push(flat2.slice(i, i + dimension));
+      }
+      return tuples;
+    }
+    normalizeElement(value) {
+      if (Array.isArray(value)) {
+        if (!value.length)
+          throw new Error("Unexpected empty GML element array");
+        return value[0];
+      }
+      return value;
+    }
+    getLocalName(key, element) {
+      if (element && typeof element === "object" && typeof element["#name"] === "string") {
+        return element["#name"];
+      }
+      const parts = key.split(":");
+      return parts[parts.length - 1];
+    }
+    isFeatureCollection(value) {
+      return value.type === "FeatureCollection";
+    }
+    isFeature(value) {
+      return value.geometry !== void 0 && value.properties !== void 0;
+    }
+    isCoverage(value) {
+      const type = value.type;
+      return type === "RectifiedGridCoverage" || type === "GridCoverage" || type === "ReferenceableGridCoverage" || type === "MultiPointCoverage";
+    }
+    coverageToGeoJson(coverage) {
+      switch (coverage.type) {
+        case "RectifiedGridCoverage":
+          return this.builder.buildRectifiedGridCoverage(coverage);
+        case "GridCoverage":
+          return this.builder.buildGridCoverage(coverage);
+        case "ReferenceableGridCoverage":
+          return this.builder.buildReferenceableGridCoverage(coverage);
+        case "MultiPointCoverage":
+          return this.builder.buildMultiPointCoverage(coverage);
+        default:
+          throw new Error(`Unsupported coverage type: ${coverage.type}`);
+      }
+    }
+  };
+  var GmlParser2 = class extends GmlParser$1 {
+    constructor(targetFormat = "geojson") {
+      super(targetFormat, getBuilder);
+    }
+  };
+  var StringCache = class {
+    cache = /* @__PURE__ */ new Map();
+    maxSize;
+    constructor(maxSize = 1e4) {
+      this.maxSize = maxSize;
+    }
+    intern(str) {
+      if (!str)
+        return str;
+      const cached = this.cache.get(str);
+      if (cached)
+        return cached;
+      if (this.cache.size >= this.maxSize) {
+        const firstKey = this.cache.keys().next().value;
+        if (firstKey !== void 0) {
+          this.cache.delete(firstKey);
+        }
+      }
+      this.cache.set(str, str);
+      return str;
+    }
+    clear() {
+      this.cache.clear();
+    }
+    size() {
+      return this.cache.size;
+    }
+  };
+  var CoordinateArrayPool = class {
+    pool = [];
+    maxPoolSize;
+    constructor(maxPoolSize = 1e3) {
+      this.maxPoolSize = maxPoolSize;
+    }
+    acquire() {
+      if (this.pool.length > 0) {
+        const array = this.pool.pop();
+        array.length = 0;
+        return array;
+      }
+      return [];
+    }
+    release(array) {
+      if (this.pool.length < this.maxPoolSize) {
+        array.length = 0;
+        this.pool.push(array);
+      }
+    }
+    clear() {
+      this.pool = [];
+    }
+    size() {
+      return this.pool.length;
+    }
+  };
+  var stringCache = new StringCache();
+  var coordinatePool = new CoordinateArrayPool();
 
   // node_modules/postcss/lib/postcss.mjs
   var import_postcss = __toESM(require_postcss(), 1);
@@ -24445,8 +32510,8 @@ var YasguiGeoTg = (() => {
     return node?.textContent || "";
   }
   function get1(node, tagName, callback) {
-    const n = node.getElementsByTagName(tagName);
-    const result = n.length ? n[0] : null;
+    const n2 = node.getElementsByTagName(tagName);
+    const result = n2.length ? n2[0] : null;
     if (result && callback)
       callback(result);
     return result;
@@ -24455,8 +32520,8 @@ var YasguiGeoTg = (() => {
     const properties = {};
     if (!node)
       return properties;
-    const n = node.getElementsByTagName(tagName);
-    const result = n.length ? n[0] : null;
+    const n2 = node.getElementsByTagName(tagName);
+    const result = n2.length ? n2[0] : null;
     if (result && callback) {
       return callback(result, properties);
     }
@@ -25073,20 +33138,20 @@ var YasguiGeoTg = (() => {
   function* kmlGen(node, options = {
     skipNullGeometry: false
   }) {
-    const n = node;
-    const styleMap = buildStyleMap(n);
-    const schema = buildSchema(n);
-    for (const placemark of $(n, "Placemark")) {
+    const n2 = node;
+    const styleMap = buildStyleMap(n2);
+    const schema = buildSchema(n2);
+    for (const placemark of $(n2, "Placemark")) {
       const feature = getPlacemark(placemark, styleMap, schema, options);
       if (feature)
         yield feature;
     }
-    for (const groundOverlay of $(n, "GroundOverlay")) {
+    for (const groundOverlay of $(n2, "GroundOverlay")) {
       const feature = getGroundOverlay(groundOverlay, styleMap, schema, options);
       if (feature)
         yield feature;
     }
-    for (const networkLink of $(n, "NetworkLink")) {
+    for (const networkLink of $(n2, "NetworkLink")) {
       const feature = getNetworkLink(networkLink, styleMap, schema, options);
       if (feature)
         yield feature;
@@ -25530,8 +33595,8 @@ var YasguiGeoTg = (() => {
       if (!err2.stack) {
         try {
           throw new Error(0);
-        } catch (e) {
-          err2 = e;
+        } catch (e2) {
+          err2 = e2;
         }
         if (!err2.stack) {
           return "(no stack trace available)";
@@ -25574,7 +33639,7 @@ var YasguiGeoTg = (() => {
         _emscripten_replace_memory(newBuffer);
         updateGlobalBufferAndViews(newBuffer);
         return 1;
-      } catch (e) {
+      } catch (e2) {
       }
     }
     function _emscripten_resize_heap(requestedSize) {
@@ -25672,13 +33737,13 @@ var YasguiGeoTg = (() => {
       /** @suppress {uselessCode} */
       function(global, env, buffer2) {
         "almost asm";
-        var a2 = new global.Int8Array(buffer2), b2 = new global.Int32Array(buffer2), c3 = new global.Uint8Array(buffer2), d3 = new global.Float32Array(buffer2), e = new global.Float64Array(buffer2), f3 = env.o | 0, g2 = env.p | 0, p = global.Math.floor, q = global.Math.abs, r = global.Math.sqrt, s2 = global.Math.pow, t = global.Math.cos, u3 = global.Math.sin, v = global.Math.tan, w = global.Math.acos, x3 = global.Math.asin, y3 = global.Math.atan, z = global.Math.atan2, A6 = global.Math.ceil, B2 = global.Math.imul, C2 = global.Math.min, D = global.Math.max, E3 = global.Math.clz32, G3 = env.b, H = env.c, I2 = env.d, J = env.e, K = env.f, L3 = env.g, M3 = env.h, N = env.i, T2 = 28656;
+        var a2 = new global.Int8Array(buffer2), b2 = new global.Int32Array(buffer2), c3 = new global.Uint8Array(buffer2), d3 = new global.Float32Array(buffer2), e2 = new global.Float64Array(buffer2), f3 = env.o | 0, g2 = env.p | 0, p = global.Math.floor, q = global.Math.abs, r2 = global.Math.sqrt, s2 = global.Math.pow, t = global.Math.cos, u3 = global.Math.sin, v = global.Math.tan, w = global.Math.acos, x3 = global.Math.asin, y3 = global.Math.atan, z = global.Math.atan2, A6 = global.Math.ceil, B2 = global.Math.imul, C2 = global.Math.min, D = global.Math.max, E3 = global.Math.clz32, G3 = env.b, H = env.c, I2 = env.d, J = env.e, K = env.f, L3 = env.g, M3 = env.h, N = env.i, T2 = 28656;
         function W(newBuffer) {
           a2 = new Int8Array(newBuffer);
           c3 = new Uint8Array(newBuffer);
           b2 = new Int32Array(newBuffer);
           d3 = new Float32Array(newBuffer);
-          e = new Float64Array(newBuffer);
+          e2 = new Float64Array(newBuffer);
           buffer2 = newBuffer;
           return true;
         }
@@ -25705,7 +33770,7 @@ var YasguiGeoTg = (() => {
         function $2(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0;
+          var d4 = 0, e3 = 0, f4 = 0;
           if ((a3 | 0) < 0) {
             c4 = 2;
             return c4 | 0;
@@ -25716,9 +33781,9 @@ var YasguiGeoTg = (() => {
           } else {
             d4 = ((a3 | 0) < 0) << 31 >> 31;
             f4 = Pd(a3 | 0, d4 | 0, 3, 0) | 0;
-            e2 = H() | 0;
+            e3 = H() | 0;
             d4 = Jd(a3 | 0, d4 | 0, 1, 0) | 0;
-            d4 = Pd(f4 | 0, e2 | 0, d4 | 0, H() | 0) | 0;
+            d4 = Pd(f4 | 0, e3 | 0, d4 | 0, H() | 0) | 0;
             d4 = Jd(d4 | 0, H() | 0, 1, 0) | 0;
             a3 = H() | 0;
             b2[c4 >> 2] = d4;
@@ -25735,20 +33800,20 @@ var YasguiGeoTg = (() => {
           d4 = d4 | 0;
           return ba(a3, b3, c4, d4, 0) | 0;
         }
-        function ba(a3, c4, d4, e2, f4) {
+        function ba(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           j = T2;
           T2 = T2 + 16 | 0;
           h2 = j;
-          if (!(ca(a3, c4, d4, e2, f4) | 0)) {
-            e2 = 0;
+          if (!(ca(a3, c4, d4, e3, f4) | 0)) {
+            e3 = 0;
             T2 = j;
-            return e2 | 0;
+            return e3 | 0;
           }
           do {
             if ((d4 | 0) >= 0) {
@@ -25772,17 +33837,17 @@ var YasguiGeoTg = (() => {
                 b2[h2 + 4 >> 2] = i;
                 h2 = g3;
               }
-              _d(e2 | 0, 0, h2 << 3 | 0) | 0;
+              _d(e3 | 0, 0, h2 << 3 | 0) | 0;
               if (f4 | 0) {
                 _d(f4 | 0, 0, h2 << 2 | 0) | 0;
-                g3 = da(a3, c4, d4, e2, f4, h2, i, 0) | 0;
+                g3 = da(a3, c4, d4, e3, f4, h2, i, 0) | 0;
                 break;
               }
               g3 = Id(h2, 4) | 0;
               if (!g3) {
                 g3 = 13;
               } else {
-                k = da(a3, c4, d4, e2, g3, h2, i, 0) | 0;
+                k = da(a3, c4, d4, e3, g3, h2, i, 0) | 0;
                 Hd(g3);
                 g3 = k;
               }
@@ -25794,26 +33859,26 @@ var YasguiGeoTg = (() => {
           T2 = j;
           return k | 0;
         }
-        function ca(a3, c4, d4, e2, f4) {
+        function ca(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0;
           q2 = T2;
           T2 = T2 + 16 | 0;
-          o = q2;
+          o2 = q2;
           p2 = q2 + 8 | 0;
-          n = o;
-          b2[n >> 2] = a3;
-          b2[n + 4 >> 2] = c4;
+          n2 = o2;
+          b2[n2 >> 2] = a3;
+          b2[n2 + 4 >> 2] = c4;
           if ((d4 | 0) < 0) {
             p2 = 2;
             T2 = q2;
             return p2 | 0;
           }
-          g3 = e2;
+          g3 = e3;
           b2[g3 >> 2] = a3;
           b2[g3 + 4 >> 2] = c4;
           g3 = (f4 | 0) != 0;
@@ -25832,15 +33897,15 @@ var YasguiGeoTg = (() => {
                 l2 = 1;
                 k = 0;
                 m3 = 0;
-                n = 1;
+                n2 = 1;
                 g3 = a3;
                 while (1) {
                   if (!(k | m3)) {
-                    g3 = ea(g3, c4, 4, p2, o) | 0;
+                    g3 = ea(g3, c4, 4, p2, o2) | 0;
                     if (g3 | 0) {
                       break a;
                     }
-                    c4 = o;
+                    c4 = o2;
                     g3 = b2[c4 >> 2] | 0;
                     c4 = b2[c4 + 4 >> 2] | 0;
                     if (Kb(g3, c4) | 0) {
@@ -25848,27 +33913,27 @@ var YasguiGeoTg = (() => {
                       break a;
                     }
                   }
-                  g3 = ea(g3, c4, b2[26800 + (m3 << 2) >> 2] | 0, p2, o) | 0;
+                  g3 = ea(g3, c4, b2[26800 + (m3 << 2) >> 2] | 0, p2, o2) | 0;
                   if (g3 | 0) {
                     break a;
                   }
-                  c4 = o;
+                  c4 = o2;
                   g3 = b2[c4 >> 2] | 0;
                   c4 = b2[c4 + 4 >> 2] | 0;
-                  a3 = e2 + (l2 << 3) | 0;
+                  a3 = e3 + (l2 << 3) | 0;
                   b2[a3 >> 2] = g3;
                   b2[a3 + 4 >> 2] = c4;
-                  b2[f4 + (l2 << 2) >> 2] = n;
+                  b2[f4 + (l2 << 2) >> 2] = n2;
                   a3 = k + 1 | 0;
-                  h2 = (a3 | 0) == (n | 0);
+                  h2 = (a3 | 0) == (n2 | 0);
                   i = m3 + 1 | 0;
                   j = (i | 0) == 6;
                   if (Kb(g3, c4) | 0) {
                     g3 = 9;
                     break a;
                   }
-                  n = n + (j & h2 & 1) | 0;
-                  if ((n | 0) > (d4 | 0)) {
+                  n2 = n2 + (j & h2 & 1) | 0;
+                  if ((n2 | 0) > (d4 | 0)) {
                     g3 = 0;
                     break;
                   } else {
@@ -25881,15 +33946,15 @@ var YasguiGeoTg = (() => {
                 l2 = 1;
                 k = 0;
                 m3 = 0;
-                n = 1;
+                n2 = 1;
                 g3 = a3;
                 while (1) {
                   if (!(k | m3)) {
-                    g3 = ea(g3, c4, 4, p2, o) | 0;
+                    g3 = ea(g3, c4, 4, p2, o2) | 0;
                     if (g3 | 0) {
                       break a;
                     }
-                    c4 = o;
+                    c4 = o2;
                     g3 = b2[c4 >> 2] | 0;
                     c4 = b2[c4 + 4 >> 2] | 0;
                     if (Kb(g3, c4) | 0) {
@@ -25897,26 +33962,26 @@ var YasguiGeoTg = (() => {
                       break a;
                     }
                   }
-                  g3 = ea(g3, c4, b2[26800 + (m3 << 2) >> 2] | 0, p2, o) | 0;
+                  g3 = ea(g3, c4, b2[26800 + (m3 << 2) >> 2] | 0, p2, o2) | 0;
                   if (g3 | 0) {
                     break a;
                   }
-                  c4 = o;
+                  c4 = o2;
                   g3 = b2[c4 >> 2] | 0;
                   c4 = b2[c4 + 4 >> 2] | 0;
-                  a3 = e2 + (l2 << 3) | 0;
+                  a3 = e3 + (l2 << 3) | 0;
                   b2[a3 >> 2] = g3;
                   b2[a3 + 4 >> 2] = c4;
                   a3 = k + 1 | 0;
-                  h2 = (a3 | 0) == (n | 0);
+                  h2 = (a3 | 0) == (n2 | 0);
                   i = m3 + 1 | 0;
                   j = (i | 0) == 6;
                   if (Kb(g3, c4) | 0) {
                     g3 = 9;
                     break a;
                   }
-                  n = n + (j & h2 & 1) | 0;
-                  if ((n | 0) > (d4 | 0)) {
+                  n2 = n2 + (j & h2 & 1) | 0;
+                  if ((n2 | 0) > (d4 | 0)) {
                     g3 = 0;
                     break;
                   } else {
@@ -25934,38 +33999,38 @@ var YasguiGeoTg = (() => {
           T2 = q2;
           return p2 | 0;
         }
-        function da(a3, c4, d4, e2, f4, g3, h2, i) {
+        function da(a3, c4, d4, e3, f4, g3, h2, i) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
           h2 = h2 | 0;
           i = i | 0;
-          var j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0;
+          var j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0;
           q2 = T2;
           T2 = T2 + 16 | 0;
-          o = q2 + 8 | 0;
+          o2 = q2 + 8 | 0;
           p2 = q2;
           j = Rd(a3 | 0, c4 | 0, g3 | 0, h2 | 0) | 0;
           l2 = H() | 0;
-          m3 = e2 + (j << 3) | 0;
-          r2 = m3;
-          s3 = b2[r2 >> 2] | 0;
-          r2 = b2[r2 + 4 >> 2] | 0;
-          k = (s3 | 0) == (a3 | 0) & (r2 | 0) == (c4 | 0);
-          if (!((s3 | 0) == 0 & (r2 | 0) == 0 | k)) {
+          m3 = e3 + (j << 3) | 0;
+          r3 = m3;
+          s3 = b2[r3 >> 2] | 0;
+          r3 = b2[r3 + 4 >> 2] | 0;
+          k = (s3 | 0) == (a3 | 0) & (r3 | 0) == (c4 | 0);
+          if (!((s3 | 0) == 0 & (r3 | 0) == 0 | k)) {
             do {
               j = Jd(j | 0, l2 | 0, 1, 0) | 0;
               j = Qd(j | 0, H() | 0, g3 | 0, h2 | 0) | 0;
               l2 = H() | 0;
-              m3 = e2 + (j << 3) | 0;
+              m3 = e3 + (j << 3) | 0;
               s3 = m3;
-              r2 = b2[s3 >> 2] | 0;
+              r3 = b2[s3 >> 2] | 0;
               s3 = b2[s3 + 4 >> 2] | 0;
-              k = (r2 | 0) == (a3 | 0) & (s3 | 0) == (c4 | 0);
-            } while (!((r2 | 0) == 0 & (s3 | 0) == 0 | k));
+              k = (r3 | 0) == (a3 | 0) & (s3 | 0) == (c4 | 0);
+            } while (!((r3 | 0) == 0 & (s3 | 0) == 0 | k));
           }
           j = f4 + (j << 2) | 0;
           if (k ? (b2[j >> 2] | 0) <= (i | 0) : 0) {
@@ -25983,33 +34048,33 @@ var YasguiGeoTg = (() => {
             return s3 | 0;
           }
           k = i + 1 | 0;
-          b2[o >> 2] = 0;
-          j = ea(a3, c4, 2, o, p2) | 0;
+          b2[o2 >> 2] = 0;
+          j = ea(a3, c4, 2, o2, p2) | 0;
           switch (j | 0) {
             case 9: {
-              n = 9;
+              n2 = 9;
               break;
             }
             case 0: {
               j = p2;
-              j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+              j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
               if (!j) {
-                n = 9;
+                n2 = 9;
               }
               break;
             }
             default:
           }
           a: do {
-            if ((n | 0) == 9) {
-              b2[o >> 2] = 0;
-              j = ea(a3, c4, 3, o, p2) | 0;
+            if ((n2 | 0) == 9) {
+              b2[o2 >> 2] = 0;
+              j = ea(a3, c4, 3, o2, p2) | 0;
               switch (j | 0) {
                 case 9:
                   break;
                 case 0: {
                   j = p2;
-                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
                   if (j | 0) {
                     break a;
                   }
@@ -26018,14 +34083,14 @@ var YasguiGeoTg = (() => {
                 default:
                   break a;
               }
-              b2[o >> 2] = 0;
-              j = ea(a3, c4, 1, o, p2) | 0;
+              b2[o2 >> 2] = 0;
+              j = ea(a3, c4, 1, o2, p2) | 0;
               switch (j | 0) {
                 case 9:
                   break;
                 case 0: {
                   j = p2;
-                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
                   if (j | 0) {
                     break a;
                   }
@@ -26034,14 +34099,14 @@ var YasguiGeoTg = (() => {
                 default:
                   break a;
               }
-              b2[o >> 2] = 0;
-              j = ea(a3, c4, 5, o, p2) | 0;
+              b2[o2 >> 2] = 0;
+              j = ea(a3, c4, 5, o2, p2) | 0;
               switch (j | 0) {
                 case 9:
                   break;
                 case 0: {
                   j = p2;
-                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
                   if (j | 0) {
                     break a;
                   }
@@ -26050,14 +34115,14 @@ var YasguiGeoTg = (() => {
                 default:
                   break a;
               }
-              b2[o >> 2] = 0;
-              j = ea(a3, c4, 4, o, p2) | 0;
+              b2[o2 >> 2] = 0;
+              j = ea(a3, c4, 4, o2, p2) | 0;
               switch (j | 0) {
                 case 9:
                   break;
                 case 0: {
                   j = p2;
-                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
                   if (j | 0) {
                     break a;
                   }
@@ -26066,14 +34131,14 @@ var YasguiGeoTg = (() => {
                 default:
                   break a;
               }
-              b2[o >> 2] = 0;
-              j = ea(a3, c4, 6, o, p2) | 0;
+              b2[o2 >> 2] = 0;
+              j = ea(a3, c4, 6, o2, p2) | 0;
               switch (j | 0) {
                 case 9:
                   break;
                 case 0: {
                   j = p2;
-                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e2, f4, g3, h2, k) | 0;
+                  j = da(b2[j >> 2] | 0, b2[j + 4 >> 2] | 0, d4, e3, f4, g3, h2, k) | 0;
                   if (j | 0) {
                     break a;
                   }
@@ -26091,25 +34156,25 @@ var YasguiGeoTg = (() => {
           T2 = q2;
           return s3 | 0;
         }
-        function ea(a3, c4, d4, e2, f4) {
+        function ea(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0;
           if (d4 >>> 0 > 6) {
             f4 = 1;
             return f4 | 0;
           }
-          m3 = (b2[e2 >> 2] | 0) % 6 | 0;
-          b2[e2 >> 2] = m3;
+          m3 = (b2[e3 >> 2] | 0) % 6 | 0;
+          b2[e3 >> 2] = m3;
           if ((m3 | 0) > 0) {
             g3 = 0;
             do {
               d4 = $a(d4) | 0;
               g3 = g3 + 1 | 0;
-            } while ((g3 | 0) < (b2[e2 >> 2] | 0));
+            } while ((g3 | 0) < (b2[e3 >> 2] | 0));
           }
           m3 = Td(a3 | 0, c4 | 0, 45) | 0;
           H() | 0;
@@ -26137,12 +34202,12 @@ var YasguiGeoTg = (() => {
                 }
                 p2 = (Yb(g3) | 0) == 0;
                 g3 = g3 + -1 | 0;
-                n = Ud(7, 0, h2 | 0) | 0;
+                n2 = Ud(7, 0, h2 | 0) | 0;
                 c4 = c4 & ~(H() | 0);
-                o = Ud(b2[(p2 ? 432 : 16) + (i * 28 | 0) + (d4 << 2) >> 2] | 0, 0, h2 | 0) | 0;
+                o2 = Ud(b2[(p2 ? 432 : 16) + (i * 28 | 0) + (d4 << 2) >> 2] | 0, 0, h2 | 0) | 0;
                 h2 = H() | 0;
                 d4 = b2[(p2 ? 640 : 224) + (i * 28 | 0) + (d4 << 2) >> 2] | 0;
-                a3 = o | a3 & ~n;
+                a3 = o2 | a3 & ~n2;
                 c4 = h2 | c4;
                 if (!d4) {
                   d4 = 0;
@@ -26158,8 +34223,8 @@ var YasguiGeoTg = (() => {
           } while (0);
           if ((k | 0) == 8) {
             p2 = b2[848 + (l2 * 28 | 0) + (d4 << 2) >> 2] | 0;
-            o = Ud(p2 | 0, 0, 45) | 0;
-            a3 = o | a3;
+            o2 = Ud(p2 | 0, 0, 45) | 0;
+            a3 = o2 | a3;
             c4 = H() | 0 | c4 & -1040385;
             d4 = b2[4272 + (l2 * 28 | 0) + (d4 << 2) >> 2] | 0;
             if ((p2 & 127 | 0) == 127) {
@@ -26168,7 +34233,7 @@ var YasguiGeoTg = (() => {
               d4 = b2[4272 + (l2 * 28 | 0) + 20 >> 2] | 0;
               a3 = Ub(p2 | a3, c4) | 0;
               c4 = H() | 0;
-              b2[e2 >> 2] = (b2[e2 >> 2] | 0) + 1;
+              b2[e3 >> 2] = (b2[e3 >> 2] | 0) + 1;
             }
           }
           i = Td(a3 | 0, c4 | 0, 45) | 0;
@@ -26201,14 +34266,14 @@ var YasguiGeoTg = (() => {
                     case 3: {
                       a3 = Ub(a3, c4) | 0;
                       c4 = H() | 0;
-                      b2[e2 >> 2] = (b2[e2 >> 2] | 0) + 1;
+                      b2[e3 >> 2] = (b2[e3 >> 2] | 0) + 1;
                       h2 = 0;
                       break c;
                     }
                     case 5: {
                       a3 = Wb(a3, c4) | 0;
                       c4 = H() | 0;
-                      b2[e2 >> 2] = (b2[e2 >> 2] | 0) + 5;
+                      b2[e3 >> 2] = (b2[e3 >> 2] | 0) + 5;
                       h2 = 0;
                       break c;
                     }
@@ -26238,7 +34303,7 @@ var YasguiGeoTg = (() => {
                   if ((h2 | 0) != 0 | (Sb(a3, c4) | 0) != 5) {
                     break;
                   }
-                  b2[e2 >> 2] = (b2[e2 >> 2] | 0) + 1;
+                  b2[e3 >> 2] = (b2[e3 >> 2] | 0) + 1;
                   break;
                 }
                 switch (m3 & 127) {
@@ -26248,12 +34313,12 @@ var YasguiGeoTg = (() => {
                   default:
                 }
                 if ((Sb(a3, c4) | 0) != 3) {
-                  b2[e2 >> 2] = (b2[e2 >> 2] | 0) + 1;
+                  b2[e3 >> 2] = (b2[e3 >> 2] | 0) + 1;
                 }
               }
             }
           } while (0);
-          b2[e2 >> 2] = ((b2[e2 >> 2] | 0) + d4 | 0) % 6 | 0;
+          b2[e3 >> 2] = ((b2[e3 >> 2] | 0) + d4 | 0) % 6 | 0;
           p2 = f4;
           b2[p2 >> 2] = a3;
           b2[p2 + 4 >> 2] = c4;
@@ -26273,43 +34338,43 @@ var YasguiGeoTg = (() => {
           d4 = ha(a3, b3, c4, d4) | 0;
           return d4 | 0;
         }
-        function ga(a3, c4, d4, e2) {
+        function ga(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0;
           p2 = T2;
           T2 = T2 + 16 | 0;
-          n = p2;
-          o = p2 + 8 | 0;
-          m3 = n;
+          n2 = p2;
+          o2 = p2 + 8 | 0;
+          m3 = n2;
           b2[m3 >> 2] = a3;
           b2[m3 + 4 >> 2] = c4;
           if ((d4 | 0) < 0) {
-            o = 2;
+            o2 = 2;
             T2 = p2;
-            return o | 0;
+            return o2 | 0;
           }
           if (!d4) {
-            o = e2;
-            b2[o >> 2] = a3;
-            b2[o + 4 >> 2] = c4;
-            o = 0;
+            o2 = e3;
+            b2[o2 >> 2] = a3;
+            b2[o2 + 4 >> 2] = c4;
+            o2 = 0;
             T2 = p2;
-            return o | 0;
+            return o2 | 0;
           }
-          b2[o >> 2] = 0;
+          b2[o2 >> 2] = 0;
           a: do {
             if (!(Kb(a3, c4) | 0)) {
               f4 = 0;
               m3 = a3;
               do {
-                a3 = ea(m3, c4, 4, o, n) | 0;
+                a3 = ea(m3, c4, 4, o2, n2) | 0;
                 if (a3 | 0) {
                   break a;
                 }
-                c4 = n;
+                c4 = n2;
                 m3 = b2[c4 >> 2] | 0;
                 c4 = b2[c4 + 4 >> 2] | 0;
                 f4 = f4 + 1 | 0;
@@ -26318,7 +34383,7 @@ var YasguiGeoTg = (() => {
                   break a;
                 }
               } while ((f4 | 0) < (d4 | 0));
-              l2 = e2;
+              l2 = e3;
               b2[l2 >> 2] = m3;
               b2[l2 + 4 >> 2] = c4;
               l2 = d4 + -1 | 0;
@@ -26331,16 +34396,16 @@ var YasguiGeoTg = (() => {
                   g3 = 0;
                   f4 = a3;
                   while (1) {
-                    a3 = n;
-                    a3 = ea(b2[a3 >> 2] | 0, b2[a3 + 4 >> 2] | 0, h2, o, n) | 0;
+                    a3 = n2;
+                    a3 = ea(b2[a3 >> 2] | 0, b2[a3 + 4 >> 2] | 0, h2, o2, n2) | 0;
                     if (a3 | 0) {
                       break a;
                     }
                     if ((g3 | 0) != (l2 | 0)) {
-                      j = n;
+                      j = n2;
                       i = b2[j >> 2] | 0;
                       j = b2[j + 4 >> 2] | 0;
-                      a3 = e2 + (f4 << 3) | 0;
+                      a3 = e3 + (f4 << 3) | 0;
                       b2[a3 >> 2] = i;
                       b2[a3 + 4 >> 2] = j;
                       if (!(Kb(i, j) | 0)) {
@@ -26360,21 +34425,21 @@ var YasguiGeoTg = (() => {
                     }
                   }
                 } else {
-                  h2 = n;
+                  h2 = n2;
                   j = b2[f4 >> 2] | 0;
                   i = 0;
                   f4 = a3;
                   g3 = b2[h2 >> 2] | 0;
                   h2 = b2[h2 + 4 >> 2] | 0;
                   while (1) {
-                    a3 = ea(g3, h2, j, o, n) | 0;
+                    a3 = ea(g3, h2, j, o2, n2) | 0;
                     if (a3 | 0) {
                       break a;
                     }
-                    h2 = n;
+                    h2 = n2;
                     g3 = b2[h2 >> 2] | 0;
                     h2 = b2[h2 + 4 >> 2] | 0;
-                    a3 = e2 + (f4 << 3) | 0;
+                    a3 = e3 + (f4 << 3) | 0;
                     b2[a3 >> 2] = g3;
                     b2[a3 + 4 >> 2] = h2;
                     a3 = f4 + 1 | 0;
@@ -26392,31 +34457,31 @@ var YasguiGeoTg = (() => {
                 }
                 k = k + 1 | 0;
               } while (k >>> 0 < 6);
-              a3 = n;
+              a3 = n2;
               a3 = ((m3 | 0) == (b2[a3 >> 2] | 0) ? (c4 | 0) == (b2[a3 + 4 >> 2] | 0) : 0) ? 0 : 9;
             } else {
               a3 = 9;
             }
           } while (0);
-          o = a3;
+          o2 = a3;
           T2 = p2;
-          return o | 0;
+          return o2 | 0;
         }
-        function ha(a3, c4, d4, e2) {
+        function ha(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0;
           m3 = T2;
           T2 = T2 + 16 | 0;
           h2 = m3;
           if (!d4) {
-            b2[e2 >> 2] = a3;
-            b2[e2 + 4 >> 2] = c4;
-            e2 = 0;
+            b2[e3 >> 2] = a3;
+            b2[e3 + 4 >> 2] = c4;
+            e3 = 0;
             T2 = m3;
-            return e2 | 0;
+            return e3 | 0;
           }
           do {
             if ((d4 | 0) >= 0) {
@@ -26467,9 +34532,9 @@ var YasguiGeoTg = (() => {
                     g3 = b2[a3 >> 2] | 0;
                     a3 = b2[a3 + 4 >> 2] | 0;
                     if (!((g3 | 0) == 0 & (a3 | 0) == 0) ? (b2[l2 + (i << 2) >> 2] | 0) == (d4 | 0) : 0) {
-                      n = e2 + (f4 << 3) | 0;
-                      b2[n >> 2] = g3;
-                      b2[n + 4 >> 2] = a3;
+                      n2 = e3 + (f4 << 3) | 0;
+                      b2[n2 >> 2] = g3;
+                      b2[n2 + 4 >> 2] = a3;
                       f4 = f4 + 1 | 0;
                     }
                     i = Jd(i | 0, j | 0, 1, 0) | 0;
@@ -26484,15 +34549,15 @@ var YasguiGeoTg = (() => {
               f4 = 2;
             }
           } while (0);
-          n = f4;
+          n2 = f4;
           T2 = m3;
-          return n | 0;
+          return n2 | 0;
         }
-        function ia(a3, c4, d4, e2) {
+        function ia(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           i = T2;
           T2 = T2 + 16 | 0;
@@ -26504,7 +34569,7 @@ var YasguiGeoTg = (() => {
             b2[h2 >> 2] = 0;
             k = (ea(a3, c4, f4, h2, g3) | 0) == 0;
             j = g3;
-            if (k & ((b2[j >> 2] | 0) == (d4 | 0) ? (b2[j + 4 >> 2] | 0) == (e2 | 0) : 0)) {
+            if (k & ((b2[j >> 2] | 0) == (d4 | 0) ? (b2[j + 4 >> 2] | 0) == (e3 | 0) : 0)) {
               a3 = 4;
               break;
             }
@@ -26521,11 +34586,11 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function ja(a3, c4, d4, e2) {
+        function ja(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           i = T2;
           T2 = T2 + 48 | 0;
@@ -26573,7 +34638,7 @@ var YasguiGeoTg = (() => {
             d4 = h2;
             b2[d4 >> 2] = j;
             b2[d4 + 4 >> 2] = k;
-            d4 = e2;
+            d4 = e3;
             b2[d4 >> 2] = j;
             b2[d4 + 4 >> 2] = k;
             d4 = 0;
@@ -26590,7 +34655,7 @@ var YasguiGeoTg = (() => {
           g3 = g3 | 0;
           h2 = h2 | 0;
           i = i | 0;
-          var j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, I3 = 0, J2 = 0, K2 = 0, L4 = 0, M4 = 0;
+          var j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, I3 = 0, J2 = 0, K2 = 0, L4 = 0, M4 = 0;
           I3 = T2;
           T2 = T2 + 64 | 0;
           D2 = I3 + 48 | 0;
@@ -26640,28 +34705,28 @@ var YasguiGeoTg = (() => {
                   u4 = 0;
                   b: while (1) {
                     K2 = 1 / (+(l2 >>> 0) + 4294967296 * +(k | 0));
-                    M4 = +e[D2 >> 3];
+                    M4 = +e2[D2 >> 3];
                     k = Kd(l2 | 0, k | 0, t2 | 0, u4 | 0) | 0;
                     L4 = +(k >>> 0) + 4294967296 * +(H() | 0);
                     J2 = +(t2 >>> 0) + 4294967296 * +(u4 | 0);
-                    e[x4 >> 3] = K2 * (M4 * L4) + K2 * (+e[E4 >> 3] * J2);
-                    e[C3 >> 3] = K2 * (+e[A7 >> 3] * L4) + K2 * (+e[B3 >> 3] * J2);
+                    e2[x4 >> 3] = K2 * (M4 * L4) + K2 * (+e2[E4 >> 3] * J2);
+                    e2[C3 >> 3] = K2 * (+e2[A7 >> 3] * L4) + K2 * (+e2[B3 >> 3] * J2);
                     k = Zb(x4, f4, y4) | 0;
                     if (k | 0) {
                       j = k;
                       break;
                     }
                     s3 = y4;
-                    r2 = b2[s3 >> 2] | 0;
+                    r3 = b2[s3 >> 2] | 0;
                     s3 = b2[s3 + 4 >> 2] | 0;
-                    o = Rd(r2 | 0, s3 | 0, c4 | 0, d4 | 0) | 0;
+                    o2 = Rd(r3 | 0, s3 | 0, c4 | 0, d4 | 0) | 0;
                     m3 = H() | 0;
-                    k = i + (o << 3) | 0;
-                    n = k;
-                    l2 = b2[n >> 2] | 0;
-                    n = b2[n + 4 >> 2] | 0;
+                    k = i + (o2 << 3) | 0;
+                    n2 = k;
+                    l2 = b2[n2 >> 2] | 0;
+                    n2 = b2[n2 + 4 >> 2] | 0;
                     c: do {
-                      if ((l2 | 0) == 0 & (n | 0) == 0) {
+                      if ((l2 | 0) == 0 & (n2 | 0) == 0) {
                         w2 = k;
                         G4 = 16;
                       } else {
@@ -26672,19 +34737,19 @@ var YasguiGeoTg = (() => {
                             j = 1;
                             break b;
                           }
-                          if ((l2 | 0) == (r2 | 0) & (n | 0) == (s3 | 0)) {
+                          if ((l2 | 0) == (r3 | 0) & (n2 | 0) == (s3 | 0)) {
                             break c;
                           }
-                          k = Jd(o | 0, m3 | 0, 1, 0) | 0;
-                          o = Qd(k | 0, H() | 0, c4 | 0, d4 | 0) | 0;
+                          k = Jd(o2 | 0, m3 | 0, 1, 0) | 0;
+                          o2 = Qd(k | 0, H() | 0, c4 | 0, d4 | 0) | 0;
                           m3 = H() | 0;
                           q2 = Jd(q2 | 0, p2 | 0, 1, 0) | 0;
                           p2 = H() | 0;
-                          k = i + (o << 3) | 0;
-                          n = k;
-                          l2 = b2[n >> 2] | 0;
-                          n = b2[n + 4 >> 2] | 0;
-                          if ((l2 | 0) == 0 & (n | 0) == 0) {
+                          k = i + (o2 << 3) | 0;
+                          n2 = k;
+                          l2 = b2[n2 >> 2] | 0;
+                          n2 = b2[n2 + 4 >> 2] | 0;
+                          if ((l2 | 0) == 0 & (n2 | 0) == 0) {
                             w2 = k;
                             G4 = 16;
                             break;
@@ -26692,19 +34757,19 @@ var YasguiGeoTg = (() => {
                         }
                       }
                     } while (0);
-                    if ((G4 | 0) == 16 ? (G4 = 0, !((r2 | 0) == 0 & (s3 | 0) == 0)) : 0) {
+                    if ((G4 | 0) == 16 ? (G4 = 0, !((r3 | 0) == 0 & (s3 | 0) == 0)) : 0) {
                       q2 = w2;
-                      b2[q2 >> 2] = r2;
+                      b2[q2 >> 2] = r3;
                       b2[q2 + 4 >> 2] = s3;
                       q2 = h2 + (b2[g3 >> 2] << 3) | 0;
-                      b2[q2 >> 2] = r2;
+                      b2[q2 >> 2] = r3;
                       b2[q2 + 4 >> 2] = s3;
                       q2 = g3;
                       q2 = Jd(b2[q2 >> 2] | 0, b2[q2 + 4 >> 2] | 0, 1, 0) | 0;
-                      r2 = H() | 0;
+                      r3 = H() | 0;
                       s3 = g3;
                       b2[s3 >> 2] = q2;
-                      b2[s3 + 4 >> 2] = r2;
+                      b2[s3 + 4 >> 2] = r3;
                     }
                     t2 = Jd(t2 | 0, u4 | 0, 1, 0) | 0;
                     u4 = H() | 0;
@@ -26743,12 +34808,12 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function la(a3, c4, d4, e2) {
+        function la(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, I3 = 0, J2 = 0, K2 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, I3 = 0, J2 = 0, K2 = 0;
           K2 = T2;
           T2 = T2 + 112 | 0;
           F = K2 + 80 | 0;
@@ -26879,7 +34944,7 @@ var YasguiGeoTg = (() => {
                       x4 = i;
                       d4 = i;
                       d: while (1) {
-                        r2 = 0;
+                        r3 = 0;
                         s3 = 0;
                         t2 = 0;
                         u4 = 0;
@@ -26892,7 +34957,7 @@ var YasguiGeoTg = (() => {
                             b2[i >> 2] = 0;
                             i = i + 4 | 0;
                           } while ((i | 0) < (j | 0));
-                          c4 = y4 + (r2 << 3) | 0;
+                          c4 = y4 + (r3 << 3) | 0;
                           k = b2[c4 >> 2] | 0;
                           c4 = b2[c4 + 4 >> 2] | 0;
                           if (ca(k, c4, 1, G4, 0) | 0) {
@@ -26911,27 +34976,27 @@ var YasguiGeoTg = (() => {
                           q2 = 0;
                           while (1) {
                             p2 = G4 + (q2 << 3) | 0;
-                            o = b2[p2 >> 2] | 0;
+                            o2 = b2[p2 >> 2] | 0;
                             p2 = b2[p2 + 4 >> 2] | 0;
                             e: do {
-                              if ((o | 0) == 0 & (p2 | 0) == 0) {
+                              if ((o2 | 0) == 0 & (p2 | 0) == 0) {
                                 i = g3;
                                 j = h2;
                               } else {
-                                l2 = Rd(o | 0, p2 | 0, D2 | 0, E4 | 0) | 0;
+                                l2 = Rd(o2 | 0, p2 | 0, D2 | 0, E4 | 0) | 0;
                                 k = H() | 0;
-                                i = e2 + (l2 << 3) | 0;
+                                i = e3 + (l2 << 3) | 0;
                                 c4 = i;
                                 j = b2[c4 >> 2] | 0;
                                 c4 = b2[c4 + 4 >> 2] | 0;
                                 if (!((j | 0) == 0 & (c4 | 0) == 0)) {
                                   m3 = 0;
-                                  n = 0;
+                                  n2 = 0;
                                   do {
-                                    if ((m3 | 0) > (E4 | 0) | (m3 | 0) == (E4 | 0) & n >>> 0 > D2 >>> 0) {
+                                    if ((m3 | 0) > (E4 | 0) | (m3 | 0) == (E4 | 0) & n2 >>> 0 > D2 >>> 0) {
                                       break d;
                                     }
-                                    if ((j | 0) == (o | 0) & (c4 | 0) == (p2 | 0)) {
+                                    if ((j | 0) == (o2 | 0) & (c4 | 0) == (p2 | 0)) {
                                       i = g3;
                                       j = h2;
                                       break e;
@@ -26939,30 +35004,30 @@ var YasguiGeoTg = (() => {
                                     i = Jd(l2 | 0, k | 0, 1, 0) | 0;
                                     l2 = Qd(i | 0, H() | 0, D2 | 0, E4 | 0) | 0;
                                     k = H() | 0;
-                                    n = Jd(n | 0, m3 | 0, 1, 0) | 0;
+                                    n2 = Jd(n2 | 0, m3 | 0, 1, 0) | 0;
                                     m3 = H() | 0;
-                                    i = e2 + (l2 << 3) | 0;
+                                    i = e3 + (l2 << 3) | 0;
                                     c4 = i;
                                     j = b2[c4 >> 2] | 0;
                                     c4 = b2[c4 + 4 >> 2] | 0;
                                   } while (!((j | 0) == 0 & (c4 | 0) == 0));
                                 }
-                                if ((o | 0) == 0 & (p2 | 0) == 0) {
+                                if ((o2 | 0) == 0 & (p2 | 0) == 0) {
                                   i = g3;
                                   j = h2;
                                   break;
                                 }
-                                ac(o, p2, I3) | 0;
+                                ac(o2, p2, I3) | 0;
                                 if (ad(a3, J2, I3) | 0) {
-                                  n = Jd(g3 | 0, h2 | 0, 1, 0) | 0;
+                                  n2 = Jd(g3 | 0, h2 | 0, 1, 0) | 0;
                                   h2 = H() | 0;
                                   m3 = i;
-                                  b2[m3 >> 2] = o;
+                                  b2[m3 >> 2] = o2;
                                   b2[m3 + 4 >> 2] = p2;
                                   g3 = z2 + (g3 << 3) | 0;
-                                  b2[g3 >> 2] = o;
+                                  b2[g3 >> 2] = o2;
                                   b2[g3 + 4 >> 2] = p2;
-                                  g3 = n;
+                                  g3 = n2;
                                 }
                                 i = g3;
                                 j = h2;
@@ -26976,7 +35041,7 @@ var YasguiGeoTg = (() => {
                               h2 = j;
                             }
                           }
-                          r2 = Jd(r2 | 0, s3 | 0, 1, 0) | 0;
+                          r3 = Jd(r3 | 0, s3 | 0, 1, 0) | 0;
                           s3 = H() | 0;
                           t2 = Jd(t2 | 0, u4 | 0, 1, 0) | 0;
                           u4 = H() | 0;
@@ -27008,7 +35073,7 @@ var YasguiGeoTg = (() => {
                         b2[u4 + 4 >> 2] = j;
                         if ((j | 0) > 0 | (j | 0) == 0 & i >>> 0 > 0) {
                           q2 = d4;
-                          r2 = x4;
+                          r3 = x4;
                           s3 = C3;
                           t2 = w2;
                           u4 = z2;
@@ -27016,7 +35081,7 @@ var YasguiGeoTg = (() => {
                           x4 = f4;
                           w2 = A7;
                           v2 = q2;
-                          f4 = r2;
+                          f4 = r3;
                           C3 = B3;
                           B3 = s3;
                           A7 = t2;
@@ -27059,7 +35124,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           l2 = T2;
           T2 = T2 + 176 | 0;
           j = l2;
@@ -27075,40 +35140,40 @@ var YasguiGeoTg = (() => {
           xd(d4, (c4 | 0) > 6 ? c4 : 6, i & 15);
           i = 0;
           while (1) {
-            e2 = a3 + (i << 3) | 0;
-            e2 = bc(b2[e2 >> 2] | 0, b2[e2 + 4 >> 2] | 0, j) | 0;
-            if (e2 | 0) {
+            e3 = a3 + (i << 3) | 0;
+            e3 = bc(b2[e3 >> 2] | 0, b2[e3 + 4 >> 2] | 0, j) | 0;
+            if (e3 | 0) {
               break;
             }
-            e2 = b2[j >> 2] | 0;
-            if ((e2 | 0) > 0) {
+            e3 = b2[j >> 2] | 0;
+            if ((e3 | 0) > 0) {
               h2 = 0;
               do {
                 g3 = j + 8 + (h2 << 4) | 0;
                 h2 = h2 + 1 | 0;
-                e2 = j + 8 + (((h2 | 0) % (e2 | 0) | 0) << 4) | 0;
-                f4 = Cd(d4, e2, g3) | 0;
+                e3 = j + 8 + (((h2 | 0) % (e3 | 0) | 0) << 4) | 0;
+                f4 = Cd(d4, e3, g3) | 0;
                 if (!f4) {
-                  Bd(d4, g3, e2) | 0;
+                  Bd(d4, g3, e3) | 0;
                 } else {
                   Ad(d4, f4) | 0;
                 }
-                e2 = b2[j >> 2] | 0;
-              } while ((h2 | 0) < (e2 | 0));
+                e3 = b2[j >> 2] | 0;
+              } while ((h2 | 0) < (e3 | 0));
             }
             i = i + 1 | 0;
             if ((i | 0) >= (c4 | 0)) {
-              e2 = 0;
+              e3 = 0;
               k = 13;
               break;
             }
           }
           if ((k | 0) == 13) {
             T2 = l2;
-            return e2 | 0;
+            return e3 | 0;
           }
           yd(d4);
-          k = e2;
+          k = e3;
           T2 = l2;
           return k | 0;
         }
@@ -27116,10 +35181,10 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           g3 = T2;
           T2 = T2 + 32 | 0;
-          e2 = g3;
+          e3 = g3;
           f4 = g3 + 16 | 0;
           a3 = ma(a3, c4, f4) | 0;
           if (a3 | 0) {
@@ -27137,12 +35202,12 @@ var YasguiGeoTg = (() => {
               do {
                 Gc(c4, a3) | 0;
                 h2 = a3 + 16 | 0;
-                b2[e2 >> 2] = b2[h2 >> 2];
-                b2[e2 + 4 >> 2] = b2[h2 + 4 >> 2];
-                b2[e2 + 8 >> 2] = b2[h2 + 8 >> 2];
-                b2[e2 + 12 >> 2] = b2[h2 + 12 >> 2];
+                b2[e3 >> 2] = b2[h2 >> 2];
+                b2[e3 + 4 >> 2] = b2[h2 + 4 >> 2];
+                b2[e3 + 8 >> 2] = b2[h2 + 8 >> 2];
+                b2[e3 + 12 >> 2] = b2[h2 + 12 >> 2];
                 Ad(f4, a3) | 0;
-                a3 = Dd(f4, e2) | 0;
+                a3 = Dd(f4, e3) | 0;
               } while ((a3 | 0) != 0);
               a3 = zd(f4) | 0;
             } while ((a3 | 0) != 0);
@@ -27193,7 +35258,7 @@ var YasguiGeoTg = (() => {
         function ta(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0;
+          var d4 = 0, e3 = 0;
           if (c4 >>> 0 > 20) {
             c4 = -1;
             return c4 | 0;
@@ -27219,60 +35284,60 @@ var YasguiGeoTg = (() => {
                                               if ((b2[11120 + (c4 * 216 | 0) + 136 >> 2] | 0) == (a3 | 0)) {
                                                 a3 = 2;
                                                 d4 = 1;
-                                                e2 = 2;
+                                                e3 = 2;
                                               } else {
                                                 if ((b2[11120 + (c4 * 216 | 0) + 144 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 0;
                                                   d4 = 2;
-                                                  e2 = 0;
+                                                  e3 = 0;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 152 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 0;
                                                   d4 = 2;
-                                                  e2 = 1;
+                                                  e3 = 1;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 160 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 0;
                                                   d4 = 2;
-                                                  e2 = 2;
+                                                  e3 = 2;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 168 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 1;
                                                   d4 = 2;
-                                                  e2 = 0;
+                                                  e3 = 0;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 176 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 1;
                                                   d4 = 2;
-                                                  e2 = 1;
+                                                  e3 = 1;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 184 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 1;
                                                   d4 = 2;
-                                                  e2 = 2;
+                                                  e3 = 2;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 192 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 2;
                                                   d4 = 2;
-                                                  e2 = 0;
+                                                  e3 = 0;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 200 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 2;
                                                   d4 = 2;
-                                                  e2 = 1;
+                                                  e3 = 1;
                                                   break;
                                                 }
                                                 if ((b2[11120 + (c4 * 216 | 0) + 208 >> 2] | 0) == (a3 | 0)) {
                                                   a3 = 2;
                                                   d4 = 2;
-                                                  e2 = 2;
+                                                  e3 = 2;
                                                   break;
                                                 } else {
                                                   a3 = -1;
@@ -27282,90 +35347,90 @@ var YasguiGeoTg = (() => {
                                             } else {
                                               a3 = 2;
                                               d4 = 1;
-                                              e2 = 1;
+                                              e3 = 1;
                                             }
                                           } else {
                                             a3 = 2;
                                             d4 = 1;
-                                            e2 = 0;
+                                            e3 = 0;
                                           }
                                         } else {
                                           a3 = 1;
                                           d4 = 1;
-                                          e2 = 2;
+                                          e3 = 2;
                                         }
                                       } else {
                                         a3 = 1;
                                         d4 = 1;
-                                        e2 = 1;
+                                        e3 = 1;
                                       }
                                     } else {
                                       a3 = 1;
                                       d4 = 1;
-                                      e2 = 0;
+                                      e3 = 0;
                                     }
                                   } else {
                                     a3 = 0;
                                     d4 = 1;
-                                    e2 = 2;
+                                    e3 = 2;
                                   }
                                 } else {
                                   a3 = 0;
                                   d4 = 1;
-                                  e2 = 1;
+                                  e3 = 1;
                                 }
                               } else {
                                 a3 = 0;
                                 d4 = 1;
-                                e2 = 0;
+                                e3 = 0;
                               }
                             } else {
                               a3 = 2;
                               d4 = 0;
-                              e2 = 2;
+                              e3 = 2;
                             }
                           } else {
                             a3 = 2;
                             d4 = 0;
-                            e2 = 1;
+                            e3 = 1;
                           }
                         } else {
                           a3 = 2;
                           d4 = 0;
-                          e2 = 0;
+                          e3 = 0;
                         }
                       } else {
                         a3 = 1;
                         d4 = 0;
-                        e2 = 2;
+                        e3 = 2;
                       }
                     } else {
                       a3 = 1;
                       d4 = 0;
-                      e2 = 1;
+                      e3 = 1;
                     }
                   } else {
                     a3 = 1;
                     d4 = 0;
-                    e2 = 0;
+                    e3 = 0;
                   }
                 } else {
                   a3 = 0;
                   d4 = 0;
-                  e2 = 2;
+                  e3 = 2;
                 }
               } else {
                 a3 = 0;
                 d4 = 0;
-                e2 = 1;
+                e3 = 1;
               }
             } else {
               a3 = 0;
               d4 = 0;
-              e2 = 0;
+              e3 = 0;
             }
           } while (0);
-          c4 = b2[11120 + (c4 * 216 | 0) + (d4 * 72 | 0) + (a3 * 24 | 0) + (e2 << 3) + 4 >> 2] | 0;
+          c4 = b2[11120 + (c4 * 216 | 0) + (d4 * 72 | 0) + (a3 * 24 | 0) + (e3 << 3) + 4 >> 2] | 0;
           return c4 | 0;
         }
         function ua(a3, c4) {
@@ -27419,14 +35484,14 @@ var YasguiGeoTg = (() => {
         }
         function ya(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
+          var c4 = 0, d4 = 0, e3 = 0;
           c4 = 0;
           do {
             Ud(c4 | 0, 0, 45) | 0;
-            e2 = H() | 0 | 134225919;
+            e3 = H() | 0 | 134225919;
             d4 = a3 + (c4 << 3) | 0;
             b2[d4 >> 2] = -1;
-            b2[d4 + 4 >> 2] = e2;
+            b2[d4 + 4 >> 2] = e3;
             c4 = c4 + 1 | 0;
           } while ((c4 | 0) != 122);
           return 0;
@@ -27434,35 +35499,35 @@ var YasguiGeoTg = (() => {
         function za(a3) {
           a3 = a3 | 0;
           var b3 = 0, c4 = 0, d4 = 0;
-          d4 = +e[a3 + 16 >> 3];
-          c4 = +e[a3 + 24 >> 3];
+          d4 = +e2[a3 + 16 >> 3];
+          c4 = +e2[a3 + 24 >> 3];
           b3 = d4 - c4;
           return +(d4 < c4 ? b3 + 6.283185307179586 : b3);
         }
         function Aa(a3) {
           a3 = a3 | 0;
-          return +e[a3 + 16 >> 3] < +e[a3 + 24 >> 3] | 0;
+          return +e2[a3 + 16 >> 3] < +e2[a3 + 24 >> 3] | 0;
         }
         function Ba(a3) {
           a3 = a3 | 0;
-          return +(+e[a3 >> 3] - +e[a3 + 8 >> 3]);
+          return +(+e2[a3 >> 3] - +e2[a3 + 8 >> 3]);
         }
         function Ca(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0;
-          c4 = +e[b3 >> 3];
-          if (!(c4 >= +e[a3 + 8 >> 3])) {
+          c4 = +e2[b3 >> 3];
+          if (!(c4 >= +e2[a3 + 8 >> 3])) {
             b3 = 0;
             return b3 | 0;
           }
-          if (!(c4 <= +e[a3 >> 3])) {
+          if (!(c4 <= +e2[a3 >> 3])) {
             b3 = 0;
             return b3 | 0;
           }
-          d4 = +e[a3 + 16 >> 3];
-          c4 = +e[a3 + 24 >> 3];
-          f4 = +e[b3 + 8 >> 3];
+          d4 = +e2[a3 + 16 >> 3];
+          c4 = +e2[a3 + 24 >> 3];
+          f4 = +e2[b3 + 8 >> 3];
           b3 = f4 >= c4;
           a3 = f4 <= d4 & 1;
           if (d4 < c4) {
@@ -27479,33 +35544,33 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
-          if (+e[a3 >> 3] < +e[b3 + 8 >> 3]) {
+          if (+e2[a3 >> 3] < +e2[b3 + 8 >> 3]) {
             d4 = 0;
             return d4 | 0;
           }
-          if (+e[a3 + 8 >> 3] > +e[b3 >> 3]) {
+          if (+e2[a3 + 8 >> 3] > +e2[b3 >> 3]) {
             d4 = 0;
             return d4 | 0;
           }
-          g3 = +e[a3 + 16 >> 3];
+          g3 = +e2[a3 + 16 >> 3];
           c4 = a3 + 24 | 0;
-          l2 = +e[c4 >> 3];
+          l2 = +e2[c4 >> 3];
           h2 = g3 < l2;
           d4 = b3 + 16 | 0;
-          k = +e[d4 >> 3];
+          k = +e2[d4 >> 3];
           f4 = b3 + 24 | 0;
-          j = +e[f4 >> 3];
+          j = +e2[f4 >> 3];
           i = k < j;
           b3 = l2 - k < j - g3;
           a3 = h2 ? i | b3 ? 1 : 2 : 0;
           b3 = i ? h2 ? 1 : b3 ? 2 : 1 : 0;
           g3 = +nc(g3, a3);
-          if (g3 < +nc(+e[f4 >> 3], b3)) {
+          if (g3 < +nc(+e2[f4 >> 3], b3)) {
             i = 0;
             return i | 0;
           }
-          l2 = +nc(+e[c4 >> 3], a3);
-          if (l2 > +nc(+e[d4 >> 3], b3)) {
+          l2 = +nc(+e2[c4 >> 3], a3);
+          if (l2 > +nc(+e2[d4 >> 3], b3)) {
             i = 0;
             return i | 0;
           }
@@ -27518,11 +35583,11 @@ var YasguiGeoTg = (() => {
           d4 = d4 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
-          h2 = +e[a3 + 16 >> 3];
-          k = +e[a3 + 24 >> 3];
+          h2 = +e2[a3 + 16 >> 3];
+          k = +e2[a3 + 24 >> 3];
           a3 = h2 < k;
-          j = +e[c4 + 16 >> 3];
-          i = +e[c4 + 24 >> 3];
+          j = +e2[c4 + 16 >> 3];
+          i = +e2[c4 + 24 >> 3];
           g3 = j < i;
           c4 = k - j < i - h2;
           b2[d4 >> 2] = a3 ? g3 | c4 ? 1 : 2 : 0;
@@ -27533,33 +35598,33 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
-          if (+e[a3 >> 3] < +e[b3 >> 3]) {
+          if (+e2[a3 >> 3] < +e2[b3 >> 3]) {
             d4 = 0;
             return d4 | 0;
           }
-          if (+e[a3 + 8 >> 3] > +e[b3 + 8 >> 3]) {
+          if (+e2[a3 + 8 >> 3] > +e2[b3 + 8 >> 3]) {
             d4 = 0;
             return d4 | 0;
           }
           d4 = a3 + 16 | 0;
-          j = +e[d4 >> 3];
-          g3 = +e[a3 + 24 >> 3];
+          j = +e2[d4 >> 3];
+          g3 = +e2[a3 + 24 >> 3];
           h2 = j < g3;
           c4 = b3 + 16 | 0;
-          l2 = +e[c4 >> 3];
+          l2 = +e2[c4 >> 3];
           f4 = b3 + 24 | 0;
-          k = +e[f4 >> 3];
+          k = +e2[f4 >> 3];
           i = l2 < k;
           b3 = g3 - l2 < k - j;
           a3 = h2 ? i | b3 ? 1 : 2 : 0;
           b3 = i ? h2 ? 1 : b3 ? 2 : 1 : 0;
           g3 = +nc(g3, a3);
-          if (!(g3 <= +nc(+e[f4 >> 3], b3))) {
+          if (!(g3 <= +nc(+e2[f4 >> 3], b3))) {
             i = 0;
             return i | 0;
           }
-          l2 = +nc(+e[d4 >> 3], a3);
-          i = l2 >= +nc(+e[c4 >> 3], b3);
+          l2 = +nc(+e2[d4 >> 3], a3);
+          i = l2 >= +nc(+e2[c4 >> 3], b3);
           return i | 0;
         }
         function Ga(a3, c4) {
@@ -27570,18 +35635,18 @@ var YasguiGeoTg = (() => {
           T2 = T2 + 176 | 0;
           f4 = g3;
           b2[f4 >> 2] = 4;
-          j = +e[c4 >> 3];
-          e[f4 + 8 >> 3] = j;
-          h2 = +e[c4 + 16 >> 3];
-          e[f4 + 16 >> 3] = h2;
-          e[f4 + 24 >> 3] = j;
-          j = +e[c4 + 24 >> 3];
-          e[f4 + 32 >> 3] = j;
-          i = +e[c4 + 8 >> 3];
-          e[f4 + 40 >> 3] = i;
-          e[f4 + 48 >> 3] = j;
-          e[f4 + 56 >> 3] = i;
-          e[f4 + 64 >> 3] = h2;
+          j = +e2[c4 >> 3];
+          e2[f4 + 8 >> 3] = j;
+          h2 = +e2[c4 + 16 >> 3];
+          e2[f4 + 16 >> 3] = h2;
+          e2[f4 + 24 >> 3] = j;
+          j = +e2[c4 + 24 >> 3];
+          e2[f4 + 32 >> 3] = j;
+          i = +e2[c4 + 8 >> 3];
+          e2[f4 + 40 >> 3] = i;
+          e2[f4 + 48 >> 3] = j;
+          e2[f4 + 56 >> 3] = i;
+          e2[f4 + 64 >> 3] = h2;
           c4 = f4 + 72 | 0;
           d4 = c4 + 96 | 0;
           do {
@@ -27596,11 +35661,11 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0;
           t2 = T2;
           T2 = T2 + 288 | 0;
-          n = t2 + 264 | 0;
-          o = t2 + 96 | 0;
+          n2 = t2 + 264 | 0;
+          o2 = t2 + 96 | 0;
           m3 = t2;
           k = m3;
           l2 = k + 96 | 0;
@@ -27617,25 +35682,25 @@ var YasguiGeoTg = (() => {
           l2 = m3;
           m3 = b2[l2 >> 2] | 0;
           l2 = b2[l2 + 4 >> 2] | 0;
-          ac(m3, l2, n) | 0;
-          bc(m3, l2, o) | 0;
-          j = +pc(n, o + 8 | 0);
-          e[n >> 3] = +e[a3 >> 3];
-          l2 = n + 8 | 0;
-          e[l2 >> 3] = +e[a3 + 16 >> 3];
-          e[o >> 3] = +e[a3 + 8 >> 3];
-          m3 = o + 8 | 0;
-          e[m3 >> 3] = +e[a3 + 24 >> 3];
-          h2 = +pc(n, o);
-          v2 = +e[l2 >> 3] - +e[m3 >> 3];
+          ac(m3, l2, n2) | 0;
+          bc(m3, l2, o2) | 0;
+          j = +pc(n2, o2 + 8 | 0);
+          e2[n2 >> 3] = +e2[a3 >> 3];
+          l2 = n2 + 8 | 0;
+          e2[l2 >> 3] = +e2[a3 + 16 >> 3];
+          e2[o2 >> 3] = +e2[a3 + 8 >> 3];
+          m3 = o2 + 8 | 0;
+          e2[m3 >> 3] = +e2[a3 + 24 >> 3];
+          h2 = +pc(n2, o2);
+          v2 = +e2[l2 >> 3] - +e2[m3 >> 3];
           i = +q(+v2);
-          u4 = +e[n >> 3] - +e[o >> 3];
+          u4 = +e2[n2 >> 3] - +e2[o2 >> 3];
           g3 = +q(+u4);
-          if (!(v2 == 0 | u4 == 0) ? (v2 = +Wd(+i, +g3), v2 = +A6(+(h2 * h2 / +Xd(+(v2 / +Xd(+i, +g3)), 3) / (j * (j * 2.59807621135) * 0.8))), e[f3 >> 3] = v2, r2 = ~~v2 >>> 0, s3 = +q(v2) >= 1 ? v2 > 0 ? ~~+C2(+p(v2 / 4294967296), 4294967295) >>> 0 : ~~+A6((v2 - +(~~v2 >>> 0)) / 4294967296) >>> 0 : 0, !((b2[f3 + 4 >> 2] & 2146435072 | 0) == 2146435072)) : 0) {
-            o = (r2 | 0) == 0 & (s3 | 0) == 0;
+          if (!(v2 == 0 | u4 == 0) ? (v2 = +Wd(+i, +g3), v2 = +A6(+(h2 * h2 / +Xd(+(v2 / +Xd(+i, +g3)), 3) / (j * (j * 2.59807621135) * 0.8))), e2[f3 >> 3] = v2, r3 = ~~v2 >>> 0, s3 = +q(v2) >= 1 ? v2 > 0 ? ~~+C2(+p(v2 / 4294967296), 4294967295) >>> 0 : ~~+A6((v2 - +(~~v2 >>> 0)) / 4294967296) >>> 0 : 0, !((b2[f3 + 4 >> 2] & 2146435072 | 0) == 2146435072)) : 0) {
+            o2 = (r3 | 0) == 0 & (s3 | 0) == 0;
             c4 = d4;
-            b2[c4 >> 2] = o ? 1 : r2;
-            b2[c4 + 4 >> 2] = o ? 0 : s3;
+            b2[c4 >> 2] = o2 ? 1 : r3;
+            b2[c4 + 4 >> 2] = o2 ? 0 : s3;
             c4 = 0;
           } else {
             c4 = 1;
@@ -27649,7 +35714,7 @@ var YasguiGeoTg = (() => {
           c4 = c4 | 0;
           d4 = d4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0;
           m3 = T2;
           T2 = T2 + 288 | 0;
           j = m3 + 264 | 0;
@@ -27672,11 +35737,11 @@ var YasguiGeoTg = (() => {
           d4 = b2[d4 + 4 >> 2] | 0;
           ac(h2, d4, j) | 0;
           bc(h2, d4, k) | 0;
-          n = +pc(j, k + 8 | 0);
-          n = +A6(+(+pc(a3, c4) / (n * 2)));
-          e[f3 >> 3] = n;
-          d4 = ~~n >>> 0;
-          h2 = +q(n) >= 1 ? n > 0 ? ~~+C2(+p(n / 4294967296), 4294967295) >>> 0 : ~~+A6((n - +(~~n >>> 0)) / 4294967296) >>> 0 : 0;
+          n2 = +pc(j, k + 8 | 0);
+          n2 = +A6(+(+pc(a3, c4) / (n2 * 2)));
+          e2[f3 >> 3] = n2;
+          d4 = ~~n2 >>> 0;
+          h2 = +q(n2) >= 1 ? n2 > 0 ? ~~+C2(+p(n2 / 4294967296), 4294967295) >>> 0 : ~~+A6((n2 - +(~~n2 >>> 0)) / 4294967296) >>> 0 : 0;
           if ((b2[f3 + 4 >> 2] & 2146435072 | 0) == 2146435072) {
             g3 = 1;
             T2 = m3;
@@ -27694,48 +35759,48 @@ var YasguiGeoTg = (() => {
           b3 = +b3;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           g3 = a3 + 16 | 0;
-          h2 = +e[g3 >> 3];
+          h2 = +e2[g3 >> 3];
           c4 = a3 + 24 | 0;
-          f4 = +e[c4 >> 3];
+          f4 = +e2[c4 >> 3];
           d4 = h2 - f4;
           d4 = h2 < f4 ? d4 + 6.283185307179586 : d4;
-          k = +e[a3 >> 3];
+          k = +e2[a3 >> 3];
           i = a3 + 8 | 0;
-          j = +e[i >> 3];
+          j = +e2[i >> 3];
           l2 = k - j;
           d4 = (d4 * b3 - d4) * 0.5;
           b3 = (l2 * b3 - l2) * 0.5;
           k = k + b3;
-          e[a3 >> 3] = k > 1.5707963267948966 ? 1.5707963267948966 : k;
+          e2[a3 >> 3] = k > 1.5707963267948966 ? 1.5707963267948966 : k;
           b3 = j - b3;
-          e[i >> 3] = b3 < -1.5707963267948966 ? -1.5707963267948966 : b3;
+          e2[i >> 3] = b3 < -1.5707963267948966 ? -1.5707963267948966 : b3;
           b3 = h2 + d4;
           b3 = b3 > 3.141592653589793 ? b3 + -6.283185307179586 : b3;
-          e[g3 >> 3] = b3 < -3.141592653589793 ? b3 + 6.283185307179586 : b3;
+          e2[g3 >> 3] = b3 < -3.141592653589793 ? b3 + 6.283185307179586 : b3;
           b3 = f4 - d4;
           b3 = b3 > 3.141592653589793 ? b3 + -6.283185307179586 : b3;
-          e[c4 >> 3] = b3 < -3.141592653589793 ? b3 + 6.283185307179586 : b3;
+          e2[c4 >> 3] = b3 < -3.141592653589793 ? b3 + 6.283185307179586 : b3;
           return;
         }
-        function Ka(a3, c4, d4, e2) {
+        function Ka(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           b2[a3 >> 2] = c4;
           b2[a3 + 4 >> 2] = d4;
-          b2[a3 + 8 >> 2] = e2;
+          b2[a3 + 8 >> 2] = e3;
           return;
         }
         function La(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0;
-          n = c4 + 8 | 0;
-          b2[n >> 2] = 0;
-          k = +e[a3 >> 3];
+          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0;
+          n2 = c4 + 8 | 0;
+          b2[n2 >> 2] = 0;
+          k = +e2[a3 >> 3];
           i = +q(+k);
-          l2 = +e[a3 + 8 >> 3];
+          l2 = +e2[a3 + 8 >> 3];
           j = +q(+l2) * 1.1547005383792515;
           i = i + j * 0.5;
           d4 = ~~i;
@@ -27755,10 +35820,10 @@ var YasguiGeoTg = (() => {
                   break;
                 }
               } else {
-                o = 1 - i;
-                a3 = (!(j < o) & 1) + a3 | 0;
+                o2 = 1 - i;
+                a3 = (!(j < o2) & 1) + a3 | 0;
                 b2[c4 + 4 >> 2] = a3;
-                if (o <= j & j < i * 2) {
+                if (o2 <= j & j < i * 2) {
                   d4 = d4 + 1 | 0;
                   b2[c4 >> 2] = d4;
                   break;
@@ -27822,7 +35887,7 @@ var YasguiGeoTg = (() => {
           if ((d4 | 0) < 0) {
             g3 = 0 - d4 | 0;
             b2[m3 >> 2] = f4;
-            b2[n >> 2] = g3;
+            b2[n2 >> 2] = g3;
             b2[c4 >> 2] = 0;
             a3 = f4;
             d4 = 0;
@@ -27833,7 +35898,7 @@ var YasguiGeoTg = (() => {
             d4 = d4 - a3 | 0;
             b2[c4 >> 2] = d4;
             g3 = g3 - a3 | 0;
-            b2[n >> 2] = g3;
+            b2[n2 >> 2] = g3;
             b2[m3 >> 2] = 0;
             a3 = 0;
           }
@@ -27842,7 +35907,7 @@ var YasguiGeoTg = (() => {
           if ((g3 | 0) < 0) {
             b2[c4 >> 2] = h2;
             b2[m3 >> 2] = f4;
-            b2[n >> 2] = 0;
+            b2[n2 >> 2] = 0;
             a3 = f4;
             d4 = h2;
             g3 = 0;
@@ -27854,12 +35919,12 @@ var YasguiGeoTg = (() => {
           }
           b2[c4 >> 2] = d4 - f4;
           b2[m3 >> 2] = a3 - f4;
-          b2[n >> 2] = g3 - f4;
+          b2[n2 >> 2] = g3 - f4;
           return;
         }
         function Ma(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           c4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           d4 = b2[h2 >> 2] | 0;
@@ -27892,14 +35957,14 @@ var YasguiGeoTg = (() => {
             b2[g3 >> 2] = 0;
             f4 = 0;
           }
-          e2 = (d4 | 0) < (c4 | 0) ? d4 : c4;
-          e2 = (f4 | 0) < (e2 | 0) ? f4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (d4 | 0) < (c4 | 0) ? d4 : c4;
+          e3 = (f4 | 0) < (e3 | 0) ? f4 : e3;
+          if ((e3 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = c4 - e2;
-          b2[h2 >> 2] = d4 - e2;
-          b2[g3 >> 2] = f4 - e2;
+          b2[a3 >> 2] = c4 - e3;
+          b2[h2 >> 2] = d4 - e3;
+          b2[g3 >> 2] = f4 - e3;
           return;
         }
         function Na(a3, c4) {
@@ -27908,8 +35973,8 @@ var YasguiGeoTg = (() => {
           var d4 = 0, f4 = 0;
           f4 = b2[a3 + 8 >> 2] | 0;
           d4 = +((b2[a3 + 4 >> 2] | 0) - f4 | 0);
-          e[c4 >> 3] = +((b2[a3 >> 2] | 0) - f4 | 0) - d4 * 0.5;
-          e[c4 + 8 >> 3] = d4 * 0.8660254037844386;
+          e2[c4 >> 3] = +((b2[a3 >> 2] | 0) - f4 | 0) - d4 * 0.5;
+          e2[c4 + 8 >> 3] = d4 * 0.8660254037844386;
           return;
         }
         function Oa(a3, c4, d4) {
@@ -27933,12 +35998,12 @@ var YasguiGeoTg = (() => {
         function Qa(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0;
+          var d4 = 0, e3 = 0;
           d4 = B2(b2[a3 >> 2] | 0, c4) | 0;
           b2[a3 >> 2] = d4;
           d4 = a3 + 4 | 0;
-          e2 = B2(b2[d4 >> 2] | 0, c4) | 0;
-          b2[d4 >> 2] = e2;
+          e3 = B2(b2[d4 >> 2] | 0, c4) | 0;
+          b2[d4 >> 2] = e3;
           a3 = a3 + 8 | 0;
           c4 = B2(b2[a3 >> 2] | 0, c4) | 0;
           b2[a3 >> 2] = c4;
@@ -27946,23 +36011,23 @@ var YasguiGeoTg = (() => {
         }
         function Ra(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           h2 = b2[a3 >> 2] | 0;
           i = (h2 | 0) < 0;
-          e2 = (b2[a3 + 4 >> 2] | 0) - (i ? h2 : 0) | 0;
-          g3 = (e2 | 0) < 0;
-          f4 = (g3 ? 0 - e2 | 0 : 0) + ((b2[a3 + 8 >> 2] | 0) - (i ? h2 : 0)) | 0;
+          e3 = (b2[a3 + 4 >> 2] | 0) - (i ? h2 : 0) | 0;
+          g3 = (e3 | 0) < 0;
+          f4 = (g3 ? 0 - e3 | 0 : 0) + ((b2[a3 + 8 >> 2] | 0) - (i ? h2 : 0)) | 0;
           d4 = (f4 | 0) < 0;
           a3 = d4 ? 0 : f4;
-          c4 = (g3 ? 0 : e2) - (d4 ? f4 : 0) | 0;
-          f4 = (i ? 0 : h2) - (g3 ? e2 : 0) - (d4 ? f4 : 0) | 0;
+          c4 = (g3 ? 0 : e3) - (d4 ? f4 : 0) | 0;
+          f4 = (i ? 0 : h2) - (g3 ? e3 : 0) - (d4 ? f4 : 0) | 0;
           d4 = (c4 | 0) < (f4 | 0) ? c4 : f4;
           d4 = (a3 | 0) < (d4 | 0) ? a3 : d4;
-          e2 = (d4 | 0) > 0;
-          a3 = a3 - (e2 ? d4 : 0) | 0;
-          c4 = c4 - (e2 ? d4 : 0) | 0;
+          e3 = (d4 | 0) > 0;
+          a3 = a3 - (e3 ? d4 : 0) | 0;
+          c4 = c4 - (e3 ? d4 : 0) | 0;
           a: do {
-            switch (f4 - (e2 ? d4 : 0) | 0) {
+            switch (f4 - (e3 ? d4 : 0) | 0) {
               case 0:
                 switch (c4 | 0) {
                   case 0: {
@@ -28001,22 +36066,22 @@ var YasguiGeoTg = (() => {
         }
         function Sa(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           j = a3 + 8 | 0;
           h2 = b2[j >> 2] | 0;
           i = (b2[a3 >> 2] | 0) - h2 | 0;
           k = a3 + 4 | 0;
           h2 = (b2[k >> 2] | 0) - h2 | 0;
           if (i >>> 0 > 715827881 | h2 >>> 0 > 715827881) {
-            e2 = (i | 0) > 0;
+            e3 = (i | 0) > 0;
             f4 = 2147483647 - i | 0;
             g3 = -2147483648 - i | 0;
-            if (e2 ? (f4 | 0) < (i | 0) : (g3 | 0) > (i | 0)) {
+            if (e3 ? (f4 | 0) < (i | 0) : (g3 | 0) > (i | 0)) {
               k = 1;
               return k | 0;
             }
             d4 = i << 1;
-            if (e2 ? (2147483647 - d4 | 0) < (i | 0) : (-2147483648 - d4 | 0) > (i | 0)) {
+            if (e3 ? (2147483647 - d4 | 0) < (i | 0) : (-2147483648 - d4 | 0) > (i | 0)) {
               k = 1;
               return k | 0;
             }
@@ -28026,7 +36091,7 @@ var YasguiGeoTg = (() => {
             }
             c4 = i * 3 | 0;
             d4 = h2 << 1;
-            if ((e2 ? (f4 | 0) < (d4 | 0) : (g3 | 0) > (d4 | 0)) ? 1 : (i | 0) > -1 ? (c4 | -2147483648 | 0) >= (h2 | 0) : (c4 ^ -2147483648 | 0) < (h2 | 0)) {
+            if ((e3 ? (f4 | 0) < (d4 | 0) : (g3 | 0) > (d4 | 0)) ? 1 : (i | 0) > -1 ? (c4 | -2147483648 | 0) >= (h2 | 0) : (c4 ^ -2147483648 | 0) < (h2 | 0)) {
               k = 1;
               return k | 0;
             }
@@ -28034,14 +36099,14 @@ var YasguiGeoTg = (() => {
             d4 = h2 << 1;
             c4 = i * 3 | 0;
           }
-          e2 = Fd(+(c4 - h2 | 0) * 0.14285714285714285) | 0;
-          b2[a3 >> 2] = e2;
+          e3 = Fd(+(c4 - h2 | 0) * 0.14285714285714285) | 0;
+          b2[a3 >> 2] = e3;
           f4 = Fd(+(d4 + i | 0) * 0.14285714285714285) | 0;
           b2[k >> 2] = f4;
           b2[j >> 2] = 0;
-          d4 = (f4 | 0) < (e2 | 0);
-          c4 = d4 ? e2 : f4;
-          d4 = d4 ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0);
+          c4 = d4 ? e3 : f4;
+          d4 = d4 ? f4 : e3;
           if ((d4 | 0) < 0) {
             if ((d4 | 0) == -2147483648 ? 1 : (c4 | 0) > 0 ? (2147483647 - c4 | 0) < (d4 | 0) : (-2147483648 - c4 | 0) > (d4 | 0)) {
               I2(27795, 26892, 354, 26903);
@@ -28050,26 +36115,26 @@ var YasguiGeoTg = (() => {
               I2(27795, 26892, 354, 26903);
             }
           }
-          c4 = f4 - e2 | 0;
-          if ((e2 | 0) < 0) {
-            d4 = 0 - e2 | 0;
+          c4 = f4 - e3 | 0;
+          if ((e3 | 0) < 0) {
+            d4 = 0 - e3 | 0;
             b2[k >> 2] = c4;
             b2[j >> 2] = d4;
             b2[a3 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
             c4 = f4;
             d4 = 0;
           }
           if ((c4 | 0) < 0) {
-            e2 = e2 - c4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - c4 | 0;
+            b2[a3 >> 2] = e3;
             d4 = d4 - c4 | 0;
             b2[j >> 2] = d4;
             b2[k >> 2] = 0;
             c4 = 0;
           }
-          g3 = e2 - d4 | 0;
+          g3 = e3 - d4 | 0;
           f4 = c4 - d4 | 0;
           if ((d4 | 0) < 0) {
             b2[a3 >> 2] = g3;
@@ -28079,23 +36144,23 @@ var YasguiGeoTg = (() => {
             f4 = g3;
             d4 = 0;
           } else {
-            f4 = e2;
+            f4 = e3;
           }
-          e2 = (c4 | 0) < (f4 | 0) ? c4 : f4;
-          e2 = (d4 | 0) < (e2 | 0) ? d4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (c4 | 0) < (f4 | 0) ? c4 : f4;
+          e3 = (d4 | 0) < (e3 | 0) ? d4 : e3;
+          if ((e3 | 0) <= 0) {
             k = 0;
             return k | 0;
           }
-          b2[a3 >> 2] = f4 - e2;
-          b2[k >> 2] = c4 - e2;
-          b2[j >> 2] = d4 - e2;
+          b2[a3 >> 2] = f4 - e3;
+          b2[k >> 2] = c4 - e3;
+          b2[j >> 2] = d4 - e3;
           k = 0;
           return k | 0;
         }
         function Ta(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           h2 = a3 + 8 | 0;
           f4 = b2[h2 >> 2] | 0;
           g3 = (b2[a3 >> 2] | 0) - f4 | 0;
@@ -28108,13 +36173,13 @@ var YasguiGeoTg = (() => {
               return i | 0;
             }
             c4 = g3 << 1;
-            e2 = (f4 | 0) > 0;
-            if (e2 ? (2147483647 - f4 | 0) < (f4 | 0) : (-2147483648 - f4 | 0) > (f4 | 0)) {
+            e3 = (f4 | 0) > 0;
+            if (e3 ? (2147483647 - f4 | 0) < (f4 | 0) : (-2147483648 - f4 | 0) > (f4 | 0)) {
               i = 1;
               return i | 0;
             }
             j = f4 << 1;
-            if (e2 ? (2147483647 - j | 0) < (f4 | 0) : (-2147483648 - j | 0) > (f4 | 0)) {
+            if (e3 ? (2147483647 - j | 0) < (f4 | 0) : (-2147483648 - j | 0) > (f4 | 0)) {
               j = 1;
               return j | 0;
             }
@@ -28131,14 +36196,14 @@ var YasguiGeoTg = (() => {
             d4 = f4 * 3 | 0;
             c4 = g3 << 1;
           }
-          e2 = Fd(+(c4 + f4 | 0) * 0.14285714285714285) | 0;
-          b2[a3 >> 2] = e2;
+          e3 = Fd(+(c4 + f4 | 0) * 0.14285714285714285) | 0;
+          b2[a3 >> 2] = e3;
           f4 = Fd(+(d4 - g3 | 0) * 0.14285714285714285) | 0;
           b2[i >> 2] = f4;
           b2[h2 >> 2] = 0;
-          d4 = (f4 | 0) < (e2 | 0);
-          c4 = d4 ? e2 : f4;
-          d4 = d4 ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0);
+          c4 = d4 ? e3 : f4;
+          d4 = d4 ? f4 : e3;
           if ((d4 | 0) < 0) {
             if ((d4 | 0) == -2147483648 ? 1 : (c4 | 0) > 0 ? (2147483647 - c4 | 0) < (d4 | 0) : (-2147483648 - c4 | 0) > (d4 | 0)) {
               I2(27795, 26892, 402, 26917);
@@ -28147,26 +36212,26 @@ var YasguiGeoTg = (() => {
               I2(27795, 26892, 402, 26917);
             }
           }
-          c4 = f4 - e2 | 0;
-          if ((e2 | 0) < 0) {
-            d4 = 0 - e2 | 0;
+          c4 = f4 - e3 | 0;
+          if ((e3 | 0) < 0) {
+            d4 = 0 - e3 | 0;
             b2[i >> 2] = c4;
             b2[h2 >> 2] = d4;
             b2[a3 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
             c4 = f4;
             d4 = 0;
           }
           if ((c4 | 0) < 0) {
-            e2 = e2 - c4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - c4 | 0;
+            b2[a3 >> 2] = e3;
             d4 = d4 - c4 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = 0;
             c4 = 0;
           }
-          g3 = e2 - d4 | 0;
+          g3 = e3 - d4 | 0;
           f4 = c4 - d4 | 0;
           if ((d4 | 0) < 0) {
             b2[a3 >> 2] = g3;
@@ -28176,54 +36241,54 @@ var YasguiGeoTg = (() => {
             f4 = g3;
             d4 = 0;
           } else {
-            f4 = e2;
+            f4 = e3;
           }
-          e2 = (c4 | 0) < (f4 | 0) ? c4 : f4;
-          e2 = (d4 | 0) < (e2 | 0) ? d4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (c4 | 0) < (f4 | 0) ? c4 : f4;
+          e3 = (d4 | 0) < (e3 | 0) ? d4 : e3;
+          if ((e3 | 0) <= 0) {
             j = 0;
             return j | 0;
           }
-          b2[a3 >> 2] = f4 - e2;
-          b2[i >> 2] = c4 - e2;
-          b2[h2 >> 2] = d4 - e2;
+          b2[a3 >> 2] = f4 - e3;
+          b2[i >> 2] = c4 - e3;
+          b2[h2 >> 2] = d4 - e3;
           j = 0;
           return j | 0;
         }
         function Ua(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           h2 = a3 + 8 | 0;
           d4 = b2[h2 >> 2] | 0;
           c4 = (b2[a3 >> 2] | 0) - d4 | 0;
           i = a3 + 4 | 0;
           d4 = (b2[i >> 2] | 0) - d4 | 0;
-          e2 = Fd(+((c4 * 3 | 0) - d4 | 0) * 0.14285714285714285) | 0;
-          b2[a3 >> 2] = e2;
+          e3 = Fd(+((c4 * 3 | 0) - d4 | 0) * 0.14285714285714285) | 0;
+          b2[a3 >> 2] = e3;
           c4 = Fd(+((d4 << 1) + c4 | 0) * 0.14285714285714285) | 0;
           b2[i >> 2] = c4;
           b2[h2 >> 2] = 0;
-          d4 = c4 - e2 | 0;
-          if ((e2 | 0) < 0) {
-            g3 = 0 - e2 | 0;
+          d4 = c4 - e3 | 0;
+          if ((e3 | 0) < 0) {
+            g3 = 0 - e3 | 0;
             b2[i >> 2] = d4;
             b2[h2 >> 2] = g3;
             b2[a3 >> 2] = 0;
             c4 = d4;
-            e2 = 0;
+            e3 = 0;
             d4 = g3;
           } else {
             d4 = 0;
           }
           if ((c4 | 0) < 0) {
-            e2 = e2 - c4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - c4 | 0;
+            b2[a3 >> 2] = e3;
             d4 = d4 - c4 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = 0;
             c4 = 0;
           }
-          g3 = e2 - d4 | 0;
+          g3 = e3 - d4 | 0;
           f4 = c4 - d4 | 0;
           if ((d4 | 0) < 0) {
             b2[a3 >> 2] = g3;
@@ -28233,52 +36298,52 @@ var YasguiGeoTg = (() => {
             f4 = g3;
             d4 = 0;
           } else {
-            f4 = e2;
+            f4 = e3;
           }
-          e2 = (c4 | 0) < (f4 | 0) ? c4 : f4;
-          e2 = (d4 | 0) < (e2 | 0) ? d4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (c4 | 0) < (f4 | 0) ? c4 : f4;
+          e3 = (d4 | 0) < (e3 | 0) ? d4 : e3;
+          if ((e3 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = f4 - e2;
-          b2[i >> 2] = c4 - e2;
-          b2[h2 >> 2] = d4 - e2;
+          b2[a3 >> 2] = f4 - e3;
+          b2[i >> 2] = c4 - e3;
+          b2[h2 >> 2] = d4 - e3;
           return;
         }
         function Va(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           h2 = a3 + 8 | 0;
           d4 = b2[h2 >> 2] | 0;
           c4 = (b2[a3 >> 2] | 0) - d4 | 0;
           i = a3 + 4 | 0;
           d4 = (b2[i >> 2] | 0) - d4 | 0;
-          e2 = Fd(+((c4 << 1) + d4 | 0) * 0.14285714285714285) | 0;
-          b2[a3 >> 2] = e2;
+          e3 = Fd(+((c4 << 1) + d4 | 0) * 0.14285714285714285) | 0;
+          b2[a3 >> 2] = e3;
           c4 = Fd(+((d4 * 3 | 0) - c4 | 0) * 0.14285714285714285) | 0;
           b2[i >> 2] = c4;
           b2[h2 >> 2] = 0;
-          d4 = c4 - e2 | 0;
-          if ((e2 | 0) < 0) {
-            g3 = 0 - e2 | 0;
+          d4 = c4 - e3 | 0;
+          if ((e3 | 0) < 0) {
+            g3 = 0 - e3 | 0;
             b2[i >> 2] = d4;
             b2[h2 >> 2] = g3;
             b2[a3 >> 2] = 0;
             c4 = d4;
-            e2 = 0;
+            e3 = 0;
             d4 = g3;
           } else {
             d4 = 0;
           }
           if ((c4 | 0) < 0) {
-            e2 = e2 - c4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - c4 | 0;
+            b2[a3 >> 2] = e3;
             d4 = d4 - c4 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = 0;
             c4 = 0;
           }
-          g3 = e2 - d4 | 0;
+          g3 = e3 - d4 | 0;
           f4 = c4 - d4 | 0;
           if ((d4 | 0) < 0) {
             b2[a3 >> 2] = g3;
@@ -28288,87 +36353,87 @@ var YasguiGeoTg = (() => {
             f4 = g3;
             d4 = 0;
           } else {
-            f4 = e2;
+            f4 = e3;
           }
-          e2 = (c4 | 0) < (f4 | 0) ? c4 : f4;
-          e2 = (d4 | 0) < (e2 | 0) ? d4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (c4 | 0) < (f4 | 0) ? c4 : f4;
+          e3 = (d4 | 0) < (e3 | 0) ? d4 : e3;
+          if ((e3 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = f4 - e2;
-          b2[i >> 2] = c4 - e2;
-          b2[h2 >> 2] = d4 - e2;
+          b2[a3 >> 2] = f4 - e3;
+          b2[i >> 2] = c4 - e3;
+          b2[h2 >> 2] = d4 - e3;
           return;
         }
         function Wa(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           c4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           d4 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
-          e2 = b2[i >> 2] | 0;
+          e3 = b2[i >> 2] | 0;
           f4 = d4 + (c4 * 3 | 0) | 0;
           b2[a3 >> 2] = f4;
-          d4 = e2 + (d4 * 3 | 0) | 0;
+          d4 = e3 + (d4 * 3 | 0) | 0;
           b2[h2 >> 2] = d4;
-          c4 = (e2 * 3 | 0) + c4 | 0;
+          c4 = (e3 * 3 | 0) + c4 | 0;
           b2[i >> 2] = c4;
-          e2 = d4 - f4 | 0;
+          e3 = d4 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
-            b2[h2 >> 2] = e2;
+            b2[h2 >> 2] = e3;
             b2[i >> 2] = c4;
             b2[a3 >> 2] = 0;
-            d4 = e2;
-            e2 = 0;
+            d4 = e3;
+            e3 = 0;
           } else {
-            e2 = f4;
+            e3 = f4;
           }
           if ((d4 | 0) < 0) {
-            e2 = e2 - d4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - d4 | 0;
+            b2[a3 >> 2] = e3;
             c4 = c4 - d4 | 0;
             b2[i >> 2] = c4;
             b2[h2 >> 2] = 0;
             d4 = 0;
           }
-          g3 = e2 - c4 | 0;
+          g3 = e3 - c4 | 0;
           f4 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
             b2[h2 >> 2] = f4;
             b2[i >> 2] = 0;
-            e2 = g3;
+            e3 = g3;
             c4 = 0;
           } else {
             f4 = d4;
           }
-          d4 = (f4 | 0) < (e2 | 0) ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0) ? f4 : e3;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = e2 - d4;
+          b2[a3 >> 2] = e3 - d4;
           b2[h2 >> 2] = f4 - d4;
           b2[i >> 2] = c4 - d4;
           return;
         }
         function Xa(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           f4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           c4 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
           d4 = b2[i >> 2] | 0;
-          e2 = (c4 * 3 | 0) + f4 | 0;
+          e3 = (c4 * 3 | 0) + f4 | 0;
           f4 = d4 + (f4 * 3 | 0) | 0;
           b2[a3 >> 2] = f4;
-          b2[h2 >> 2] = e2;
+          b2[h2 >> 2] = e3;
           c4 = (d4 * 3 | 0) + c4 | 0;
           b2[i >> 2] = c4;
-          d4 = e2 - f4 | 0;
+          d4 = e3 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
             b2[h2 >> 2] = d4;
@@ -28376,7 +36441,7 @@ var YasguiGeoTg = (() => {
             b2[a3 >> 2] = 0;
             f4 = 0;
           } else {
-            d4 = e2;
+            d4 = e3;
           }
           if ((d4 | 0) < 0) {
             f4 = f4 - d4 | 0;
@@ -28387,185 +36452,185 @@ var YasguiGeoTg = (() => {
             d4 = 0;
           }
           g3 = f4 - c4 | 0;
-          e2 = d4 - c4 | 0;
+          e3 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
-            b2[h2 >> 2] = e2;
+            b2[h2 >> 2] = e3;
             b2[i >> 2] = 0;
             f4 = g3;
             c4 = 0;
           } else {
-            e2 = d4;
+            e3 = d4;
           }
-          d4 = (e2 | 0) < (f4 | 0) ? e2 : f4;
+          d4 = (e3 | 0) < (f4 | 0) ? e3 : f4;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
           b2[a3 >> 2] = f4 - d4;
-          b2[h2 >> 2] = e2 - d4;
+          b2[h2 >> 2] = e3 - d4;
           b2[i >> 2] = c4 - d4;
           return;
         }
         function Ya(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           if ((c4 + -1 | 0) >>> 0 >= 6) {
             return;
           }
           f4 = (b2[15440 + (c4 * 12 | 0) >> 2] | 0) + (b2[a3 >> 2] | 0) | 0;
           b2[a3 >> 2] = f4;
           i = a3 + 4 | 0;
-          e2 = (b2[15440 + (c4 * 12 | 0) + 4 >> 2] | 0) + (b2[i >> 2] | 0) | 0;
-          b2[i >> 2] = e2;
+          e3 = (b2[15440 + (c4 * 12 | 0) + 4 >> 2] | 0) + (b2[i >> 2] | 0) | 0;
+          b2[i >> 2] = e3;
           h2 = a3 + 8 | 0;
           c4 = (b2[15440 + (c4 * 12 | 0) + 8 >> 2] | 0) + (b2[h2 >> 2] | 0) | 0;
           b2[h2 >> 2] = c4;
-          d4 = e2 - f4 | 0;
+          d4 = e3 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
             b2[i >> 2] = d4;
             b2[h2 >> 2] = c4;
             b2[a3 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
-            d4 = e2;
-            e2 = f4;
+            d4 = e3;
+            e3 = f4;
           }
           if ((d4 | 0) < 0) {
-            e2 = e2 - d4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - d4 | 0;
+            b2[a3 >> 2] = e3;
             c4 = c4 - d4 | 0;
             b2[h2 >> 2] = c4;
             b2[i >> 2] = 0;
             d4 = 0;
           }
-          g3 = e2 - c4 | 0;
+          g3 = e3 - c4 | 0;
           f4 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
             b2[i >> 2] = f4;
             b2[h2 >> 2] = 0;
-            e2 = g3;
+            e3 = g3;
             c4 = 0;
           } else {
             f4 = d4;
           }
-          d4 = (f4 | 0) < (e2 | 0) ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0) ? f4 : e3;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = e2 - d4;
+          b2[a3 >> 2] = e3 - d4;
           b2[i >> 2] = f4 - d4;
           b2[h2 >> 2] = c4 - d4;
           return;
         }
         function Za(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           f4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           c4 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
           d4 = b2[i >> 2] | 0;
-          e2 = c4 + f4 | 0;
+          e3 = c4 + f4 | 0;
           f4 = d4 + f4 | 0;
           b2[a3 >> 2] = f4;
-          b2[h2 >> 2] = e2;
+          b2[h2 >> 2] = e3;
           c4 = d4 + c4 | 0;
           b2[i >> 2] = c4;
-          d4 = e2 - f4 | 0;
+          d4 = e3 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = c4;
             b2[a3 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
-            d4 = e2;
-            e2 = f4;
+            d4 = e3;
+            e3 = f4;
           }
           if ((d4 | 0) < 0) {
-            e2 = e2 - d4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - d4 | 0;
+            b2[a3 >> 2] = e3;
             c4 = c4 - d4 | 0;
             b2[i >> 2] = c4;
             b2[h2 >> 2] = 0;
             d4 = 0;
           }
-          g3 = e2 - c4 | 0;
+          g3 = e3 - c4 | 0;
           f4 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
             b2[h2 >> 2] = f4;
             b2[i >> 2] = 0;
-            e2 = g3;
+            e3 = g3;
             c4 = 0;
           } else {
             f4 = d4;
           }
-          d4 = (f4 | 0) < (e2 | 0) ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0) ? f4 : e3;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = e2 - d4;
+          b2[a3 >> 2] = e3 - d4;
           b2[h2 >> 2] = f4 - d4;
           b2[i >> 2] = c4 - d4;
           return;
         }
         function _a(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           c4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
-          e2 = b2[h2 >> 2] | 0;
+          e3 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
           d4 = b2[i >> 2] | 0;
-          f4 = e2 + c4 | 0;
+          f4 = e3 + c4 | 0;
           b2[a3 >> 2] = f4;
-          e2 = d4 + e2 | 0;
-          b2[h2 >> 2] = e2;
+          e3 = d4 + e3 | 0;
+          b2[h2 >> 2] = e3;
           c4 = d4 + c4 | 0;
           b2[i >> 2] = c4;
-          d4 = e2 - f4 | 0;
+          d4 = e3 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = c4;
             b2[a3 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
-            d4 = e2;
-            e2 = f4;
+            d4 = e3;
+            e3 = f4;
           }
           if ((d4 | 0) < 0) {
-            e2 = e2 - d4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - d4 | 0;
+            b2[a3 >> 2] = e3;
             c4 = c4 - d4 | 0;
             b2[i >> 2] = c4;
             b2[h2 >> 2] = 0;
             d4 = 0;
           }
-          g3 = e2 - c4 | 0;
+          g3 = e3 - c4 | 0;
           f4 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
             b2[h2 >> 2] = f4;
             b2[i >> 2] = 0;
-            e2 = g3;
+            e3 = g3;
             c4 = 0;
           } else {
             f4 = d4;
           }
-          d4 = (f4 | 0) < (e2 | 0) ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0) ? f4 : e3;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = e2 - d4;
+          b2[a3 >> 2] = e3 - d4;
           b2[h2 >> 2] = f4 - d4;
           b2[i >> 2] = c4 - d4;
           return;
@@ -28634,73 +36699,73 @@ var YasguiGeoTg = (() => {
         }
         function bb(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           c4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           d4 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
-          e2 = b2[i >> 2] | 0;
+          e3 = b2[i >> 2] | 0;
           f4 = d4 + (c4 << 1) | 0;
           b2[a3 >> 2] = f4;
-          d4 = e2 + (d4 << 1) | 0;
+          d4 = e3 + (d4 << 1) | 0;
           b2[h2 >> 2] = d4;
-          c4 = (e2 << 1) + c4 | 0;
+          c4 = (e3 << 1) + c4 | 0;
           b2[i >> 2] = c4;
-          e2 = d4 - f4 | 0;
+          e3 = d4 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
-            b2[h2 >> 2] = e2;
+            b2[h2 >> 2] = e3;
             b2[i >> 2] = c4;
             b2[a3 >> 2] = 0;
-            d4 = e2;
-            e2 = 0;
+            d4 = e3;
+            e3 = 0;
           } else {
-            e2 = f4;
+            e3 = f4;
           }
           if ((d4 | 0) < 0) {
-            e2 = e2 - d4 | 0;
-            b2[a3 >> 2] = e2;
+            e3 = e3 - d4 | 0;
+            b2[a3 >> 2] = e3;
             c4 = c4 - d4 | 0;
             b2[i >> 2] = c4;
             b2[h2 >> 2] = 0;
             d4 = 0;
           }
-          g3 = e2 - c4 | 0;
+          g3 = e3 - c4 | 0;
           f4 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
             b2[h2 >> 2] = f4;
             b2[i >> 2] = 0;
-            e2 = g3;
+            e3 = g3;
             c4 = 0;
           } else {
             f4 = d4;
           }
-          d4 = (f4 | 0) < (e2 | 0) ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0) ? f4 : e3;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
-          b2[a3 >> 2] = e2 - d4;
+          b2[a3 >> 2] = e3 - d4;
           b2[h2 >> 2] = f4 - d4;
           b2[i >> 2] = c4 - d4;
           return;
         }
         function cb(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           f4 = b2[a3 >> 2] | 0;
           h2 = a3 + 4 | 0;
           c4 = b2[h2 >> 2] | 0;
           i = a3 + 8 | 0;
           d4 = b2[i >> 2] | 0;
-          e2 = (c4 << 1) + f4 | 0;
+          e3 = (c4 << 1) + f4 | 0;
           f4 = d4 + (f4 << 1) | 0;
           b2[a3 >> 2] = f4;
-          b2[h2 >> 2] = e2;
+          b2[h2 >> 2] = e3;
           c4 = (d4 << 1) + c4 | 0;
           b2[i >> 2] = c4;
-          d4 = e2 - f4 | 0;
+          d4 = e3 - f4 | 0;
           if ((f4 | 0) < 0) {
             c4 = c4 - f4 | 0;
             b2[h2 >> 2] = d4;
@@ -28708,7 +36773,7 @@ var YasguiGeoTg = (() => {
             b2[a3 >> 2] = 0;
             f4 = 0;
           } else {
-            d4 = e2;
+            d4 = e3;
           }
           if ((d4 | 0) < 0) {
             f4 = f4 - d4 | 0;
@@ -28719,45 +36784,45 @@ var YasguiGeoTg = (() => {
             d4 = 0;
           }
           g3 = f4 - c4 | 0;
-          e2 = d4 - c4 | 0;
+          e3 = d4 - c4 | 0;
           if ((c4 | 0) < 0) {
             b2[a3 >> 2] = g3;
-            b2[h2 >> 2] = e2;
+            b2[h2 >> 2] = e3;
             b2[i >> 2] = 0;
             f4 = g3;
             c4 = 0;
           } else {
-            e2 = d4;
+            e3 = d4;
           }
-          d4 = (e2 | 0) < (f4 | 0) ? e2 : f4;
+          d4 = (e3 | 0) < (f4 | 0) ? e3 : f4;
           d4 = (c4 | 0) < (d4 | 0) ? c4 : d4;
           if ((d4 | 0) <= 0) {
             return;
           }
           b2[a3 >> 2] = f4 - d4;
-          b2[h2 >> 2] = e2 - d4;
+          b2[h2 >> 2] = e3 - d4;
           b2[i >> 2] = c4 - d4;
           return;
         }
         function db(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           h2 = (b2[a3 >> 2] | 0) - (b2[c4 >> 2] | 0) | 0;
           i = (h2 | 0) < 0;
-          e2 = (b2[a3 + 4 >> 2] | 0) - (b2[c4 + 4 >> 2] | 0) - (i ? h2 : 0) | 0;
-          g3 = (e2 | 0) < 0;
-          f4 = (i ? 0 - h2 | 0 : 0) + (b2[a3 + 8 >> 2] | 0) - (b2[c4 + 8 >> 2] | 0) + (g3 ? 0 - e2 | 0 : 0) | 0;
+          e3 = (b2[a3 + 4 >> 2] | 0) - (b2[c4 + 4 >> 2] | 0) - (i ? h2 : 0) | 0;
+          g3 = (e3 | 0) < 0;
+          f4 = (i ? 0 - h2 | 0 : 0) + (b2[a3 + 8 >> 2] | 0) - (b2[c4 + 8 >> 2] | 0) + (g3 ? 0 - e3 | 0 : 0) | 0;
           a3 = (f4 | 0) < 0;
           c4 = a3 ? 0 : f4;
-          d4 = (g3 ? 0 : e2) - (a3 ? f4 : 0) | 0;
-          f4 = (i ? 0 : h2) - (g3 ? e2 : 0) - (a3 ? f4 : 0) | 0;
+          d4 = (g3 ? 0 : e3) - (a3 ? f4 : 0) | 0;
+          f4 = (i ? 0 : h2) - (g3 ? e3 : 0) - (a3 ? f4 : 0) | 0;
           a3 = (d4 | 0) < (f4 | 0) ? d4 : f4;
           a3 = (c4 | 0) < (a3 | 0) ? c4 : a3;
-          e2 = (a3 | 0) > 0;
-          c4 = c4 - (e2 ? a3 : 0) | 0;
-          d4 = d4 - (e2 ? a3 : 0) | 0;
-          a3 = f4 - (e2 ? a3 : 0) | 0;
+          e3 = (a3 | 0) > 0;
+          c4 = c4 - (e3 ? a3 : 0) | 0;
+          d4 = d4 - (e3 ? a3 : 0) | 0;
+          a3 = f4 - (e3 ? a3 : 0) | 0;
           a3 = (a3 | 0) > -1 ? a3 : 0 - a3 | 0;
           d4 = (d4 | 0) > -1 ? d4 : 0 - d4 | 0;
           c4 = (c4 | 0) > -1 ? c4 : 0 - c4 | 0;
@@ -28776,17 +36841,17 @@ var YasguiGeoTg = (() => {
         function fb(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
-          e2 = b2[a3 >> 2] | 0;
-          b2[c4 >> 2] = e2;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          e3 = b2[a3 >> 2] | 0;
+          b2[c4 >> 2] = e3;
           f4 = b2[a3 + 4 >> 2] | 0;
           h2 = c4 + 4 | 0;
           b2[h2 >> 2] = f4;
           i = c4 + 8 | 0;
           b2[i >> 2] = 0;
-          d4 = (f4 | 0) < (e2 | 0);
-          a3 = d4 ? e2 : f4;
-          d4 = d4 ? f4 : e2;
+          d4 = (f4 | 0) < (e3 | 0);
+          a3 = d4 ? e3 : f4;
+          d4 = d4 ? f4 : e3;
           if ((d4 | 0) < 0) {
             if ((d4 | 0) == -2147483648 ? 1 : (a3 | 0) > 0 ? (2147483647 - a3 | 0) < (d4 | 0) : (-2147483648 - a3 | 0) > (d4 | 0)) {
               c4 = 1;
@@ -28797,26 +36862,26 @@ var YasguiGeoTg = (() => {
               return c4 | 0;
             }
           }
-          a3 = f4 - e2 | 0;
-          if ((e2 | 0) < 0) {
-            d4 = 0 - e2 | 0;
+          a3 = f4 - e3 | 0;
+          if ((e3 | 0) < 0) {
+            d4 = 0 - e3 | 0;
             b2[h2 >> 2] = a3;
             b2[i >> 2] = d4;
             b2[c4 >> 2] = 0;
-            e2 = 0;
+            e3 = 0;
           } else {
             a3 = f4;
             d4 = 0;
           }
           if ((a3 | 0) < 0) {
-            e2 = e2 - a3 | 0;
-            b2[c4 >> 2] = e2;
+            e3 = e3 - a3 | 0;
+            b2[c4 >> 2] = e3;
             d4 = d4 - a3 | 0;
             b2[i >> 2] = d4;
             b2[h2 >> 2] = 0;
             a3 = 0;
           }
-          g3 = e2 - d4 | 0;
+          g3 = e3 - d4 | 0;
           f4 = a3 - d4 | 0;
           if ((d4 | 0) < 0) {
             b2[c4 >> 2] = g3;
@@ -28826,57 +36891,57 @@ var YasguiGeoTg = (() => {
             f4 = g3;
             d4 = 0;
           } else {
-            f4 = e2;
+            f4 = e3;
           }
-          e2 = (a3 | 0) < (f4 | 0) ? a3 : f4;
-          e2 = (d4 | 0) < (e2 | 0) ? d4 : e2;
-          if ((e2 | 0) <= 0) {
+          e3 = (a3 | 0) < (f4 | 0) ? a3 : f4;
+          e3 = (d4 | 0) < (e3 | 0) ? d4 : e3;
+          if ((e3 | 0) <= 0) {
             c4 = 0;
             return c4 | 0;
           }
-          b2[c4 >> 2] = f4 - e2;
-          b2[h2 >> 2] = a3 - e2;
-          b2[i >> 2] = d4 - e2;
+          b2[c4 >> 2] = f4 - e3;
+          b2[h2 >> 2] = a3 - e3;
+          b2[i >> 2] = d4 - e3;
           c4 = 0;
           return c4 | 0;
         }
         function gb(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0;
           c4 = a3 + 8 | 0;
           f4 = b2[c4 >> 2] | 0;
           d4 = f4 - (b2[a3 >> 2] | 0) | 0;
           b2[a3 >> 2] = d4;
-          e2 = a3 + 4 | 0;
-          a3 = (b2[e2 >> 2] | 0) - f4 | 0;
-          b2[e2 >> 2] = a3;
+          e3 = a3 + 4 | 0;
+          a3 = (b2[e3 >> 2] | 0) - f4 | 0;
+          b2[e3 >> 2] = a3;
           b2[c4 >> 2] = 0 - (a3 + d4);
           return;
         }
         function hb(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           d4 = b2[a3 >> 2] | 0;
           c4 = 0 - d4 | 0;
           b2[a3 >> 2] = c4;
           h2 = a3 + 8 | 0;
           b2[h2 >> 2] = 0;
           i = a3 + 4 | 0;
-          e2 = b2[i >> 2] | 0;
-          f4 = e2 + d4 | 0;
+          e3 = b2[i >> 2] | 0;
+          f4 = e3 + d4 | 0;
           if ((d4 | 0) > 0) {
             b2[i >> 2] = f4;
             b2[h2 >> 2] = d4;
             b2[a3 >> 2] = 0;
             c4 = 0;
-            e2 = f4;
+            e3 = f4;
           } else {
             d4 = 0;
           }
-          if ((e2 | 0) < 0) {
-            g3 = c4 - e2 | 0;
+          if ((e3 | 0) < 0) {
+            g3 = c4 - e3 | 0;
             b2[a3 >> 2] = g3;
-            d4 = d4 - e2 | 0;
+            d4 = d4 - e3 | 0;
             b2[h2 >> 2] = d4;
             b2[i >> 2] = 0;
             f4 = g3 - d4 | 0;
@@ -28885,42 +36950,42 @@ var YasguiGeoTg = (() => {
               b2[a3 >> 2] = f4;
               b2[i >> 2] = c4;
               b2[h2 >> 2] = 0;
-              e2 = c4;
+              e3 = c4;
               d4 = 0;
             } else {
-              e2 = 0;
+              e3 = 0;
               f4 = g3;
             }
           } else {
             f4 = c4;
           }
-          c4 = (e2 | 0) < (f4 | 0) ? e2 : f4;
+          c4 = (e3 | 0) < (f4 | 0) ? e3 : f4;
           c4 = (d4 | 0) < (c4 | 0) ? d4 : c4;
           if ((c4 | 0) <= 0) {
             return;
           }
           b2[a3 >> 2] = f4 - c4;
-          b2[i >> 2] = e2 - c4;
+          b2[i >> 2] = e3 - c4;
           b2[h2 >> 2] = d4 - c4;
           return;
         }
-        function ib(a3, c4, d4, e2, f4) {
+        function ib(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
           m3 = T2;
           T2 = T2 + 64 | 0;
           l2 = m3;
           i = m3 + 56 | 0;
-          if (!(true & (c4 & 2013265920 | 0) == 134217728 & (true & (e2 & 2013265920 | 0) == 134217728))) {
+          if (!(true & (c4 & 2013265920 | 0) == 134217728 & (true & (e3 & 2013265920 | 0) == 134217728))) {
             f4 = 5;
             T2 = m3;
             return f4 | 0;
           }
-          if ((a3 | 0) == (d4 | 0) & (c4 | 0) == (e2 | 0)) {
+          if ((a3 | 0) == (d4 | 0) & (c4 | 0) == (e3 | 0)) {
             b2[f4 >> 2] = 0;
             f4 = 0;
             T2 = m3;
@@ -28929,7 +36994,7 @@ var YasguiGeoTg = (() => {
           h2 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           h2 = h2 & 15;
-          k = Td(d4 | 0, e2 | 0, 52) | 0;
+          k = Td(d4 | 0, e3 | 0, 52) | 0;
           H() | 0;
           if ((h2 | 0) != (k & 15 | 0)) {
             f4 = 12;
@@ -28939,7 +37004,7 @@ var YasguiGeoTg = (() => {
           g3 = h2 + -1 | 0;
           if (h2 >>> 0 > 1) {
             Ib(a3, c4, g3, l2) | 0;
-            Ib(d4, e2, g3, i) | 0;
+            Ib(d4, e3, g3, i) | 0;
             k = l2;
             j = b2[k >> 2] | 0;
             k = b2[k + 4 >> 2] | 0;
@@ -28949,7 +37014,7 @@ var YasguiGeoTg = (() => {
                 g3 = Td(a3 | 0, c4 | 0, h2 | 0) | 0;
                 H() | 0;
                 g3 = g3 & 7;
-                h2 = Td(d4 | 0, e2 | 0, h2 | 0) | 0;
+                h2 = Td(d4 | 0, e3 | 0, h2 | 0) | 0;
                 H() | 0;
                 h2 = h2 & 7;
                 do {
@@ -28986,9 +37051,9 @@ var YasguiGeoTg = (() => {
           } while ((g3 | 0) < (h2 | 0));
           aa(a3, c4, 1, l2) | 0;
           c4 = l2;
-          if (((((!((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0) ? (c4 = l2 + 8 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0)) : 0) ? (c4 = l2 + 16 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0)) : 0) ? (c4 = l2 + 24 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0)) : 0) ? (c4 = l2 + 32 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0)) : 0) ? (c4 = l2 + 40 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e2 | 0) : 0)) : 0) {
+          if (((((!((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0) ? (c4 = l2 + 8 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0)) : 0) ? (c4 = l2 + 16 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0)) : 0) ? (c4 = l2 + 24 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0)) : 0) ? (c4 = l2 + 32 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0)) : 0) ? (c4 = l2 + 40 | 0, !((b2[c4 >> 2] | 0) == (d4 | 0) ? (b2[c4 + 4 >> 2] | 0) == (e3 | 0) : 0)) : 0) {
             g3 = l2 + 48 | 0;
-            g3 = ((b2[g3 >> 2] | 0) == (d4 | 0) ? (b2[g3 + 4 >> 2] | 0) == (e2 | 0) : 0) & 1;
+            g3 = ((b2[g3 >> 2] | 0) == (d4 | 0) ? (b2[g3 + 4 >> 2] | 0) == (e3 | 0) : 0) & 1;
           } else {
             g3 = 1;
           }
@@ -28997,20 +37062,20 @@ var YasguiGeoTg = (() => {
           T2 = m3;
           return f4 | 0;
         }
-        function jb(a3, c4, d4, e2, f4) {
+        function jb(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          d4 = ia(a3, c4, d4, e2) | 0;
+          d4 = ia(a3, c4, d4, e3) | 0;
           if ((d4 | 0) == 7) {
             f4 = 11;
             return f4 | 0;
           }
-          e2 = Ud(d4 | 0, 0, 56) | 0;
+          e3 = Ud(d4 | 0, 0, 56) | 0;
           c4 = c4 & -2130706433 | (H() | 0) | 268435456;
-          b2[f4 >> 2] = a3 | e2;
+          b2[f4 >> 2] = a3 | e3;
           b2[f4 + 4 >> 2] = c4;
           f4 = 0;
           return f4 | 0;
@@ -29032,21 +37097,21 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
-          e2 = f4;
-          b2[e2 >> 2] = 0;
+          e3 = f4;
+          b2[e3 >> 2] = 0;
           if (!(true & (c4 & 2013265920 | 0) == 268435456)) {
-            e2 = 6;
+            e3 = 6;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
           g3 = Td(a3 | 0, c4 | 0, 56) | 0;
           H() | 0;
-          e2 = ea(a3, c4 & -2130706433 | 134217728, g3 & 7, e2, d4) | 0;
+          e3 = ea(a3, c4 & -2130706433 | 134217728, g3 & 7, e3, d4) | 0;
           T2 = f4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function mb(a3, b3) {
           a3 = a3 | 0;
@@ -29078,48 +37143,48 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
-          e2 = f4;
+          e3 = f4;
           if (!(true & (c4 & 2013265920 | 0) == 268435456)) {
-            e2 = 6;
+            e3 = 6;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
           g3 = c4 & -2130706433 | 134217728;
           h2 = d4;
           b2[h2 >> 2] = a3;
           b2[h2 + 4 >> 2] = g3;
-          b2[e2 >> 2] = 0;
+          b2[e3 >> 2] = 0;
           c4 = Td(a3 | 0, c4 | 0, 56) | 0;
           H() | 0;
-          e2 = ea(a3, g3, c4 & 7, e2, d4 + 8 | 0) | 0;
+          e3 = ea(a3, g3, c4 & 7, e3, d4 + 8 | 0) | 0;
           T2 = f4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function ob(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0;
+          var e3 = 0, f4 = 0;
           f4 = (Kb(a3, c4) | 0) == 0;
           c4 = c4 & -2130706433;
-          e2 = d4;
-          b2[e2 >> 2] = f4 ? a3 : 0;
-          b2[e2 + 4 >> 2] = f4 ? c4 | 285212672 : 0;
-          e2 = d4 + 8 | 0;
-          b2[e2 >> 2] = a3;
-          b2[e2 + 4 >> 2] = c4 | 301989888;
-          e2 = d4 + 16 | 0;
-          b2[e2 >> 2] = a3;
-          b2[e2 + 4 >> 2] = c4 | 318767104;
-          e2 = d4 + 24 | 0;
-          b2[e2 >> 2] = a3;
-          b2[e2 + 4 >> 2] = c4 | 335544320;
-          e2 = d4 + 32 | 0;
-          b2[e2 >> 2] = a3;
-          b2[e2 + 4 >> 2] = c4 | 352321536;
+          e3 = d4;
+          b2[e3 >> 2] = f4 ? a3 : 0;
+          b2[e3 + 4 >> 2] = f4 ? c4 | 285212672 : 0;
+          e3 = d4 + 8 | 0;
+          b2[e3 >> 2] = a3;
+          b2[e3 + 4 >> 2] = c4 | 301989888;
+          e3 = d4 + 16 | 0;
+          b2[e3 >> 2] = a3;
+          b2[e3 + 4 >> 2] = c4 | 318767104;
+          e3 = d4 + 24 | 0;
+          b2[e3 >> 2] = a3;
+          b2[e3 + 4 >> 2] = c4 | 335544320;
+          e3 = d4 + 32 | 0;
+          b2[e3 >> 2] = a3;
+          b2[e3 + 4 >> 2] = c4 | 352321536;
           d4 = d4 + 40 | 0;
           b2[d4 >> 2] = a3;
           b2[d4 + 4 >> 2] = c4 | 369098752;
@@ -29129,7 +37194,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           h2 = T2;
           T2 = T2 + 16 | 0;
           f4 = h2;
@@ -29139,10 +37204,10 @@ var YasguiGeoTg = (() => {
             T2 = h2;
             return g3 | 0;
           }
-          e2 = Td(a3 | 0, c4 | 0, 56) | 0;
+          e3 = Td(a3 | 0, c4 | 0, 56) | 0;
           H() | 0;
-          e2 = rd(a3, g3, e2 & 7) | 0;
-          if ((e2 | 0) == -1) {
+          e3 = rd(a3, g3, e3 & 7) | 0;
+          if ((e3 | 0) == -1) {
             b2[d4 >> 2] = 0;
             g3 = 6;
             T2 = h2;
@@ -29155,9 +37220,9 @@ var YasguiGeoTg = (() => {
           H() | 0;
           c4 = c4 & 15;
           if (!(Kb(a3, g3) | 0)) {
-            zb(f4, c4, e2, 2, d4);
+            zb(f4, c4, e3, 2, d4);
           } else {
-            vb(f4, c4, e2, 2, d4);
+            vb(f4, c4, e3, 2, d4);
           }
           g3 = 0;
           T2 = h2;
@@ -29167,12 +37232,12 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0;
+          var d4 = 0, e3 = 0;
           d4 = T2;
           T2 = T2 + 16 | 0;
-          e2 = d4;
-          rb(a3, b3, c4, e2);
-          La(e2, c4 + 4 | 0);
+          e3 = d4;
+          rb(a3, b3, c4, e3);
+          La(e3, c4 + 4 | 0);
           T2 = d4;
           return;
         }
@@ -29186,7 +37251,7 @@ var YasguiGeoTg = (() => {
           T2 = T2 + 16 | 0;
           k = j;
           sb(a3, d4, k);
-          h2 = +w(+(1 - +e[k >> 3] * 0.5));
+          h2 = +w(+(1 - +e2[k >> 3] * 0.5));
           if (h2 < 1e-16) {
             b2[f4 >> 2] = 0;
             b2[f4 + 4 >> 2] = 0;
@@ -29196,7 +37261,7 @@ var YasguiGeoTg = (() => {
             return;
           }
           k = b2[d4 >> 2] | 0;
-          g3 = +e[15920 + (k * 24 | 0) >> 3];
+          g3 = +e2[15920 + (k * 24 | 0) >> 3];
           g3 = +lc(g3 - +lc(+rc(15600 + (k << 4) | 0, a3)));
           if (!(Yb(c4) | 0)) {
             i = g3;
@@ -29212,9 +37277,9 @@ var YasguiGeoTg = (() => {
             } while ((a3 | 0) != (c4 | 0));
           }
           h2 = +t(+i) * g3;
-          e[f4 >> 3] = h2;
+          e2[f4 >> 3] = h2;
           i = +u3(+i) * g3;
-          e[f4 + 8 >> 3] = i;
+          e2[f4 + 8 >> 3] = i;
           T2 = j;
           return;
         }
@@ -29228,109 +37293,109 @@ var YasguiGeoTg = (() => {
           g3 = h2;
           qd(a3, g3);
           b2[c4 >> 2] = 0;
-          e[d4 >> 3] = 5;
+          e2[d4 >> 3] = 5;
           f4 = +pd(16400, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 0;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16424, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 1;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16448, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 2;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16472, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 3;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16496, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 4;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16520, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 5;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16544, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 6;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16568, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 7;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16592, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 8;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16616, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 9;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16640, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 10;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16664, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 11;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16688, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 12;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16712, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 13;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16736, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 14;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16760, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 15;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16784, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 16;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16808, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 17;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16832, g3);
-          if (f4 < +e[d4 >> 3]) {
+          if (f4 < +e2[d4 >> 3]) {
             b2[c4 >> 2] = 18;
-            e[d4 >> 3] = f4;
+            e2[d4 >> 3] = f4;
           }
           f4 = +pd(16856, g3);
-          if (!(f4 < +e[d4 >> 3])) {
+          if (!(f4 < +e2[d4 >> 3])) {
             T2 = h2;
             return;
           }
           b2[c4 >> 2] = 19;
-          e[d4 >> 3] = f4;
+          e2[d4 >> 3] = f4;
           T2 = h2;
           return;
         }
@@ -29350,7 +37415,7 @@ var YasguiGeoTg = (() => {
             b2[g3 + 12 >> 2] = b2[c4 + 12 >> 2];
             return;
           }
-          i = +z(+ +e[a3 + 8 >> 3], + +e[a3 >> 3]);
+          i = +z(+ +e2[a3 + 8 >> 3], + +e2[a3 >> 3]);
           if ((d4 | 0) > 0) {
             a3 = 0;
             do {
@@ -29368,20 +37433,20 @@ var YasguiGeoTg = (() => {
             d4 = (Yb(d4) | 0) == 0;
             h2 = +y3(+((d4 ? j : j * 0.37796447300922725) * 0.381966011250105));
           }
-          sc(15600 + (c4 << 4) | 0, +lc(+e[15920 + (c4 * 24 | 0) >> 3] - i), h2, g3);
+          sc(15600 + (c4 << 4) | 0, +lc(+e2[15920 + (c4 * 24 | 0) >> 3] - i), h2, g3);
           return;
         }
         function ub(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0;
-          e2 = T2;
+          var e3 = 0, f4 = 0;
+          e3 = T2;
           T2 = T2 + 16 | 0;
-          f4 = e2;
+          f4 = e3;
           Na(a3 + 4 | 0, f4);
           tb(f4, b2[a3 >> 2] | 0, c4, 0, d4);
-          T2 = e2;
+          T2 = e3;
           return;
         }
         function vb(a3, c4, d4, f4, g3) {
@@ -29390,7 +37455,7 @@ var YasguiGeoTg = (() => {
           d4 = d4 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, H2 = 0, J2 = 0;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, H2 = 0, J2 = 0;
           G4 = T2;
           T2 = T2 + 272 | 0;
           h2 = G4 + 256 | 0;
@@ -29421,11 +37486,11 @@ var YasguiGeoTg = (() => {
           k = b2[h2 >> 2] | 0;
           l2 = E4 + 4 | 0;
           m3 = v2 + 4 | 0;
-          n = d4 + 5 | 0;
-          o = 16880 + (k << 2) | 0;
+          n2 = d4 + 5 | 0;
+          o2 = 16880 + (k << 2) | 0;
           p2 = 16960 + (k << 2) | 0;
           q2 = z2 + 8 | 0;
-          r2 = A7 + 8 | 0;
+          r3 = A7 + 8 | 0;
           s3 = B3 + 8 | 0;
           t2 = F + 4 | 0;
           j = d4;
@@ -29458,18 +37523,18 @@ var YasguiGeoTg = (() => {
               b2[x4 >> 2] = b2[i >> 2];
               b2[x4 + 4 >> 2] = b2[i + 4 >> 2];
               b2[x4 + 8 >> 2] = b2[i + 8 >> 2];
-              Qa(x4, (b2[o >> 2] | 0) * 3 | 0);
+              Qa(x4, (b2[o2 >> 2] | 0) * 3 | 0);
               Oa(m3, x4, m3);
               Ma(m3);
               Na(m3, y4);
               H2 = +(b2[p2 >> 2] | 0);
-              e[z2 >> 3] = H2 * 3;
-              e[q2 >> 3] = 0;
+              e2[z2 >> 3] = H2 * 3;
+              e2[q2 >> 3] = 0;
               J2 = H2 * -1.5;
-              e[A7 >> 3] = J2;
-              e[r2 >> 3] = H2 * 2.598076211353316;
-              e[B3 >> 3] = J2;
-              e[s3 >> 3] = H2 * -2.598076211353316;
+              e2[A7 >> 3] = J2;
+              e2[r3 >> 3] = H2 * 2.598076211353316;
+              e2[B3 >> 3] = J2;
+              e2[s3 >> 3] = H2 * -2.598076211353316;
               switch (b2[17040 + ((b2[v2 >> 2] | 0) * 80 | 0) + (b2[F >> 2] << 2) >> 2] | 0) {
                 case 1: {
                   a3 = A7;
@@ -29495,7 +37560,7 @@ var YasguiGeoTg = (() => {
               tb(C3, b2[v2 >> 2] | 0, k, 1, g3 + 8 + (b2[g3 >> 2] << 4) | 0);
               b2[g3 >> 2] = (b2[g3 >> 2] | 0) + 1;
             }
-            if ((j | 0) < (n | 0)) {
+            if ((j | 0) < (n2 | 0)) {
               Na(t2, v2);
               tb(v2, b2[F >> 2] | 0, k, 1, g3 + 8 + (b2[g3 >> 2] << 4) | 0);
               b2[g3 >> 2] = (b2[g3 >> 2] | 0) + 1;
@@ -29521,12 +37586,12 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           j = T2;
           T2 = T2 + 128 | 0;
-          e2 = j + 64 | 0;
+          e3 = j + 64 | 0;
           f4 = j;
-          g3 = e2;
+          g3 = e3;
           h2 = 20240;
           i = g3 + 60 | 0;
           do {
@@ -29543,7 +37608,7 @@ var YasguiGeoTg = (() => {
             h2 = h2 + 4 | 0;
           } while ((g3 | 0) < (i | 0));
           i = (Yb(b2[c4 >> 2] | 0) | 0) == 0;
-          e2 = i ? e2 : f4;
+          e3 = i ? e3 : f4;
           f4 = a3 + 4 | 0;
           bb(f4);
           cb(f4);
@@ -29553,115 +37618,115 @@ var YasguiGeoTg = (() => {
           }
           b2[d4 >> 2] = b2[a3 >> 2];
           c4 = d4 + 4 | 0;
-          Oa(f4, e2, c4);
+          Oa(f4, e3, c4);
           Ma(c4);
           b2[d4 + 16 >> 2] = b2[a3 >> 2];
           c4 = d4 + 20 | 0;
-          Oa(f4, e2 + 12 | 0, c4);
+          Oa(f4, e3 + 12 | 0, c4);
           Ma(c4);
           b2[d4 + 32 >> 2] = b2[a3 >> 2];
           c4 = d4 + 36 | 0;
-          Oa(f4, e2 + 24 | 0, c4);
+          Oa(f4, e3 + 24 | 0, c4);
           Ma(c4);
           b2[d4 + 48 >> 2] = b2[a3 >> 2];
           c4 = d4 + 52 | 0;
-          Oa(f4, e2 + 36 | 0, c4);
+          Oa(f4, e3 + 36 | 0, c4);
           Ma(c4);
           b2[d4 + 64 >> 2] = b2[a3 >> 2];
           d4 = d4 + 68 | 0;
-          Oa(f4, e2 + 48 | 0, d4);
+          Oa(f4, e3 + 48 | 0, d4);
           Ma(d4);
           T2 = j;
           return;
         }
-        function xb(a3, c4, d4, e2) {
+        function xb(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0;
           p2 = T2;
           T2 = T2 + 32 | 0;
-          n = p2 + 12 | 0;
+          n2 = p2 + 12 | 0;
           i = p2;
-          o = a3 + 4 | 0;
+          o2 = a3 + 4 | 0;
           m3 = b2[16960 + (c4 << 2) >> 2] | 0;
-          l2 = (e2 | 0) != 0;
+          l2 = (e3 | 0) != 0;
           m3 = l2 ? m3 * 3 | 0 : m3;
-          f4 = b2[o >> 2] | 0;
+          f4 = b2[o2 >> 2] | 0;
           k = a3 + 8 | 0;
           h2 = b2[k >> 2] | 0;
           if (l2) {
             g3 = a3 + 12 | 0;
-            e2 = b2[g3 >> 2] | 0;
-            f4 = h2 + f4 + e2 | 0;
+            e3 = b2[g3 >> 2] | 0;
+            f4 = h2 + f4 + e3 | 0;
             if ((f4 | 0) == (m3 | 0)) {
-              o = 1;
+              o2 = 1;
               T2 = p2;
-              return o | 0;
+              return o2 | 0;
             } else {
               j = g3;
             }
           } else {
             j = a3 + 12 | 0;
-            e2 = b2[j >> 2] | 0;
-            f4 = h2 + f4 + e2 | 0;
+            e3 = b2[j >> 2] | 0;
+            f4 = h2 + f4 + e3 | 0;
           }
           if ((f4 | 0) <= (m3 | 0)) {
-            o = 0;
+            o2 = 0;
             T2 = p2;
-            return o | 0;
+            return o2 | 0;
           }
           do {
-            if ((e2 | 0) > 0) {
-              e2 = b2[a3 >> 2] | 0;
+            if ((e3 | 0) > 0) {
+              e3 = b2[a3 >> 2] | 0;
               if ((h2 | 0) > 0) {
-                g3 = 18640 + (e2 * 80 | 0) + 60 | 0;
-                e2 = a3;
+                g3 = 18640 + (e3 * 80 | 0) + 60 | 0;
+                e3 = a3;
                 break;
               }
-              e2 = 18640 + (e2 * 80 | 0) + 40 | 0;
+              e3 = 18640 + (e3 * 80 | 0) + 40 | 0;
               if (!d4) {
-                g3 = e2;
-                e2 = a3;
+                g3 = e3;
+                e3 = a3;
               } else {
-                Ka(n, m3, 0, 0);
-                Pa(o, n, i);
+                Ka(n2, m3, 0, 0);
+                Pa(o2, n2, i);
                 _a(i);
-                Oa(i, n, o);
-                g3 = e2;
-                e2 = a3;
+                Oa(i, n2, o2);
+                g3 = e3;
+                e3 = a3;
               }
             } else {
               g3 = 18640 + ((b2[a3 >> 2] | 0) * 80 | 0) + 20 | 0;
-              e2 = a3;
+              e3 = a3;
             }
           } while (0);
-          b2[e2 >> 2] = b2[g3 >> 2];
+          b2[e3 >> 2] = b2[g3 >> 2];
           f4 = g3 + 16 | 0;
           if ((b2[f4 >> 2] | 0) > 0) {
-            e2 = 0;
+            e3 = 0;
             do {
-              Za(o);
-              e2 = e2 + 1 | 0;
-            } while ((e2 | 0) < (b2[f4 >> 2] | 0));
+              Za(o2);
+              e3 = e3 + 1 | 0;
+            } while ((e3 | 0) < (b2[f4 >> 2] | 0));
           }
           a3 = g3 + 4 | 0;
-          b2[n >> 2] = b2[a3 >> 2];
-          b2[n + 4 >> 2] = b2[a3 + 4 >> 2];
-          b2[n + 8 >> 2] = b2[a3 + 8 >> 2];
+          b2[n2 >> 2] = b2[a3 >> 2];
+          b2[n2 + 4 >> 2] = b2[a3 + 4 >> 2];
+          b2[n2 + 8 >> 2] = b2[a3 + 8 >> 2];
           c4 = b2[16880 + (c4 << 2) >> 2] | 0;
-          Qa(n, l2 ? c4 * 3 | 0 : c4);
-          Oa(o, n, o);
-          Ma(o);
+          Qa(n2, l2 ? c4 * 3 | 0 : c4);
+          Oa(o2, n2, o2);
+          Ma(o2);
           if (l2) {
-            e2 = ((b2[k >> 2] | 0) + (b2[o >> 2] | 0) + (b2[j >> 2] | 0) | 0) == (m3 | 0) ? 1 : 2;
+            e3 = ((b2[k >> 2] | 0) + (b2[o2 >> 2] | 0) + (b2[j >> 2] | 0) | 0) == (m3 | 0) ? 1 : 2;
           } else {
-            e2 = 2;
+            e3 = 2;
           }
-          o = e2;
+          o2 = e3;
           T2 = p2;
-          return o | 0;
+          return o2 | 0;
         }
         function yb(a3, b3) {
           a3 = a3 | 0;
@@ -29678,7 +37743,7 @@ var YasguiGeoTg = (() => {
           d4 = d4 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0;
           B3 = T2;
           T2 = T2 + 240 | 0;
           h2 = B3 + 224 | 0;
@@ -29698,16 +37763,16 @@ var YasguiGeoTg = (() => {
           b2[x4 + 12 >> 2] = b2[a3 + 12 >> 2];
           Ab(x4, h2, y4);
           b2[g3 >> 2] = 0;
-          r2 = f4 + d4 + ((f4 | 0) == 6 & 1) | 0;
-          if ((r2 | 0) <= (d4 | 0)) {
+          r3 = f4 + d4 + ((f4 | 0) == 6 & 1) | 0;
+          if ((r3 | 0) <= (d4 | 0)) {
             T2 = B3;
             return;
           }
           k = b2[h2 >> 2] | 0;
           l2 = d4 + 6 | 0;
           m3 = 16960 + (k << 2) | 0;
-          n = t2 + 8 | 0;
-          o = u4 + 8 | 0;
+          n2 = t2 + 8 | 0;
+          o2 = u4 + 8 | 0;
           p2 = v2 + 8 | 0;
           q2 = z2 + 4 | 0;
           i = 0;
@@ -29726,13 +37791,13 @@ var YasguiGeoTg = (() => {
               Na(y4 + (((h2 + 5 | 0) % 6 | 0) << 4) + 4 | 0, A7);
               Na(y4 + (h2 << 4) + 4 | 0, s3);
               C3 = +(b2[m3 >> 2] | 0);
-              e[t2 >> 3] = C3 * 3;
-              e[n >> 3] = 0;
+              e2[t2 >> 3] = C3 * 3;
+              e2[n2 >> 3] = 0;
               D2 = C3 * -1.5;
-              e[u4 >> 3] = D2;
-              e[o >> 3] = C3 * 2.598076211353316;
-              e[v2 >> 3] = D2;
-              e[p2 >> 3] = C3 * -2.598076211353316;
+              e2[u4 >> 3] = D2;
+              e2[o2 >> 3] = C3 * 2.598076211353316;
+              e2[v2 >> 3] = D2;
+              e2[p2 >> 3] = C3 * -2.598076211353316;
               h2 = b2[x4 >> 2] | 0;
               switch (b2[17040 + (h2 * 80 | 0) + (((f4 | 0) == (h2 | 0) ? b2[z2 >> 2] | 0 : f4) << 2) >> 2] | 0) {
                 case 1: {
@@ -29767,7 +37832,7 @@ var YasguiGeoTg = (() => {
               b2[g3 >> 2] = (b2[g3 >> 2] | 0) + 1;
             }
             j = j + 1 | 0;
-            if ((j | 0) >= (r2 | 0)) {
+            if ((j | 0) >= (r3 | 0)) {
               a3 = 3;
               break;
             } else {
@@ -29785,12 +37850,12 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           j = T2;
           T2 = T2 + 160 | 0;
-          e2 = j + 80 | 0;
+          e3 = j + 80 | 0;
           f4 = j;
-          g3 = e2;
+          g3 = e3;
           h2 = 20368;
           i = g3 + 72 | 0;
           do {
@@ -29807,7 +37872,7 @@ var YasguiGeoTg = (() => {
             h2 = h2 + 4 | 0;
           } while ((g3 | 0) < (i | 0));
           i = (Yb(b2[c4 >> 2] | 0) | 0) == 0;
-          e2 = i ? e2 : f4;
+          e3 = i ? e3 : f4;
           f4 = a3 + 4 | 0;
           bb(f4);
           cb(f4);
@@ -29817,27 +37882,27 @@ var YasguiGeoTg = (() => {
           }
           b2[d4 >> 2] = b2[a3 >> 2];
           c4 = d4 + 4 | 0;
-          Oa(f4, e2, c4);
+          Oa(f4, e3, c4);
           Ma(c4);
           b2[d4 + 16 >> 2] = b2[a3 >> 2];
           c4 = d4 + 20 | 0;
-          Oa(f4, e2 + 12 | 0, c4);
+          Oa(f4, e3 + 12 | 0, c4);
           Ma(c4);
           b2[d4 + 32 >> 2] = b2[a3 >> 2];
           c4 = d4 + 36 | 0;
-          Oa(f4, e2 + 24 | 0, c4);
+          Oa(f4, e3 + 24 | 0, c4);
           Ma(c4);
           b2[d4 + 48 >> 2] = b2[a3 >> 2];
           c4 = d4 + 52 | 0;
-          Oa(f4, e2 + 36 | 0, c4);
+          Oa(f4, e3 + 36 | 0, c4);
           Ma(c4);
           b2[d4 + 64 >> 2] = b2[a3 >> 2];
           c4 = d4 + 68 | 0;
-          Oa(f4, e2 + 48 | 0, c4);
+          Oa(f4, e3 + 48 | 0, c4);
           Ma(c4);
           b2[d4 + 80 >> 2] = b2[a3 >> 2];
           d4 = d4 + 84 | 0;
-          Oa(f4, e2 + 60 | 0, d4);
+          Oa(f4, e3 + 60 | 0, d4);
           Ma(d4);
           T2 = j;
           return;
@@ -29856,25 +37921,25 @@ var YasguiGeoTg = (() => {
           H() | 0;
           return b3 & 127 | 0;
         }
-        function Db(a3, c4, d4, e2) {
+        function Db(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           if ((d4 + -1 | 0) >>> 0 > 14) {
-            e2 = 4;
-            return e2 | 0;
+            e3 = 4;
+            return e3 | 0;
           }
           d4 = Td(a3 | 0, c4 | 0, (15 - d4 | 0) * 3 | 0) | 0;
           H() | 0;
-          b2[e2 >> 2] = d4 & 7;
-          e2 = 0;
-          return e2 | 0;
+          b2[e3 >> 2] = d4 & 7;
+          e3 = 0;
+          return e3 | 0;
         }
-        function Eb(c4, d4, e2, f4) {
+        function Eb(c4, d4, e3, f4) {
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           if (c4 >>> 0 > 15) {
@@ -29895,7 +37960,7 @@ var YasguiGeoTg = (() => {
               i = (a2[20528 + d4 >> 0] | 0) != 0;
               h2 = -1;
               while (1) {
-                d4 = b2[e2 + (j + -1 << 2) >> 2] | 0;
+                d4 = b2[e3 + (j + -1 << 2) >> 2] | 0;
                 if (d4 >>> 0 > 6) {
                   g3 = 18;
                   d4 = 10;
@@ -29938,14 +38003,14 @@ var YasguiGeoTg = (() => {
         function Fb(b3, c4) {
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           if (!(true & (c4 & -16777216 | 0) == 134217728)) {
             b3 = 0;
             return b3 | 0;
           }
-          e2 = Td(b3 | 0, c4 | 0, 52) | 0;
+          e3 = Td(b3 | 0, c4 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
+          e3 = e3 & 15;
           d4 = Td(b3 | 0, c4 | 0, 45) | 0;
           H() | 0;
           d4 = d4 & 127;
@@ -29953,7 +38018,7 @@ var YasguiGeoTg = (() => {
             b3 = 0;
             return b3 | 0;
           }
-          h2 = (e2 ^ 15) * 3 | 0;
+          h2 = (e3 ^ 15) * 3 | 0;
           f4 = Td(b3 | 0, c4 | 0, h2 | 0) | 0;
           h2 = Ud(f4 | 0, H() | 0, h2 | 0) | 0;
           f4 = H() | 0;
@@ -29962,10 +38027,10 @@ var YasguiGeoTg = (() => {
             h2 = 0;
             return h2 | 0;
           }
-          h2 = (e2 * 3 | 0) + 19 | 0;
+          h2 = (e3 * 3 | 0) + 19 | 0;
           g3 = Ud(~b3 | 0, ~c4 | 0, h2 | 0) | 0;
           h2 = Td(g3 | 0, H() | 0, h2 | 0) | 0;
-          if (!((e2 | 0) == 15 | (h2 | 0) == 0 & (H() | 0) == 0)) {
+          if (!((e3 | 0) == 15 | (h2 | 0) == 0 & (H() | 0) == 0)) {
             h2 = 0;
             return h2 | 0;
           }
@@ -29987,8 +38052,8 @@ var YasguiGeoTg = (() => {
         function Gb(b3, c4) {
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0;
-          if (((true & (c4 & -16777216 | 0) == 134217728 ? (e2 = Td(b3 | 0, c4 | 0, 52) | 0, H() | 0, e2 = e2 & 15, d4 = Td(b3 | 0, c4 | 0, 45) | 0, H() | 0, d4 = d4 & 127, d4 >>> 0 <= 121) : 0) ? (h2 = (e2 ^ 15) * 3 | 0, f4 = Td(b3 | 0, c4 | 0, h2 | 0) | 0, h2 = Ud(f4 | 0, H() | 0, h2 | 0) | 0, f4 = H() | 0, g3 = Kd(-1227133514, -1171, h2 | 0, f4 | 0) | 0, (h2 & 613566756 & g3 | 0) == 0 & (f4 & 4681 & (H() | 0) | 0) == 0) : 0) ? (h2 = (e2 * 3 | 0) + 19 | 0, g3 = Ud(~b3 | 0, ~c4 | 0, h2 | 0) | 0, h2 = Td(g3 | 0, H() | 0, h2 | 0) | 0, (e2 | 0) == 15 | (h2 | 0) == 0 & (H() | 0) == 0) : 0) {
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0;
+          if (((true & (c4 & -16777216 | 0) == 134217728 ? (e3 = Td(b3 | 0, c4 | 0, 52) | 0, H() | 0, e3 = e3 & 15, d4 = Td(b3 | 0, c4 | 0, 45) | 0, H() | 0, d4 = d4 & 127, d4 >>> 0 <= 121) : 0) ? (h2 = (e3 ^ 15) * 3 | 0, f4 = Td(b3 | 0, c4 | 0, h2 | 0) | 0, h2 = Ud(f4 | 0, H() | 0, h2 | 0) | 0, f4 = H() | 0, g3 = Kd(-1227133514, -1171, h2 | 0, f4 | 0) | 0, (h2 & 613566756 & g3 | 0) == 0 & (f4 & 4681 & (H() | 0) | 0) == 0) : 0) ? (h2 = (e3 * 3 | 0) + 19 | 0, g3 = Ud(~b3 | 0, ~c4 | 0, h2 | 0) | 0, h2 = Td(g3 | 0, H() | 0, h2 | 0) | 0, (e3 | 0) == 15 | (h2 | 0) == 0 & (H() | 0) == 0) : 0) {
             if (!(a2[20528 + d4 >> 0] | 0)) {
               h2 = 1;
               return h2 | 0;
@@ -30012,11 +38077,11 @@ var YasguiGeoTg = (() => {
           h2 = (wd(b3, c4) | 0) != 0 & 1;
           return h2 | 0;
         }
-        function Hb(a3, c4, d4, e2) {
+        function Hb(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0;
           f4 = Ud(c4 | 0, 0, 52) | 0;
           g3 = H() | 0;
@@ -30024,11 +38089,11 @@ var YasguiGeoTg = (() => {
           d4 = g3 | (H() | 0) | 134225919;
           if ((c4 | 0) < 1) {
             g3 = -1;
-            e2 = d4;
+            e3 = d4;
             c4 = a3;
             b2[c4 >> 2] = g3;
             a3 = a3 + 4 | 0;
-            b2[a3 >> 2] = e2;
+            b2[a3 >> 2] = e3;
             return;
           }
           g3 = 1;
@@ -30037,7 +38102,7 @@ var YasguiGeoTg = (() => {
             h2 = (15 - g3 | 0) * 3 | 0;
             i = Ud(7, 0, h2 | 0) | 0;
             d4 = d4 & ~(H() | 0);
-            h2 = Ud(e2 | 0, 0, h2 | 0) | 0;
+            h2 = Ud(e3 | 0, 0, h2 | 0) | 0;
             f4 = f4 & ~i | h2;
             d4 = d4 | (H() | 0);
             if ((g3 | 0) == (c4 | 0)) {
@@ -30053,28 +38118,28 @@ var YasguiGeoTg = (() => {
           b2[i >> 2] = d4;
           return;
         }
-        function Ib(a3, c4, d4, e2) {
+        function Ib(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0;
           g3 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           g3 = g3 & 15;
           if (d4 >>> 0 > 15) {
-            e2 = 4;
-            return e2 | 0;
+            e3 = 4;
+            return e3 | 0;
           }
           if ((g3 | 0) < (d4 | 0)) {
-            e2 = 12;
-            return e2 | 0;
+            e3 = 12;
+            return e3 | 0;
           }
           if ((g3 | 0) == (d4 | 0)) {
-            b2[e2 >> 2] = a3;
-            b2[e2 + 4 >> 2] = c4;
-            e2 = 0;
-            return e2 | 0;
+            b2[e3 >> 2] = a3;
+            b2[e3 + 4 >> 2] = c4;
+            e3 = 0;
+            return e3 | 0;
           }
           f4 = Ud(d4 | 0, 0, 52) | 0;
           f4 = f4 | a3;
@@ -30087,23 +38152,23 @@ var YasguiGeoTg = (() => {
               a3 = H() | 0 | a3;
             } while ((d4 | 0) < (g3 | 0));
           }
-          b2[e2 >> 2] = f4;
-          b2[e2 + 4 >> 2] = a3;
-          e2 = 0;
-          return e2 | 0;
+          b2[e3 >> 2] = f4;
+          b2[e3 + 4 >> 2] = a3;
+          e3 = 0;
+          return e3 | 0;
         }
-        function Jb(a3, c4, d4, e2) {
+        function Jb(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0;
           g3 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           g3 = g3 & 15;
           if (!((d4 | 0) < 16 & (g3 | 0) <= (d4 | 0))) {
-            e2 = 4;
-            return e2 | 0;
+            e3 = 4;
+            return e3 | 0;
           }
           f4 = d4 - g3 | 0;
           d4 = Td(a3 | 0, c4 | 0, 45) | 0;
@@ -30140,7 +38205,7 @@ var YasguiGeoTg = (() => {
               f4 = H() | 0;
             }
           } while (0);
-          h2 = e2;
+          h2 = e3;
           b2[h2 >> 2] = d4;
           b2[h2 + 4 >> 2] = f4;
           h2 = 0;
@@ -30149,18 +38214,18 @@ var YasguiGeoTg = (() => {
         function Kb(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
-          e2 = Td(a3 | 0, b3 | 0, 45) | 0;
+          var c4 = 0, d4 = 0, e3 = 0;
+          e3 = Td(a3 | 0, b3 | 0, 45) | 0;
           H() | 0;
-          if (!(oa(e2 & 127) | 0)) {
-            e2 = 0;
-            return e2 | 0;
+          if (!(oa(e3 & 127) | 0)) {
+            e3 = 0;
+            return e3 | 0;
           }
-          e2 = Td(a3 | 0, b3 | 0, 52) | 0;
+          e3 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
+          e3 = e3 & 15;
           a: do {
-            if (!e2) {
+            if (!e3) {
               c4 = 0;
             } else {
               d4 = 1;
@@ -30171,7 +38236,7 @@ var YasguiGeoTg = (() => {
                 if (c4 | 0) {
                   break a;
                 }
-                if (d4 >>> 0 < e2 >>> 0) {
+                if (d4 >>> 0 < e3 >>> 0) {
                   d4 = d4 + 1 | 0;
                 } else {
                   c4 = 0;
@@ -30180,14 +38245,14 @@ var YasguiGeoTg = (() => {
               }
             }
           } while (0);
-          e2 = (c4 | 0) == 0 & 1;
-          return e2 | 0;
+          e3 = (c4 | 0) == 0 & 1;
+          return e3 | 0;
         }
-        function Lb(a3, c4, d4, e2) {
+        function Lb(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0;
           h2 = T2;
           T2 = T2 + 16 | 0;
@@ -30203,7 +38268,7 @@ var YasguiGeoTg = (() => {
           f4 = 0;
           d4 = 0;
           do {
-            i = e2 + (f4 << 3) | 0;
+            i = e3 + (f4 << 3) | 0;
             b2[i >> 2] = a3;
             b2[i + 4 >> 2] = c4;
             f4 = Jd(f4 | 0, d4 | 0, 1, 0) | 0;
@@ -30234,18 +38299,18 @@ var YasguiGeoTg = (() => {
           G3(c4 | 0);
           return d4 | 0;
         }
-        function Nb(a3, c4, d4, e2) {
+        function Nb(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0;
           f4 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           f4 = f4 & 15;
           if (!((d4 | 0) < 16 & (f4 | 0) <= (d4 | 0))) {
-            e2 = 4;
-            return e2 | 0;
+            e3 = 4;
+            return e3 | 0;
           }
           if ((f4 | 0) < (d4 | 0)) {
             f4 = Ud(-1, -1, ((d4 + -1 - f4 | 0) * 3 | 0) + 3 | 0) | 0;
@@ -30255,18 +38320,18 @@ var YasguiGeoTg = (() => {
           }
           f4 = Ud(d4 | 0, 0, 52) | 0;
           d4 = c4 & -15728641 | (H() | 0);
-          b2[e2 >> 2] = a3 | f4;
-          b2[e2 + 4 >> 2] = d4;
-          e2 = 0;
-          return e2 | 0;
+          b2[e3 >> 2] = a3 | f4;
+          b2[e3 + 4 >> 2] = d4;
+          e3 = 0;
+          return e3 | 0;
         }
-        function Ob(a3, c4, d4, e2) {
+        function Ob(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0;
-          if ((d4 | 0) == 0 & (e2 | 0) == 0) {
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0;
+          if ((d4 | 0) == 0 & (e3 | 0) == 0) {
             E4 = 0;
             return E4 | 0;
           }
@@ -30274,14 +38339,14 @@ var YasguiGeoTg = (() => {
           g3 = b2[f4 >> 2] | 0;
           f4 = b2[f4 + 4 >> 2] | 0;
           if (true & (f4 & 15728640 | 0) == 0) {
-            if (!((e2 | 0) > 0 | (e2 | 0) == 0 & d4 >>> 0 > 0)) {
+            if (!((e3 | 0) > 0 | (e3 | 0) == 0 & d4 >>> 0 > 0)) {
               E4 = 0;
               return E4 | 0;
             }
             E4 = c4;
             b2[E4 >> 2] = g3;
             b2[E4 + 4 >> 2] = f4;
-            if ((d4 | 0) == 1 & (e2 | 0) == 0) {
+            if ((d4 | 0) == 1 & (e3 | 0) == 0) {
               E4 = 0;
               return E4 | 0;
             }
@@ -30295,7 +38360,7 @@ var YasguiGeoTg = (() => {
               b2[E4 + 4 >> 2] = D2;
               f4 = Jd(f4 | 0, g3 | 0, 1, 0) | 0;
               g3 = H() | 0;
-            } while ((g3 | 0) < (e2 | 0) | (g3 | 0) == (e2 | 0) & f4 >>> 0 < d4 >>> 0);
+            } while ((g3 | 0) < (e3 | 0) | (g3 | 0) == (e3 | 0) & f4 >>> 0 < d4 >>> 0);
             f4 = 0;
             return f4 | 0;
           }
@@ -30321,7 +38386,7 @@ var YasguiGeoTg = (() => {
             z2 = z2 & 15;
             A7 = z2 + -1 | 0;
             y4 = (z2 | 0) != 0;
-            x4 = (e2 | 0) > 0 | (e2 | 0) == 0 & d4 >>> 0 > 0;
+            x4 = (e3 | 0) > 0 | (e3 | 0) == 0 & d4 >>> 0 > 0;
             b: do {
               if (y4 & x4) {
                 t2 = Ud(A7 | 0, 0, 52) | 0;
@@ -30336,7 +38401,7 @@ var YasguiGeoTg = (() => {
                   while (1) {
                     g3 = Jd(g3 | 0, a3 | 0, 1, 0) | 0;
                     a3 = H() | 0;
-                    if (!((a3 | 0) < (e2 | 0) | (a3 | 0) == (e2 | 0) & g3 >>> 0 < d4 >>> 0)) {
+                    if (!((a3 | 0) < (e3 | 0) | (a3 | 0) == (e3 | 0) & g3 >>> 0 < d4 >>> 0)) {
                       break b;
                     }
                     h2 = D2 + (g3 << 3) | 0;
@@ -30380,17 +38445,17 @@ var YasguiGeoTg = (() => {
                         } while (j >>> 0 < l2 >>> 0);
                       }
                     }
-                    n = Rd(i | 0, a3 | 0, d4 | 0, e2 | 0) | 0;
-                    o = H() | 0;
-                    j = C3 + (n << 3) | 0;
+                    n2 = Rd(i | 0, a3 | 0, d4 | 0, e3 | 0) | 0;
+                    o2 = H() | 0;
+                    j = C3 + (n2 << 3) | 0;
                     l2 = j;
                     m3 = b2[l2 >> 2] | 0;
                     l2 = b2[l2 + 4 >> 2] | 0;
                     if (!((m3 | 0) == 0 & (l2 | 0) == 0)) {
-                      r2 = 0;
+                      r3 = 0;
                       s3 = 0;
                       do {
-                        if ((r2 | 0) > (e2 | 0) | (r2 | 0) == (e2 | 0) & s3 >>> 0 > d4 >>> 0) {
+                        if ((r3 | 0) > (e3 | 0) | (r3 | 0) == (e3 | 0) & s3 >>> 0 > d4 >>> 0) {
                           E4 = 31;
                           break a;
                         }
@@ -30439,13 +38504,13 @@ var YasguiGeoTg = (() => {
                           b2[v2 + 4 >> 2] = 0;
                           i = w2 | i;
                         } else {
-                          n = Jd(n | 0, o | 0, 1, 0) | 0;
-                          n = Qd(n | 0, H() | 0, d4 | 0, e2 | 0) | 0;
-                          o = H() | 0;
+                          n2 = Jd(n2 | 0, o2 | 0, 1, 0) | 0;
+                          n2 = Qd(n2 | 0, H() | 0, d4 | 0, e3 | 0) | 0;
+                          o2 = H() | 0;
                         }
-                        s3 = Jd(s3 | 0, r2 | 0, 1, 0) | 0;
-                        r2 = H() | 0;
-                        j = C3 + (n << 3) | 0;
+                        s3 = Jd(s3 | 0, r3 | 0, 1, 0) | 0;
+                        r3 = H() | 0;
+                        j = C3 + (n2 << 3) | 0;
                         l2 = j;
                         m3 = b2[l2 >> 2] | 0;
                         l2 = b2[l2 + 4 >> 2] | 0;
@@ -30457,7 +38522,7 @@ var YasguiGeoTg = (() => {
                   }
                   g3 = Jd(g3 | 0, h2 | 0, 1, 0) | 0;
                   h2 = H() | 0;
-                  if (!((h2 | 0) < (e2 | 0) | (h2 | 0) == (e2 | 0) & g3 >>> 0 < d4 >>> 0)) {
+                  if (!((h2 | 0) < (e3 | 0) | (h2 | 0) == (e3 | 0) & g3 >>> 0 < d4 >>> 0)) {
                     break b;
                   }
                   a3 = D2 + (g3 << 3) | 0;
@@ -30466,13 +38531,13 @@ var YasguiGeoTg = (() => {
                 }
               }
             } while (0);
-            w2 = Jd(d4 | 0, e2 | 0, 5, 0) | 0;
+            w2 = Jd(d4 | 0, e3 | 0, 5, 0) | 0;
             v2 = H() | 0;
             if (v2 >>> 0 < 0 | (v2 | 0) == 0 & w2 >>> 0 < 11) {
               E4 = 85;
               break;
             }
-            w2 = Nd(d4 | 0, e2 | 0, 6, 0) | 0;
+            w2 = Nd(d4 | 0, e3 | 0, 6, 0) | 0;
             H() | 0;
             w2 = Id(w2, 8) | 0;
             if (!w2) {
@@ -30484,7 +38549,7 @@ var YasguiGeoTg = (() => {
                 q2 = 0;
                 a3 = 0;
                 p2 = 0;
-                r2 = 0;
+                r3 = 0;
                 while (1) {
                   l2 = C3 + (q2 << 3) | 0;
                   h2 = l2;
@@ -30495,22 +38560,22 @@ var YasguiGeoTg = (() => {
                     H() | 0;
                     m3 = m3 & 7;
                     i = m3 + 1 | 0;
-                    n = h2 & -117440513;
+                    n2 = h2 & -117440513;
                     v2 = Td(g3 | 0, h2 | 0, 45) | 0;
                     H() | 0;
                     d: do {
                       if (oa(v2 & 127) | 0) {
-                        o = Td(g3 | 0, h2 | 0, 52) | 0;
+                        o2 = Td(g3 | 0, h2 | 0, 52) | 0;
                         H() | 0;
-                        o = o & 15;
-                        if (o | 0) {
+                        o2 = o2 & 15;
+                        if (o2 | 0) {
                           j = 1;
                           while (1) {
                             v2 = Ud(7, 0, (15 - j | 0) * 3 | 0) | 0;
-                            if (!((g3 & v2 | 0) == 0 & (n & (H() | 0) | 0) == 0)) {
+                            if (!((g3 & v2 | 0) == 0 & (n2 & (H() | 0) | 0) == 0)) {
                               break d;
                             }
-                            if (j >>> 0 < o >>> 0) {
+                            if (j >>> 0 < o2 >>> 0) {
                               j = j + 1 | 0;
                             } else {
                               break;
@@ -30519,7 +38584,7 @@ var YasguiGeoTg = (() => {
                         }
                         h2 = Ud(i | 0, 0, 56) | 0;
                         g3 = h2 | g3;
-                        h2 = H() | 0 | n;
+                        h2 = H() | 0 | n2;
                         i = l2;
                         b2[i >> 2] = g3;
                         b2[i + 4 >> 2] = h2;
@@ -30538,9 +38603,9 @@ var YasguiGeoTg = (() => {
                   } else {
                     v2 = p2;
                   }
-                  q2 = Jd(q2 | 0, r2 | 0, 1, 0) | 0;
-                  r2 = H() | 0;
-                  if (!((r2 | 0) < (e2 | 0) | (r2 | 0) == (e2 | 0) & q2 >>> 0 < d4 >>> 0)) {
+                  q2 = Jd(q2 | 0, r3 | 0, 1, 0) | 0;
+                  r3 = H() | 0;
+                  if (!((r3 | 0) < (e3 | 0) | (r3 | 0) == (e3 | 0) & q2 >>> 0 < d4 >>> 0)) {
                     break;
                   } else {
                     p2 = v2;
@@ -30565,7 +38630,7 @@ var YasguiGeoTg = (() => {
                       }
                       i = Jd(i | 0, h2 | 0, 1, 0) | 0;
                       h2 = H() | 0;
-                      if (!((h2 | 0) < (e2 | 0) | (h2 | 0) == (e2 | 0) & i >>> 0 < d4 >>> 0)) {
+                      if (!((h2 | 0) < (e3 | 0) | (h2 | 0) == (e3 | 0) & i >>> 0 < d4 >>> 0)) {
                         break;
                       }
                       f4 = D2 + (i << 3) | 0;
@@ -30582,35 +38647,35 @@ var YasguiGeoTg = (() => {
                   while (1) {
                     do {
                       if (!((k | 0) == 0 & (f4 | 0) == 0)) {
-                        o = Td(k | 0, f4 | 0, 52) | 0;
+                        o2 = Td(k | 0, f4 | 0, 52) | 0;
                         H() | 0;
-                        o = o & 15;
-                        if (s3 | (o | 0) < (A7 | 0)) {
+                        o2 = o2 & 15;
+                        if (s3 | (o2 | 0) < (A7 | 0)) {
                           E4 = 80;
                           break a;
                         }
-                        if ((o | 0) != (A7 | 0)) {
+                        if ((o2 | 0) != (A7 | 0)) {
                           l2 = k | t2;
                           m3 = f4 & -15728641 | u4;
-                          if (o >>> 0 >= z2 >>> 0) {
-                            n = A7;
+                          if (o2 >>> 0 >= z2 >>> 0) {
+                            n2 = A7;
                             do {
-                              y4 = Ud(7, 0, (14 - n | 0) * 3 | 0) | 0;
-                              n = n + 1 | 0;
+                              y4 = Ud(7, 0, (14 - n2 | 0) * 3 | 0) | 0;
+                              n2 = n2 + 1 | 0;
                               l2 = y4 | l2;
                               m3 = H() | 0 | m3;
-                            } while (n >>> 0 < o >>> 0);
+                            } while (n2 >>> 0 < o2 >>> 0);
                           }
                         } else {
                           l2 = k;
                           m3 = f4;
                         }
-                        p2 = Rd(l2 | 0, m3 | 0, d4 | 0, e2 | 0) | 0;
-                        n = 0;
-                        o = 0;
-                        r2 = H() | 0;
+                        p2 = Rd(l2 | 0, m3 | 0, d4 | 0, e3 | 0) | 0;
+                        n2 = 0;
+                        o2 = 0;
+                        r3 = H() | 0;
                         do {
-                          if ((n | 0) > (e2 | 0) | (n | 0) == (e2 | 0) & o >>> 0 > d4 >>> 0) {
+                          if ((n2 | 0) > (e3 | 0) | (n2 | 0) == (e3 | 0) & o2 >>> 0 > d4 >>> 0) {
                             E4 = 81;
                             break a;
                           }
@@ -30620,11 +38685,11 @@ var YasguiGeoTg = (() => {
                             E4 = 65;
                             break;
                           }
-                          y4 = Jd(p2 | 0, r2 | 0, 1, 0) | 0;
-                          p2 = Qd(y4 | 0, H() | 0, d4 | 0, e2 | 0) | 0;
-                          r2 = H() | 0;
-                          o = Jd(o | 0, n | 0, 1, 0) | 0;
-                          n = H() | 0;
+                          y4 = Jd(p2 | 0, r3 | 0, 1, 0) | 0;
+                          p2 = Qd(y4 | 0, H() | 0, d4 | 0, e3 | 0) | 0;
+                          r3 = H() | 0;
+                          o2 = Jd(o2 | 0, n2 | 0, 1, 0) | 0;
+                          n2 = H() | 0;
                           y4 = C3 + (p2 << 3) | 0;
                         } while (!((b2[y4 >> 2] | 0) == (l2 | 0) ? (b2[y4 + 4 >> 2] | 0) == (m3 | 0) : 0));
                         if ((E4 | 0) == 65 ? (E4 = 0, true & (q2 & 117440512 | 0) == 100663296) : 0) {
@@ -30639,7 +38704,7 @@ var YasguiGeoTg = (() => {
                     } while (0);
                     h2 = Jd(h2 | 0, i | 0, 1, 0) | 0;
                     i = H() | 0;
-                    if (!((i | 0) < (e2 | 0) | (i | 0) == (e2 | 0) & h2 >>> 0 < d4 >>> 0)) {
+                    if (!((i | 0) < (e3 | 0) | (i | 0) == (e3 | 0) & h2 >>> 0 < d4 >>> 0)) {
                       break;
                     }
                     f4 = D2 + (h2 << 3) | 0;
@@ -30665,7 +38730,7 @@ var YasguiGeoTg = (() => {
               break;
             } else {
               c4 = c4 + (g3 << 3) | 0;
-              e2 = f4;
+              e3 = f4;
               d4 = a3;
             }
           }
@@ -30714,15 +38779,15 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function Pb(a3, c4, d4, e2, f4, g3, h2) {
+        function Pb(a3, c4, d4, e3, f4, g3, h2) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
           h2 = h2 | 0;
-          var i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0;
+          var i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0;
           q2 = T2;
           T2 = T2 + 16 | 0;
           p2 = q2;
@@ -30736,12 +38801,12 @@ var YasguiGeoTg = (() => {
             T2 = q2;
             return p2 | 0;
           }
-          n = 0;
-          o = 0;
+          n2 = 0;
+          o2 = 0;
           m3 = 0;
           i = 0;
           a: while (1) {
-            k = a3 + (n << 3) | 0;
+            k = a3 + (n2 << 3) | 0;
             j = b2[k >> 2] | 0;
             k = b2[k + 4 >> 2] | 0;
             l2 = Td(j | 0, k | 0, 52) | 0;
@@ -30764,7 +38829,7 @@ var YasguiGeoTg = (() => {
                   j = 10;
                   break a;
                 }
-                m3 = e2 + (j << 3) | 0;
+                m3 = e3 + (j << 3) | 0;
                 b2[m3 >> 2] = k;
                 b2[m3 + 4 >> 2] = l2;
                 j = Jd(j | 0, i | 0, 1, 0) | 0;
@@ -30775,9 +38840,9 @@ var YasguiGeoTg = (() => {
                 l2 = b2[m3 + 4 >> 2] | 0;
               } while (!((k | 0) == 0 & (l2 | 0) == 0));
             }
-            n = Jd(n | 0, o | 0, 1, 0) | 0;
-            o = H() | 0;
-            if (!((o | 0) < (d4 | 0) | (o | 0) == (d4 | 0) & n >>> 0 < c4 >>> 0)) {
+            n2 = Jd(n2 | 0, o2 | 0, 1, 0) | 0;
+            o2 = H() | 0;
+            if (!((o2 | 0) < (d4 | 0) | (o2 | 0) == (d4 | 0) & n2 >>> 0 < c4 >>> 0)) {
               i = 0;
               j = 11;
               break;
@@ -30795,16 +38860,16 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function Qb(a3, c4, d4, e2, f4) {
+        function Qb(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0;
-          n = T2;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0;
+          n2 = T2;
           T2 = T2 + 16 | 0;
-          m3 = n;
+          m3 = n2;
           a: do {
             if ((d4 | 0) > 0 | (d4 | 0) == 0 & c4 >>> 0 > 0) {
               k = 0;
@@ -30816,7 +38881,7 @@ var YasguiGeoTg = (() => {
                 i = b2[j >> 2] | 0;
                 j = b2[j + 4 >> 2] | 0;
                 if (!((i | 0) == 0 & (j | 0) == 0)) {
-                  j = (Jb(i, j, e2, m3) | 0) == 0;
+                  j = (Jb(i, j, e3, m3) | 0) == 0;
                   i = m3;
                   h2 = Jd(b2[i >> 2] | 0, b2[i + 4 >> 2] | 0, h2 | 0, g3 | 0) | 0;
                   g3 = H() | 0;
@@ -30831,7 +38896,7 @@ var YasguiGeoTg = (() => {
                   break a;
                 }
               }
-              T2 = n;
+              T2 = n2;
               return g3 | 0;
             } else {
               h2 = 0;
@@ -30841,7 +38906,7 @@ var YasguiGeoTg = (() => {
           b2[f4 >> 2] = h2;
           b2[f4 + 4 >> 2] = g3;
           f4 = 0;
-          T2 = n;
+          T2 = n2;
           return f4 | 0;
         }
         function Rb(a3, b3) {
@@ -30854,13 +38919,13 @@ var YasguiGeoTg = (() => {
         function Sb(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
-          e2 = Td(a3 | 0, b3 | 0, 52) | 0;
+          var c4 = 0, d4 = 0, e3 = 0;
+          e3 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
-          if (!e2) {
-            e2 = 0;
-            return e2 | 0;
+          e3 = e3 & 15;
+          if (!e3) {
+            e3 = 0;
+            return e3 | 0;
           }
           d4 = 1;
           while (1) {
@@ -30871,7 +38936,7 @@ var YasguiGeoTg = (() => {
               d4 = 5;
               break;
             }
-            if (d4 >>> 0 < e2 >>> 0) {
+            if (d4 >>> 0 < e3 >>> 0) {
               d4 = d4 + 1 | 0;
             } else {
               c4 = 0;
@@ -30887,7 +38952,7 @@ var YasguiGeoTg = (() => {
         function Tb(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           i = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
           i = i & 15;
@@ -30902,16 +38967,16 @@ var YasguiGeoTg = (() => {
           while (1) {
             f4 = (15 - h2 | 0) * 3 | 0;
             d4 = Ud(7, 0, f4 | 0) | 0;
-            e2 = H() | 0;
+            e3 = H() | 0;
             g3 = Td(a3 | 0, b3 | 0, f4 | 0) | 0;
             H() | 0;
             f4 = Ud($a(g3 & 7) | 0, 0, f4 | 0) | 0;
             g3 = H() | 0;
             a3 = f4 | a3 & ~d4;
-            b3 = g3 | b3 & ~e2;
+            b3 = g3 | b3 & ~e3;
             a: do {
               if (!c4) {
-                if (!((f4 & d4 | 0) == 0 & (g3 & e2 | 0) == 0)) {
+                if (!((f4 & d4 | 0) == 0 & (g3 & e3 | 0) == 0)) {
                   d4 = Td(a3 | 0, b3 | 0, 52) | 0;
                   H() | 0;
                   d4 = d4 & 15;
@@ -30942,11 +39007,11 @@ var YasguiGeoTg = (() => {
                     c4 = 1;
                     while (1) {
                       g3 = (15 - c4 | 0) * 3 | 0;
-                      e2 = Td(a3 | 0, b3 | 0, g3 | 0) | 0;
+                      e3 = Td(a3 | 0, b3 | 0, g3 | 0) | 0;
                       H() | 0;
                       f4 = Ud(7, 0, g3 | 0) | 0;
                       b3 = b3 & ~(H() | 0);
-                      g3 = Ud($a(e2 & 7) | 0, 0, g3 | 0) | 0;
+                      g3 = Ud($a(e3 & 7) | 0, 0, g3 | 0) | 0;
                       a3 = a3 & ~f4 | g3;
                       b3 = b3 | (H() | 0);
                       if (c4 >>> 0 < d4 >>> 0) {
@@ -30974,7 +39039,7 @@ var YasguiGeoTg = (() => {
         function Ub(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0;
           d4 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
           d4 = d4 & 15;
@@ -30989,10 +39054,10 @@ var YasguiGeoTg = (() => {
             f4 = (15 - c4 | 0) * 3 | 0;
             g3 = Td(a3 | 0, b3 | 0, f4 | 0) | 0;
             H() | 0;
-            e2 = Ud(7, 0, f4 | 0) | 0;
+            e3 = Ud(7, 0, f4 | 0) | 0;
             b3 = b3 & ~(H() | 0);
             f4 = Ud($a(g3 & 7) | 0, 0, f4 | 0) | 0;
-            a3 = f4 | a3 & ~e2;
+            a3 = f4 | a3 & ~e3;
             b3 = H() | 0 | b3;
             if (c4 >>> 0 < d4 >>> 0) {
               c4 = c4 + 1 | 0;
@@ -31006,7 +39071,7 @@ var YasguiGeoTg = (() => {
         function Vb(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0;
           i = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
           i = i & 15;
@@ -31021,16 +39086,16 @@ var YasguiGeoTg = (() => {
           while (1) {
             f4 = (15 - h2 | 0) * 3 | 0;
             d4 = Ud(7, 0, f4 | 0) | 0;
-            e2 = H() | 0;
+            e3 = H() | 0;
             g3 = Td(a3 | 0, b3 | 0, f4 | 0) | 0;
             H() | 0;
             f4 = Ud(ab(g3 & 7) | 0, 0, f4 | 0) | 0;
             g3 = H() | 0;
             a3 = f4 | a3 & ~d4;
-            b3 = g3 | b3 & ~e2;
+            b3 = g3 | b3 & ~e3;
             a: do {
               if (!c4) {
-                if (!((f4 & d4 | 0) == 0 & (g3 & e2 | 0) == 0)) {
+                if (!((f4 & d4 | 0) == 0 & (g3 & e3 | 0) == 0)) {
                   d4 = Td(a3 | 0, b3 | 0, 52) | 0;
                   H() | 0;
                   d4 = d4 & 15;
@@ -31060,12 +39125,12 @@ var YasguiGeoTg = (() => {
                     }
                     c4 = 1;
                     while (1) {
-                      e2 = (15 - c4 | 0) * 3 | 0;
-                      f4 = Ud(7, 0, e2 | 0) | 0;
+                      e3 = (15 - c4 | 0) * 3 | 0;
+                      f4 = Ud(7, 0, e3 | 0) | 0;
                       g3 = b3 & ~(H() | 0);
-                      b3 = Td(a3 | 0, b3 | 0, e2 | 0) | 0;
+                      b3 = Td(a3 | 0, b3 | 0, e3 | 0) | 0;
                       H() | 0;
-                      b3 = Ud(ab(b3 & 7) | 0, 0, e2 | 0) | 0;
+                      b3 = Ud(ab(b3 & 7) | 0, 0, e3 | 0) | 0;
                       a3 = a3 & ~f4 | b3;
                       b3 = g3 | (H() | 0);
                       if (c4 >>> 0 < d4 >>> 0) {
@@ -31093,7 +39158,7 @@ var YasguiGeoTg = (() => {
         function Wb(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0;
           d4 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
           d4 = d4 & 15;
@@ -31107,12 +39172,12 @@ var YasguiGeoTg = (() => {
           while (1) {
             g3 = (15 - c4 | 0) * 3 | 0;
             f4 = Ud(7, 0, g3 | 0) | 0;
-            e2 = b3 & ~(H() | 0);
+            e3 = b3 & ~(H() | 0);
             b3 = Td(a3 | 0, b3 | 0, g3 | 0) | 0;
             H() | 0;
             b3 = Ud(ab(b3 & 7) | 0, 0, g3 | 0) | 0;
             a3 = b3 | a3 & ~f4;
-            b3 = H() | 0 | e2;
+            b3 = H() | 0 | e3;
             if (c4 >>> 0 < d4 >>> 0) {
               c4 = c4 + 1 | 0;
             } else {
@@ -31125,11 +39190,11 @@ var YasguiGeoTg = (() => {
         function Xb(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           j = T2;
           T2 = T2 + 64 | 0;
           i = j + 40 | 0;
-          e2 = j + 24 | 0;
+          e3 = j + 24 | 0;
           f4 = j + 12 | 0;
           g3 = j;
           Ud(c4 | 0, 0, 52) | 0;
@@ -31171,9 +39236,9 @@ var YasguiGeoTg = (() => {
           if ((c4 | 0) > 0) {
             a3 = -1;
             while (1) {
-              b2[e2 >> 2] = b2[h2 >> 2];
-              b2[e2 + 4 >> 2] = b2[h2 + 4 >> 2];
-              b2[e2 + 8 >> 2] = b2[h2 + 8 >> 2];
+              b2[e3 >> 2] = b2[h2 >> 2];
+              b2[e3 + 4 >> 2] = b2[h2 + 4 >> 2];
+              b2[e3 + 8 >> 2] = b2[h2 + 8 >> 2];
               if (!(c4 & 1)) {
                 Va(h2);
                 b2[f4 >> 2] = b2[h2 >> 2];
@@ -31187,7 +39252,7 @@ var YasguiGeoTg = (() => {
                 b2[f4 + 8 >> 2] = b2[h2 + 8 >> 2];
                 Wa(f4);
               }
-              Pa(e2, f4, g3);
+              Pa(e3, f4, g3);
               Ma(g3);
               l2 = (15 - c4 | 0) * 3 | 0;
               k = Ud(7, 0, l2 | 0) | 0;
@@ -31206,21 +39271,21 @@ var YasguiGeoTg = (() => {
           }
           a: do {
             if (((b2[h2 >> 2] | 0) <= 2 ? (b2[i + 8 >> 2] | 0) <= 2 : 0) ? (b2[i + 12 >> 2] | 0) <= 2 : 0) {
-              e2 = qa(i) | 0;
-              c4 = Ud(e2 | 0, 0, 45) | 0;
+              e3 = qa(i) | 0;
+              c4 = Ud(e3 | 0, 0, 45) | 0;
               c4 = c4 | a3;
               a3 = H() | 0 | d4 & -1040385;
               g3 = ra(i) | 0;
-              if (!(oa(e2) | 0)) {
+              if (!(oa(e3) | 0)) {
                 if ((g3 | 0) <= 0) {
                   break;
                 }
                 f4 = 0;
                 while (1) {
-                  e2 = Td(c4 | 0, a3 | 0, 52) | 0;
+                  e3 = Td(c4 | 0, a3 | 0, 52) | 0;
                   H() | 0;
-                  e2 = e2 & 15;
-                  if (e2) {
+                  e3 = e3 & 15;
+                  if (e3) {
                     d4 = 1;
                     while (1) {
                       l2 = (15 - d4 | 0) * 3 | 0;
@@ -31231,7 +39296,7 @@ var YasguiGeoTg = (() => {
                       l2 = Ud($a(i & 7) | 0, 0, l2 | 0) | 0;
                       c4 = c4 & ~k | l2;
                       a3 = a3 | (H() | 0);
-                      if (d4 >>> 0 < e2 >>> 0) {
+                      if (d4 >>> 0 < e3 >>> 0) {
                         d4 = d4 + 1 | 0;
                       } else {
                         break;
@@ -31267,7 +39332,7 @@ var YasguiGeoTg = (() => {
                       break b;
                     }
                   }
-                  if (ua(e2, b2[i >> 2] | 0) | 0) {
+                  if (ua(e3, b2[i >> 2] | 0) | 0) {
                     d4 = 1;
                     while (1) {
                       i = (15 - d4 | 0) * 3 | 0;
@@ -31331,64 +39396,64 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0;
+          var e3 = 0, f4 = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
-          e2 = f4;
+          e3 = f4;
           if (c4 >>> 0 > 15) {
-            e2 = 4;
+            e3 = 4;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
           if ((b2[a3 + 4 >> 2] & 2146435072 | 0) == 2146435072) {
-            e2 = 3;
+            e3 = 3;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
           if ((b2[a3 + 8 + 4 >> 2] & 2146435072 | 0) == 2146435072) {
-            e2 = 3;
+            e3 = 3;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
-          qb(a3, c4, e2);
-          c4 = Xb(e2, c4) | 0;
-          e2 = H() | 0;
+          qb(a3, c4, e3);
+          c4 = Xb(e3, c4) | 0;
+          e3 = H() | 0;
           b2[d4 >> 2] = c4;
-          b2[d4 + 4 >> 2] = e2;
-          if ((c4 | 0) == 0 & (e2 | 0) == 0) {
+          b2[d4 + 4 >> 2] = e3;
+          if ((c4 | 0) == 0 & (e3 | 0) == 0) {
             I2(27795, 27122, 1050, 27145);
           }
-          e2 = 0;
+          e3 = 0;
           T2 = f4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function _b(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           f4 = d4 + 4 | 0;
           g3 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           g3 = g3 & 15;
           h2 = Td(a3 | 0, c4 | 0, 45) | 0;
           H() | 0;
-          e2 = (g3 | 0) == 0;
+          e3 = (g3 | 0) == 0;
           if (!(oa(h2 & 127) | 0)) {
-            if (e2) {
+            if (e3) {
               h2 = 0;
               return h2 | 0;
             }
             if ((b2[f4 >> 2] | 0) == 0 ? (b2[d4 + 8 >> 2] | 0) == 0 : 0) {
-              e2 = (b2[d4 + 12 >> 2] | 0) != 0 & 1;
+              e3 = (b2[d4 + 12 >> 2] | 0) != 0 & 1;
             } else {
-              e2 = 1;
+              e3 = 1;
             }
-          } else if (e2) {
+          } else if (e3) {
             h2 = 1;
             return h2 | 0;
           } else {
-            e2 = 1;
+            e3 = 1;
           }
           d4 = 1;
           while (1) {
@@ -31406,13 +39471,13 @@ var YasguiGeoTg = (() => {
               break;
             }
           }
-          return e2 | 0;
+          return e3 | 0;
         }
         function $b(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           l2 = T2;
           T2 = T2 + 16 | 0;
           j = l2;
@@ -31430,9 +39495,9 @@ var YasguiGeoTg = (() => {
           }
           a: do {
             if ((oa(k) | 0) != 0 ? (g3 = Td(a3 | 0, c4 | 0, 52) | 0, H() | 0, g3 = g3 & 15, (g3 | 0) != 0) : 0) {
-              e2 = 1;
+              e3 = 1;
               b: while (1) {
-                i = Td(a3 | 0, c4 | 0, (15 - e2 | 0) * 3 | 0) | 0;
+                i = Td(a3 | 0, c4 | 0, (15 - e3 | 0) * 3 | 0) | 0;
                 H() | 0;
                 switch (i & 7) {
                   case 5:
@@ -31440,28 +39505,28 @@ var YasguiGeoTg = (() => {
                   case 0:
                     break;
                   default: {
-                    e2 = c4;
+                    e3 = c4;
                     break a;
                   }
                 }
-                if (e2 >>> 0 < g3 >>> 0) {
-                  e2 = e2 + 1 | 0;
+                if (e3 >>> 0 < g3 >>> 0) {
+                  e3 = e3 + 1 | 0;
                 } else {
-                  e2 = c4;
+                  e3 = c4;
                   break a;
                 }
               }
               f4 = 1;
-              e2 = c4;
+              e3 = c4;
               while (1) {
                 c4 = (15 - f4 | 0) * 3 | 0;
                 h2 = Ud(7, 0, c4 | 0) | 0;
-                i = e2 & ~(H() | 0);
-                e2 = Td(a3 | 0, e2 | 0, c4 | 0) | 0;
+                i = e3 & ~(H() | 0);
+                e3 = Td(a3 | 0, e3 | 0, c4 | 0) | 0;
                 H() | 0;
-                e2 = Ud(ab(e2 & 7) | 0, 0, c4 | 0) | 0;
-                a3 = a3 & ~h2 | e2;
-                e2 = i | (H() | 0);
+                e3 = Ud(ab(e3 & 7) | 0, 0, c4 | 0) | 0;
+                a3 = a3 & ~h2 | e3;
+                e3 = i | (H() | 0);
                 if (f4 >>> 0 < g3 >>> 0) {
                   f4 = f4 + 1 | 0;
                 } else {
@@ -31469,7 +39534,7 @@ var YasguiGeoTg = (() => {
                 }
               }
             } else {
-              e2 = c4;
+              e3 = c4;
             }
           } while (0);
           i = 7696 + (k * 28 | 0) | 0;
@@ -31477,7 +39542,7 @@ var YasguiGeoTg = (() => {
           b2[d4 + 4 >> 2] = b2[i + 4 >> 2];
           b2[d4 + 8 >> 2] = b2[i + 8 >> 2];
           b2[d4 + 12 >> 2] = b2[i + 12 >> 2];
-          if (!(_b(a3, e2, d4) | 0)) {
+          if (!(_b(a3, e3, d4) | 0)) {
             k = 0;
             T2 = l2;
             return k | 0;
@@ -31486,7 +39551,7 @@ var YasguiGeoTg = (() => {
           b2[j >> 2] = b2[h2 >> 2];
           b2[j + 4 >> 2] = b2[h2 + 4 >> 2];
           b2[j + 8 >> 2] = b2[h2 + 8 >> 2];
-          g3 = Td(a3 | 0, e2 | 0, 52) | 0;
+          g3 = Td(a3 | 0, e3 | 0, 52) | 0;
           H() | 0;
           i = g3 & 15;
           if (!(g3 & 1)) {
@@ -31496,33 +39561,33 @@ var YasguiGeoTg = (() => {
             g3 = i + 1 | 0;
           }
           if (!(oa(k) | 0)) {
-            e2 = 0;
+            e3 = 0;
           } else {
             c: do {
               if (!i) {
-                e2 = 0;
+                e3 = 0;
               } else {
                 c4 = 1;
                 while (1) {
-                  f4 = Td(a3 | 0, e2 | 0, (15 - c4 | 0) * 3 | 0) | 0;
+                  f4 = Td(a3 | 0, e3 | 0, (15 - c4 | 0) * 3 | 0) | 0;
                   H() | 0;
                   f4 = f4 & 7;
                   if (f4 | 0) {
-                    e2 = f4;
+                    e3 = f4;
                     break c;
                   }
                   if (c4 >>> 0 < i >>> 0) {
                     c4 = c4 + 1 | 0;
                   } else {
-                    e2 = 0;
+                    e3 = 0;
                     break;
                   }
                 }
               }
             } while (0);
-            e2 = (e2 | 0) == 4 & 1;
+            e3 = (e3 | 0) == 4 & 1;
           }
-          if (!(xb(d4, g3, e2, 0) | 0)) {
+          if (!(xb(d4, g3, e3, 0) | 0)) {
             if ((g3 | 0) != (i | 0)) {
               b2[h2 >> 2] = b2[j >> 2];
               b2[h2 + 4 >> 2] = b2[j + 4 >> 2];
@@ -31545,27 +39610,27 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0;
+          var d4 = 0, e3 = 0, f4 = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
           d4 = f4;
-          e2 = $b(a3, b3, d4) | 0;
-          if (e2 | 0) {
+          e3 = $b(a3, b3, d4) | 0;
+          if (e3 | 0) {
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
-          e2 = Td(a3 | 0, b3 | 0, 52) | 0;
+          e3 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
-          ub(d4, e2 & 15, c4);
-          e2 = 0;
+          ub(d4, e3 & 15, c4);
+          e3 = 0;
           T2 = f4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function bc(a3, b3, c4) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0;
           g3 = T2;
           T2 = T2 + 16 | 0;
           f4 = g3;
@@ -31578,32 +39643,32 @@ var YasguiGeoTg = (() => {
           d4 = Td(a3 | 0, b3 | 0, 45) | 0;
           H() | 0;
           d4 = (oa(d4 & 127) | 0) == 0;
-          e2 = Td(a3 | 0, b3 | 0, 52) | 0;
+          e3 = Td(a3 | 0, b3 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
+          e3 = e3 & 15;
           a: do {
             if (!d4) {
-              if (e2 | 0) {
+              if (e3 | 0) {
                 d4 = 1;
                 while (1) {
                   h2 = Ud(7, 0, (15 - d4 | 0) * 3 | 0) | 0;
                   if (!((h2 & a3 | 0) == 0 & ((H() | 0) & b3 | 0) == 0)) {
                     break a;
                   }
-                  if (d4 >>> 0 < e2 >>> 0) {
+                  if (d4 >>> 0 < e3 >>> 0) {
                     d4 = d4 + 1 | 0;
                   } else {
                     break;
                   }
                 }
               }
-              vb(f4, e2, 0, 5, c4);
+              vb(f4, e3, 0, 5, c4);
               h2 = 0;
               T2 = g3;
               return h2 | 0;
             }
           } while (0);
-          zb(f4, e2, 0, 6, c4);
+          zb(f4, e3, 0, 6, c4);
           h2 = 0;
           T2 = g3;
           return h2 | 0;
@@ -31612,7 +39677,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           f4 = Td(a3 | 0, c4 | 0, 45) | 0;
           H() | 0;
           if (!(oa(f4 & 127) | 0)) {
@@ -31628,24 +39693,24 @@ var YasguiGeoTg = (() => {
             b2[d4 >> 2] = f4;
             return 0;
           }
-          e2 = 1;
+          e3 = 1;
           while (1) {
-            g3 = Ud(7, 0, (15 - e2 | 0) * 3 | 0) | 0;
+            g3 = Ud(7, 0, (15 - e3 | 0) * 3 | 0) | 0;
             if (!((g3 & a3 | 0) == 0 & ((H() | 0) & c4 | 0) == 0)) {
-              e2 = 2;
+              e3 = 2;
               a3 = 6;
               break;
             }
-            if (e2 >>> 0 < f4 >>> 0) {
-              e2 = e2 + 1 | 0;
+            if (e3 >>> 0 < f4 >>> 0) {
+              e3 = e3 + 1 | 0;
             } else {
-              e2 = 5;
+              e3 = 5;
               a3 = 6;
               break;
             }
           }
           if ((a3 | 0) == 6) {
-            b2[d4 >> 2] = e2;
+            b2[d4 >> 2] = e3;
             return 0;
           }
           return 0;
@@ -31654,7 +39719,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
           m3 = T2;
           T2 = T2 + 128 | 0;
           k = m3 + 112 | 0;
@@ -31670,15 +39735,15 @@ var YasguiGeoTg = (() => {
           a: do {
             if (oa(h2) | 0) {
               if (i | 0) {
-                e2 = 1;
+                e3 = 1;
                 while (1) {
-                  j = Ud(7, 0, (15 - e2 | 0) * 3 | 0) | 0;
+                  j = Ud(7, 0, (15 - e3 | 0) * 3 | 0) | 0;
                   if (!((j & a3 | 0) == 0 & ((H() | 0) & c4 | 0) == 0)) {
                     f4 = 0;
                     break a;
                   }
-                  if (e2 >>> 0 < i >>> 0) {
-                    e2 = e2 + 1 | 0;
+                  if (e3 >>> 0 < i >>> 0) {
+                    e3 = e3 + 1 | 0;
                   } else {
                     break;
                   }
@@ -31698,8 +39763,8 @@ var YasguiGeoTg = (() => {
               f4 = 0;
             }
           } while (0);
-          e2 = $b(a3, c4, g3) | 0;
-          if (!e2) {
+          e3 = $b(a3, c4, g3) | 0;
+          if (!e3) {
             if (f4) {
               wb(g3, k, l2);
               j = 5;
@@ -31712,15 +39777,15 @@ var YasguiGeoTg = (() => {
                 if (!i) {
                   a3 = 5;
                 } else {
-                  e2 = 1;
+                  e3 = 1;
                   while (1) {
-                    h2 = Ud(7, 0, (15 - e2 | 0) * 3 | 0) | 0;
+                    h2 = Ud(7, 0, (15 - e3 | 0) * 3 | 0) | 0;
                     if (!((h2 & a3 | 0) == 0 & ((H() | 0) & c4 | 0) == 0)) {
                       a3 = 2;
                       break b;
                     }
-                    if (e2 >>> 0 < i >>> 0) {
-                      e2 = e2 + 1 | 0;
+                    if (e3 >>> 0 < i >>> 0) {
+                      e3 = e3 + 1 | 0;
                     } else {
                       a3 = 5;
                       break;
@@ -31741,23 +39806,23 @@ var YasguiGeoTg = (() => {
                   h2 = b2[h2 >> 2] | 0;
                   i = b2[d4 >> 2] | 0;
                   if ((i | 0) == -1 | (i | 0) == (h2 | 0)) {
-                    e2 = d4;
+                    e3 = d4;
                   } else {
                     f4 = 0;
                     do {
                       f4 = f4 + 1 | 0;
                       if (f4 >>> 0 >= a3 >>> 0) {
-                        e2 = 1;
+                        e3 = 1;
                         break c;
                       }
-                      e2 = d4 + (f4 << 2) | 0;
-                      i = b2[e2 >> 2] | 0;
+                      e3 = d4 + (f4 << 2) | 0;
+                      i = b2[e3 >> 2] | 0;
                     } while (!((i | 0) == -1 | (i | 0) == (h2 | 0)));
                   }
-                  b2[e2 >> 2] = h2;
+                  b2[e3 >> 2] = h2;
                   g3 = g3 + 1 | 0;
                   if (g3 >>> 0 >= j >>> 0) {
-                    e2 = 0;
+                    e3 = 0;
                     break;
                   }
                 }
@@ -31769,30 +39834,30 @@ var YasguiGeoTg = (() => {
                   h2 = b2[h2 >> 2] | 0;
                   i = b2[d4 >> 2] | 0;
                   if ((i | 0) == -1 | (i | 0) == (h2 | 0)) {
-                    e2 = d4;
+                    e3 = d4;
                   } else {
                     f4 = 0;
                     do {
                       f4 = f4 + 1 | 0;
                       if (f4 >>> 0 >= a3 >>> 0) {
-                        e2 = 1;
+                        e3 = 1;
                         break c;
                       }
-                      e2 = d4 + (f4 << 2) | 0;
-                      i = b2[e2 >> 2] | 0;
+                      e3 = d4 + (f4 << 2) | 0;
+                      i = b2[e3 >> 2] | 0;
                     } while (!((i | 0) == -1 | (i | 0) == (h2 | 0)));
                   }
-                  b2[e2 >> 2] = h2;
+                  b2[e3 >> 2] = h2;
                   g3 = g3 + 1 | 0;
                   if (g3 >>> 0 >= j >>> 0) {
-                    e2 = 0;
+                    e3 = 0;
                     break;
                   }
                 }
               }
             } while (0);
           }
-          l2 = e2;
+          l2 = e3;
           T2 = m3;
           return l2 | 0;
         }
@@ -31802,7 +39867,7 @@ var YasguiGeoTg = (() => {
         function fc(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           if (a3 >>> 0 > 15) {
             i = 4;
             return i | 0;
@@ -31811,18 +39876,18 @@ var YasguiGeoTg = (() => {
           i = H() | 0 | 134225919;
           if (!a3) {
             d4 = 0;
-            e2 = 0;
+            e3 = 0;
             do {
-              if (oa(e2) | 0) {
-                Ud(e2 | 0, 0, 45) | 0;
+              if (oa(e3) | 0) {
+                Ud(e3 | 0, 0, 45) | 0;
                 h2 = i | (H() | 0);
                 a3 = c4 + (d4 << 3) | 0;
                 b2[a3 >> 2] = -1;
                 b2[a3 + 4 >> 2] = h2;
                 d4 = d4 + 1 | 0;
               }
-              e2 = e2 + 1 | 0;
-            } while ((e2 | 0) != 122);
+              e3 = e3 + 1 | 0;
+            } while ((e3 | 0) != 122);
             d4 = 0;
             return d4 | 0;
           }
@@ -31831,17 +39896,17 @@ var YasguiGeoTg = (() => {
           do {
             if (oa(h2) | 0) {
               Ud(h2 | 0, 0, 45) | 0;
-              e2 = 1;
+              e3 = 1;
               f4 = -1;
               g3 = i | (H() | 0);
               while (1) {
-                j = Ud(7, 0, (15 - e2 | 0) * 3 | 0) | 0;
+                j = Ud(7, 0, (15 - e3 | 0) * 3 | 0) | 0;
                 f4 = f4 & ~j;
                 g3 = g3 & ~(H() | 0);
-                if ((e2 | 0) == (a3 | 0)) {
+                if ((e3 | 0) == (a3 | 0)) {
                   break;
                 } else {
-                  e2 = e2 + 1 | 0;
+                  e3 = e3 + 1 | 0;
                 }
               }
               j = c4 + (d4 << 3) | 0;
@@ -31854,15 +39919,15 @@ var YasguiGeoTg = (() => {
           d4 = 0;
           return d4 | 0;
         }
-        function gc(a3, c4, d4, e2) {
+        function gc(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0;
           t2 = T2;
           T2 = T2 + 16 | 0;
-          r2 = t2;
+          r3 = t2;
           s3 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           s3 = s3 & 15;
@@ -31918,27 +39983,27 @@ var YasguiGeoTg = (() => {
                   }
                 }
               }
-              p2 = e2;
+              p2 = e3;
               b2[p2 >> 2] = 0;
               b2[p2 + 4 >> 2] = 0;
               if ((s3 | 0) > (d4 | 0)) {
                 p2 = c4 & -15728641;
-                o = s3;
+                o2 = s3;
                 while (1) {
-                  n = o;
-                  o = o + -1 | 0;
-                  if (o >>> 0 > 15 | (s3 | 0) < (o | 0)) {
+                  n2 = o2;
+                  o2 = o2 + -1 | 0;
+                  if (o2 >>> 0 > 15 | (s3 | 0) < (o2 | 0)) {
                     k = 19;
                     break;
                   }
-                  if ((s3 | 0) != (o | 0)) {
-                    g3 = Ud(o | 0, 0, 52) | 0;
+                  if ((s3 | 0) != (o2 | 0)) {
+                    g3 = Ud(o2 | 0, 0, 52) | 0;
                     g3 = g3 | a3;
                     j = H() | 0 | p2;
-                    if ((s3 | 0) < (n | 0)) {
+                    if ((s3 | 0) < (n2 | 0)) {
                       m3 = g3;
                     } else {
-                      k = o;
+                      k = o2;
                       do {
                         m3 = Ud(7, 0, (14 - k | 0) * 3 | 0) | 0;
                         k = k + 1 | 0;
@@ -31982,7 +40047,7 @@ var YasguiGeoTg = (() => {
                     } while (0);
                     g3 = (g3 | 0) == 0 & 1;
                   }
-                  j = Td(a3 | 0, c4 | 0, (15 - n | 0) * 3 | 0) | 0;
+                  j = Td(a3 | 0, c4 | 0, (15 - n2 | 0) * 3 | 0) | 0;
                   H() | 0;
                   j = j & 7;
                   if ((j | 0) == 7) {
@@ -31998,7 +40063,7 @@ var YasguiGeoTg = (() => {
                   }
                   m3 = j + (((j | 0) != 0 & g3) << 31 >> 31) | 0;
                   if (m3 | 0) {
-                    k = s3 - n | 0;
+                    k = s3 - n2 | 0;
                     k = Rc(7, 0, k, ((k | 0) < 0) << 31 >> 31) | 0;
                     l2 = H() | 0;
                     if (g3) {
@@ -32011,18 +40076,18 @@ var YasguiGeoTg = (() => {
                       g3 = k;
                       j = l2;
                     }
-                    n = m3 + -1 | 0;
-                    n = Pd(k | 0, l2 | 0, n | 0, ((n | 0) < 0) << 31 >> 31 | 0) | 0;
-                    n = Jd(g3 | 0, j | 0, n | 0, H() | 0) | 0;
+                    n2 = m3 + -1 | 0;
+                    n2 = Pd(k | 0, l2 | 0, n2 | 0, ((n2 | 0) < 0) << 31 >> 31 | 0) | 0;
+                    n2 = Jd(g3 | 0, j | 0, n2 | 0, H() | 0) | 0;
                     m3 = H() | 0;
-                    l2 = e2;
-                    l2 = Jd(n | 0, m3 | 0, b2[l2 >> 2] | 0, b2[l2 + 4 >> 2] | 0) | 0;
+                    l2 = e3;
+                    l2 = Jd(n2 | 0, m3 | 0, b2[l2 >> 2] | 0, b2[l2 + 4 >> 2] | 0) | 0;
                     m3 = H() | 0;
-                    n = e2;
-                    b2[n >> 2] = l2;
-                    b2[n + 4 >> 2] = m3;
+                    n2 = e3;
+                    b2[n2 >> 2] = l2;
+                    b2[n2 + 4 >> 2] = m3;
                   }
-                  if ((o | 0) <= (d4 | 0)) {
+                  if ((o2 | 0) <= (d4 | 0)) {
                     k = 37;
                     break;
                   }
@@ -32030,7 +40095,7 @@ var YasguiGeoTg = (() => {
                 if ((k | 0) == 19) {
                   I2(27795, 27122, 1367, 27158);
                 } else if ((k | 0) == 37) {
-                  h2 = e2;
+                  h2 = e3;
                   f4 = b2[h2 + 4 >> 2] | 0;
                   h2 = b2[h2 >> 2] | 0;
                   break;
@@ -32048,7 +40113,7 @@ var YasguiGeoTg = (() => {
           } while (0);
           c: do {
             if ((k | 0) == 33) {
-              p2 = e2;
+              p2 = e3;
               b2[p2 >> 2] = 0;
               b2[p2 + 4 >> 2] = 0;
               if ((s3 | 0) > (d4 | 0)) {
@@ -32065,10 +40130,10 @@ var YasguiGeoTg = (() => {
                   h2 = Rc(7, 0, h2, ((h2 | 0) < 0) << 31 >> 31) | 0;
                   f4 = Pd(h2 | 0, H() | 0, f4 | 0, 0) | 0;
                   h2 = H() | 0;
-                  p2 = e2;
+                  p2 = e3;
                   h2 = Jd(b2[p2 >> 2] | 0, b2[p2 + 4 >> 2] | 0, f4 | 0, h2 | 0) | 0;
                   f4 = H() | 0;
-                  p2 = e2;
+                  p2 = e3;
                   b2[p2 >> 2] = h2;
                   b2[p2 + 4 >> 2] = f4;
                   g3 = g3 + -1 | 0;
@@ -32084,12 +40149,12 @@ var YasguiGeoTg = (() => {
               }
             }
           } while (0);
-          if (Jb(q2, i, s3, r2) | 0) {
+          if (Jb(q2, i, s3, r3) | 0) {
             I2(27795, 27122, 1327, 27173);
           }
-          s3 = r2;
-          r2 = b2[s3 + 4 >> 2] | 0;
-          if (((f4 | 0) > -1 | (f4 | 0) == -1 & h2 >>> 0 > 4294967295) & ((r2 | 0) > (f4 | 0) | ((r2 | 0) == (f4 | 0) ? (b2[s3 >> 2] | 0) >>> 0 > h2 >>> 0 : 0))) {
+          s3 = r3;
+          r3 = b2[s3 + 4 >> 2] | 0;
+          if (((f4 | 0) > -1 | (f4 | 0) == -1 & h2 >>> 0 > 4294967295) & ((r3 | 0) > (f4 | 0) | ((r3 | 0) == (f4 | 0) ? (b2[s3 >> 2] | 0) >>> 0 > h2 >>> 0 : 0))) {
             s3 = 0;
             T2 = t2;
             return s3 | 0;
@@ -32098,14 +40163,14 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function hc(a3, c4, d4, e2, f4, g3) {
+        function hc(a3, c4, d4, e3, f4, g3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0;
           m3 = T2;
           T2 = T2 + 16 | 0;
           h2 = m3;
@@ -32114,7 +40179,7 @@ var YasguiGeoTg = (() => {
             T2 = m3;
             return g3 | 0;
           }
-          i = Td(d4 | 0, e2 | 0, 52) | 0;
+          i = Td(d4 | 0, e3 | 0, 52) | 0;
           H() | 0;
           i = i & 15;
           if ((i | 0) > (f4 | 0)) {
@@ -32122,7 +40187,7 @@ var YasguiGeoTg = (() => {
             T2 = m3;
             return g3 | 0;
           }
-          if (Jb(d4, e2, f4, h2) | 0) {
+          if (Jb(d4, e3, f4, h2) | 0) {
             I2(27795, 27122, 1327, 27173);
           }
           l2 = h2;
@@ -32134,11 +40199,11 @@ var YasguiGeoTg = (() => {
           }
           l2 = f4 - i | 0;
           f4 = Ud(f4 | 0, 0, 52) | 0;
-          j = H() | 0 | e2 & -15728641;
+          j = H() | 0 | e3 & -15728641;
           k = g3;
           b2[k >> 2] = f4 | d4;
           b2[k + 4 >> 2] = j;
-          k = Td(d4 | 0, e2 | 0, 45) | 0;
+          k = Td(d4 | 0, e3 | 0, 45) | 0;
           H() | 0;
           a: do {
             if (oa(k & 127) | 0) {
@@ -32146,7 +40211,7 @@ var YasguiGeoTg = (() => {
                 h2 = 1;
                 while (1) {
                   k = Ud(7, 0, (15 - h2 | 0) * 3 | 0) | 0;
-                  if (!((k & d4 | 0) == 0 & ((H() | 0) & e2 | 0) == 0)) {
+                  if (!((k & d4 | 0) == 0 & ((H() | 0) & e3 | 0) == 0)) {
                     break a;
                   }
                   if (h2 >>> 0 < i >>> 0) {
@@ -32162,7 +40227,7 @@ var YasguiGeoTg = (() => {
                 return g3 | 0;
               }
               k = i ^ 15;
-              e2 = -1;
+              e3 = -1;
               j = 1;
               h2 = 1;
               while (1) {
@@ -32179,51 +40244,51 @@ var YasguiGeoTg = (() => {
                       c4 = Jd(a3 | 0, c4 | 0, -1, -1) | 0;
                       c4 = Kd(c4 | 0, H() | 0, h2 | 0, f4 | 0) | 0;
                       h2 = H() | 0;
-                      n = g3;
-                      p2 = b2[n >> 2] | 0;
-                      n = b2[n + 4 >> 2] | 0;
-                      q2 = (k + e2 | 0) * 3 | 0;
-                      o = Ud(7, 0, q2 | 0) | 0;
-                      n = n & ~(H() | 0);
-                      e2 = Nd(c4 | 0, h2 | 0, i | 0, d4 | 0) | 0;
+                      n2 = g3;
+                      p2 = b2[n2 >> 2] | 0;
+                      n2 = b2[n2 + 4 >> 2] | 0;
+                      q2 = (k + e3 | 0) * 3 | 0;
+                      o2 = Ud(7, 0, q2 | 0) | 0;
+                      n2 = n2 & ~(H() | 0);
+                      e3 = Nd(c4 | 0, h2 | 0, i | 0, d4 | 0) | 0;
                       a3 = H() | 0;
-                      f4 = Jd(e2 | 0, a3 | 0, 2, 0) | 0;
+                      f4 = Jd(e3 | 0, a3 | 0, 2, 0) | 0;
                       q2 = Ud(f4 | 0, H() | 0, q2 | 0) | 0;
-                      n = H() | 0 | n;
+                      n2 = H() | 0 | n2;
                       f4 = g3;
-                      b2[f4 >> 2] = q2 | p2 & ~o;
-                      b2[f4 + 4 >> 2] = n;
-                      a3 = Pd(e2 | 0, a3 | 0, i | 0, d4 | 0) | 0;
+                      b2[f4 >> 2] = q2 | p2 & ~o2;
+                      b2[f4 + 4 >> 2] = n2;
+                      a3 = Pd(e3 | 0, a3 | 0, i | 0, d4 | 0) | 0;
                       a3 = Kd(c4 | 0, h2 | 0, a3 | 0, H() | 0) | 0;
                       h2 = 0;
                       c4 = H() | 0;
                       break;
                     } else {
                       q2 = g3;
-                      o = b2[q2 >> 2] | 0;
+                      o2 = b2[q2 >> 2] | 0;
                       q2 = b2[q2 + 4 >> 2] | 0;
-                      p2 = Ud(7, 0, (k + e2 | 0) * 3 | 0) | 0;
+                      p2 = Ud(7, 0, (k + e3 | 0) * 3 | 0) | 0;
                       q2 = q2 & ~(H() | 0);
                       h2 = g3;
-                      b2[h2 >> 2] = o & ~p2;
+                      b2[h2 >> 2] = o2 & ~p2;
                       b2[h2 + 4 >> 2] = q2;
                       h2 = 1;
                       break;
                     }
                   } else {
-                    o = g3;
-                    f4 = b2[o >> 2] | 0;
-                    o = b2[o + 4 >> 2] | 0;
-                    e2 = (k + e2 | 0) * 3 | 0;
-                    n = Ud(7, 0, e2 | 0) | 0;
-                    o = o & ~(H() | 0);
+                    o2 = g3;
+                    f4 = b2[o2 >> 2] | 0;
+                    o2 = b2[o2 + 4 >> 2] | 0;
+                    e3 = (k + e3 | 0) * 3 | 0;
+                    n2 = Ud(7, 0, e3 | 0) | 0;
+                    o2 = o2 & ~(H() | 0);
                     q2 = Nd(a3 | 0, c4 | 0, i | 0, d4 | 0) | 0;
                     h2 = H() | 0;
-                    e2 = Ud(q2 | 0, h2 | 0, e2 | 0) | 0;
-                    o = H() | 0 | o;
+                    e3 = Ud(q2 | 0, h2 | 0, e3 | 0) | 0;
+                    o2 = H() | 0 | o2;
                     p2 = g3;
-                    b2[p2 >> 2] = e2 | f4 & ~n;
-                    b2[p2 + 4 >> 2] = o;
+                    b2[p2 >> 2] = e3 | f4 & ~n2;
+                    b2[p2 + 4 >> 2] = o2;
                     h2 = Pd(q2 | 0, h2 | 0, i | 0, d4 | 0) | 0;
                     a3 = Kd(a3 | 0, c4 | 0, h2 | 0, H() | 0) | 0;
                     h2 = 0;
@@ -32231,7 +40296,7 @@ var YasguiGeoTg = (() => {
                   }
                 } while (0);
                 if ((l2 | 0) > (j | 0)) {
-                  e2 = ~j;
+                  e3 = ~j;
                   j = j + 1 | 0;
                 } else {
                   c4 = 0;
@@ -32257,16 +40322,16 @@ var YasguiGeoTg = (() => {
             d4 = b2[j >> 2] | 0;
             j = b2[j + 4 >> 2] | 0;
             i = (f4 - h2 | 0) * 3 | 0;
-            e2 = Ud(7, 0, i | 0) | 0;
+            e3 = Ud(7, 0, i | 0) | 0;
             j = j & ~(H() | 0);
-            n = Nd(a3 | 0, c4 | 0, p2 | 0, q2 | 0) | 0;
-            o = H() | 0;
-            i = Ud(n | 0, o | 0, i | 0) | 0;
+            n2 = Nd(a3 | 0, c4 | 0, p2 | 0, q2 | 0) | 0;
+            o2 = H() | 0;
+            i = Ud(n2 | 0, o2 | 0, i | 0) | 0;
             j = H() | 0 | j;
             k = g3;
-            b2[k >> 2] = i | d4 & ~e2;
+            b2[k >> 2] = i | d4 & ~e3;
             b2[k + 4 >> 2] = j;
-            q2 = Pd(n | 0, o | 0, p2 | 0, q2 | 0) | 0;
+            q2 = Pd(n2 | 0, o2 | 0, p2 | 0, q2 | 0) | 0;
             a3 = Kd(a3 | 0, c4 | 0, q2 | 0, H() | 0) | 0;
             c4 = H() | 0;
             if ((l2 | 0) <= (h2 | 0)) {
@@ -32279,29 +40344,29 @@ var YasguiGeoTg = (() => {
           T2 = m3;
           return c4 | 0;
         }
-        function ic(a3, c4, d4, e2) {
+        function ic(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0;
           f4 = Td(c4 | 0, d4 | 0, 52) | 0;
           H() | 0;
           f4 = f4 & 15;
-          if ((c4 | 0) == 0 & (d4 | 0) == 0 | ((e2 | 0) > 15 | (f4 | 0) > (e2 | 0))) {
+          if ((c4 | 0) == 0 & (d4 | 0) == 0 | ((e3 | 0) > 15 | (f4 | 0) > (e3 | 0))) {
             g3 = -1;
             c4 = -1;
             d4 = 0;
             f4 = 0;
           } else {
-            c4 = Mb(c4, d4, f4 + 1 | 0, e2) | 0;
+            c4 = Mb(c4, d4, f4 + 1 | 0, e3) | 0;
             h2 = (H() | 0) & -15728641;
-            d4 = Ud(e2 | 0, 0, 52) | 0;
+            d4 = Ud(e3 | 0, 0, 52) | 0;
             d4 = c4 | d4;
             h2 = h2 | (H() | 0);
             c4 = (Kb(d4, h2) | 0) == 0;
             g3 = f4;
-            c4 = c4 ? -1 : e2;
+            c4 = c4 ? -1 : e3;
             f4 = h2;
           }
           h2 = a3;
@@ -32311,23 +40376,23 @@ var YasguiGeoTg = (() => {
           b2[a3 + 12 >> 2] = c4;
           return;
         }
-        function jc(a3, c4, d4, e2) {
+        function jc(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0;
           f4 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           f4 = f4 & 15;
-          g3 = e2 + 8 | 0;
+          g3 = e3 + 8 | 0;
           b2[g3 >> 2] = f4;
           if ((a3 | 0) == 0 & (c4 | 0) == 0 | ((d4 | 0) > 15 | (f4 | 0) > (d4 | 0))) {
-            d4 = e2;
+            d4 = e3;
             b2[d4 >> 2] = 0;
             b2[d4 + 4 >> 2] = 0;
             b2[g3 >> 2] = -1;
-            b2[e2 + 12 >> 2] = -1;
+            b2[e3 + 12 >> 2] = -1;
             return;
           }
           a3 = Mb(a3, c4, f4 + 1 | 0, d4) | 0;
@@ -32335,10 +40400,10 @@ var YasguiGeoTg = (() => {
           f4 = Ud(d4 | 0, 0, 52) | 0;
           f4 = a3 | f4;
           g3 = g3 | (H() | 0);
-          a3 = e2;
+          a3 = e3;
           b2[a3 >> 2] = f4;
           b2[a3 + 4 >> 2] = g3;
-          a3 = e2 + 12 | 0;
+          a3 = e3 + 12 | 0;
           if (!(Kb(f4, g3) | 0)) {
             b2[a3 >> 2] = -1;
             return;
@@ -32349,17 +40414,17 @@ var YasguiGeoTg = (() => {
         }
         function kc(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           d4 = a3;
           c4 = b2[d4 >> 2] | 0;
           d4 = b2[d4 + 4 >> 2] | 0;
           if ((c4 | 0) == 0 & (d4 | 0) == 0) {
             return;
           }
-          e2 = Td(c4 | 0, d4 | 0, 52) | 0;
+          e3 = Td(c4 | 0, d4 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
-          i = Ud(1, 0, (e2 ^ 15) * 3 | 0) | 0;
+          e3 = e3 & 15;
+          i = Ud(1, 0, (e3 ^ 15) * 3 | 0) | 0;
           c4 = Jd(i | 0, H() | 0, c4 | 0, d4 | 0) | 0;
           d4 = H() | 0;
           i = a3;
@@ -32367,27 +40432,27 @@ var YasguiGeoTg = (() => {
           b2[i + 4 >> 2] = d4;
           i = a3 + 8 | 0;
           h2 = b2[i >> 2] | 0;
-          if ((e2 | 0) < (h2 | 0)) {
+          if ((e3 | 0) < (h2 | 0)) {
             return;
           }
           j = a3 + 12 | 0;
-          g3 = e2;
+          g3 = e3;
           while (1) {
             if ((g3 | 0) == (h2 | 0)) {
-              e2 = 5;
+              e3 = 5;
               break;
             }
             k = (g3 | 0) == (b2[j >> 2] | 0);
             f4 = (15 - g3 | 0) * 3 | 0;
-            e2 = Td(c4 | 0, d4 | 0, f4 | 0) | 0;
+            e3 = Td(c4 | 0, d4 | 0, f4 | 0) | 0;
             H() | 0;
-            e2 = e2 & 7;
-            if (k & ((e2 | 0) == 1 & true)) {
-              e2 = 7;
+            e3 = e3 & 7;
+            if (k & ((e3 | 0) == 1 & true)) {
+              e3 = 7;
               break;
             }
-            if (!((e2 | 0) == 7 & true)) {
-              e2 = 10;
+            if (!((e3 | 0) == 7 & true)) {
+              e3 = 10;
               break;
             }
             k = Ud(1, 0, f4 | 0) | 0;
@@ -32399,18 +40464,18 @@ var YasguiGeoTg = (() => {
             if ((g3 | 0) > (h2 | 0)) {
               g3 = g3 + -1 | 0;
             } else {
-              e2 = 10;
+              e3 = 10;
               break;
             }
           }
-          if ((e2 | 0) == 5) {
+          if ((e3 | 0) == 5) {
             k = a3;
             b2[k >> 2] = 0;
             b2[k + 4 >> 2] = 0;
             b2[i >> 2] = -1;
             b2[j >> 2] = -1;
             return;
-          } else if ((e2 | 0) == 7) {
+          } else if ((e3 | 0) == 7) {
             h2 = Ud(1, 0, f4 | 0) | 0;
             h2 = Jd(c4 | 0, d4 | 0, h2 | 0, H() | 0) | 0;
             i = H() | 0;
@@ -32419,7 +40484,7 @@ var YasguiGeoTg = (() => {
             b2[k + 4 >> 2] = i;
             b2[j >> 2] = g3 + -1;
             return;
-          } else if ((e2 | 0) == 10) {
+          } else if ((e3 | 0) == 10) {
             return;
           }
         }
@@ -32432,11 +40497,11 @@ var YasguiGeoTg = (() => {
         function mc(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          if (!(+q(+(+e[a3 >> 3] - +e[b3 >> 3])) < 17453292519943298e-27)) {
+          if (!(+q(+(+e2[a3 >> 3] - +e2[b3 >> 3])) < 17453292519943298e-27)) {
             b3 = 0;
             return b3 | 0;
           }
-          b3 = +q(+(+e[a3 + 8 >> 3] - +e[b3 + 8 >> 3])) < 17453292519943298e-27;
+          b3 = +q(+(+e2[a3 + 8 >> 3] - +e2[b3 + 8 >> 3])) < 17453292519943298e-27;
           return b3 | 0;
         }
         function nc(a3, b3) {
@@ -32459,44 +40524,44 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0;
-          f4 = +e[b3 >> 3];
-          d4 = +e[a3 >> 3];
+          f4 = +e2[b3 >> 3];
+          d4 = +e2[a3 >> 3];
           g3 = +u3(+((f4 - d4) * 0.5));
-          c4 = +u3(+((+e[b3 + 8 >> 3] - +e[a3 + 8 >> 3]) * 0.5));
+          c4 = +u3(+((+e2[b3 + 8 >> 3] - +e2[a3 + 8 >> 3]) * 0.5));
           c4 = g3 * g3 + c4 * (+t(+f4) * +t(+d4) * c4);
-          return +(+z(+ +r(+c4), + +r(+(1 - c4))) * 2);
+          return +(+z(+ +r2(+c4), + +r2(+(1 - c4))) * 2);
         }
         function pc(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0;
-          f4 = +e[b3 >> 3];
-          d4 = +e[a3 >> 3];
+          f4 = +e2[b3 >> 3];
+          d4 = +e2[a3 >> 3];
           g3 = +u3(+((f4 - d4) * 0.5));
-          c4 = +u3(+((+e[b3 + 8 >> 3] - +e[a3 + 8 >> 3]) * 0.5));
+          c4 = +u3(+((+e2[b3 + 8 >> 3] - +e2[a3 + 8 >> 3]) * 0.5));
           c4 = g3 * g3 + c4 * (+t(+f4) * +t(+d4) * c4);
-          return +(+z(+ +r(+c4), + +r(+(1 - c4))) * 2 * 6371.007180918475);
+          return +(+z(+ +r2(+c4), + +r2(+(1 - c4))) * 2 * 6371.007180918475);
         }
         function qc(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0;
-          f4 = +e[b3 >> 3];
-          d4 = +e[a3 >> 3];
+          f4 = +e2[b3 >> 3];
+          d4 = +e2[a3 >> 3];
           g3 = +u3(+((f4 - d4) * 0.5));
-          c4 = +u3(+((+e[b3 + 8 >> 3] - +e[a3 + 8 >> 3]) * 0.5));
+          c4 = +u3(+((+e2[b3 + 8 >> 3] - +e2[a3 + 8 >> 3]) * 0.5));
           c4 = g3 * g3 + c4 * (+t(+f4) * +t(+d4) * c4);
-          return +(+z(+ +r(+c4), + +r(+(1 - c4))) * 2 * 6371.007180918475 * 1e3);
+          return +(+z(+ +r2(+c4), + +r2(+(1 - c4))) * 2 * 6371.007180918475 * 1e3);
         }
         function rc(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0;
-          g3 = +e[b3 >> 3];
+          g3 = +e2[b3 >> 3];
           d4 = +t(+g3);
-          f4 = +e[b3 + 8 >> 3] - +e[a3 + 8 >> 3];
+          f4 = +e2[b3 + 8 >> 3] - +e2[a3 + 8 >> 3];
           h2 = d4 * +u3(+f4);
-          c4 = +e[a3 >> 3];
+          c4 = +e2[a3 >> 3];
           return + +z(+h2, +(+u3(+g3) * +t(+c4) - +t(+f4) * (d4 * +u3(+c4))));
         }
         function sc(a3, c4, d4, f4) {
@@ -32516,15 +40581,15 @@ var YasguiGeoTg = (() => {
           h2 = !(c4 >= 6.283185307179586) ? h2 : h2 + -6.283185307179586;
           do {
             if (h2 < 1e-16) {
-              c4 = +e[a3 >> 3] + d4;
-              e[f4 >> 3] = c4;
+              c4 = +e2[a3 >> 3] + d4;
+              e2[f4 >> 3] = c4;
               g3 = f4;
             } else {
               g3 = +q(+(h2 + -3.141592653589793)) < 1e-16;
-              c4 = +e[a3 >> 3];
+              c4 = +e2[a3 >> 3];
               if (g3) {
                 c4 = c4 - d4;
-                e[f4 >> 3] = c4;
+                e2[f4 >> 3] = c4;
                 g3 = f4;
                 break;
               }
@@ -32533,24 +40598,24 @@ var YasguiGeoTg = (() => {
               c4 = i * +u3(+c4) + +t(+h2) * (d4 * +t(+c4));
               c4 = c4 > 1 ? 1 : c4;
               c4 = +x3(+(c4 < -1 ? -1 : c4));
-              e[f4 >> 3] = c4;
+              e2[f4 >> 3] = c4;
               if (+q(+(c4 + -1.5707963267948966)) < 1e-16) {
-                e[f4 >> 3] = 1.5707963267948966;
-                e[f4 + 8 >> 3] = 0;
+                e2[f4 >> 3] = 1.5707963267948966;
+                e2[f4 + 8 >> 3] = 0;
                 return;
               }
               if (+q(+(c4 + 1.5707963267948966)) < 1e-16) {
-                e[f4 >> 3] = -1.5707963267948966;
-                e[f4 + 8 >> 3] = 0;
+                e2[f4 >> 3] = -1.5707963267948966;
+                e2[f4 + 8 >> 3] = 0;
                 return;
               }
               j = 1 / +t(+c4);
               h2 = d4 * +u3(+h2) * j;
-              d4 = +e[a3 >> 3];
+              d4 = +e2[a3 >> 3];
               c4 = j * ((i - +u3(+c4) * +u3(+d4)) / +t(+d4));
               i = h2 > 1 ? 1 : h2;
               c4 = c4 > 1 ? 1 : c4;
-              c4 = +e[a3 + 8 >> 3] + +z(+(i < -1 ? -1 : i), +(c4 < -1 ? -1 : c4));
+              c4 = +e2[a3 + 8 >> 3] + +z(+(i < -1 ? -1 : i), +(c4 < -1 ? -1 : c4));
               if (c4 > 3.141592653589793) {
                 do {
                   c4 = c4 + -6.283185307179586;
@@ -32561,21 +40626,21 @@ var YasguiGeoTg = (() => {
                   c4 = c4 + 6.283185307179586;
                 } while (c4 < -3.141592653589793);
               }
-              e[f4 + 8 >> 3] = c4;
+              e2[f4 + 8 >> 3] = c4;
               return;
             }
           } while (0);
           if (+q(+(c4 + -1.5707963267948966)) < 1e-16) {
-            e[g3 >> 3] = 1.5707963267948966;
-            e[f4 + 8 >> 3] = 0;
+            e2[g3 >> 3] = 1.5707963267948966;
+            e2[f4 + 8 >> 3] = 0;
             return;
           }
           if (+q(+(c4 + 1.5707963267948966)) < 1e-16) {
-            e[g3 >> 3] = -1.5707963267948966;
-            e[f4 + 8 >> 3] = 0;
+            e2[g3 >> 3] = -1.5707963267948966;
+            e2[f4 + 8 >> 3] = 0;
             return;
           }
-          c4 = +e[a3 + 8 >> 3];
+          c4 = +e2[a3 + 8 >> 3];
           if (c4 > 3.141592653589793) {
             do {
               c4 = c4 + -6.283185307179586;
@@ -32586,7 +40651,7 @@ var YasguiGeoTg = (() => {
               c4 = c4 + 6.283185307179586;
             } while (c4 < -3.141592653589793);
           }
-          e[f4 + 8 >> 3] = c4;
+          e2[f4 + 8 >> 3] = c4;
           return;
         }
         function tc(a3, b3) {
@@ -32596,7 +40661,7 @@ var YasguiGeoTg = (() => {
             b3 = 4;
             return b3 | 0;
           }
-          e[b3 >> 3] = +e[20656 + (a3 << 3) >> 3];
+          e2[b3 >> 3] = +e2[20656 + (a3 << 3) >> 3];
           b3 = 0;
           return b3 | 0;
         }
@@ -32607,7 +40672,7 @@ var YasguiGeoTg = (() => {
             b3 = 4;
             return b3 | 0;
           }
-          e[b3 >> 3] = +e[20784 + (a3 << 3) >> 3];
+          e2[b3 >> 3] = +e2[20784 + (a3 << 3) >> 3];
           b3 = 0;
           return b3 | 0;
         }
@@ -32618,7 +40683,7 @@ var YasguiGeoTg = (() => {
             b3 = 4;
             return b3 | 0;
           }
-          e[b3 >> 3] = +e[20912 + (a3 << 3) >> 3];
+          e2[b3 >> 3] = +e2[20912 + (a3 << 3) >> 3];
           b3 = 0;
           return b3 | 0;
         }
@@ -32629,7 +40694,7 @@ var YasguiGeoTg = (() => {
             b3 = 4;
             return b3 | 0;
           }
-          e[b3 >> 3] = +e[21040 + (a3 << 3) >> 3];
+          e2[b3 >> 3] = +e2[21040 + (a3 << 3) >> 3];
           b3 = 0;
           return b3 | 0;
         }
@@ -32653,30 +40718,30 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0;
-          n = +e[b3 >> 3];
-          l2 = +e[a3 >> 3];
-          j = +u3(+((n - l2) * 0.5));
-          g3 = +e[b3 + 8 >> 3];
-          k = +e[a3 + 8 >> 3];
+          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0;
+          n2 = +e2[b3 >> 3];
+          l2 = +e2[a3 >> 3];
+          j = +u3(+((n2 - l2) * 0.5));
+          g3 = +e2[b3 + 8 >> 3];
+          k = +e2[a3 + 8 >> 3];
           h2 = +u3(+((g3 - k) * 0.5));
           i = +t(+l2);
-          m3 = +t(+n);
+          m3 = +t(+n2);
           h2 = j * j + h2 * (m3 * i * h2);
-          h2 = +z(+ +r(+h2), + +r(+(1 - h2))) * 2;
-          j = +e[c4 >> 3];
-          n = +u3(+((j - n) * 0.5));
-          d4 = +e[c4 + 8 >> 3];
+          h2 = +z(+ +r2(+h2), + +r2(+(1 - h2))) * 2;
+          j = +e2[c4 >> 3];
+          n2 = +u3(+((j - n2) * 0.5));
+          d4 = +e2[c4 + 8 >> 3];
           g3 = +u3(+((d4 - g3) * 0.5));
           f4 = +t(+j);
-          g3 = n * n + g3 * (m3 * f4 * g3);
-          g3 = +z(+ +r(+g3), + +r(+(1 - g3))) * 2;
+          g3 = n2 * n2 + g3 * (m3 * f4 * g3);
+          g3 = +z(+ +r2(+g3), + +r2(+(1 - g3))) * 2;
           j = +u3(+((l2 - j) * 0.5));
           d4 = +u3(+((k - d4) * 0.5));
           d4 = j * j + d4 * (i * f4 * d4);
-          d4 = +z(+ +r(+d4), + +r(+(1 - d4))) * 2;
+          d4 = +z(+ +r2(+d4), + +r2(+(1 - d4))) * 2;
           f4 = (h2 + g3 + d4) * 0.5;
-          return +(+y3(+ +r(+(+v(+(f4 * 0.5)) * +v(+((f4 - h2) * 0.5)) * +v(+((f4 - g3) * 0.5)) * +v(+((f4 - d4) * 0.5))))) * 4);
+          return +(+y3(+ +r2(+(+v(+(f4 * 0.5)) * +v(+((f4 - h2) * 0.5)) * +v(+((f4 - g3) * 0.5)) * +v(+((f4 - d4) * 0.5))))) * 4);
         }
         function zc(a3, c4, d4) {
           a3 = a3 | 0;
@@ -32710,7 +40775,7 @@ var YasguiGeoTg = (() => {
           } else {
             f4 = 0;
           }
-          e[d4 >> 3] = f4;
+          e2[d4 >> 3] = f4;
           d4 = 0;
           T2 = j;
           return d4 | 0;
@@ -32723,7 +40788,7 @@ var YasguiGeoTg = (() => {
           if (a3 | 0) {
             return a3 | 0;
           }
-          e[c4 >> 3] = +e[c4 >> 3] * 6371.007180918475 * 6371.007180918475;
+          e2[c4 >> 3] = +e2[c4 >> 3] * 6371.007180918475 * 6371.007180918475;
           return a3 | 0;
         }
         function Bc(a3, b3, c4) {
@@ -32734,7 +40799,7 @@ var YasguiGeoTg = (() => {
           if (a3 | 0) {
             return a3 | 0;
           }
-          e[c4 >> 3] = +e[c4 >> 3] * 6371.007180918475 * 6371.007180918475 * 1e3 * 1e3;
+          e2[c4 >> 3] = +e2[c4 >> 3] * 6371.007180918475 * 6371.007180918475 * 1e3 * 1e3;
           return a3 | 0;
         }
         function Cc(a3, c4, d4) {
@@ -32751,7 +40816,7 @@ var YasguiGeoTg = (() => {
             T2 = j;
             return i | 0;
           }
-          e[d4 >> 3] = 0;
+          e2[d4 >> 3] = 0;
           a3 = b2[i >> 2] | 0;
           if ((a3 | 0) <= 1) {
             i = 0;
@@ -32760,21 +40825,21 @@ var YasguiGeoTg = (() => {
           }
           c4 = a3 + -1 | 0;
           a3 = 0;
-          f4 = +e[i + 8 >> 3];
-          g3 = +e[i + 16 >> 3];
+          f4 = +e2[i + 8 >> 3];
+          g3 = +e2[i + 16 >> 3];
           h2 = 0;
           do {
             a3 = a3 + 1 | 0;
             l2 = f4;
-            f4 = +e[i + 8 + (a3 << 4) >> 3];
+            f4 = +e2[i + 8 + (a3 << 4) >> 3];
             m3 = +u3(+((f4 - l2) * 0.5));
             k = g3;
-            g3 = +e[i + 8 + (a3 << 4) + 8 >> 3];
+            g3 = +e2[i + 8 + (a3 << 4) + 8 >> 3];
             k = +u3(+((g3 - k) * 0.5));
             k = m3 * m3 + k * (+t(+f4) * +t(+l2) * k);
-            h2 = h2 + +z(+ +r(+k), + +r(+(1 - k))) * 2;
+            h2 = h2 + +z(+ +r2(+k), + +r2(+(1 - k))) * 2;
           } while ((a3 | 0) < (c4 | 0));
-          e[d4 >> 3] = h2;
+          e2[d4 >> 3] = h2;
           i = 0;
           T2 = j;
           return i | 0;
@@ -32790,43 +40855,43 @@ var YasguiGeoTg = (() => {
           a3 = pb(a3, c4, i) | 0;
           if (a3 | 0) {
             i = a3;
-            h2 = +e[d4 >> 3];
+            h2 = +e2[d4 >> 3];
             h2 = h2 * 6371.007180918475;
-            e[d4 >> 3] = h2;
+            e2[d4 >> 3] = h2;
             T2 = j;
             return i | 0;
           }
-          e[d4 >> 3] = 0;
+          e2[d4 >> 3] = 0;
           a3 = b2[i >> 2] | 0;
           if ((a3 | 0) <= 1) {
             i = 0;
             h2 = 0;
             h2 = h2 * 6371.007180918475;
-            e[d4 >> 3] = h2;
+            e2[d4 >> 3] = h2;
             T2 = j;
             return i | 0;
           }
           c4 = a3 + -1 | 0;
           a3 = 0;
-          f4 = +e[i + 8 >> 3];
-          g3 = +e[i + 16 >> 3];
+          f4 = +e2[i + 8 >> 3];
+          g3 = +e2[i + 16 >> 3];
           h2 = 0;
           do {
             a3 = a3 + 1 | 0;
             l2 = f4;
-            f4 = +e[i + 8 + (a3 << 4) >> 3];
+            f4 = +e2[i + 8 + (a3 << 4) >> 3];
             m3 = +u3(+((f4 - l2) * 0.5));
             k = g3;
-            g3 = +e[i + 8 + (a3 << 4) + 8 >> 3];
+            g3 = +e2[i + 8 + (a3 << 4) + 8 >> 3];
             k = +u3(+((g3 - k) * 0.5));
             k = m3 * m3 + k * (+t(+l2) * +t(+f4) * k);
-            h2 = h2 + +z(+ +r(+k), + +r(+(1 - k))) * 2;
+            h2 = h2 + +z(+ +r2(+k), + +r2(+(1 - k))) * 2;
           } while ((a3 | 0) != (c4 | 0));
-          e[d4 >> 3] = h2;
+          e2[d4 >> 3] = h2;
           i = 0;
           m3 = h2;
           m3 = m3 * 6371.007180918475;
-          e[d4 >> 3] = m3;
+          e2[d4 >> 3] = m3;
           T2 = j;
           return i | 0;
         }
@@ -32841,106 +40906,106 @@ var YasguiGeoTg = (() => {
           a3 = pb(a3, c4, i) | 0;
           if (a3 | 0) {
             i = a3;
-            h2 = +e[d4 >> 3];
+            h2 = +e2[d4 >> 3];
             h2 = h2 * 6371.007180918475;
             h2 = h2 * 1e3;
-            e[d4 >> 3] = h2;
+            e2[d4 >> 3] = h2;
             T2 = j;
             return i | 0;
           }
-          e[d4 >> 3] = 0;
+          e2[d4 >> 3] = 0;
           a3 = b2[i >> 2] | 0;
           if ((a3 | 0) <= 1) {
             i = 0;
             h2 = 0;
             h2 = h2 * 6371.007180918475;
             h2 = h2 * 1e3;
-            e[d4 >> 3] = h2;
+            e2[d4 >> 3] = h2;
             T2 = j;
             return i | 0;
           }
           c4 = a3 + -1 | 0;
           a3 = 0;
-          f4 = +e[i + 8 >> 3];
-          g3 = +e[i + 16 >> 3];
+          f4 = +e2[i + 8 >> 3];
+          g3 = +e2[i + 16 >> 3];
           h2 = 0;
           do {
             a3 = a3 + 1 | 0;
             l2 = f4;
-            f4 = +e[i + 8 + (a3 << 4) >> 3];
+            f4 = +e2[i + 8 + (a3 << 4) >> 3];
             m3 = +u3(+((f4 - l2) * 0.5));
             k = g3;
-            g3 = +e[i + 8 + (a3 << 4) + 8 >> 3];
+            g3 = +e2[i + 8 + (a3 << 4) + 8 >> 3];
             k = +u3(+((g3 - k) * 0.5));
             k = m3 * m3 + k * (+t(+l2) * +t(+f4) * k);
-            h2 = h2 + +z(+ +r(+k), + +r(+(1 - k))) * 2;
+            h2 = h2 + +z(+ +r2(+k), + +r2(+(1 - k))) * 2;
           } while ((a3 | 0) != (c4 | 0));
-          e[d4 >> 3] = h2;
+          e2[d4 >> 3] = h2;
           i = 0;
           m3 = h2;
           m3 = m3 * 6371.007180918475;
           m3 = m3 * 1e3;
-          e[d4 >> 3] = m3;
+          e2[d4 >> 3] = m3;
           T2 = j;
           return i | 0;
         }
         function Fc(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
+          var c4 = 0, d4 = 0, e3 = 0;
           c4 = Id(1, 12) | 0;
           if (!c4) {
             I2(27280, 27235, 49, 27293);
           }
           d4 = a3 + 4 | 0;
-          e2 = b2[d4 >> 2] | 0;
-          if (e2 | 0) {
-            e2 = e2 + 8 | 0;
-            b2[e2 >> 2] = c4;
+          e3 = b2[d4 >> 2] | 0;
+          if (e3 | 0) {
+            e3 = e3 + 8 | 0;
+            b2[e3 >> 2] = c4;
             b2[d4 >> 2] = c4;
             return c4 | 0;
           }
           if (b2[a3 >> 2] | 0) {
             I2(27310, 27235, 61, 27333);
           }
-          e2 = a3;
-          b2[e2 >> 2] = c4;
+          e3 = a3;
+          b2[e3 >> 2] = c4;
           b2[d4 >> 2] = c4;
           return c4 | 0;
         }
         function Gc(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0;
-          e2 = Gd(24) | 0;
-          if (!e2) {
+          var d4 = 0, e3 = 0;
+          e3 = Gd(24) | 0;
+          if (!e3) {
             I2(27347, 27235, 78, 27361);
           }
-          b2[e2 >> 2] = b2[c4 >> 2];
-          b2[e2 + 4 >> 2] = b2[c4 + 4 >> 2];
-          b2[e2 + 8 >> 2] = b2[c4 + 8 >> 2];
-          b2[e2 + 12 >> 2] = b2[c4 + 12 >> 2];
-          b2[e2 + 16 >> 2] = 0;
+          b2[e3 >> 2] = b2[c4 >> 2];
+          b2[e3 + 4 >> 2] = b2[c4 + 4 >> 2];
+          b2[e3 + 8 >> 2] = b2[c4 + 8 >> 2];
+          b2[e3 + 12 >> 2] = b2[c4 + 12 >> 2];
+          b2[e3 + 16 >> 2] = 0;
           c4 = a3 + 4 | 0;
           d4 = b2[c4 >> 2] | 0;
           if (d4 | 0) {
-            b2[d4 + 16 >> 2] = e2;
-            b2[c4 >> 2] = e2;
-            return e2 | 0;
+            b2[d4 + 16 >> 2] = e3;
+            b2[c4 >> 2] = e3;
+            return e3 | 0;
           }
           if (b2[a3 >> 2] | 0) {
             I2(27376, 27235, 82, 27361);
           }
-          b2[a3 >> 2] = e2;
-          b2[c4 >> 2] = e2;
-          return e2 | 0;
+          b2[a3 >> 2] = e3;
+          b2[c4 >> 2] = e3;
+          return e3 | 0;
         }
         function Hc(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0;
           if (!a3) {
             return;
           }
-          e2 = 1;
+          e3 = 1;
           while (1) {
             c4 = b2[a3 >> 2] | 0;
             if (c4 | 0) {
@@ -32960,20 +41025,20 @@ var YasguiGeoTg = (() => {
             }
             c4 = a3;
             a3 = b2[a3 + 8 >> 2] | 0;
-            if (!e2) {
+            if (!e3) {
               Hd(c4);
             }
             if (!a3) {
               break;
             } else {
-              e2 = 0;
+              e3 = 0;
             }
           }
           return;
         }
         function Ic(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, H2 = 0, J2 = 0, K2 = 0;
+          var c4 = 0, d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0, B3 = 0, C3 = 0, D2 = 0, E4 = 0, F = 0, G4 = 0, H2 = 0, J2 = 0, K2 = 0;
           g3 = a3 + 8 | 0;
           if (b2[g3 >> 2] | 0) {
             K2 = 1;
@@ -33009,36 +41074,36 @@ var YasguiGeoTg = (() => {
           d4 = 0;
           F = 0;
           y4 = 0;
-          n = 0;
+          n2 = 0;
           a: while (1) {
             m3 = b2[f4 >> 2] | 0;
             if (m3) {
               h2 = 0;
               i = m3;
               do {
-                k = +e[i + 8 >> 3];
+                k = +e2[i + 8 >> 3];
                 c4 = i;
                 i = b2[i + 16 >> 2] | 0;
                 l2 = (i | 0) == 0;
                 g3 = l2 ? m3 : i;
-                j = +e[g3 + 8 >> 3];
+                j = +e2[g3 + 8 >> 3];
                 if (+q(+(k - j)) > 3.141592653589793) {
                   K2 = 14;
                   break;
                 }
-                h2 = h2 + (j - k) * (+e[c4 >> 3] + +e[g3 >> 3]);
+                h2 = h2 + (j - k) * (+e2[c4 >> 3] + +e2[g3 >> 3]);
               } while (!l2);
               if ((K2 | 0) == 14) {
                 K2 = 0;
                 h2 = 0;
                 c4 = m3;
                 do {
-                  x4 = +e[c4 + 8 >> 3];
+                  x4 = +e2[c4 + 8 >> 3];
                   E4 = c4 + 16 | 0;
                   D2 = b2[E4 >> 2] | 0;
                   D2 = (D2 | 0) == 0 ? m3 : D2;
-                  w2 = +e[D2 + 8 >> 3];
-                  h2 = h2 + (+e[c4 >> 3] + +e[D2 >> 3]) * ((w2 < 0 ? w2 + 6.283185307179586 : w2) - (x4 < 0 ? x4 + 6.283185307179586 : x4));
+                  w2 = +e2[D2 + 8 >> 3];
+                  h2 = h2 + (+e2[c4 >> 3] + +e2[D2 >> 3]) * ((w2 < 0 ? w2 + 6.283185307179586 : w2) - (x4 < 0 ? x4 + 6.283185307179586 : x4));
                   c4 = b2[((c4 | 0) == 0 ? f4 : E4) >> 2] | 0;
                 } while ((c4 | 0) != 0);
               }
@@ -33046,7 +41111,7 @@ var YasguiGeoTg = (() => {
                 b2[H2 + (F << 2) >> 2] = f4;
                 F = F + 1 | 0;
                 g3 = y4;
-                c4 = n;
+                c4 = n2;
               } else {
                 K2 = 19;
               }
@@ -33057,7 +41122,7 @@ var YasguiGeoTg = (() => {
               K2 = 0;
               do {
                 if (!d4) {
-                  if (!n) {
+                  if (!n2) {
                     if (!(b2[a3 >> 2] | 0)) {
                       g3 = z2;
                       i = a3;
@@ -33070,7 +41135,7 @@ var YasguiGeoTg = (() => {
                     }
                   } else {
                     g3 = z2;
-                    i = n + 8 | 0;
+                    i = n2 + 8 | 0;
                     c4 = f4;
                     d4 = a3;
                     break;
@@ -33089,7 +41154,7 @@ var YasguiGeoTg = (() => {
                   b2[c4 >> 2] = d4;
                   g3 = d4 + 4 | 0;
                   i = d4;
-                  c4 = n;
+                  c4 = n2;
                 }
               } while (0);
               b2[i >> 2] = f4;
@@ -33098,12 +41163,12 @@ var YasguiGeoTg = (() => {
               l2 = b2[f4 >> 2] | 0;
               if (l2) {
                 m3 = G4 + (y4 << 5) + 8 | 0;
-                e[m3 >> 3] = 17976931348623157e292;
-                n = G4 + (y4 << 5) + 24 | 0;
-                e[n >> 3] = 17976931348623157e292;
-                e[i >> 3] = -17976931348623157e292;
-                o = G4 + (y4 << 5) + 16 | 0;
-                e[o >> 3] = -17976931348623157e292;
+                e2[m3 >> 3] = 17976931348623157e292;
+                n2 = G4 + (y4 << 5) + 24 | 0;
+                e2[n2 >> 3] = 17976931348623157e292;
+                e2[i >> 3] = -17976931348623157e292;
+                o2 = G4 + (y4 << 5) + 16 | 0;
+                e2[o2 >> 3] = -17976931348623157e292;
                 u4 = 17976931348623157e292;
                 v2 = -17976931348623157e292;
                 g3 = 0;
@@ -33113,40 +41178,40 @@ var YasguiGeoTg = (() => {
                 t2 = -17976931348623157e292;
                 j = -17976931348623157e292;
                 while (1) {
-                  h2 = +e[p2 >> 3];
-                  x4 = +e[p2 + 8 >> 3];
+                  h2 = +e2[p2 >> 3];
+                  x4 = +e2[p2 + 8 >> 3];
                   p2 = b2[p2 + 16 >> 2] | 0;
-                  r2 = (p2 | 0) == 0;
-                  w2 = +e[(r2 ? l2 : p2) + 8 >> 3];
+                  r3 = (p2 | 0) == 0;
+                  w2 = +e2[(r3 ? l2 : p2) + 8 >> 3];
                   if (h2 < k) {
-                    e[m3 >> 3] = h2;
+                    e2[m3 >> 3] = h2;
                     k = h2;
                   }
                   if (x4 < s3) {
-                    e[n >> 3] = x4;
+                    e2[n2 >> 3] = x4;
                     s3 = x4;
                   }
                   if (h2 > t2) {
-                    e[i >> 3] = h2;
+                    e2[i >> 3] = h2;
                   } else {
                     h2 = t2;
                   }
                   if (x4 > j) {
-                    e[o >> 3] = x4;
+                    e2[o2 >> 3] = x4;
                     j = x4;
                   }
                   u4 = x4 > 0 & x4 < u4 ? x4 : u4;
                   v2 = x4 < 0 & x4 > v2 ? x4 : v2;
                   g3 = g3 | +q(+(x4 - w2)) > 3.141592653589793;
-                  if (r2) {
+                  if (r3) {
                     break;
                   } else {
                     t2 = h2;
                   }
                 }
                 if (g3) {
-                  e[o >> 3] = v2;
-                  e[n >> 3] = u4;
+                  e2[o2 >> 3] = v2;
+                  e2[n2 >> 3] = u4;
                 }
               } else {
                 b2[i >> 2] = 0;
@@ -33168,7 +41233,7 @@ var YasguiGeoTg = (() => {
               break;
             } else {
               y4 = g3;
-              n = c4;
+              n2 = c4;
             }
           }
           if ((K2 | 0) == 21) {
@@ -33208,29 +41273,29 @@ var YasguiGeoTg = (() => {
                           if (Jc(b2[i >> 2] | 0, f4, b2[A7 >> 2] | 0) | 0) {
                             b2[y4 + (d4 << 2) >> 2] = i;
                             b2[z2 + (d4 << 2) >> 2] = f4;
-                            r2 = d4 + 1 | 0;
+                            r3 = d4 + 1 | 0;
                           } else {
-                            r2 = d4;
+                            r3 = d4;
                           }
                           i = b2[i + 8 >> 2] | 0;
                           if (!i) {
                             break;
                           } else {
                             g3 = g3 + 1 | 0;
-                            d4 = r2;
+                            d4 = r3;
                           }
                         }
-                        if ((r2 | 0) > 0) {
+                        if ((r3 | 0) > 0) {
                           f4 = b2[y4 >> 2] | 0;
-                          if ((r2 | 0) == 1) {
+                          if ((r3 | 0) == 1) {
                             d4 = f4;
                           } else {
-                            o = 0;
+                            o2 = 0;
                             p2 = -1;
                             d4 = f4;
-                            n = f4;
+                            n2 = f4;
                             while (1) {
-                              l2 = b2[n >> 2] | 0;
+                              l2 = b2[n2 >> 2] | 0;
                               f4 = 0;
                               i = 0;
                               while (1) {
@@ -33241,21 +41306,21 @@ var YasguiGeoTg = (() => {
                                   m3 = f4 + ((Jc(g3, b2[z2 + (i << 2) >> 2] | 0, b2[l2 >> 2] | 0) | 0) & 1) | 0;
                                 }
                                 i = i + 1 | 0;
-                                if ((i | 0) == (r2 | 0)) {
+                                if ((i | 0) == (r3 | 0)) {
                                   break;
                                 } else {
                                   f4 = m3;
                                 }
                               }
                               g3 = (m3 | 0) > (p2 | 0);
-                              d4 = g3 ? n : d4;
-                              f4 = o + 1 | 0;
-                              if ((f4 | 0) == (r2 | 0)) {
+                              d4 = g3 ? n2 : d4;
+                              f4 = o2 + 1 | 0;
+                              if ((f4 | 0) == (r3 | 0)) {
                                 break c;
                               }
-                              o = f4;
+                              o2 = f4;
                               p2 = g3 ? m3 : p2;
-                              n = b2[y4 + (f4 << 2) >> 2] | 0;
+                              n2 = b2[y4 + (f4 << 2) >> 2] | 0;
                             }
                           }
                         } else {
@@ -33333,8 +41398,8 @@ var YasguiGeoTg = (() => {
             return a3 | 0;
           }
           c4 = Aa(c4) | 0;
-          f4 = +e[d4 >> 3];
-          g3 = +e[d4 + 8 >> 3];
+          f4 = +e2[d4 >> 3];
+          g3 = +e2[d4 + 8 >> 3];
           g3 = c4 & g3 < 0 ? g3 + 6.283185307179586 : g3;
           a3 = b2[a3 >> 2] | 0;
           if (!a3) {
@@ -33347,13 +41412,13 @@ var YasguiGeoTg = (() => {
             d4 = a3;
             a: while (1) {
               while (1) {
-                i = +e[d4 >> 3];
-                g3 = +e[d4 + 8 >> 3];
+                i = +e2[d4 >> 3];
+                g3 = +e2[d4 + 8 >> 3];
                 d4 = d4 + 16 | 0;
                 m3 = b2[d4 >> 2] | 0;
                 m3 = (m3 | 0) == 0 ? a3 : m3;
-                h2 = +e[m3 >> 3];
-                j = +e[m3 + 8 >> 3];
+                h2 = +e2[m3 >> 3];
+                j = +e2[m3 + 8 >> 3];
                 if (i > h2) {
                   k = i;
                   i = j;
@@ -33395,13 +41460,13 @@ var YasguiGeoTg = (() => {
             d4 = a3;
             b: while (1) {
               while (1) {
-                i = +e[d4 >> 3];
-                g3 = +e[d4 + 8 >> 3];
+                i = +e2[d4 >> 3];
+                g3 = +e2[d4 + 8 >> 3];
                 d4 = d4 + 16 | 0;
                 m3 = b2[d4 >> 2] | 0;
                 m3 = (m3 | 0) == 0 ? a3 : m3;
-                h2 = +e[m3 >> 3];
-                j = +e[m3 + 8 >> 3];
+                h2 = +e2[m3 >> 3];
+                j = +e2[m3 + 8 >> 3];
                 if (i > h2) {
                   k = i;
                   i = j;
@@ -33437,13 +41502,13 @@ var YasguiGeoTg = (() => {
           }
           return 0;
         }
-        function Kc(c4, d4, e2, f4, g3) {
+        function Kc(c4, d4, e3, f4, g3) {
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0;
           u4 = T2;
           T2 = T2 + 32 | 0;
           t2 = u4 + 16 | 0;
@@ -33451,7 +41516,7 @@ var YasguiGeoTg = (() => {
           h2 = Td(c4 | 0, d4 | 0, 52) | 0;
           H() | 0;
           h2 = h2 & 15;
-          p2 = Td(e2 | 0, f4 | 0, 52) | 0;
+          p2 = Td(e3 | 0, f4 | 0, 52) | 0;
           H() | 0;
           if ((h2 | 0) != (p2 & 15 | 0)) {
             t2 = 12;
@@ -33461,7 +41526,7 @@ var YasguiGeoTg = (() => {
           l2 = Td(c4 | 0, d4 | 0, 45) | 0;
           H() | 0;
           l2 = l2 & 127;
-          m3 = Td(e2 | 0, f4 | 0, 45) | 0;
+          m3 = Td(e3 | 0, f4 | 0, 45) | 0;
           H() | 0;
           m3 = m3 & 127;
           if (l2 >>> 0 > 121 | m3 >>> 0 > 121) {
@@ -33488,21 +41553,21 @@ var YasguiGeoTg = (() => {
             q2 = 0;
             i = 0;
           }
-          n = oa(l2) | 0;
-          o = oa(m3) | 0;
+          n2 = oa(l2) | 0;
+          o2 = oa(m3) | 0;
           b2[t2 >> 2] = 0;
           b2[t2 + 4 >> 2] = 0;
           b2[t2 + 8 >> 2] = 0;
           b2[t2 + 12 >> 2] = 0;
           do {
             if (!q2) {
-              _b(e2, f4, t2) | 0;
-              if ((n | 0) != 0 & (o | 0) != 0) {
+              _b(e3, f4, t2) | 0;
+              if ((n2 | 0) != 0 & (o2 | 0) != 0) {
                 if ((m3 | 0) != (l2 | 0)) {
                   I2(27621, 27538, 261, 27548);
                 }
                 i = Sb(c4, d4) | 0;
-                h2 = Sb(e2, f4) | 0;
+                h2 = Sb(e3, f4) | 0;
                 if (!((i | 0) == 7 | (h2 | 0) == 7)) {
                   if (!(a2[22e3 + (i * 7 | 0) + h2 >> 0] | 0)) {
                     i = b2[21168 + (i * 28 | 0) + (h2 << 2) >> 2] | 0;
@@ -33513,9 +41578,9 @@ var YasguiGeoTg = (() => {
                         _a(j);
                         h2 = h2 + 1 | 0;
                       } while ((h2 | 0) != (i | 0));
-                      r2 = 51;
+                      r3 = 51;
                     } else {
-                      r2 = 51;
+                      r3 = 51;
                     }
                   } else {
                     h2 = 1;
@@ -33524,15 +41589,15 @@ var YasguiGeoTg = (() => {
                   h2 = 5;
                 }
               } else {
-                r2 = 51;
+                r3 = 51;
               }
             } else {
               m3 = b2[4272 + (l2 * 28 | 0) + (q2 << 2) >> 2] | 0;
               j = (m3 | 0) > 0;
-              if (!o) {
+              if (!o2) {
                 if (j) {
                   l2 = 0;
-                  k = e2;
+                  k = e3;
                   j = f4;
                   do {
                     k = Wb(k, j) | 0;
@@ -33545,12 +41610,12 @@ var YasguiGeoTg = (() => {
                   k = j;
                 } else {
                   m3 = i;
-                  l2 = e2;
+                  l2 = e3;
                   k = f4;
                 }
               } else if (j) {
                 l2 = 0;
-                k = e2;
+                k = e3;
                 j = f4;
                 do {
                   k = Vb(k, j) | 0;
@@ -33566,15 +41631,15 @@ var YasguiGeoTg = (() => {
                 k = j;
               } else {
                 m3 = i;
-                l2 = e2;
+                l2 = e3;
                 k = f4;
               }
               _b(l2, k, t2) | 0;
               if (!p2) {
                 I2(27563, 27538, 191, 27548);
               }
-              j = (n | 0) != 0;
-              i = (o | 0) != 0;
+              j = (n2 | 0) != 0;
+              i = (o2 | 0) != 0;
               if (j & i) {
                 I2(27590, 27538, 192, 27548);
               }
@@ -33644,14 +41709,14 @@ var YasguiGeoTg = (() => {
                     h2 = h2 + 1 | 0;
                   } while ((h2 | 0) != (l2 | 0));
                 }
-                r2 = t2 + 4 | 0;
-                Oa(r2, s3, r2);
-                Ma(r2);
-                r2 = 51;
+                r3 = t2 + 4 | 0;
+                Oa(r3, s3, r3);
+                Ma(r3);
+                r3 = 51;
               }
             }
           } while (0);
-          if ((r2 | 0) == 51) {
+          if ((r3 | 0) == 51) {
             h2 = t2 + 4 | 0;
             b2[g3 >> 2] = b2[h2 >> 2];
             b2[g3 + 4 >> 2] = b2[h2 + 4 >> 2];
@@ -33662,12 +41727,12 @@ var YasguiGeoTg = (() => {
           T2 = u4;
           return t2 | 0;
         }
-        function Lc(a3, c4, d4, e2) {
+        function Lc(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0;
           q2 = T2;
           T2 = T2 + 48 | 0;
           k = q2 + 36 | 0;
@@ -33677,43 +41742,43 @@ var YasguiGeoTg = (() => {
           f4 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           f4 = f4 & 15;
-          n = Td(a3 | 0, c4 | 0, 45) | 0;
+          n2 = Td(a3 | 0, c4 | 0, 45) | 0;
           H() | 0;
-          n = n & 127;
-          if (n >>> 0 > 121) {
-            e2 = 5;
+          n2 = n2 & 127;
+          if (n2 >>> 0 > 121) {
+            e3 = 5;
             T2 = q2;
-            return e2 | 0;
+            return e3 | 0;
           }
-          l2 = oa(n) | 0;
+          l2 = oa(n2) | 0;
           Ud(f4 | 0, 0, 52) | 0;
-          r2 = H() | 0 | 134225919;
-          g3 = e2;
+          r3 = H() | 0 | 134225919;
+          g3 = e3;
           b2[g3 >> 2] = -1;
-          b2[g3 + 4 >> 2] = r2;
+          b2[g3 + 4 >> 2] = r3;
           if (!f4) {
             f4 = Ra(d4) | 0;
             if ((f4 | 0) == 7) {
-              r2 = 1;
+              r3 = 1;
               T2 = q2;
-              return r2 | 0;
+              return r3 | 0;
             }
-            f4 = va(n, f4) | 0;
+            f4 = va(n2, f4) | 0;
             if ((f4 | 0) == 127) {
-              r2 = 1;
+              r3 = 1;
               T2 = q2;
-              return r2 | 0;
+              return r3 | 0;
             }
-            o = Ud(f4 | 0, 0, 45) | 0;
+            o2 = Ud(f4 | 0, 0, 45) | 0;
             p2 = H() | 0;
-            n = e2;
-            p2 = b2[n + 4 >> 2] & -1040385 | p2;
-            r2 = e2;
-            b2[r2 >> 2] = b2[n >> 2] | o;
-            b2[r2 + 4 >> 2] = p2;
-            r2 = 0;
+            n2 = e3;
+            p2 = b2[n2 + 4 >> 2] & -1040385 | p2;
+            r3 = e3;
+            b2[r3 >> 2] = b2[n2 >> 2] | o2;
+            b2[r3 + 4 >> 2] = p2;
+            r3 = 0;
             T2 = q2;
-            return r2 | 0;
+            return r3 | 0;
           }
           b2[k >> 2] = b2[d4 >> 2];
           b2[k + 4 >> 2] = b2[d4 + 4 >> 2];
@@ -33748,7 +41813,7 @@ var YasguiGeoTg = (() => {
             }
             Pa(h2, i, j);
             Ma(j);
-            f4 = e2;
+            f4 = e3;
             t2 = b2[f4 >> 2] | 0;
             f4 = b2[f4 + 4 >> 2] | 0;
             u4 = (15 - g3 | 0) * 3 | 0;
@@ -33756,9 +41821,9 @@ var YasguiGeoTg = (() => {
             f4 = f4 & ~(H() | 0);
             u4 = Ud(Ra(j) | 0, 0, u4 | 0) | 0;
             f4 = H() | 0 | f4;
-            r2 = e2;
-            b2[r2 >> 2] = u4 | t2 & ~s3;
-            b2[r2 + 4 >> 2] = f4;
+            r3 = e3;
+            b2[r3 >> 2] = u4 | t2 & ~s3;
+            b2[r3 + 4 >> 2] = f4;
             if ((g3 | 0) <= 1) {
               d4 = 14;
               break;
@@ -33769,7 +41834,7 @@ var YasguiGeoTg = (() => {
               if ((d4 | 0) == 14) {
                 if (((b2[k >> 2] | 0) <= 1 ? (b2[k + 4 >> 2] | 0) <= 1 : 0) ? (b2[k + 8 >> 2] | 0) <= 1 : 0) {
                   d4 = Ra(k) | 0;
-                  f4 = va(n, d4) | 0;
+                  f4 = va(n2, d4) | 0;
                   if ((f4 | 0) == 127) {
                     j = 0;
                   } else {
@@ -33779,7 +41844,7 @@ var YasguiGeoTg = (() => {
                     if (!d4) {
                       if ((l2 | 0) != 0 & (j | 0) != 0) {
                         d4 = Sb(a3, c4) | 0;
-                        g3 = e2;
+                        g3 = e3;
                         g3 = Sb(b2[g3 >> 2] | 0, b2[g3 + 4 >> 2] | 0) | 0;
                         if ((d4 | 0) == 7 | (g3 | 0) == 7) {
                           f4 = 5;
@@ -33793,14 +41858,14 @@ var YasguiGeoTg = (() => {
                         if (!g3) {
                           d4 = 59;
                         } else {
-                          i = e2;
+                          i = e3;
                           d4 = 0;
                           h2 = b2[i >> 2] | 0;
                           i = b2[i + 4 >> 2] | 0;
                           do {
                             h2 = Ub(h2, i) | 0;
                             i = H() | 0;
-                            u4 = e2;
+                            u4 = e3;
                             b2[u4 >> 2] = h2;
                             b2[u4 + 4 >> 2] = i;
                             d4 = d4 + 1 | 0;
@@ -33832,58 +41897,58 @@ var YasguiGeoTg = (() => {
                           f4 = 9;
                           break a;
                         }
-                        d4 = va(n, f4) | 0;
+                        d4 = va(n2, f4) | 0;
                         if ((d4 | 0) == 127) {
                           I2(27648, 27538, 411, 27678);
                         }
                         if (!(oa(d4) | 0)) {
                           p2 = d4;
-                          o = g3;
+                          o2 = g3;
                           m3 = f4;
                         } else {
                           I2(27693, 27538, 412, 27678);
                         }
                       } else {
                         p2 = f4;
-                        o = 0;
+                        o2 = 0;
                         m3 = d4;
                       }
-                      i = b2[4272 + (n * 28 | 0) + (m3 << 2) >> 2] | 0;
+                      i = b2[4272 + (n2 * 28 | 0) + (m3 << 2) >> 2] | 0;
                       if ((i | 0) <= -1) {
                         I2(27724, 27538, 419, 27678);
                       }
                       if (!j) {
-                        if ((o | 0) < 0) {
+                        if ((o2 | 0) < 0) {
                           f4 = 5;
                           break a;
                         }
-                        if (o | 0) {
-                          g3 = e2;
+                        if (o2 | 0) {
+                          g3 = e3;
                           f4 = 0;
                           d4 = b2[g3 >> 2] | 0;
                           g3 = b2[g3 + 4 >> 2] | 0;
                           do {
                             d4 = Ub(d4, g3) | 0;
                             g3 = H() | 0;
-                            u4 = e2;
+                            u4 = e3;
                             b2[u4 >> 2] = d4;
                             b2[u4 + 4 >> 2] = g3;
                             f4 = f4 + 1 | 0;
-                          } while ((f4 | 0) < (o | 0));
+                          } while ((f4 | 0) < (o2 | 0));
                         }
                         if ((i | 0) <= 0) {
                           f4 = p2;
                           d4 = 58;
                           break;
                         }
-                        g3 = e2;
+                        g3 = e3;
                         f4 = 0;
                         d4 = b2[g3 >> 2] | 0;
                         g3 = b2[g3 + 4 >> 2] | 0;
                         while (1) {
                           d4 = Ub(d4, g3) | 0;
                           g3 = H() | 0;
-                          u4 = e2;
+                          u4 = e3;
                           b2[u4 >> 2] = d4;
                           b2[u4 + 4 >> 2] = g3;
                           f4 = f4 + 1 | 0;
@@ -33894,11 +41959,11 @@ var YasguiGeoTg = (() => {
                           }
                         }
                       }
-                      h2 = wa(p2, n) | 0;
+                      h2 = wa(p2, n2) | 0;
                       if ((h2 | 0) == 7) {
                         I2(27514, 27538, 428, 27678);
                       }
-                      f4 = e2;
+                      f4 = e3;
                       d4 = b2[f4 >> 2] | 0;
                       f4 = b2[f4 + 4 >> 2] | 0;
                       if ((i | 0) > 0) {
@@ -33906,7 +41971,7 @@ var YasguiGeoTg = (() => {
                         do {
                           d4 = Ub(d4, f4) | 0;
                           f4 = H() | 0;
-                          u4 = e2;
+                          u4 = e3;
                           b2[u4 >> 2] = d4;
                           b2[u4 + 4 >> 2] = f4;
                           g3 = g3 + 1 | 0;
@@ -33925,14 +41990,14 @@ var YasguiGeoTg = (() => {
                         f4 = p2;
                         d4 = 58;
                       } else {
-                        h2 = e2;
+                        h2 = e3;
                         f4 = 0;
                         g3 = b2[h2 >> 2] | 0;
                         h2 = b2[h2 + 4 >> 2] | 0;
                         do {
                           g3 = Tb(g3, h2) | 0;
                           h2 = H() | 0;
-                          u4 = e2;
+                          u4 = e3;
                           b2[u4 >> 2] = g3;
                           b2[u4 + 4 >> 2] = h2;
                           f4 = f4 + 1 | 0;
@@ -33948,18 +42013,18 @@ var YasguiGeoTg = (() => {
                     }
                   }
                   if ((d4 | 0) == 59) {
-                    u4 = e2;
+                    u4 = e3;
                     if ((Sb(b2[u4 >> 2] | 0, b2[u4 + 4 >> 2] | 0) | 0) == 1) {
                       f4 = 9;
                       break;
                     }
                   }
-                  u4 = e2;
+                  u4 = e3;
                   s3 = b2[u4 >> 2] | 0;
                   u4 = b2[u4 + 4 >> 2] & -1040385;
                   t2 = Ud(f4 | 0, 0, 45) | 0;
                   u4 = u4 | (H() | 0);
-                  f4 = e2;
+                  f4 = e3;
                   b2[f4 >> 2] = s3 | t2;
                   b2[f4 + 4 >> 2] = u4;
                   f4 = 0;
@@ -33973,18 +42038,18 @@ var YasguiGeoTg = (() => {
           T2 = q2;
           return u4 | 0;
         }
-        function Mc(a3, b3, c4, d4, e2, f4) {
+        function Mc(a3, b3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0;
           h2 = T2;
           T2 = T2 + 16 | 0;
           g3 = h2;
-          if (!e2) {
+          if (!e3) {
             a3 = Kc(a3, b3, c4, d4, g3) | 0;
             if (!a3) {
               eb(g3, f4);
@@ -33996,12 +42061,12 @@ var YasguiGeoTg = (() => {
           T2 = h2;
           return a3 | 0;
         }
-        function Nc(a3, b3, c4, d4, e2) {
+        function Nc(a3, b3, c4, d4, e3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0;
           g3 = T2;
           T2 = T2 + 16 | 0;
@@ -34009,7 +42074,7 @@ var YasguiGeoTg = (() => {
           if (!d4) {
             c4 = fb(c4, f4) | 0;
             if (!c4) {
-              c4 = Lc(a3, b3, f4, e2) | 0;
+              c4 = Lc(a3, b3, f4, e3) | 0;
             }
           } else {
             c4 = 15;
@@ -34017,11 +42082,11 @@ var YasguiGeoTg = (() => {
           T2 = g3;
           return c4 | 0;
         }
-        function Oc(a3, c4, d4, e2, f4) {
+        function Oc(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0;
           j = T2;
@@ -34034,7 +42099,7 @@ var YasguiGeoTg = (() => {
             T2 = j;
             return i | 0;
           }
-          a3 = Kc(a3, c4, d4, e2, i) | 0;
+          a3 = Kc(a3, c4, d4, e3, i) | 0;
           if (a3 | 0) {
             i = a3;
             T2 = j;
@@ -34048,11 +42113,11 @@ var YasguiGeoTg = (() => {
           T2 = j;
           return i | 0;
         }
-        function Pc(a3, c4, d4, e2, f4) {
+        function Pc(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0;
           j = T2;
@@ -34061,13 +42126,13 @@ var YasguiGeoTg = (() => {
           i = j;
           g3 = Kc(a3, c4, a3, c4, h2) | 0;
           if (!g3) {
-            g3 = Kc(a3, c4, d4, e2, i) | 0;
+            g3 = Kc(a3, c4, d4, e3, i) | 0;
             if (!g3) {
-              e2 = db(h2, i) | 0;
-              e2 = Jd(e2 | 0, ((e2 | 0) < 0) << 31 >> 31 | 0, 1, 0) | 0;
+              e3 = db(h2, i) | 0;
+              e3 = Jd(e3 | 0, ((e3 | 0) < 0) << 31 >> 31 | 0, 1, 0) | 0;
               h2 = H() | 0;
               i = f4;
-              b2[i >> 2] = e2;
+              b2[i >> 2] = e3;
               b2[i + 4 >> 2] = h2;
               i = 0;
               T2 = j;
@@ -34078,13 +42143,13 @@ var YasguiGeoTg = (() => {
           T2 = j;
           return i | 0;
         }
-        function Qc(a3, c4, d4, e2, f4) {
+        function Qc(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
           z2 = T2;
           T2 = T2 + 48 | 0;
           x4 = z2 + 24 | 0;
@@ -34092,7 +42157,7 @@ var YasguiGeoTg = (() => {
           y4 = z2;
           g3 = Kc(a3, c4, a3, c4, x4) | 0;
           if (!g3) {
-            g3 = Kc(a3, c4, d4, e2, h2) | 0;
+            g3 = Kc(a3, c4, d4, e3, h2) | 0;
             if (!g3) {
               v2 = db(x4, h2) | 0;
               w2 = ((v2 | 0) < 0) << 31 >> 31;
@@ -34105,35 +42170,35 @@ var YasguiGeoTg = (() => {
               if (Kc(a3, c4, a3, c4, x4) | 0) {
                 I2(27795, 27538, 692, 27747);
               }
-              if (Kc(a3, c4, d4, e2, h2) | 0) {
+              if (Kc(a3, c4, d4, e3, h2) | 0) {
                 I2(27795, 27538, 697, 27747);
               }
               gb(x4);
               gb(h2);
               l2 = (v2 | 0) == 0 ? 0 : 1 / +(v2 | 0);
               d4 = b2[x4 >> 2] | 0;
-              r2 = l2 * +((b2[h2 >> 2] | 0) - d4 | 0);
+              r3 = l2 * +((b2[h2 >> 2] | 0) - d4 | 0);
               s3 = x4 + 4 | 0;
-              e2 = b2[s3 >> 2] | 0;
-              t2 = l2 * +((b2[h2 + 4 >> 2] | 0) - e2 | 0);
+              e3 = b2[s3 >> 2] | 0;
+              t2 = l2 * +((b2[h2 + 4 >> 2] | 0) - e3 | 0);
               u4 = x4 + 8 | 0;
               g3 = b2[u4 >> 2] | 0;
               l2 = l2 * +((b2[h2 + 8 >> 2] | 0) - g3 | 0);
               b2[y4 >> 2] = d4;
               m3 = y4 + 4 | 0;
-              b2[m3 >> 2] = e2;
-              n = y4 + 8 | 0;
-              b2[n >> 2] = g3;
+              b2[m3 >> 2] = e3;
+              n2 = y4 + 8 | 0;
+              b2[n2 >> 2] = g3;
               a: do {
                 if ((v2 | 0) < 0) {
                   g3 = 0;
                 } else {
-                  o = 0;
+                  o2 = 0;
                   p2 = 0;
                   while (1) {
-                    j = +(p2 >>> 0) + 4294967296 * +(o | 0);
-                    A7 = r2 * j + +(d4 | 0);
-                    i = t2 * j + +(e2 | 0);
+                    j = +(p2 >>> 0) + 4294967296 * +(o2 | 0);
+                    A7 = r3 * j + +(d4 | 0);
+                    i = t2 * j + +(e3 | 0);
                     j = l2 * j + +(g3 | 0);
                     d4 = ~~+Yd(+A7);
                     h2 = ~~+Yd(+i);
@@ -34145,36 +42210,36 @@ var YasguiGeoTg = (() => {
                       if (!(A7 > i & A7 > j)) {
                         k = 0 - d4 | 0;
                         if (i > j) {
-                          e2 = k - g3 | 0;
+                          e3 = k - g3 | 0;
                           break;
                         } else {
-                          e2 = h2;
+                          e3 = h2;
                           g3 = k - h2 | 0;
                           break;
                         }
                       } else {
                         d4 = 0 - (h2 + g3) | 0;
-                        e2 = h2;
+                        e3 = h2;
                       }
                     } while (0);
                     b2[y4 >> 2] = d4;
-                    b2[m3 >> 2] = e2;
-                    b2[n >> 2] = g3;
+                    b2[m3 >> 2] = e3;
+                    b2[n2 >> 2] = g3;
                     hb(y4);
                     g3 = Lc(a3, c4, y4, f4 + (p2 << 3) | 0) | 0;
                     if (g3 | 0) {
                       break a;
                     }
-                    if (!((o | 0) < (w2 | 0) | (o | 0) == (w2 | 0) & p2 >>> 0 < v2 >>> 0)) {
+                    if (!((o2 | 0) < (w2 | 0) | (o2 | 0) == (w2 | 0) & p2 >>> 0 < v2 >>> 0)) {
                       g3 = 0;
                       break a;
                     }
-                    d4 = Jd(p2 | 0, o | 0, 1, 0) | 0;
-                    e2 = H() | 0;
-                    o = e2;
+                    d4 = Jd(p2 | 0, o2 | 0, 1, 0) | 0;
+                    e3 = H() | 0;
+                    o2 = e3;
                     p2 = d4;
                     d4 = b2[x4 >> 2] | 0;
-                    e2 = b2[s3 >> 2] | 0;
+                    e3 = b2[s3 >> 2] | 0;
                     g3 = b2[u4 >> 2] | 0;
                   }
                 }
@@ -34193,25 +42258,25 @@ var YasguiGeoTg = (() => {
           b3 = b3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           if ((c4 | 0) == 0 & (d4 | 0) == 0) {
-            e2 = 0;
+            e3 = 0;
             f4 = 1;
-            G3(e2 | 0);
+            G3(e3 | 0);
             return f4 | 0;
           }
           f4 = a3;
-          e2 = b3;
+          e3 = b3;
           a3 = 1;
           b3 = 0;
           do {
             g3 = (c4 & 1 | 0) == 0 & true;
-            a3 = Pd((g3 ? 1 : f4) | 0, (g3 ? 0 : e2) | 0, a3 | 0, b3 | 0) | 0;
+            a3 = Pd((g3 ? 1 : f4) | 0, (g3 ? 0 : e3) | 0, a3 | 0, b3 | 0) | 0;
             b3 = H() | 0;
             c4 = Sd(c4 | 0, d4 | 0, 1) | 0;
             d4 = H() | 0;
-            f4 = Pd(f4 | 0, e2 | 0, f4 | 0, e2 | 0) | 0;
-            e2 = H() | 0;
+            f4 = Pd(f4 | 0, e3 | 0, f4 | 0, e3 | 0) | 0;
+            e3 = H() | 0;
           } while (!((c4 | 0) == 0 & (d4 | 0) == 0));
           G3(b3 | 0);
           return a3 | 0;
@@ -34252,15 +42317,15 @@ var YasguiGeoTg = (() => {
             } else {
               g3 = ac(a3, c4, h2) | 0;
               if (!g3) {
-                l2 = +e[h2 >> 3];
+                l2 = +e2[h2 >> 3];
                 k = 1 / +t(+l2);
-                m3 = +e[25968 + (i << 3) >> 3];
-                e[d4 >> 3] = l2 + m3;
-                e[d4 + 8 >> 3] = l2 - m3;
-                l2 = +e[h2 + 8 >> 3];
+                m3 = +e2[25968 + (i << 3) >> 3];
+                e2[d4 >> 3] = l2 + m3;
+                e2[d4 + 8 >> 3] = l2 - m3;
+                l2 = +e2[h2 + 8 >> 3];
                 k = m3 * k;
-                e[d4 + 16 >> 3] = k + l2;
-                e[d4 + 24 >> 3] = l2 - k;
+                e2[d4 + 16 >> 3] = k + l2;
+                e2[d4 + 24 >> 3] = l2 - k;
                 break;
               }
               i = g3;
@@ -34271,27 +42336,27 @@ var YasguiGeoTg = (() => {
           Ja(d4, f4 ? 1.4 : 1.1);
           f4 = 26096 + (i << 3) | 0;
           if ((b2[f4 >> 2] | 0) == (a3 | 0) ? (b2[f4 + 4 >> 2] | 0) == (c4 | 0) : 0) {
-            e[d4 >> 3] = 1.5707963267948966;
+            e2[d4 >> 3] = 1.5707963267948966;
           }
           i = 26224 + (i << 3) | 0;
           if ((b2[i >> 2] | 0) == (a3 | 0) ? (b2[i + 4 >> 2] | 0) == (c4 | 0) : 0) {
-            e[d4 + 8 >> 3] = -1.5707963267948966;
+            e2[d4 + 8 >> 3] = -1.5707963267948966;
           }
-          if (!(+e[d4 >> 3] == 1.5707963267948966) ? !(+e[d4 + 8 >> 3] == -1.5707963267948966) : 0) {
+          if (!(+e2[d4 >> 3] == 1.5707963267948966) ? !(+e2[d4 + 8 >> 3] == -1.5707963267948966) : 0) {
             i = 0;
             T2 = j;
             return i | 0;
           }
-          e[d4 + 16 >> 3] = 3.141592653589793;
-          e[d4 + 24 >> 3] = -3.141592653589793;
+          e2[d4 + 16 >> 3] = 3.141592653589793;
+          e2[d4 + 24 >> 3] = -3.141592653589793;
           i = 0;
           T2 = j;
           return i | 0;
         }
-        function Tc(c4, d4, e2, f4) {
+        function Tc(c4, d4, e3, f4) {
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
           l2 = T2;
@@ -34303,7 +42368,7 @@ var YasguiGeoTg = (() => {
           k = b2[i >> 2] | 0;
           i = b2[i + 4 >> 2] | 0;
           do {
-            if (e2 >>> 0 <= 15) {
+            if (e3 >>> 0 <= 15) {
               g3 = _c(f4) | 0;
               if (g3 | 0) {
                 f4 = j;
@@ -34345,7 +42410,7 @@ var YasguiGeoTg = (() => {
                 b2[m3 >> 2] = k;
                 b2[m3 + 4 >> 2] = i;
                 b2[j + 8 >> 2] = 0;
-                b2[j + 12 >> 2] = e2;
+                b2[j + 12 >> 2] = e3;
                 b2[j + 16 >> 2] = f4;
                 b2[j + 20 >> 2] = d4;
                 b2[j + 24 >> 2] = g3;
@@ -34387,15 +42452,15 @@ var YasguiGeoTg = (() => {
         }
         function Uc(c4) {
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0;
           w2 = T2;
           T2 = T2 + 336 | 0;
           p2 = w2 + 168 | 0;
           q2 = w2;
           f4 = c4;
-          e2 = b2[f4 >> 2] | 0;
+          e3 = b2[f4 >> 2] | 0;
           f4 = b2[f4 + 4 >> 2] | 0;
-          if ((e2 | 0) == 0 & (f4 | 0) == 0) {
+          if ((e3 | 0) == 0 & (f4 | 0) == 0) {
             T2 = w2;
             return;
           }
@@ -34403,15 +42468,15 @@ var YasguiGeoTg = (() => {
           if (!(a2[d4 >> 0] | 0)) {
             a2[d4 >> 0] = 1;
           } else {
-            e2 = Vc(e2, f4) | 0;
+            e3 = Vc(e3, f4) | 0;
             f4 = H() | 0;
           }
           v2 = c4 + 20 | 0;
           if (!(b2[b2[v2 >> 2] >> 2] | 0)) {
             d4 = c4 + 24 | 0;
-            e2 = b2[d4 >> 2] | 0;
-            if (e2 | 0) {
-              Hd(e2);
+            e3 = b2[d4 >> 2] | 0;
+            if (e3 | 0) {
+              Hd(e3);
             }
             u4 = c4;
             b2[u4 >> 2] = 0;
@@ -34428,30 +42493,30 @@ var YasguiGeoTg = (() => {
           d4 = b2[u4 >> 2] | 0;
           g3 = d4 & 15;
           a: do {
-            if (!((e2 | 0) == 0 & (f4 | 0) == 0)) {
-              r2 = c4 + 12 | 0;
-              n = (g3 | 0) == 3;
+            if (!((e3 | 0) == 0 & (f4 | 0) == 0)) {
+              r3 = c4 + 12 | 0;
+              n2 = (g3 | 0) == 3;
               m3 = d4 & 255;
               k = (g3 | 1 | 0) == 3;
-              o = c4 + 24 | 0;
+              o2 = c4 + 24 | 0;
               l2 = (g3 + -1 | 0) >>> 0 < 3;
               i = (g3 | 2 | 0) == 3;
               j = q2 + 8 | 0;
               b: while (1) {
-                h2 = Td(e2 | 0, f4 | 0, 52) | 0;
+                h2 = Td(e3 | 0, f4 | 0, 52) | 0;
                 H() | 0;
                 h2 = h2 & 15;
-                if ((h2 | 0) == (b2[r2 >> 2] | 0)) {
+                if ((h2 | 0) == (b2[r3 >> 2] | 0)) {
                   switch (m3 & 15) {
                     case 0:
                     case 2:
                     case 3: {
-                      g3 = ac(e2, f4, p2) | 0;
+                      g3 = ac(e3, f4, p2) | 0;
                       if (g3 | 0) {
                         s3 = 15;
                         break b;
                       }
-                      if (ad(b2[v2 >> 2] | 0, b2[o >> 2] | 0, p2) | 0) {
+                      if (ad(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, p2) | 0) {
                         s3 = 19;
                         break b;
                       }
@@ -34465,48 +42530,48 @@ var YasguiGeoTg = (() => {
                       break;
                     }
                     g3 = q2;
-                    if ((b2[g3 >> 2] | 0) == (e2 | 0) ? (b2[g3 + 4 >> 2] | 0) == (f4 | 0) : 0) {
+                    if ((b2[g3 >> 2] | 0) == (e3 | 0) ? (b2[g3 + 4 >> 2] | 0) == (f4 | 0) : 0) {
                       s3 = 29;
                       break;
                     }
                   }
                   if (l2) {
-                    g3 = bc(e2, f4, p2) | 0;
+                    g3 = bc(e3, f4, p2) | 0;
                     if (g3 | 0) {
                       s3 = 32;
                       break;
                     }
-                    if (Sc(e2, f4, q2, 0) | 0) {
+                    if (Sc(e3, f4, q2, 0) | 0) {
                       s3 = 36;
                       break;
                     }
-                    if (i ? bd(b2[v2 >> 2] | 0, b2[o >> 2] | 0, p2, q2) | 0 : 0) {
+                    if (i ? bd(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, p2, q2) | 0 : 0) {
                       s3 = 42;
                       break;
                     }
-                    if (k ? dd(b2[v2 >> 2] | 0, b2[o >> 2] | 0, p2, q2) | 0 : 0) {
+                    if (k ? dd(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, p2, q2) | 0 : 0) {
                       s3 = 42;
                       break;
                     }
                   }
-                  if (n) {
-                    d4 = Sc(e2, f4, p2, 1) | 0;
-                    g3 = b2[o >> 2] | 0;
+                  if (n2) {
+                    d4 = Sc(e3, f4, p2, 1) | 0;
+                    g3 = b2[o2 >> 2] | 0;
                     if (d4 | 0) {
                       s3 = 45;
                       break;
                     }
                     if (Da(g3, p2) | 0) {
                       Ga(q2, p2);
-                      if (Fa(p2, b2[o >> 2] | 0) | 0) {
+                      if (Fa(p2, b2[o2 >> 2] | 0) | 0) {
                         s3 = 53;
                         break;
                       }
-                      if (ad(b2[v2 >> 2] | 0, b2[o >> 2] | 0, j) | 0) {
+                      if (ad(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, j) | 0) {
                         s3 = 53;
                         break;
                       }
-                      if (dd(b2[v2 >> 2] | 0, b2[o >> 2] | 0, q2, p2) | 0) {
+                      if (dd(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, q2, p2) | 0) {
                         s3 = 53;
                         break;
                       }
@@ -34514,9 +42579,9 @@ var YasguiGeoTg = (() => {
                   }
                 }
                 do {
-                  if ((h2 | 0) < (b2[r2 >> 2] | 0)) {
-                    d4 = Sc(e2, f4, p2, 1) | 0;
-                    g3 = b2[o >> 2] | 0;
+                  if ((h2 | 0) < (b2[r3 >> 2] | 0)) {
+                    d4 = Sc(e3, f4, p2, 1) | 0;
+                    g3 = b2[o2 >> 2] | 0;
                     if (d4 | 0) {
                       s3 = 58;
                       break b;
@@ -34525,17 +42590,17 @@ var YasguiGeoTg = (() => {
                       s3 = 73;
                       break;
                     }
-                    if (Fa(b2[o >> 2] | 0, p2) | 0 ? (Ga(q2, p2), bd(b2[v2 >> 2] | 0, b2[o >> 2] | 0, q2, p2) | 0) : 0) {
+                    if (Fa(b2[o2 >> 2] | 0, p2) | 0 ? (Ga(q2, p2), bd(b2[v2 >> 2] | 0, b2[o2 >> 2] | 0, q2, p2) | 0) : 0) {
                       s3 = 65;
                       break b;
                     }
-                    e2 = Nb(e2, f4, h2 + 1 | 0, q2) | 0;
-                    if (e2 | 0) {
+                    e3 = Nb(e3, f4, h2 + 1 | 0, q2) | 0;
+                    if (e3 | 0) {
                       s3 = 67;
                       break b;
                     }
                     f4 = q2;
-                    e2 = b2[f4 >> 2] | 0;
+                    e3 = b2[f4 >> 2] | 0;
                     f4 = b2[f4 + 4 >> 2] | 0;
                   } else {
                     s3 = 73;
@@ -34543,17 +42608,17 @@ var YasguiGeoTg = (() => {
                 } while (0);
                 if ((s3 | 0) == 73) {
                   s3 = 0;
-                  e2 = Vc(e2, f4) | 0;
+                  e3 = Vc(e3, f4) | 0;
                   f4 = H() | 0;
                 }
-                if ((e2 | 0) == 0 & (f4 | 0) == 0) {
-                  t2 = o;
+                if ((e3 | 0) == 0 & (f4 | 0) == 0) {
+                  t2 = o2;
                   break a;
                 }
               }
               switch (s3 | 0) {
                 case 15: {
-                  d4 = b2[o >> 2] | 0;
+                  d4 = b2[o2 >> 2] | 0;
                   if (d4 | 0) {
                     Hd(d4);
                   }
@@ -34561,15 +42626,15 @@ var YasguiGeoTg = (() => {
                   b2[s3 >> 2] = 0;
                   b2[s3 + 4 >> 2] = 0;
                   b2[v2 >> 2] = 0;
-                  b2[r2 >> 2] = -1;
+                  b2[r3 >> 2] = -1;
                   b2[u4 >> 2] = 0;
-                  b2[o >> 2] = 0;
+                  b2[o2 >> 2] = 0;
                   b2[c4 + 8 >> 2] = g3;
                   s3 = 20;
                   break;
                 }
                 case 19: {
-                  b2[c4 >> 2] = e2;
+                  b2[c4 >> 2] = e3;
                   b2[c4 + 4 >> 2] = f4;
                   s3 = 20;
                   break;
@@ -34579,13 +42644,13 @@ var YasguiGeoTg = (() => {
                   break;
                 }
                 case 29: {
-                  b2[c4 >> 2] = e2;
+                  b2[c4 >> 2] = e3;
                   b2[c4 + 4 >> 2] = f4;
                   T2 = w2;
                   return;
                 }
                 case 32: {
-                  d4 = b2[o >> 2] | 0;
+                  d4 = b2[o2 >> 2] | 0;
                   if (d4 | 0) {
                     Hd(d4);
                   }
@@ -34593,9 +42658,9 @@ var YasguiGeoTg = (() => {
                   b2[t2 >> 2] = 0;
                   b2[t2 + 4 >> 2] = 0;
                   b2[v2 >> 2] = 0;
-                  b2[r2 >> 2] = -1;
+                  b2[r3 >> 2] = -1;
                   b2[u4 >> 2] = 0;
-                  b2[o >> 2] = 0;
+                  b2[o2 >> 2] = 0;
                   b2[c4 + 8 >> 2] = g3;
                   T2 = w2;
                   return;
@@ -34605,7 +42670,7 @@ var YasguiGeoTg = (() => {
                   break;
                 }
                 case 42: {
-                  b2[c4 >> 2] = e2;
+                  b2[c4 >> 2] = e3;
                   b2[c4 + 4 >> 2] = f4;
                   T2 = w2;
                   return;
@@ -34618,15 +42683,15 @@ var YasguiGeoTg = (() => {
                   b2[s3 >> 2] = 0;
                   b2[s3 + 4 >> 2] = 0;
                   b2[v2 >> 2] = 0;
-                  b2[r2 >> 2] = -1;
+                  b2[r3 >> 2] = -1;
                   b2[u4 >> 2] = 0;
-                  b2[o >> 2] = 0;
+                  b2[o2 >> 2] = 0;
                   b2[c4 + 8 >> 2] = d4;
                   s3 = 55;
                   break;
                 }
                 case 53: {
-                  b2[c4 >> 2] = e2;
+                  b2[c4 >> 2] = e3;
                   b2[c4 + 4 >> 2] = f4;
                   s3 = 55;
                   break;
@@ -34639,21 +42704,21 @@ var YasguiGeoTg = (() => {
                   b2[s3 >> 2] = 0;
                   b2[s3 + 4 >> 2] = 0;
                   b2[v2 >> 2] = 0;
-                  b2[r2 >> 2] = -1;
+                  b2[r3 >> 2] = -1;
                   b2[u4 >> 2] = 0;
-                  b2[o >> 2] = 0;
+                  b2[o2 >> 2] = 0;
                   b2[c4 + 8 >> 2] = d4;
                   s3 = 71;
                   break;
                 }
                 case 65: {
-                  b2[c4 >> 2] = e2;
+                  b2[c4 >> 2] = e3;
                   b2[c4 + 4 >> 2] = f4;
                   s3 = 71;
                   break;
                 }
                 case 67: {
-                  d4 = b2[o >> 2] | 0;
+                  d4 = b2[o2 >> 2] | 0;
                   if (d4 | 0) {
                     Hd(d4);
                   }
@@ -34661,10 +42726,10 @@ var YasguiGeoTg = (() => {
                   b2[t2 >> 2] = 0;
                   b2[t2 + 4 >> 2] = 0;
                   b2[v2 >> 2] = 0;
-                  b2[r2 >> 2] = -1;
+                  b2[r3 >> 2] = -1;
                   b2[u4 >> 2] = 0;
-                  b2[o >> 2] = 0;
-                  b2[c4 + 8 >> 2] = e2;
+                  b2[o2 >> 2] = 0;
+                  b2[c4 + 8 >> 2] = e3;
                   T2 = w2;
                   return;
                 }
@@ -34701,21 +42766,21 @@ var YasguiGeoTg = (() => {
         function Vc(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0;
           m3 = T2;
           T2 = T2 + 16 | 0;
           l2 = m3;
-          e2 = Td(a3 | 0, c4 | 0, 52) | 0;
+          e3 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
-          e2 = e2 & 15;
+          e3 = e3 & 15;
           d4 = Td(a3 | 0, c4 | 0, 45) | 0;
           H() | 0;
           do {
-            if (e2) {
+            if (e3) {
               while (1) {
-                d4 = Ud(e2 + 4095 | 0, 0, 52) | 0;
+                d4 = Ud(e3 + 4095 | 0, 0, 52) | 0;
                 f4 = H() | 0 | c4 & -15728641;
-                g3 = (15 - e2 | 0) * 3 | 0;
+                g3 = (15 - e3 | 0) * 3 | 0;
                 h2 = Ud(7, 0, g3 | 0) | 0;
                 i = H() | 0;
                 d4 = d4 | a3 | h2;
@@ -34723,11 +42788,11 @@ var YasguiGeoTg = (() => {
                 j = Td(a3 | 0, c4 | 0, g3 | 0) | 0;
                 H() | 0;
                 j = j & 7;
-                e2 = e2 + -1 | 0;
+                e3 = e3 + -1 | 0;
                 if (j >>> 0 < 6) {
                   break;
                 }
-                if (!e2) {
+                if (!e3) {
                   k = 4;
                   break;
                 } else {
@@ -34764,20 +42829,20 @@ var YasguiGeoTg = (() => {
           T2 = m3;
           return l2 | 0;
         }
-        function Wc(a3, c4, d4, e2, f4, g3) {
+        function Wc(a3, c4, d4, e3, f4, g3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0;
-          r2 = T2;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0;
+          r3 = T2;
           T2 = T2 + 160 | 0;
-          m3 = r2 + 80 | 0;
-          i = r2 + 64 | 0;
-          n = r2 + 112 | 0;
-          q2 = r2;
+          m3 = r3 + 80 | 0;
+          i = r3 + 64 | 0;
+          n2 = r3 + 112 | 0;
+          q2 = r3;
           Tc(m3, a3, c4, d4);
           k = m3;
           ic(i, b2[k >> 2] | 0, b2[k + 4 >> 2] | 0, c4);
@@ -34785,36 +42850,36 @@ var YasguiGeoTg = (() => {
           j = b2[k >> 2] | 0;
           k = b2[k + 4 >> 2] | 0;
           h2 = b2[m3 + 8 >> 2] | 0;
-          o = n + 4 | 0;
-          b2[o >> 2] = b2[m3 >> 2];
-          b2[o + 4 >> 2] = b2[m3 + 4 >> 2];
-          b2[o + 8 >> 2] = b2[m3 + 8 >> 2];
-          b2[o + 12 >> 2] = b2[m3 + 12 >> 2];
-          b2[o + 16 >> 2] = b2[m3 + 16 >> 2];
-          b2[o + 20 >> 2] = b2[m3 + 20 >> 2];
-          b2[o + 24 >> 2] = b2[m3 + 24 >> 2];
-          b2[o + 28 >> 2] = b2[m3 + 28 >> 2];
-          o = q2;
-          b2[o >> 2] = j;
-          b2[o + 4 >> 2] = k;
-          o = q2 + 8 | 0;
-          b2[o >> 2] = h2;
+          o2 = n2 + 4 | 0;
+          b2[o2 >> 2] = b2[m3 >> 2];
+          b2[o2 + 4 >> 2] = b2[m3 + 4 >> 2];
+          b2[o2 + 8 >> 2] = b2[m3 + 8 >> 2];
+          b2[o2 + 12 >> 2] = b2[m3 + 12 >> 2];
+          b2[o2 + 16 >> 2] = b2[m3 + 16 >> 2];
+          b2[o2 + 20 >> 2] = b2[m3 + 20 >> 2];
+          b2[o2 + 24 >> 2] = b2[m3 + 24 >> 2];
+          b2[o2 + 28 >> 2] = b2[m3 + 28 >> 2];
+          o2 = q2;
+          b2[o2 >> 2] = j;
+          b2[o2 + 4 >> 2] = k;
+          o2 = q2 + 8 | 0;
+          b2[o2 >> 2] = h2;
           a3 = q2 + 12 | 0;
-          c4 = n;
+          c4 = n2;
           d4 = a3 + 36 | 0;
           do {
             b2[a3 >> 2] = b2[c4 >> 2];
             a3 = a3 + 4 | 0;
             c4 = c4 + 4 | 0;
           } while ((a3 | 0) < (d4 | 0));
-          n = q2 + 48 | 0;
-          b2[n >> 2] = b2[i >> 2];
-          b2[n + 4 >> 2] = b2[i + 4 >> 2];
-          b2[n + 8 >> 2] = b2[i + 8 >> 2];
-          b2[n + 12 >> 2] = b2[i + 12 >> 2];
+          n2 = q2 + 48 | 0;
+          b2[n2 >> 2] = b2[i >> 2];
+          b2[n2 + 4 >> 2] = b2[i + 4 >> 2];
+          b2[n2 + 8 >> 2] = b2[i + 8 >> 2];
+          b2[n2 + 12 >> 2] = b2[i + 12 >> 2];
           if ((j | 0) == 0 & (k | 0) == 0) {
             q2 = h2;
-            T2 = r2;
+            T2 = r3;
             return q2 | 0;
           }
           d4 = q2 + 16 | 0;
@@ -34825,7 +42890,7 @@ var YasguiGeoTg = (() => {
           c4 = j;
           a3 = k;
           do {
-            if (!((h2 | 0) < (f4 | 0) | (h2 | 0) == (f4 | 0) & i >>> 0 < e2 >>> 0)) {
+            if (!((h2 | 0) < (f4 | 0) | (h2 | 0) == (f4 | 0) & i >>> 0 < e3 >>> 0)) {
               p2 = 4;
               break;
             }
@@ -34835,8 +42900,8 @@ var YasguiGeoTg = (() => {
             k = g3 + (k << 3) | 0;
             b2[k >> 2] = c4;
             b2[k + 4 >> 2] = a3;
-            kc(n);
-            a3 = n;
+            kc(n2);
+            a3 = n2;
             c4 = b2[a3 >> 2] | 0;
             a3 = b2[a3 + 4 >> 2] | 0;
             if ((c4 | 0) == 0 & (a3 | 0) == 0) {
@@ -34848,8 +42913,8 @@ var YasguiGeoTg = (() => {
                 p2 = 10;
                 break;
               }
-              jc(a3, c4, b2[m3 >> 2] | 0, n);
-              a3 = n;
+              jc(a3, c4, b2[m3 >> 2] | 0, n2);
+              a3 = n2;
               c4 = b2[a3 >> 2] | 0;
               a3 = b2[a3 + 4 >> 2] | 0;
             }
@@ -34871,20 +42936,20 @@ var YasguiGeoTg = (() => {
             b2[m3 >> 2] = -1;
             b2[q2 + 32 >> 2] = 0;
             b2[a3 >> 2] = 0;
-            jc(0, 0, 0, n);
+            jc(0, 0, 0, n2);
             b2[q2 >> 2] = 0;
             b2[q2 + 4 >> 2] = 0;
-            b2[o >> 2] = 0;
+            b2[o2 >> 2] = 0;
             q2 = 14;
-            T2 = r2;
+            T2 = r3;
             return q2 | 0;
           } else if ((p2 | 0) == 10) {
             b2[q2 >> 2] = 0;
             b2[q2 + 4 >> 2] = 0;
-            b2[o >> 2] = b2[l2 >> 2];
+            b2[o2 >> 2] = b2[l2 >> 2];
           }
-          q2 = b2[o >> 2] | 0;
-          T2 = r2;
+          q2 = b2[o2 >> 2] | 0;
+          T2 = r3;
           return q2 | 0;
         }
         function Xc(c4, d4, f4, g3) {
@@ -34892,19 +42957,19 @@ var YasguiGeoTg = (() => {
           d4 = d4 | 0;
           f4 = f4 | 0;
           g3 = g3 | 0;
-          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, r2 = 0;
-          o = T2;
+          var h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, r3 = 0;
+          o2 = T2;
           T2 = T2 + 48 | 0;
-          l2 = o + 32 | 0;
-          k = o + 40 | 0;
-          m3 = o;
+          l2 = o2 + 32 | 0;
+          k = o2 + 40 | 0;
+          m3 = o2;
           if (!(b2[c4 >> 2] | 0)) {
-            n = g3;
-            b2[n >> 2] = 0;
-            b2[n + 4 >> 2] = 0;
-            n = 0;
-            T2 = o;
-            return n | 0;
+            n2 = g3;
+            b2[n2 >> 2] = 0;
+            b2[n2 + 4 >> 2] = 0;
+            n2 = 0;
+            T2 = o2;
+            return n2 | 0;
           }
           Hb(l2, 0, 0, 0);
           j = l2;
@@ -34912,22 +42977,22 @@ var YasguiGeoTg = (() => {
           j = b2[j + 4 >> 2] | 0;
           do {
             if (d4 >>> 0 > 15) {
-              n = m3;
-              b2[n >> 2] = 0;
-              b2[n + 4 >> 2] = 0;
+              n2 = m3;
+              b2[n2 >> 2] = 0;
+              b2[n2 + 4 >> 2] = 0;
               b2[m3 + 8 >> 2] = 4;
               b2[m3 + 12 >> 2] = -1;
-              n = m3 + 16 | 0;
+              n2 = m3 + 16 | 0;
               f4 = m3 + 29 | 0;
-              b2[n >> 2] = 0;
-              b2[n + 4 >> 2] = 0;
-              b2[n + 8 >> 2] = 0;
-              a2[n + 12 >> 0] = 0;
+              b2[n2 >> 2] = 0;
+              b2[n2 + 4 >> 2] = 0;
+              b2[n2 + 8 >> 2] = 0;
+              a2[n2 + 12 >> 0] = 0;
               a2[f4 >> 0] = a2[k >> 0] | 0;
               a2[f4 + 1 >> 0] = a2[k + 1 >> 0] | 0;
               a2[f4 + 2 >> 0] = a2[k + 2 >> 0] | 0;
               f4 = 4;
-              n = 9;
+              n2 = 9;
             } else {
               f4 = _c(f4) | 0;
               if (f4 | 0) {
@@ -34937,41 +43002,41 @@ var YasguiGeoTg = (() => {
                 b2[m3 + 8 >> 2] = f4;
                 b2[m3 + 12 >> 2] = -1;
                 l2 = m3 + 16 | 0;
-                n = m3 + 29 | 0;
+                n2 = m3 + 29 | 0;
                 b2[l2 >> 2] = 0;
                 b2[l2 + 4 >> 2] = 0;
                 b2[l2 + 8 >> 2] = 0;
                 a2[l2 + 12 >> 0] = 0;
-                a2[n >> 0] = a2[k >> 0] | 0;
-                a2[n + 1 >> 0] = a2[k + 1 >> 0] | 0;
-                a2[n + 2 >> 0] = a2[k + 2 >> 0] | 0;
-                n = 9;
+                a2[n2 >> 0] = a2[k >> 0] | 0;
+                a2[n2 + 1 >> 0] = a2[k + 1 >> 0] | 0;
+                a2[n2 + 2 >> 0] = a2[k + 2 >> 0] | 0;
+                n2 = 9;
                 break;
               }
               f4 = Id((b2[c4 + 8 >> 2] | 0) + 1 | 0, 32) | 0;
               if (!f4) {
-                n = m3;
-                b2[n >> 2] = 0;
-                b2[n + 4 >> 2] = 0;
+                n2 = m3;
+                b2[n2 >> 2] = 0;
+                b2[n2 + 4 >> 2] = 0;
                 b2[m3 + 8 >> 2] = 13;
                 b2[m3 + 12 >> 2] = -1;
-                n = m3 + 16 | 0;
+                n2 = m3 + 16 | 0;
                 f4 = m3 + 29 | 0;
-                b2[n >> 2] = 0;
-                b2[n + 4 >> 2] = 0;
-                b2[n + 8 >> 2] = 0;
-                a2[n + 12 >> 0] = 0;
+                b2[n2 >> 2] = 0;
+                b2[n2 + 4 >> 2] = 0;
+                b2[n2 + 8 >> 2] = 0;
+                a2[n2 + 12 >> 0] = 0;
                 a2[f4 >> 0] = a2[k >> 0] | 0;
                 a2[f4 + 1 >> 0] = a2[k + 1 >> 0] | 0;
                 a2[f4 + 2 >> 0] = a2[k + 2 >> 0] | 0;
                 f4 = 13;
-                n = 9;
+                n2 = 9;
                 break;
               }
               $c(c4, f4);
-              r2 = m3;
-              b2[r2 >> 2] = h2;
-              b2[r2 + 4 >> 2] = j;
+              r3 = m3;
+              b2[r3 >> 2] = h2;
+              b2[r3 + 4 >> 2] = j;
               j = m3 + 8 | 0;
               b2[j >> 2] = 0;
               b2[m3 + 12 >> 2] = d4;
@@ -34985,21 +43050,21 @@ var YasguiGeoTg = (() => {
               b2[m3 + 16 >> 2] = 3;
               p2 = +Ba(f4);
               p2 = p2 * +za(f4);
-              i = +q(+ +e[f4 >> 3]);
-              i = p2 / +t(+ +Xd(+i, + +q(+ +e[f4 + 8 >> 3]))) * 6371.007180918475 * 6371.007180918475;
+              i = +q(+ +e2[f4 >> 3]);
+              i = p2 / +t(+ +Xd(+i, + +q(+ +e2[f4 + 8 >> 3]))) * 6371.007180918475 * 6371.007180918475;
               h2 = m3 + 12 | 0;
               f4 = b2[h2 >> 2] | 0;
               a: do {
                 if ((f4 | 0) > 0) {
                   do {
                     tc(f4 + -1 | 0, l2) | 0;
-                    if (!(i / +e[l2 >> 3] > 10)) {
+                    if (!(i / +e2[l2 >> 3] > 10)) {
                       break a;
                     }
-                    r2 = b2[h2 >> 2] | 0;
-                    f4 = r2 + -1 | 0;
+                    r3 = b2[h2 >> 2] | 0;
+                    f4 = r3 + -1 | 0;
                     b2[h2 >> 2] = f4;
-                  } while ((r2 | 0) > 1);
+                  } while ((r3 | 0) > 1);
                 }
               } while (0);
               Uc(m3);
@@ -35016,41 +43081,41 @@ var YasguiGeoTg = (() => {
                   c4 = g3;
                   k = Jd(b2[c4 >> 2] | 0, b2[c4 + 4 >> 2] | 0, b2[k >> 2] | 0, b2[k + 4 >> 2] | 0) | 0;
                   c4 = H() | 0;
-                  r2 = g3;
-                  b2[r2 >> 2] = k;
-                  b2[r2 + 4 >> 2] = c4;
+                  r3 = g3;
+                  b2[r3 >> 2] = k;
+                  b2[r3 + 4 >> 2] = c4;
                   Uc(m3);
-                  r2 = m3;
-                  f4 = b2[r2 >> 2] | 0;
-                  h2 = b2[r2 + 4 >> 2] | 0;
+                  r3 = m3;
+                  f4 = b2[r3 >> 2] | 0;
+                  h2 = b2[r3 + 4 >> 2] | 0;
                 } while (!((f4 | 0) == 0 & (h2 | 0) == 0));
               }
               f4 = b2[j >> 2] | 0;
             }
           } while (0);
-          r2 = f4;
-          T2 = o;
-          return r2 | 0;
+          r3 = f4;
+          T2 = o2;
+          return r3 | 0;
         }
         function Yc(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0;
           if (!(Ca(c4, d4) | 0)) {
-            o = 0;
-            return o | 0;
+            o2 = 0;
+            return o2 | 0;
           }
           c4 = Aa(c4) | 0;
-          f4 = +e[d4 >> 3];
-          g3 = +e[d4 + 8 >> 3];
+          f4 = +e2[d4 >> 3];
+          g3 = +e2[d4 + 8 >> 3];
           g3 = c4 & g3 < 0 ? g3 + 6.283185307179586 : g3;
-          o = b2[a3 >> 2] | 0;
-          if ((o | 0) <= 0) {
-            o = 0;
-            return o | 0;
+          o2 = b2[a3 >> 2] | 0;
+          if ((o2 | 0) <= 0) {
+            o2 = 0;
+            return o2 | 0;
           }
-          n = b2[a3 + 4 >> 2] | 0;
+          n2 = b2[a3 + 4 >> 2] | 0;
           if (c4) {
             c4 = 0;
             m3 = g3;
@@ -35059,11 +43124,11 @@ var YasguiGeoTg = (() => {
             a: while (1) {
               l2 = a3;
               while (1) {
-                i = +e[n + (l2 << 4) >> 3];
-                g3 = +e[n + (l2 << 4) + 8 >> 3];
-                a3 = (d4 + 2 | 0) % (o | 0) | 0;
-                h2 = +e[n + (a3 << 4) >> 3];
-                j = +e[n + (a3 << 4) + 8 >> 3];
+                i = +e2[n2 + (l2 << 4) >> 3];
+                g3 = +e2[n2 + (l2 << 4) + 8 >> 3];
+                a3 = (d4 + 2 | 0) % (o2 | 0) | 0;
+                h2 = +e2[n2 + (a3 << 4) >> 3];
+                j = +e2[n2 + (a3 << 4) + 8 >> 3];
                 if (i > h2) {
                   k = i;
                   i = j;
@@ -35078,7 +43143,7 @@ var YasguiGeoTg = (() => {
                   break;
                 }
                 d4 = l2 + 1 | 0;
-                if ((d4 | 0) >= (o | 0)) {
+                if ((d4 | 0) >= (o2 | 0)) {
                   d4 = 22;
                   break a;
                 } else {
@@ -35095,7 +43160,7 @@ var YasguiGeoTg = (() => {
                 c4 = c4 ^ 1;
               }
               a3 = l2 + 1 | 0;
-              if ((a3 | 0) >= (o | 0)) {
+              if ((a3 | 0) >= (o2 | 0)) {
                 d4 = 22;
                 break;
               } else {
@@ -35113,11 +43178,11 @@ var YasguiGeoTg = (() => {
             b: while (1) {
               l2 = a3;
               while (1) {
-                i = +e[n + (l2 << 4) >> 3];
-                g3 = +e[n + (l2 << 4) + 8 >> 3];
-                a3 = (d4 + 2 | 0) % (o | 0) | 0;
-                h2 = +e[n + (a3 << 4) >> 3];
-                j = +e[n + (a3 << 4) + 8 >> 3];
+                i = +e2[n2 + (l2 << 4) >> 3];
+                g3 = +e2[n2 + (l2 << 4) + 8 >> 3];
+                a3 = (d4 + 2 | 0) % (o2 | 0) | 0;
+                h2 = +e2[n2 + (a3 << 4) >> 3];
+                j = +e2[n2 + (a3 << 4) + 8 >> 3];
                 if (i > h2) {
                   k = i;
                   i = j;
@@ -35132,7 +43197,7 @@ var YasguiGeoTg = (() => {
                   break;
                 }
                 d4 = l2 + 1 | 0;
-                if ((d4 | 0) >= (o | 0)) {
+                if ((d4 | 0) >= (o2 | 0)) {
                   d4 = 22;
                   break b;
                 } else {
@@ -35146,7 +43211,7 @@ var YasguiGeoTg = (() => {
                 c4 = c4 ^ 1;
               }
               a3 = l2 + 1 | 0;
-              if ((a3 | 0) >= (o | 0)) {
+              if ((a3 | 0) >= (o2 | 0)) {
                 d4 = 22;
                 break;
               } else {
@@ -35162,9 +43227,9 @@ var YasguiGeoTg = (() => {
         function Zc(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0;
-          r2 = b2[a3 >> 2] | 0;
-          if (!r2) {
+          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0;
+          r3 = b2[a3 >> 2] | 0;
+          if (!r3) {
             b2[c4 >> 2] = 0;
             b2[c4 + 4 >> 2] = 0;
             b2[c4 + 8 >> 2] = 0;
@@ -35176,19 +43241,19 @@ var YasguiGeoTg = (() => {
             return;
           }
           s3 = c4 + 8 | 0;
-          e[s3 >> 3] = 17976931348623157e292;
+          e2[s3 >> 3] = 17976931348623157e292;
           t2 = c4 + 24 | 0;
-          e[t2 >> 3] = 17976931348623157e292;
-          e[c4 >> 3] = -17976931348623157e292;
+          e2[t2 >> 3] = 17976931348623157e292;
+          e2[c4 >> 3] = -17976931348623157e292;
           u4 = c4 + 16 | 0;
-          e[u4 >> 3] = -17976931348623157e292;
-          if ((r2 | 0) <= 0) {
+          e2[u4 >> 3] = -17976931348623157e292;
+          if ((r3 | 0) <= 0) {
             return;
           }
-          o = b2[a3 + 4 >> 2] | 0;
+          o2 = b2[a3 + 4 >> 2] | 0;
           l2 = 17976931348623157e292;
           m3 = -17976931348623157e292;
-          n = 0;
+          n2 = 0;
           a3 = -1;
           h2 = 17976931348623157e292;
           i = 17976931348623157e292;
@@ -35196,32 +43261,32 @@ var YasguiGeoTg = (() => {
           f4 = -17976931348623157e292;
           p2 = 0;
           while (1) {
-            d4 = +e[o + (p2 << 4) >> 3];
-            j = +e[o + (p2 << 4) + 8 >> 3];
+            d4 = +e2[o2 + (p2 << 4) >> 3];
+            j = +e2[o2 + (p2 << 4) + 8 >> 3];
             a3 = a3 + 2 | 0;
-            g3 = +e[o + (((a3 | 0) == (r2 | 0) ? 0 : a3) << 4) + 8 >> 3];
+            g3 = +e2[o2 + (((a3 | 0) == (r3 | 0) ? 0 : a3) << 4) + 8 >> 3];
             if (d4 < h2) {
-              e[s3 >> 3] = d4;
+              e2[s3 >> 3] = d4;
               h2 = d4;
             }
             if (j < i) {
-              e[t2 >> 3] = j;
+              e2[t2 >> 3] = j;
               i = j;
             }
             if (d4 > k) {
-              e[c4 >> 3] = d4;
+              e2[c4 >> 3] = d4;
             } else {
               d4 = k;
             }
             if (j > f4) {
-              e[u4 >> 3] = j;
+              e2[u4 >> 3] = j;
               f4 = j;
             }
             l2 = j > 0 & j < l2 ? j : l2;
             m3 = j < 0 & j > m3 ? j : m3;
-            n = n | +q(+(j - g3)) > 3.141592653589793;
+            n2 = n2 | +q(+(j - g3)) > 3.141592653589793;
             a3 = p2 + 1 | 0;
-            if ((a3 | 0) == (r2 | 0)) {
+            if ((a3 | 0) == (r3 | 0)) {
               break;
             } else {
               v2 = p2;
@@ -35230,11 +43295,11 @@ var YasguiGeoTg = (() => {
               a3 = v2;
             }
           }
-          if (!n) {
+          if (!n2) {
             return;
           }
-          e[u4 >> 3] = m3;
-          e[t2 >> 3] = l2;
+          e2[u4 >> 3] = m3;
+          e2[t2 >> 3] = l2;
           return;
         }
         function _c(a3) {
@@ -35244,65 +43309,65 @@ var YasguiGeoTg = (() => {
         function $c(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
-          r2 = b2[a3 >> 2] | 0;
-          if (r2) {
+          var d4 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
+          r3 = b2[a3 >> 2] | 0;
+          if (r3) {
             s3 = c4 + 8 | 0;
-            e[s3 >> 3] = 17976931348623157e292;
+            e2[s3 >> 3] = 17976931348623157e292;
             t2 = c4 + 24 | 0;
-            e[t2 >> 3] = 17976931348623157e292;
-            e[c4 >> 3] = -17976931348623157e292;
+            e2[t2 >> 3] = 17976931348623157e292;
+            e2[c4 >> 3] = -17976931348623157e292;
             u4 = c4 + 16 | 0;
-            e[u4 >> 3] = -17976931348623157e292;
-            if ((r2 | 0) > 0) {
+            e2[u4 >> 3] = -17976931348623157e292;
+            if ((r3 | 0) > 0) {
               g3 = b2[a3 + 4 >> 2] | 0;
-              o = 17976931348623157e292;
+              o2 = 17976931348623157e292;
               p2 = -17976931348623157e292;
               f4 = 0;
               d4 = -1;
               k = 17976931348623157e292;
               l2 = 17976931348623157e292;
-              n = -17976931348623157e292;
+              n2 = -17976931348623157e292;
               i = -17976931348623157e292;
               v2 = 0;
               while (1) {
-                h2 = +e[g3 + (v2 << 4) >> 3];
-                m3 = +e[g3 + (v2 << 4) + 8 >> 3];
+                h2 = +e2[g3 + (v2 << 4) >> 3];
+                m3 = +e2[g3 + (v2 << 4) + 8 >> 3];
                 z2 = d4 + 2 | 0;
-                j = +e[g3 + (((z2 | 0) == (r2 | 0) ? 0 : z2) << 4) + 8 >> 3];
+                j = +e2[g3 + (((z2 | 0) == (r3 | 0) ? 0 : z2) << 4) + 8 >> 3];
                 if (h2 < k) {
-                  e[s3 >> 3] = h2;
+                  e2[s3 >> 3] = h2;
                   k = h2;
                 }
                 if (m3 < l2) {
-                  e[t2 >> 3] = m3;
+                  e2[t2 >> 3] = m3;
                   l2 = m3;
                 }
-                if (h2 > n) {
-                  e[c4 >> 3] = h2;
+                if (h2 > n2) {
+                  e2[c4 >> 3] = h2;
                 } else {
-                  h2 = n;
+                  h2 = n2;
                 }
                 if (m3 > i) {
-                  e[u4 >> 3] = m3;
+                  e2[u4 >> 3] = m3;
                   i = m3;
                 }
-                o = m3 > 0 & m3 < o ? m3 : o;
+                o2 = m3 > 0 & m3 < o2 ? m3 : o2;
                 p2 = m3 < 0 & m3 > p2 ? m3 : p2;
                 f4 = f4 | +q(+(m3 - j)) > 3.141592653589793;
                 d4 = v2 + 1 | 0;
-                if ((d4 | 0) == (r2 | 0)) {
+                if ((d4 | 0) == (r3 | 0)) {
                   break;
                 } else {
                   z2 = v2;
-                  n = h2;
+                  n2 = h2;
                   v2 = d4;
                   d4 = z2;
                 }
               }
               if (f4) {
-                e[u4 >> 3] = p2;
-                e[t2 >> 3] = o;
+                e2[u4 >> 3] = p2;
+                e2[t2 >> 3] = o2;
               }
             }
           } else {
@@ -35330,15 +43395,15 @@ var YasguiGeoTg = (() => {
             u4 = b2[g3 + (f4 << 3) >> 2] | 0;
             if (u4) {
               v2 = c4 + (x4 << 5) + 8 | 0;
-              e[v2 >> 3] = 17976931348623157e292;
+              e2[v2 >> 3] = 17976931348623157e292;
               a3 = c4 + (x4 << 5) + 24 | 0;
-              e[a3 >> 3] = 17976931348623157e292;
-              e[t2 >> 3] = -17976931348623157e292;
+              e2[a3 >> 3] = 17976931348623157e292;
+              e2[t2 >> 3] = -17976931348623157e292;
               w2 = c4 + (x4 << 5) + 16 | 0;
-              e[w2 >> 3] = -17976931348623157e292;
+              e2[w2 >> 3] = -17976931348623157e292;
               if ((u4 | 0) > 0) {
-                r2 = b2[g3 + (f4 << 3) + 4 >> 2] | 0;
-                o = 17976931348623157e292;
+                r3 = b2[g3 + (f4 << 3) + 4 >> 2] | 0;
+                o2 = 17976931348623157e292;
                 p2 = -17976931348623157e292;
                 g3 = 0;
                 f4 = -1;
@@ -35348,30 +43413,30 @@ var YasguiGeoTg = (() => {
                 m3 = -17976931348623157e292;
                 i = -17976931348623157e292;
                 while (1) {
-                  h2 = +e[r2 + (s3 << 4) >> 3];
-                  n = +e[r2 + (s3 << 4) + 8 >> 3];
+                  h2 = +e2[r3 + (s3 << 4) >> 3];
+                  n2 = +e2[r3 + (s3 << 4) + 8 >> 3];
                   f4 = f4 + 2 | 0;
-                  j = +e[r2 + (((f4 | 0) == (u4 | 0) ? 0 : f4) << 4) + 8 >> 3];
+                  j = +e2[r3 + (((f4 | 0) == (u4 | 0) ? 0 : f4) << 4) + 8 >> 3];
                   if (h2 < k) {
-                    e[v2 >> 3] = h2;
+                    e2[v2 >> 3] = h2;
                     k = h2;
                   }
-                  if (n < l2) {
-                    e[a3 >> 3] = n;
-                    l2 = n;
+                  if (n2 < l2) {
+                    e2[a3 >> 3] = n2;
+                    l2 = n2;
                   }
                   if (h2 > m3) {
-                    e[t2 >> 3] = h2;
+                    e2[t2 >> 3] = h2;
                   } else {
                     h2 = m3;
                   }
-                  if (n > i) {
-                    e[w2 >> 3] = n;
-                    i = n;
+                  if (n2 > i) {
+                    e2[w2 >> 3] = n2;
+                    i = n2;
                   }
-                  o = n > 0 & n < o ? n : o;
-                  p2 = n < 0 & n > p2 ? n : p2;
-                  g3 = g3 | +q(+(n - j)) > 3.141592653589793;
+                  o2 = n2 > 0 & n2 < o2 ? n2 : o2;
+                  p2 = n2 < 0 & n2 > p2 ? n2 : p2;
+                  g3 = g3 | +q(+(n2 - j)) > 3.141592653589793;
                   f4 = s3 + 1 | 0;
                   if ((f4 | 0) == (u4 | 0)) {
                     break;
@@ -35383,8 +43448,8 @@ var YasguiGeoTg = (() => {
                   }
                 }
                 if (g3) {
-                  e[w2 >> 3] = p2;
-                  e[a3 >> 3] = o;
+                  e2[w2 >> 3] = p2;
+                  e2[a3 >> 3] = o2;
                 }
               }
             } else {
@@ -35405,7 +43470,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           if (!(Yc(a3, c4, d4) | 0)) {
             f4 = 0;
             return f4 | 0;
@@ -35415,32 +43480,32 @@ var YasguiGeoTg = (() => {
             f4 = 1;
             return f4 | 0;
           }
-          e2 = a3 + 12 | 0;
+          e3 = a3 + 12 | 0;
           a3 = 0;
           while (1) {
             g3 = a3;
             a3 = a3 + 1 | 0;
-            if (Yc((b2[e2 >> 2] | 0) + (g3 << 3) | 0, c4 + (a3 << 5) | 0, d4) | 0) {
+            if (Yc((b2[e3 >> 2] | 0) + (g3 << 3) | 0, c4 + (a3 << 5) | 0, d4) | 0) {
               a3 = 0;
-              e2 = 6;
+              e3 = 6;
               break;
             }
             if ((a3 | 0) >= (b2[f4 >> 2] | 0)) {
               a3 = 1;
-              e2 = 6;
+              e3 = 6;
               break;
             }
           }
-          if ((e2 | 0) == 6) {
+          if ((e3 | 0) == 6) {
             return a3 | 0;
           }
           return 0;
         }
-        function bd(a3, c4, d4, e2) {
+        function bd(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           k = T2;
           T2 = T2 + 16 | 0;
@@ -35471,7 +43536,7 @@ var YasguiGeoTg = (() => {
               return f4 | 0;
             }
           } while (0);
-          if (cd(a3, c4, d4, e2) | 0) {
+          if (cd(a3, c4, d4, e3) | 0) {
             l2 = 0;
             T2 = k;
             return l2 | 0;
@@ -35487,12 +43552,12 @@ var YasguiGeoTg = (() => {
               while (1) {
                 f4 = b2[a3 >> 2] | 0;
                 if ((b2[f4 + (h2 << 3) >> 2] | 0) > 0) {
-                  if (Yc(i, e2, b2[f4 + (h2 << 3) + 4 >> 2] | 0) | 0) {
+                  if (Yc(i, e3, b2[f4 + (h2 << 3) + 4 >> 2] | 0) | 0) {
                     f4 = 0;
                     break b;
                   }
                   f4 = h2 + 1 | 0;
-                  if (cd((b2[a3 >> 2] | 0) + (h2 << 3) | 0, c4 + (f4 << 5) | 0, d4, e2) | 0) {
+                  if (cd((b2[a3 >> 2] | 0) + (h2 << 3) | 0, c4 + (f4 << 5) | 0, d4, e3) | 0) {
                     f4 = 0;
                     break b;
                   }
@@ -35520,7 +43585,7 @@ var YasguiGeoTg = (() => {
           c4 = c4 | 0;
           d4 = d4 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0, x4 = 0, y4 = 0, z2 = 0, A7 = 0;
           y4 = T2;
           T2 = T2 + 176 | 0;
           u4 = y4 + 172 | 0;
@@ -35537,15 +43602,15 @@ var YasguiGeoTg = (() => {
             c4 = 0;
             do {
               z2 = v2 + 8 + (c4 << 4) + 8 | 0;
-              t2 = +nc(+e[z2 >> 3], b2[g3 >> 2] | 0);
-              e[z2 >> 3] = t2;
+              t2 = +nc(+e2[z2 >> 3], b2[g3 >> 2] | 0);
+              e2[z2 >> 3] = t2;
               c4 = c4 + 1 | 0;
             } while ((c4 | 0) < (b2[d4 >> 2] | 0));
           }
-          r2 = +e[f4 >> 3];
-          s3 = +e[f4 + 8 >> 3];
-          t2 = +nc(+e[f4 + 16 >> 3], b2[g3 >> 2] | 0);
-          p2 = +nc(+e[f4 + 24 >> 3], b2[g3 >> 2] | 0);
+          r3 = +e2[f4 >> 3];
+          s3 = +e2[f4 + 8 >> 3];
+          t2 = +nc(+e2[f4 + 16 >> 3], b2[g3 >> 2] | 0);
+          p2 = +nc(+e2[f4 + 24 >> 3], b2[g3 >> 2] | 0);
           a: do {
             if ((b2[a3 >> 2] | 0) > 0) {
               f4 = a3 + 4 | 0;
@@ -35563,27 +43628,27 @@ var YasguiGeoTg = (() => {
               d4 = 0;
               while (1) {
                 c4 = b2[f4 >> 2] | 0;
-                o = +e[c4 + (d4 << 4) >> 3];
-                q2 = +nc(+e[c4 + (d4 << 4) + 8 >> 3], b2[u4 >> 2] | 0);
+                o2 = +e2[c4 + (d4 << 4) >> 3];
+                q2 = +nc(+e2[c4 + (d4 << 4) + 8 >> 3], b2[u4 >> 2] | 0);
                 c4 = b2[f4 >> 2] | 0;
                 d4 = d4 + 1 | 0;
                 z2 = (d4 | 0) % (b2[a3 >> 2] | 0) | 0;
-                h2 = +e[c4 + (z2 << 4) >> 3];
-                i = +nc(+e[c4 + (z2 << 4) + 8 >> 3], b2[u4 >> 2] | 0);
-                if (((!(o >= r2) | !(h2 >= r2) ? !(o <= s3) | !(h2 <= s3) : 0) ? !(q2 <= p2) | !(i <= p2) : 0) ? !(q2 >= t2) | !(i >= t2) : 0) {
-                  n = h2 - o;
+                h2 = +e2[c4 + (z2 << 4) >> 3];
+                i = +nc(+e2[c4 + (z2 << 4) + 8 >> 3], b2[u4 >> 2] | 0);
+                if (((!(o2 >= r3) | !(h2 >= r3) ? !(o2 <= s3) | !(h2 <= s3) : 0) ? !(q2 <= p2) | !(i <= p2) : 0) ? !(q2 >= t2) | !(i >= t2) : 0) {
+                  n2 = h2 - o2;
                   l2 = i - q2;
                   c4 = 0;
                   do {
                     A7 = c4;
                     c4 = c4 + 1 | 0;
                     z2 = (c4 | 0) == (g3 | 0) ? 0 : c4;
-                    h2 = +e[v2 + 8 + (A7 << 4) + 8 >> 3];
-                    i = +e[v2 + 8 + (z2 << 4) + 8 >> 3] - h2;
-                    j = +e[v2 + 8 + (A7 << 4) >> 3];
-                    k = +e[v2 + 8 + (z2 << 4) >> 3] - j;
-                    m3 = n * i - l2 * k;
-                    if ((m3 != 0 ? (w2 = q2 - h2, x4 = o - j, k = (w2 * k - i * x4) / m3, !(k < 0 | k > 1)) : 0) ? (m3 = (n * w2 - l2 * x4) / m3, m3 >= 0 & m3 <= 1) : 0) {
+                    h2 = +e2[v2 + 8 + (A7 << 4) + 8 >> 3];
+                    i = +e2[v2 + 8 + (z2 << 4) + 8 >> 3] - h2;
+                    j = +e2[v2 + 8 + (A7 << 4) >> 3];
+                    k = +e2[v2 + 8 + (z2 << 4) >> 3] - j;
+                    m3 = n2 * i - l2 * k;
+                    if ((m3 != 0 ? (w2 = q2 - h2, x4 = o2 - j, k = (w2 * k - i * x4) / m3, !(k < 0 | k > 1)) : 0) ? (m3 = (n2 * w2 - l2 * x4) / m3, m3 >= 0 & m3 <= 1) : 0) {
                       c4 = 1;
                       break a;
                     }
@@ -35602,13 +43667,13 @@ var YasguiGeoTg = (() => {
           T2 = y4;
           return A7 | 0;
         }
-        function dd(a3, c4, d4, e2) {
+        function dd(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0;
-          if (cd(a3, c4, d4, e2) | 0) {
+          if (cd(a3, c4, d4, e3) | 0) {
             g3 = 1;
             return g3 | 0;
           }
@@ -35622,7 +43687,7 @@ var YasguiGeoTg = (() => {
           while (1) {
             h2 = a3;
             a3 = a3 + 1 | 0;
-            if (cd((b2[f4 >> 2] | 0) + (h2 << 3) | 0, c4 + (a3 << 5) | 0, d4, e2) | 0) {
+            if (cd((b2[f4 >> 2] | 0) + (h2 << 3) | 0, c4 + (a3 << 5) | 0, d4, e3) | 0) {
               a3 = 1;
               f4 = 6;
               break;
@@ -35666,9 +43731,9 @@ var YasguiGeoTg = (() => {
         function md(a3) {
           a3 = a3 | 0;
           var b3 = 0, c4 = 0;
-          c4 = +e[a3 >> 3];
-          b3 = +e[a3 + 8 >> 3];
-          return + +r(+(c4 * c4 + b3 * b3));
+          c4 = +e2[a3 >> 3];
+          b3 = +e2[a3 + 8 >> 3];
+          return + +r2(+(c4 * c4 + b3 * b3));
         }
         function nd(a3, b3, c4, d4, f4) {
           a3 = a3 | 0;
@@ -35676,88 +43741,88 @@ var YasguiGeoTg = (() => {
           c4 = c4 | 0;
           d4 = d4 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0;
-          k = +e[a3 >> 3];
-          j = +e[b3 >> 3] - k;
-          i = +e[a3 + 8 >> 3];
-          h2 = +e[b3 + 8 >> 3] - i;
-          m3 = +e[c4 >> 3];
-          g3 = +e[d4 >> 3] - m3;
-          n = +e[c4 + 8 >> 3];
-          l2 = +e[d4 + 8 >> 3] - n;
-          g3 = (g3 * (i - n) - (k - m3) * l2) / (j * l2 - h2 * g3);
-          e[f4 >> 3] = k + j * g3;
-          e[f4 + 8 >> 3] = i + h2 * g3;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0;
+          k = +e2[a3 >> 3];
+          j = +e2[b3 >> 3] - k;
+          i = +e2[a3 + 8 >> 3];
+          h2 = +e2[b3 + 8 >> 3] - i;
+          m3 = +e2[c4 >> 3];
+          g3 = +e2[d4 >> 3] - m3;
+          n2 = +e2[c4 + 8 >> 3];
+          l2 = +e2[d4 + 8 >> 3] - n2;
+          g3 = (g3 * (i - n2) - (k - m3) * l2) / (j * l2 - h2 * g3);
+          e2[f4 >> 3] = k + j * g3;
+          e2[f4 + 8 >> 3] = i + h2 * g3;
           return;
         }
         function od(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          if (!(+q(+(+e[a3 >> 3] - +e[b3 >> 3])) < 11920928955078125e-23)) {
+          if (!(+q(+(+e2[a3 >> 3] - +e2[b3 >> 3])) < 11920928955078125e-23)) {
             b3 = 0;
             return b3 | 0;
           }
-          b3 = +q(+(+e[a3 + 8 >> 3] - +e[b3 + 8 >> 3])) < 11920928955078125e-23;
+          b3 = +q(+(+e2[a3 + 8 >> 3] - +e2[b3 + 8 >> 3])) < 11920928955078125e-23;
           return b3 | 0;
         }
         function pd(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0;
-          f4 = +e[a3 >> 3] - +e[b3 >> 3];
-          d4 = +e[a3 + 8 >> 3] - +e[b3 + 8 >> 3];
-          c4 = +e[a3 + 16 >> 3] - +e[b3 + 16 >> 3];
+          f4 = +e2[a3 >> 3] - +e2[b3 >> 3];
+          d4 = +e2[a3 + 8 >> 3] - +e2[b3 + 8 >> 3];
+          c4 = +e2[a3 + 16 >> 3] - +e2[b3 + 16 >> 3];
           return +(f4 * f4 + d4 * d4 + c4 * c4);
         }
         function qd(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           var c4 = 0, d4 = 0, f4 = 0;
-          c4 = +e[a3 >> 3];
+          c4 = +e2[a3 >> 3];
           d4 = +t(+c4);
           c4 = +u3(+c4);
-          e[b3 + 16 >> 3] = c4;
-          c4 = +e[a3 + 8 >> 3];
+          e2[b3 + 16 >> 3] = c4;
+          c4 = +e2[a3 + 8 >> 3];
           f4 = d4 * +t(+c4);
-          e[b3 >> 3] = f4;
+          e2[b3 >> 3] = f4;
           c4 = d4 * +u3(+c4);
-          e[b3 + 8 >> 3] = c4;
+          e2[b3 + 8 >> 3] = c4;
           return;
         }
         function rd(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           g3 = T2;
           T2 = T2 + 16 | 0;
           f4 = g3;
-          e2 = Kb(a3, c4) | 0;
+          e3 = Kb(a3, c4) | 0;
           if ((d4 + -1 | 0) >>> 0 > 5) {
             f4 = -1;
             T2 = g3;
             return f4 | 0;
           }
-          e2 = (e2 | 0) != 0;
-          if ((d4 | 0) == 1 & e2) {
+          e3 = (e3 | 0) != 0;
+          if ((d4 | 0) == 1 & e3) {
             f4 = -1;
             T2 = g3;
             return f4 | 0;
           }
           do {
             if (!(sd(a3, c4, f4) | 0)) {
-              if (e2) {
-                e2 = ((b2[26352 + (d4 << 2) >> 2] | 0) + 5 - (b2[f4 >> 2] | 0) | 0) % 5 | 0;
+              if (e3) {
+                e3 = ((b2[26352 + (d4 << 2) >> 2] | 0) + 5 - (b2[f4 >> 2] | 0) | 0) % 5 | 0;
                 break;
               } else {
-                e2 = ((b2[26384 + (d4 << 2) >> 2] | 0) + 6 - (b2[f4 >> 2] | 0) | 0) % 6 | 0;
+                e3 = ((b2[26384 + (d4 << 2) >> 2] | 0) + 6 - (b2[f4 >> 2] | 0) | 0) % 6 | 0;
                 break;
               }
             } else {
-              e2 = -1;
+              e3 = -1;
             }
           } while (0);
-          f4 = e2;
+          f4 = e3;
           T2 = g3;
           return f4 | 0;
         }
@@ -35765,21 +43830,21 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0;
           l2 = T2;
           T2 = T2 + 32 | 0;
           i = l2 + 16 | 0;
           j = l2;
-          e2 = $b(a3, c4, i) | 0;
-          if (e2 | 0) {
-            d4 = e2;
+          e3 = $b(a3, c4, i) | 0;
+          if (e3 | 0) {
+            d4 = e3;
             T2 = l2;
             return d4 | 0;
           }
           g3 = Cb(a3, c4) | 0;
           k = Sb(a3, c4) | 0;
           sa(g3, j);
-          e2 = ta(g3, b2[i >> 2] | 0) | 0;
+          e3 = ta(g3, b2[i >> 2] | 0) | 0;
           do {
             if (oa(g3) | 0) {
               do {
@@ -35843,45 +43908,45 @@ var YasguiGeoTg = (() => {
                 j = pa(g3) | 0;
                 a3 = b2[i >> 2] | 0;
                 if (j | (a3 | 0) == (c4 | 0)) {
-                  e2 = (e2 + 1 | 0) % 6 | 0;
+                  e3 = (e3 + 1 | 0) % 6 | 0;
                 }
               }
               if ((k | 0) == 3 & (a3 | 0) == (c4 | 0)) {
-                e2 = (e2 + 5 | 0) % 6 | 0;
+                e3 = (e3 + 5 | 0) % 6 | 0;
                 break;
               }
               if ((k | 0) == 5 & (a3 | 0) == (h2 | 0)) {
-                e2 = (e2 + 1 | 0) % 6 | 0;
+                e3 = (e3 + 1 | 0) % 6 | 0;
               }
             }
           } while (0);
-          b2[d4 >> 2] = e2;
+          b2[d4 >> 2] = e3;
           d4 = 0;
           T2 = l2;
           return d4 | 0;
         }
-        function td(a3, c4, d4, e2) {
+        function td(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
-          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0;
+          e3 = e3 | 0;
+          var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0;
           u4 = T2;
           T2 = T2 + 32 | 0;
           t2 = u4 + 24 | 0;
-          r2 = u4 + 20 | 0;
+          r3 = u4 + 20 | 0;
           p2 = u4 + 8 | 0;
-          o = u4 + 16 | 0;
-          n = u4;
+          o2 = u4 + 16 | 0;
+          n2 = u4;
           j = (Kb(a3, c4) | 0) == 0;
           j = j ? 6 : 5;
           l2 = Td(a3 | 0, c4 | 0, 52) | 0;
           H() | 0;
           l2 = l2 & 15;
           if (j >>> 0 <= d4 >>> 0) {
-            e2 = 2;
+            e3 = 2;
             T2 = u4;
-            return e2 | 0;
+            return e3 | 0;
           }
           m3 = (l2 | 0) == 0;
           if (!m3 ? (q2 = Ud(7, 0, (l2 ^ 15) * 3 | 0) | 0, (q2 & a3 | 0) == 0 & ((H() | 0) & c4 | 0) == 0) : 0) {
@@ -35893,14 +43958,14 @@ var YasguiGeoTg = (() => {
             if ((g3 | 0) == 4) {
               f4 = (Kb(a3, c4) | 0) != 0;
               if (((f4 ? 4 : 5) | 0) < (d4 | 0)) {
-                e2 = 1;
+                e3 = 1;
                 T2 = u4;
-                return e2 | 0;
+                return e3 | 0;
               }
               if (sd(a3, c4, t2) | 0) {
-                e2 = 1;
+                e3 = 1;
                 T2 = u4;
-                return e2 | 0;
+                return e3 | 0;
               }
               g3 = (b2[t2 >> 2] | 0) + d4 | 0;
               if (f4) {
@@ -35910,12 +43975,12 @@ var YasguiGeoTg = (() => {
               }
               q2 = b2[f4 >> 2] | 0;
               if ((q2 | 0) == 7) {
-                e2 = 1;
+                e3 = 1;
                 T2 = u4;
-                return e2 | 0;
+                return e3 | 0;
               }
-              b2[r2 >> 2] = 0;
-              f4 = ea(a3, c4, q2, r2, p2) | 0;
+              b2[r3 >> 2] = 0;
+              f4 = ea(a3, c4, q2, r3, p2) | 0;
               do {
                 if (!f4) {
                   i = p2;
@@ -35949,18 +44014,18 @@ var YasguiGeoTg = (() => {
                     if ((i | 0) == 7) {
                       I2(27795, 27797, 248, 27822);
                     }
-                    b2[o >> 2] = 0;
-                    f4 = ea(a3, c4, i, o, n) | 0;
+                    b2[o2 >> 2] = 0;
+                    f4 = ea(a3, c4, i, o2, n2) | 0;
                     if (f4 | 0) {
                       break;
                     }
-                    k = n;
+                    k = n2;
                     j = b2[k >> 2] | 0;
                     k = b2[k + 4 >> 2] | 0;
                     do {
                       if (k >>> 0 < h2 >>> 0 | (k | 0) == (h2 | 0) & j >>> 0 < g3 >>> 0) {
                         if (!(Kb(j, k) | 0)) {
-                          g3 = b2[26800 + ((((b2[o >> 2] | 0) + (b2[26768 + (i << 2) >> 2] | 0) | 0) % 6 | 0) << 2) >> 2] | 0;
+                          g3 = b2[26800 + ((((b2[o2 >> 2] | 0) + (b2[26768 + (i << 2) >> 2] | 0) | 0) % 6 | 0) << 2) >> 2] | 0;
                         } else {
                           g3 = ia(j, k, a3, c4) | 0;
                         }
@@ -36006,7 +44071,7 @@ var YasguiGeoTg = (() => {
                     if (j) {
                       a3 = ia(k, i, a3, c4) | 0;
                     } else {
-                      a3 = b2[26800 + ((((b2[r2 >> 2] | 0) + (b2[26768 + (q2 << 2) >> 2] | 0) | 0) % 6 | 0) << 2) >> 2] | 0;
+                      a3 = b2[26800 + ((((b2[r3 >> 2] | 0) + (b2[26768 + (q2 << 2) >> 2] | 0) | 0) % 6 | 0) << 2) >> 2] | 0;
                     }
                     f4 = Kb(k, i) | 0;
                     if ((a3 + -1 | 0) >>> 0 <= 5 ? (s3 = (f4 | 0) != 0, !((a3 | 0) == 1 & s3)) : 0) {
@@ -36034,77 +44099,77 @@ var YasguiGeoTg = (() => {
                   break a;
                 }
               } while (0);
-              e2 = f4;
+              e3 = f4;
               T2 = u4;
-              return e2 | 0;
+              return e3 | 0;
             }
           } while (0);
           s3 = Ud(f4 | 0, 0, 56) | 0;
           t2 = H() | 0 | c4 & -2130706433 | 536870912;
-          b2[e2 >> 2] = s3 | a3;
-          b2[e2 + 4 >> 2] = t2;
-          e2 = 0;
+          b2[e3 >> 2] = s3 | a3;
+          b2[e3 + 4 >> 2] = t2;
+          e3 = 0;
           T2 = u4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function ud(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0;
+          var e3 = 0, f4 = 0, g3 = 0;
           g3 = (Kb(a3, c4) | 0) == 0;
-          e2 = td(a3, c4, 0, d4) | 0;
-          f4 = (e2 | 0) == 0;
+          e3 = td(a3, c4, 0, d4) | 0;
+          f4 = (e3 | 0) == 0;
           if (g3) {
             if (!f4) {
-              g3 = e2;
+              g3 = e3;
               return g3 | 0;
             }
-            e2 = td(a3, c4, 1, d4 + 8 | 0) | 0;
-            if (e2 | 0) {
-              g3 = e2;
+            e3 = td(a3, c4, 1, d4 + 8 | 0) | 0;
+            if (e3 | 0) {
+              g3 = e3;
               return g3 | 0;
             }
-            e2 = td(a3, c4, 2, d4 + 16 | 0) | 0;
-            if (e2 | 0) {
-              g3 = e2;
+            e3 = td(a3, c4, 2, d4 + 16 | 0) | 0;
+            if (e3 | 0) {
+              g3 = e3;
               return g3 | 0;
             }
-            e2 = td(a3, c4, 3, d4 + 24 | 0) | 0;
-            if (e2 | 0) {
-              g3 = e2;
+            e3 = td(a3, c4, 3, d4 + 24 | 0) | 0;
+            if (e3 | 0) {
+              g3 = e3;
               return g3 | 0;
             }
-            e2 = td(a3, c4, 4, d4 + 32 | 0) | 0;
-            if (!e2) {
+            e3 = td(a3, c4, 4, d4 + 32 | 0) | 0;
+            if (!e3) {
               return td(a3, c4, 5, d4 + 40 | 0) | 0;
             } else {
-              g3 = e2;
+              g3 = e3;
               return g3 | 0;
             }
           }
           if (!f4) {
-            g3 = e2;
+            g3 = e3;
             return g3 | 0;
           }
-          e2 = td(a3, c4, 1, d4 + 8 | 0) | 0;
-          if (e2 | 0) {
-            g3 = e2;
+          e3 = td(a3, c4, 1, d4 + 8 | 0) | 0;
+          if (e3 | 0) {
+            g3 = e3;
             return g3 | 0;
           }
-          e2 = td(a3, c4, 2, d4 + 16 | 0) | 0;
-          if (e2 | 0) {
-            g3 = e2;
+          e3 = td(a3, c4, 2, d4 + 16 | 0) | 0;
+          if (e3 | 0) {
+            g3 = e3;
             return g3 | 0;
           }
-          e2 = td(a3, c4, 3, d4 + 24 | 0) | 0;
-          if (e2 | 0) {
-            g3 = e2;
+          e3 = td(a3, c4, 3, d4 + 24 | 0) | 0;
+          if (e3 | 0) {
+            g3 = e3;
             return g3 | 0;
           }
-          e2 = td(a3, c4, 4, d4 + 32 | 0) | 0;
-          if (e2 | 0) {
-            g3 = e2;
+          e3 = td(a3, c4, 4, d4 + 32 | 0) | 0;
+          if (e3 | 0) {
+            g3 = e3;
             return g3 | 0;
           }
           g3 = d4 + 40 | 0;
@@ -36117,7 +44182,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           j = T2;
           T2 = T2 + 192 | 0;
           f4 = j;
@@ -36126,9 +44191,9 @@ var YasguiGeoTg = (() => {
           H() | 0;
           h2 = h2 & 7;
           i = c4 & -2130706433 | 134217728;
-          e2 = $b(a3, i, g3) | 0;
-          if (e2 | 0) {
-            i = e2;
+          e3 = $b(a3, i, g3) | 0;
+          if (e3 | 0) {
+            i = e3;
             T2 = j;
             return i | 0;
           }
@@ -36152,38 +44217,38 @@ var YasguiGeoTg = (() => {
         function wd(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
-          var d4 = 0, e2 = 0, f4 = 0, g3 = 0;
+          var d4 = 0, e3 = 0, f4 = 0, g3 = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
           d4 = f4;
           if (!(true & (c4 & 2013265920 | 0) == 536870912)) {
-            e2 = 0;
+            e3 = 0;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
-          e2 = c4 & -2130706433 | 134217728;
-          if (!(Fb(a3, e2) | 0)) {
-            e2 = 0;
+          e3 = c4 & -2130706433 | 134217728;
+          if (!(Fb(a3, e3) | 0)) {
+            e3 = 0;
             T2 = f4;
-            return e2 | 0;
+            return e3 | 0;
           }
           g3 = Td(a3 | 0, c4 | 0, 56) | 0;
           H() | 0;
-          g3 = (td(a3, e2, g3 & 7, d4) | 0) == 0;
-          e2 = d4;
-          e2 = g3 & ((b2[e2 >> 2] | 0) == (a3 | 0) ? (b2[e2 + 4 >> 2] | 0) == (c4 | 0) : 0) & 1;
+          g3 = (td(a3, e3, g3 & 7, d4) | 0) == 0;
+          e3 = d4;
+          e3 = g3 & ((b2[e3 >> 2] | 0) == (a3 | 0) ? (b2[e3 + 4 >> 2] | 0) == (c4 | 0) : 0) & 1;
           T2 = f4;
-          return e2 | 0;
+          return e3 | 0;
         }
         function xd(a3, c4, d4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0;
+          var e3 = 0;
           if ((c4 | 0) > 0) {
-            e2 = Id(c4, 4) | 0;
-            b2[a3 >> 2] = e2;
-            if (!e2) {
+            e3 = Id(c4, 4) | 0;
+            b2[a3 >> 2] = e3;
+            if (!e3) {
               I2(27835, 27858, 40, 27872);
             }
           } else {
@@ -36215,7 +44280,7 @@ var YasguiGeoTg = (() => {
                 break;
               }
             }
-            c4 = f4 + (~~(+q(+(+s2(10, + +(15 - (b2[h2 >> 2] | 0) | 0)) * (+e[j >> 3] + +e[j + 8 >> 3]))) % +(d4 | 0)) >>> 0 << 2) | 0;
+            c4 = f4 + (~~(+q(+(+s2(10, + +(15 - (b2[h2 >> 2] | 0) | 0)) * (+e2[j >> 3] + +e2[j + 8 >> 3]))) % +(d4 | 0)) >>> 0 << 2) | 0;
             d4 = b2[c4 >> 2] | 0;
             b: do {
               if (d4 | 0) {
@@ -36250,11 +44315,11 @@ var YasguiGeoTg = (() => {
         }
         function zd(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
-          e2 = b2[a3 + 4 >> 2] | 0;
+          var c4 = 0, d4 = 0, e3 = 0;
+          e3 = b2[a3 + 4 >> 2] | 0;
           d4 = 0;
           while (1) {
-            if ((d4 | 0) >= (e2 | 0)) {
+            if ((d4 | 0) >= (e3 | 0)) {
               c4 = 0;
               d4 = 4;
               break;
@@ -36276,7 +44341,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           var d4 = 0, f4 = 0, g3 = 0, h2 = 0;
-          d4 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e[c4 >> 3] + +e[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
+          d4 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e2[c4 >> 3] + +e2[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
           d4 = (b2[a3 >> 2] | 0) + (d4 << 2) | 0;
           f4 = b2[d4 >> 2] | 0;
           if (!f4) {
@@ -36342,7 +44407,7 @@ var YasguiGeoTg = (() => {
           b2[g3 + 8 >> 2] = b2[d4 + 8 >> 2];
           b2[g3 + 12 >> 2] = b2[d4 + 12 >> 2];
           b2[h2 + 32 >> 2] = 0;
-          g3 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e[c4 >> 3] + +e[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
+          g3 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e2[c4 >> 3] + +e2[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
           g3 = (b2[a3 >> 2] | 0) + (g3 << 2) | 0;
           f4 = b2[g3 >> 2] | 0;
           do {
@@ -36379,7 +44444,7 @@ var YasguiGeoTg = (() => {
           c4 = c4 | 0;
           d4 = d4 | 0;
           var f4 = 0, g3 = 0;
-          g3 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e[c4 >> 3] + +e[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
+          g3 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e2[c4 >> 3] + +e2[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
           g3 = b2[(b2[a3 >> 2] | 0) + (g3 << 2) >> 2] | 0;
           if (!g3) {
             d4 = 0;
@@ -36425,7 +44490,7 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           c4 = c4 | 0;
           var d4 = 0;
-          d4 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e[c4 >> 3] + +e[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
+          d4 = ~~(+q(+(+s2(10, + +(15 - (b2[a3 + 12 >> 2] | 0) | 0)) * (+e2[c4 >> 3] + +e2[c4 + 8 >> 3]))) % +(b2[a3 + 4 >> 2] | 0)) >>> 0;
           a3 = b2[(b2[a3 >> 2] | 0) + (d4 << 2) >> 2] | 0;
           if (!a3) {
             d4 = 0;
@@ -36457,10 +44522,10 @@ var YasguiGeoTg = (() => {
         }
         function Gd(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0, q2 = 0, r2 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0, q2 = 0, r3 = 0, s3 = 0, t2 = 0, u4 = 0, v2 = 0, w2 = 0;
           w2 = T2;
           T2 = T2 + 16 | 0;
-          n = w2;
+          n2 = w2;
           do {
             if (a3 >>> 0 < 245) {
               k = a3 >>> 0 < 11 ? 16 : a3 + 11 & -8;
@@ -36471,8 +44536,8 @@ var YasguiGeoTg = (() => {
                 c4 = (d4 & 1 ^ 1) + a3 | 0;
                 a3 = 27964 + (c4 << 1 << 2) | 0;
                 d4 = a3 + 8 | 0;
-                e2 = b2[d4 >> 2] | 0;
-                f4 = e2 + 8 | 0;
+                e3 = b2[d4 >> 2] | 0;
+                f4 = e3 + 8 | 0;
                 g3 = b2[f4 >> 2] | 0;
                 if ((g3 | 0) == (a3 | 0)) {
                   b2[6981] = m3 & ~(1 << c4);
@@ -36481,8 +44546,8 @@ var YasguiGeoTg = (() => {
                   b2[d4 >> 2] = g3;
                 }
                 v2 = c4 << 3;
-                b2[e2 + 4 >> 2] = v2 | 3;
-                v2 = e2 + v2 + 4 | 0;
+                b2[e3 + 4 >> 2] = v2 | 3;
+                v2 = e3 + v2 + 4 | 0;
                 b2[v2 >> 2] = b2[v2 >> 2] | 1;
                 v2 = f4;
                 T2 = w2;
@@ -36502,29 +44567,29 @@ var YasguiGeoTg = (() => {
                   c4 = c4 >>> g3;
                   a3 = c4 >>> 1 & 2;
                   c4 = c4 >>> a3;
-                  e2 = c4 >>> 1 & 1;
-                  e2 = (d4 | i | g3 | a3 | e2) + (c4 >>> e2) | 0;
-                  c4 = 27964 + (e2 << 1 << 2) | 0;
+                  e3 = c4 >>> 1 & 1;
+                  e3 = (d4 | i | g3 | a3 | e3) + (c4 >>> e3) | 0;
+                  c4 = 27964 + (e3 << 1 << 2) | 0;
                   a3 = c4 + 8 | 0;
                   g3 = b2[a3 >> 2] | 0;
                   i = g3 + 8 | 0;
                   d4 = b2[i >> 2] | 0;
                   if ((d4 | 0) == (c4 | 0)) {
-                    a3 = m3 & ~(1 << e2);
+                    a3 = m3 & ~(1 << e3);
                     b2[6981] = a3;
                   } else {
                     b2[d4 + 12 >> 2] = c4;
                     b2[a3 >> 2] = d4;
                     a3 = m3;
                   }
-                  v2 = e2 << 3;
+                  v2 = e3 << 3;
                   h2 = v2 - k | 0;
                   b2[g3 + 4 >> 2] = k | 3;
                   f4 = g3 + k | 0;
                   b2[f4 + 4 >> 2] = h2 | 1;
                   b2[g3 + v2 >> 2] = h2;
                   if (l2 | 0) {
-                    e2 = b2[6986] | 0;
+                    e3 = b2[6986] | 0;
                     c4 = l2 >>> 3;
                     d4 = 27964 + (c4 << 1 << 2) | 0;
                     c4 = 1 << c4;
@@ -36536,10 +44601,10 @@ var YasguiGeoTg = (() => {
                       a3 = d4 + 8 | 0;
                       c4 = b2[a3 >> 2] | 0;
                     }
-                    b2[a3 >> 2] = e2;
-                    b2[c4 + 12 >> 2] = e2;
-                    b2[e2 + 8 >> 2] = c4;
-                    b2[e2 + 12 >> 2] = d4;
+                    b2[a3 >> 2] = e3;
+                    b2[c4 + 12 >> 2] = e3;
+                    b2[e3 + 8 >> 2] = c4;
+                    b2[e3 + 12 >> 2] = d4;
                   }
                   b2[6983] = h2;
                   b2[6986] = f4;
@@ -36552,14 +44617,14 @@ var YasguiGeoTg = (() => {
                   d4 = (g3 & 0 - g3) + -1 | 0;
                   f4 = d4 >>> 12 & 16;
                   d4 = d4 >>> f4;
-                  e2 = d4 >>> 5 & 8;
-                  d4 = d4 >>> e2;
+                  e3 = d4 >>> 5 & 8;
+                  d4 = d4 >>> e3;
                   h2 = d4 >>> 2 & 4;
                   d4 = d4 >>> h2;
                   i = d4 >>> 1 & 2;
                   d4 = d4 >>> i;
                   j = d4 >>> 1 & 1;
-                  j = b2[28228 + ((e2 | f4 | h2 | i | j) + (d4 >>> j) << 2) >> 2] | 0;
+                  j = b2[28228 + ((e3 | f4 | h2 | i | j) + (d4 >>> j) << 2) >> 2] | 0;
                   d4 = j;
                   i = j;
                   j = (b2[j + 4 >> 2] & -8) - k | 0;
@@ -36594,20 +44659,20 @@ var YasguiGeoTg = (() => {
                           }
                         }
                         while (1) {
-                          e2 = c4 + 20 | 0;
-                          d4 = b2[e2 >> 2] | 0;
+                          e3 = c4 + 20 | 0;
+                          d4 = b2[e3 >> 2] | 0;
                           if (!d4) {
-                            e2 = c4 + 16 | 0;
-                            d4 = b2[e2 >> 2] | 0;
+                            e3 = c4 + 16 | 0;
+                            d4 = b2[e3 >> 2] | 0;
                             if (!d4) {
                               break;
                             } else {
                               c4 = d4;
-                              a3 = e2;
+                              a3 = e3;
                             }
                           } else {
                             c4 = d4;
-                            a3 = e2;
+                            a3 = e3;
                           }
                         }
                         b2[a3 >> 2] = 0;
@@ -36659,7 +44724,7 @@ var YasguiGeoTg = (() => {
                       b2[h2 + 4 >> 2] = j | 1;
                       b2[h2 + j >> 2] = j;
                       if (l2 | 0) {
-                        e2 = b2[6986] | 0;
+                        e3 = b2[6986] | 0;
                         c4 = l2 >>> 3;
                         d4 = 27964 + (c4 << 1 << 2) | 0;
                         c4 = 1 << c4;
@@ -36671,10 +44736,10 @@ var YasguiGeoTg = (() => {
                           a3 = d4 + 8 | 0;
                           c4 = b2[a3 >> 2] | 0;
                         }
-                        b2[a3 >> 2] = e2;
-                        b2[c4 + 12 >> 2] = e2;
-                        b2[e2 + 8 >> 2] = c4;
-                        b2[e2 + 12 >> 2] = d4;
+                        b2[a3 >> 2] = e3;
+                        b2[c4 + 12 >> 2] = e3;
+                        b2[e3 + 8 >> 2] = c4;
+                        b2[e3 + 12 >> 2] = d4;
                       }
                       b2[6983] = j;
                       b2[6986] = h2;
@@ -36694,8 +44759,8 @@ var YasguiGeoTg = (() => {
             } else if (a3 >>> 0 <= 4294967231) {
               a3 = a3 + 11 | 0;
               k = a3 & -8;
-              e2 = b2[6982] | 0;
-              if (e2) {
+              e3 = b2[6982] | 0;
+              if (e3) {
                 f4 = 0 - k | 0;
                 a3 = a3 >>> 8;
                 if (a3) {
@@ -36752,7 +44817,7 @@ var YasguiGeoTg = (() => {
                 if ((q2 | 0) == 61) {
                   if ((d4 | 0) == 0 & (a3 | 0) == 0) {
                     a3 = 2 << j;
-                    a3 = (a3 | 0 - a3) & e2;
+                    a3 = (a3 | 0 - a3) & e3;
                     if (!a3) {
                       m3 = k;
                       break;
@@ -36843,8 +44908,8 @@ var YasguiGeoTg = (() => {
                       if ((i | 0) == (b2[d4 >> 2] | 0)) {
                         b2[d4 >> 2] = c4;
                         if (!c4) {
-                          e2 = e2 & ~(1 << a3);
-                          b2[6982] = e2;
+                          e3 = e3 & ~(1 << a3);
+                          b2[6982] = e3;
                           break;
                         }
                       } else {
@@ -36918,8 +44983,8 @@ var YasguiGeoTg = (() => {
                       b2[a3 + 4 >> 2] = 0;
                       b2[a3 >> 2] = 0;
                       a3 = 1 << d4;
-                      if (!(e2 & a3)) {
-                        b2[6982] = e2 | a3;
+                      if (!(e3 & a3)) {
+                        b2[6982] = e3 | a3;
                         b2[c4 >> 2] = l2;
                         b2[l2 + 24 >> 2] = c4;
                         b2[l2 + 12 >> 2] = l2;
@@ -36929,9 +44994,9 @@ var YasguiGeoTg = (() => {
                       c4 = b2[c4 >> 2] | 0;
                       c: do {
                         if ((b2[c4 + 4 >> 2] & -8 | 0) != (h2 | 0)) {
-                          e2 = h2 << ((d4 | 0) == 31 ? 0 : 25 - (d4 >>> 1) | 0);
+                          e3 = h2 << ((d4 | 0) == 31 ? 0 : 25 - (d4 >>> 1) | 0);
                           while (1) {
-                            d4 = c4 + 16 + (e2 >>> 31 << 2) | 0;
+                            d4 = c4 + 16 + (e3 >>> 31 << 2) | 0;
                             a3 = b2[d4 >> 2] | 0;
                             if (!a3) {
                               break;
@@ -36940,7 +45005,7 @@ var YasguiGeoTg = (() => {
                               c4 = a3;
                               break c;
                             } else {
-                              e2 = e2 << 1;
+                              e3 = e3 << 1;
                               c4 = a3;
                             }
                           }
@@ -37015,7 +45080,7 @@ var YasguiGeoTg = (() => {
             b2[7103] = -1;
             b2[7104] = 0;
             b2[7092] = 0;
-            b2[7099] = n & -16 ^ 1431655768;
+            b2[7099] = n2 & -16 ^ 1431655768;
             a3 = 4096;
           } else {
             a3 = b2[7101] | 0;
@@ -37031,7 +45096,7 @@ var YasguiGeoTg = (() => {
             return v2 | 0;
           }
           a3 = b2[7091] | 0;
-          if (a3 | 0 ? (l2 = b2[7089] | 0, n = l2 + k | 0, n >>> 0 <= l2 >>> 0 | n >>> 0 > a3 >>> 0) : 0) {
+          if (a3 | 0 ? (l2 = b2[7089] | 0, n2 = l2 + k | 0, n2 >>> 0 <= l2 >>> 0 | n2 >>> 0 > a3 >>> 0) : 0) {
             v2 = 0;
             T2 = w2;
             return v2 | 0;
@@ -37041,24 +45106,24 @@ var YasguiGeoTg = (() => {
               d4 = b2[6987] | 0;
               e: do {
                 if (d4) {
-                  e2 = 28372;
+                  e3 = 28372;
                   while (1) {
-                    n = b2[e2 >> 2] | 0;
-                    if (n >>> 0 <= d4 >>> 0 ? (n + (b2[e2 + 4 >> 2] | 0) | 0) >>> 0 > d4 >>> 0 : 0) {
+                    n2 = b2[e3 >> 2] | 0;
+                    if (n2 >>> 0 <= d4 >>> 0 ? (n2 + (b2[e3 + 4 >> 2] | 0) | 0) >>> 0 > d4 >>> 0 : 0) {
                       break;
                     }
-                    a3 = b2[e2 + 8 >> 2] | 0;
+                    a3 = b2[e3 + 8 >> 2] | 0;
                     if (!a3) {
                       q2 = 128;
                       break e;
                     } else {
-                      e2 = a3;
+                      e3 = a3;
                     }
                   }
                   c4 = g3 - h2 & f4;
                   if (c4 >>> 0 < 2147483647) {
                     a3 = ae(c4 | 0) | 0;
-                    if ((a3 | 0) == ((b2[e2 >> 2] | 0) + (b2[e2 + 4 >> 2] | 0) | 0)) {
+                    if ((a3 | 0) == ((b2[e3 >> 2] | 0) + (b2[e3 + 4 >> 2] | 0) | 0)) {
                       if ((a3 | 0) != (-1 | 0)) {
                         h2 = c4;
                         g3 = a3;
@@ -37066,7 +45131,7 @@ var YasguiGeoTg = (() => {
                         break d;
                       }
                     } else {
-                      e2 = a3;
+                      e3 = a3;
                       q2 = 136;
                     }
                   } else {
@@ -37079,9 +45144,9 @@ var YasguiGeoTg = (() => {
               do {
                 if ((q2 | 0) == 128) {
                   d4 = ae(0) | 0;
-                  if ((d4 | 0) != (-1 | 0) ? (c4 = d4, o = b2[7100] | 0, p2 = o + -1 | 0, c4 = ((p2 & c4 | 0) == 0 ? 0 : (p2 + c4 & 0 - o) - c4 | 0) + k | 0, o = b2[7089] | 0, p2 = c4 + o | 0, c4 >>> 0 > m3 >>> 0 & c4 >>> 0 < 2147483647) : 0) {
-                    n = b2[7091] | 0;
-                    if (n | 0 ? p2 >>> 0 <= o >>> 0 | p2 >>> 0 > n >>> 0 : 0) {
+                  if ((d4 | 0) != (-1 | 0) ? (c4 = d4, o2 = b2[7100] | 0, p2 = o2 + -1 | 0, c4 = ((p2 & c4 | 0) == 0 ? 0 : (p2 + c4 & 0 - o2) - c4 | 0) + k | 0, o2 = b2[7089] | 0, p2 = c4 + o2 | 0, c4 >>> 0 > m3 >>> 0 & c4 >>> 0 < 2147483647) : 0) {
+                    n2 = b2[7091] | 0;
+                    if (n2 | 0 ? p2 >>> 0 <= o2 >>> 0 | p2 >>> 0 > n2 >>> 0 : 0) {
                       c4 = 0;
                       break;
                     }
@@ -37092,7 +45157,7 @@ var YasguiGeoTg = (() => {
                       q2 = 145;
                       break d;
                     } else {
-                      e2 = a3;
+                      e3 = a3;
                       q2 = 136;
                     }
                   } else {
@@ -37103,13 +45168,13 @@ var YasguiGeoTg = (() => {
               do {
                 if ((q2 | 0) == 136) {
                   d4 = 0 - c4 | 0;
-                  if (!(i >>> 0 > c4 >>> 0 & (c4 >>> 0 < 2147483647 & (e2 | 0) != (-1 | 0)))) {
-                    if ((e2 | 0) == (-1 | 0)) {
+                  if (!(i >>> 0 > c4 >>> 0 & (c4 >>> 0 < 2147483647 & (e3 | 0) != (-1 | 0)))) {
+                    if ((e3 | 0) == (-1 | 0)) {
                       c4 = 0;
                       break;
                     } else {
                       h2 = c4;
-                      g3 = e2;
+                      g3 = e3;
                       q2 = 145;
                       break d;
                     }
@@ -37118,7 +45183,7 @@ var YasguiGeoTg = (() => {
                   a3 = j - c4 + a3 & 0 - a3;
                   if (a3 >>> 0 >= 2147483647) {
                     h2 = c4;
-                    g3 = e2;
+                    g3 = e3;
                     q2 = 145;
                     break d;
                   }
@@ -37128,7 +45193,7 @@ var YasguiGeoTg = (() => {
                     break;
                   } else {
                     h2 = a3 + c4 | 0;
-                    g3 = e2;
+                    g3 = e3;
                     q2 = 145;
                     break d;
                   }
@@ -37141,8 +45206,8 @@ var YasguiGeoTg = (() => {
               q2 = 143;
             }
           } while (0);
-          if (((q2 | 0) == 143 ? k >>> 0 < 2147483647 : 0) ? (t2 = ae(k | 0) | 0, p2 = ae(0) | 0, r2 = p2 - t2 | 0, s3 = r2 >>> 0 > (m3 + 40 | 0) >>> 0, !((t2 | 0) == (-1 | 0) | s3 ^ 1 | t2 >>> 0 < p2 >>> 0 & ((t2 | 0) != (-1 | 0) & (p2 | 0) != (-1 | 0)) ^ 1)) : 0) {
-            h2 = s3 ? r2 : c4;
+          if (((q2 | 0) == 143 ? k >>> 0 < 2147483647 : 0) ? (t2 = ae(k | 0) | 0, p2 = ae(0) | 0, r3 = p2 - t2 | 0, s3 = r3 >>> 0 > (m3 + 40 | 0) >>> 0, !((t2 | 0) == (-1 | 0) | s3 ^ 1 | t2 >>> 0 < p2 >>> 0 & ((t2 | 0) != (-1 | 0) & (p2 | 0) != (-1 | 0)) ^ 1)) : 0) {
+            h2 = s3 ? r3 : c4;
             g3 = t2;
             q2 = 145;
           }
@@ -37163,11 +45228,11 @@ var YasguiGeoTg = (() => {
                     q2 = 154;
                     break;
                   }
-                  e2 = b2[c4 + 8 >> 2] | 0;
-                  if (!e2) {
+                  e3 = b2[c4 + 8 >> 2] | 0;
+                  if (!e3) {
                     break;
                   } else {
-                    c4 = e2;
+                    c4 = e3;
                   }
                 }
                 if (((q2 | 0) == 154 ? (u4 = c4 + 4 | 0, (b2[c4 + 12 >> 2] & 8 | 0) == 0) : 0) ? g3 >>> 0 > j >>> 0 & a3 >>> 0 <= j >>> 0 : 0) {
@@ -37230,13 +45295,13 @@ var YasguiGeoTg = (() => {
                       a3 = b2[c4 + 4 >> 2] | 0;
                       if ((a3 & 3 | 0) == 1) {
                         h2 = a3 & -8;
-                        e2 = a3 >>> 3;
+                        e3 = a3 >>> 3;
                         h: do {
                           if (a3 >>> 0 < 256) {
                             a3 = b2[c4 + 8 >> 2] | 0;
                             d4 = b2[c4 + 12 >> 2] | 0;
                             if ((d4 | 0) == (a3 | 0)) {
-                              b2[6981] = b2[6981] & ~(1 << e2);
+                              b2[6981] = b2[6981] & ~(1 << e3);
                               break;
                             } else {
                               b2[a3 + 12 >> 2] = d4;
@@ -37249,8 +45314,8 @@ var YasguiGeoTg = (() => {
                             do {
                               if ((a3 | 0) == (c4 | 0)) {
                                 d4 = c4 + 16 | 0;
-                                e2 = d4 + 4 | 0;
-                                a3 = b2[e2 >> 2] | 0;
+                                e3 = d4 + 4 | 0;
+                                a3 = b2[e3 >> 2] | 0;
                                 if (!a3) {
                                   a3 = b2[d4 >> 2] | 0;
                                   if (!a3) {
@@ -37258,22 +45323,22 @@ var YasguiGeoTg = (() => {
                                     break;
                                   }
                                 } else {
-                                  d4 = e2;
+                                  d4 = e3;
                                 }
                                 while (1) {
                                   f4 = a3 + 20 | 0;
-                                  e2 = b2[f4 >> 2] | 0;
-                                  if (!e2) {
+                                  e3 = b2[f4 >> 2] | 0;
+                                  if (!e3) {
                                     f4 = a3 + 16 | 0;
-                                    e2 = b2[f4 >> 2] | 0;
-                                    if (!e2) {
+                                    e3 = b2[f4 >> 2] | 0;
+                                    if (!e3) {
                                       break;
                                     } else {
-                                      a3 = e2;
+                                      a3 = e3;
                                       d4 = f4;
                                     }
                                   } else {
-                                    a3 = e2;
+                                    a3 = e3;
                                     d4 = f4;
                                   }
                                 }
@@ -37288,16 +45353,16 @@ var YasguiGeoTg = (() => {
                               break;
                             }
                             d4 = b2[c4 + 28 >> 2] | 0;
-                            e2 = 28228 + (d4 << 2) | 0;
+                            e3 = 28228 + (d4 << 2) | 0;
                             do {
-                              if ((b2[e2 >> 2] | 0) != (c4 | 0)) {
+                              if ((b2[e3 >> 2] | 0) != (c4 | 0)) {
                                 v2 = g3 + 16 | 0;
                                 b2[((b2[v2 >> 2] | 0) == (c4 | 0) ? v2 : g3 + 20 | 0) >> 2] = a3;
                                 if (!a3) {
                                   break h;
                                 }
                               } else {
-                                b2[e2 >> 2] = a3;
+                                b2[e3 >> 2] = a3;
                                 if (a3 | 0) {
                                   break;
                                 }
@@ -37307,10 +45372,10 @@ var YasguiGeoTg = (() => {
                             } while (0);
                             b2[a3 + 24 >> 2] = g3;
                             d4 = c4 + 16 | 0;
-                            e2 = b2[d4 >> 2] | 0;
-                            if (e2 | 0) {
-                              b2[a3 + 16 >> 2] = e2;
-                              b2[e2 + 24 >> 2] = a3;
+                            e3 = b2[d4 >> 2] | 0;
+                            if (e3 | 0) {
+                              b2[a3 + 16 >> 2] = e3;
+                              b2[e3 + 24 >> 2] = a3;
                             }
                             d4 = b2[d4 + 4 >> 2] | 0;
                             if (!d4) {
@@ -37351,28 +45416,28 @@ var YasguiGeoTg = (() => {
                       c4 = f4 >>> 8;
                       do {
                         if (!c4) {
-                          e2 = 0;
+                          e3 = 0;
                         } else {
                           if (f4 >>> 0 > 16777215) {
-                            e2 = 31;
+                            e3 = 31;
                             break;
                           }
                           u4 = (c4 + 1048320 | 0) >>> 16 & 8;
                           v2 = c4 << u4;
                           t2 = (v2 + 520192 | 0) >>> 16 & 4;
                           v2 = v2 << t2;
-                          e2 = (v2 + 245760 | 0) >>> 16 & 2;
-                          e2 = 14 - (t2 | u4 | e2) + (v2 << e2 >>> 15) | 0;
-                          e2 = f4 >>> (e2 + 7 | 0) & 1 | e2 << 1;
+                          e3 = (v2 + 245760 | 0) >>> 16 & 2;
+                          e3 = 14 - (t2 | u4 | e3) + (v2 << e3 >>> 15) | 0;
+                          e3 = f4 >>> (e3 + 7 | 0) & 1 | e3 << 1;
                         }
                       } while (0);
-                      c4 = 28228 + (e2 << 2) | 0;
-                      b2[k + 28 >> 2] = e2;
+                      c4 = 28228 + (e3 << 2) | 0;
+                      b2[k + 28 >> 2] = e3;
                       a3 = k + 16 | 0;
                       b2[a3 + 4 >> 2] = 0;
                       b2[a3 >> 2] = 0;
                       a3 = b2[6982] | 0;
-                      d4 = 1 << e2;
+                      d4 = 1 << e3;
                       if (!(a3 & d4)) {
                         b2[6982] = a3 | d4;
                         b2[c4 >> 2] = k;
@@ -37384,9 +45449,9 @@ var YasguiGeoTg = (() => {
                       c4 = b2[c4 >> 2] | 0;
                       i: do {
                         if ((b2[c4 + 4 >> 2] & -8 | 0) != (f4 | 0)) {
-                          e2 = f4 << ((e2 | 0) == 31 ? 0 : 25 - (e2 >>> 1) | 0);
+                          e3 = f4 << ((e3 | 0) == 31 ? 0 : 25 - (e3 >>> 1) | 0);
                           while (1) {
-                            d4 = c4 + 16 + (e2 >>> 31 << 2) | 0;
+                            d4 = c4 + 16 + (e3 >>> 31 << 2) | 0;
                             a3 = b2[d4 >> 2] | 0;
                             if (!a3) {
                               break;
@@ -37395,7 +45460,7 @@ var YasguiGeoTg = (() => {
                               c4 = a3;
                               break i;
                             } else {
-                              e2 = e2 << 1;
+                              e3 = e3 << 1;
                               c4 = a3;
                             }
                           }
@@ -37486,25 +45551,25 @@ var YasguiGeoTg = (() => {
                   c4 = g3 >>> 8;
                   if (c4) {
                     if (g3 >>> 0 > 16777215) {
-                      e2 = 31;
+                      e3 = 31;
                     } else {
                       u4 = (c4 + 1048320 | 0) >>> 16 & 8;
                       v2 = c4 << u4;
                       t2 = (v2 + 520192 | 0) >>> 16 & 4;
                       v2 = v2 << t2;
-                      e2 = (v2 + 245760 | 0) >>> 16 & 2;
-                      e2 = 14 - (t2 | u4 | e2) + (v2 << e2 >>> 15) | 0;
-                      e2 = g3 >>> (e2 + 7 | 0) & 1 | e2 << 1;
+                      e3 = (v2 + 245760 | 0) >>> 16 & 2;
+                      e3 = 14 - (t2 | u4 | e3) + (v2 << e3 >>> 15) | 0;
+                      e3 = g3 >>> (e3 + 7 | 0) & 1 | e3 << 1;
                     }
                   } else {
-                    e2 = 0;
+                    e3 = 0;
                   }
-                  d4 = 28228 + (e2 << 2) | 0;
-                  b2[j + 28 >> 2] = e2;
+                  d4 = 28228 + (e3 << 2) | 0;
+                  b2[j + 28 >> 2] = e3;
                   b2[j + 20 >> 2] = 0;
                   b2[f4 >> 2] = 0;
                   c4 = b2[6982] | 0;
-                  a3 = 1 << e2;
+                  a3 = 1 << e3;
                   if (!(c4 & a3)) {
                     b2[6982] = c4 | a3;
                     b2[d4 >> 2] = j;
@@ -37516,9 +45581,9 @@ var YasguiGeoTg = (() => {
                   c4 = b2[d4 >> 2] | 0;
                   j: do {
                     if ((b2[c4 + 4 >> 2] & -8 | 0) != (g3 | 0)) {
-                      e2 = g3 << ((e2 | 0) == 31 ? 0 : 25 - (e2 >>> 1) | 0);
+                      e3 = g3 << ((e3 | 0) == 31 ? 0 : 25 - (e3 >>> 1) | 0);
                       while (1) {
-                        d4 = c4 + 16 + (e2 >>> 31 << 2) | 0;
+                        d4 = c4 + 16 + (e3 >>> 31 << 2) | 0;
                         a3 = b2[d4 >> 2] | 0;
                         if (!a3) {
                           break;
@@ -37527,7 +45592,7 @@ var YasguiGeoTg = (() => {
                           c4 = a3;
                           break j;
                         } else {
-                          e2 = e2 << 1;
+                          e3 = e3 << 1;
                           c4 = a3;
                         }
                       }
@@ -37654,7 +45719,7 @@ var YasguiGeoTg = (() => {
         }
         function Hd(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           if (!a3) {
             return;
           }
@@ -37665,12 +45730,12 @@ var YasguiGeoTg = (() => {
           j = d4 + c4 | 0;
           do {
             if (!(a3 & 1)) {
-              e2 = b2[d4 >> 2] | 0;
+              e3 = b2[d4 >> 2] | 0;
               if (!(a3 & 3)) {
                 return;
               }
-              h2 = d4 + (0 - e2) | 0;
-              g3 = e2 + c4 | 0;
+              h2 = d4 + (0 - e3) | 0;
+              g3 = e3 + c4 | 0;
               if (h2 >>> 0 < f4 >>> 0) {
                 return;
               }
@@ -37688,8 +45753,8 @@ var YasguiGeoTg = (() => {
                 b2[h2 + g3 >> 2] = g3;
                 return;
               }
-              d4 = e2 >>> 3;
-              if (e2 >>> 0 < 256) {
+              d4 = e3 >>> 3;
+              if (e3 >>> 0 < 256) {
                 a3 = b2[h2 + 8 >> 2] | 0;
                 c4 = b2[h2 + 12 >> 2] | 0;
                 if ((c4 | 0) == (a3 | 0)) {
@@ -37722,20 +45787,20 @@ var YasguiGeoTg = (() => {
                     c4 = d4;
                   }
                   while (1) {
-                    e2 = a3 + 20 | 0;
-                    d4 = b2[e2 >> 2] | 0;
+                    e3 = a3 + 20 | 0;
+                    d4 = b2[e3 >> 2] | 0;
                     if (!d4) {
-                      e2 = a3 + 16 | 0;
-                      d4 = b2[e2 >> 2] | 0;
+                      e3 = a3 + 16 | 0;
+                      d4 = b2[e3 >> 2] | 0;
                       if (!d4) {
                         break;
                       } else {
                         a3 = d4;
-                        c4 = e2;
+                        c4 = e3;
                       }
                     } else {
                       a3 = d4;
-                      c4 = e2;
+                      c4 = e3;
                     }
                   }
                   b2[c4 >> 2] = 0;
@@ -37795,11 +45860,11 @@ var YasguiGeoTg = (() => {
             return;
           }
           a3 = j + 4 | 0;
-          e2 = b2[a3 >> 2] | 0;
-          if (!(e2 & 1)) {
+          e3 = b2[a3 >> 2] | 0;
+          if (!(e3 & 1)) {
             return;
           }
-          if (!(e2 & 2)) {
+          if (!(e3 & 2)) {
             if ((b2[6987] | 0) == (j | 0)) {
               j = (b2[6984] | 0) + c4 | 0;
               b2[6984] = j;
@@ -37820,10 +45885,10 @@ var YasguiGeoTg = (() => {
               b2[h2 + j >> 2] = j;
               return;
             }
-            f4 = (e2 & -8) + c4 | 0;
-            d4 = e2 >>> 3;
+            f4 = (e3 & -8) + c4 | 0;
+            d4 = e3 >>> 3;
             do {
-              if (e2 >>> 0 < 256) {
+              if (e3 >>> 0 < 256) {
                 c4 = b2[j + 8 >> 2] | 0;
                 a3 = b2[j + 12 >> 2] | 0;
                 if ((a3 | 0) == (c4 | 0)) {
@@ -37852,20 +45917,20 @@ var YasguiGeoTg = (() => {
                       c4 = d4;
                     }
                     while (1) {
-                      e2 = a3 + 20 | 0;
-                      d4 = b2[e2 >> 2] | 0;
+                      e3 = a3 + 20 | 0;
+                      d4 = b2[e3 >> 2] | 0;
                       if (!d4) {
-                        e2 = a3 + 16 | 0;
-                        d4 = b2[e2 >> 2] | 0;
+                        e3 = a3 + 16 | 0;
+                        d4 = b2[e3 >> 2] | 0;
                         if (!d4) {
                           break;
                         } else {
                           a3 = d4;
-                          c4 = e2;
+                          c4 = e3;
                         }
                       } else {
                         a3 = d4;
-                        c4 = e2;
+                        c4 = e3;
                       }
                     }
                     b2[c4 >> 2] = 0;
@@ -37887,8 +45952,8 @@ var YasguiGeoTg = (() => {
                       break;
                     }
                   } else {
-                    e2 = g3 + 16 | 0;
-                    b2[((b2[e2 >> 2] | 0) == (j | 0) ? e2 : g3 + 20 | 0) >> 2] = d4;
+                    e3 = g3 + 16 | 0;
+                    b2[((b2[e3 >> 2] | 0) == (j | 0) ? e3 : g3 + 20 | 0) >> 2] = d4;
                     if (!d4) {
                       break;
                     }
@@ -37915,7 +45980,7 @@ var YasguiGeoTg = (() => {
               return;
             }
           } else {
-            b2[a3 >> 2] = e2 & -2;
+            b2[a3 >> 2] = e3 & -2;
             b2[i + 4 >> 2] = c4 | 1;
             b2[h2 + c4 >> 2] = c4;
             f4 = c4;
@@ -37942,25 +46007,25 @@ var YasguiGeoTg = (() => {
           a3 = f4 >>> 8;
           if (a3) {
             if (f4 >>> 0 > 16777215) {
-              e2 = 31;
+              e3 = 31;
             } else {
               h2 = (a3 + 1048320 | 0) >>> 16 & 8;
               j = a3 << h2;
               g3 = (j + 520192 | 0) >>> 16 & 4;
               j = j << g3;
-              e2 = (j + 245760 | 0) >>> 16 & 2;
-              e2 = 14 - (g3 | h2 | e2) + (j << e2 >>> 15) | 0;
-              e2 = f4 >>> (e2 + 7 | 0) & 1 | e2 << 1;
+              e3 = (j + 245760 | 0) >>> 16 & 2;
+              e3 = 14 - (g3 | h2 | e3) + (j << e3 >>> 15) | 0;
+              e3 = f4 >>> (e3 + 7 | 0) & 1 | e3 << 1;
             }
           } else {
-            e2 = 0;
+            e3 = 0;
           }
-          a3 = 28228 + (e2 << 2) | 0;
-          b2[i + 28 >> 2] = e2;
+          a3 = 28228 + (e3 << 2) | 0;
+          b2[i + 28 >> 2] = e3;
           b2[i + 20 >> 2] = 0;
           b2[i + 16 >> 2] = 0;
           c4 = b2[6982] | 0;
-          d4 = 1 << e2;
+          d4 = 1 << e3;
           a: do {
             if (!(c4 & d4)) {
               b2[6982] = c4 | d4;
@@ -37972,9 +46037,9 @@ var YasguiGeoTg = (() => {
               a3 = b2[a3 >> 2] | 0;
               b: do {
                 if ((b2[a3 + 4 >> 2] & -8 | 0) != (f4 | 0)) {
-                  e2 = f4 << ((e2 | 0) == 31 ? 0 : 25 - (e2 >>> 1) | 0);
+                  e3 = f4 << ((e3 | 0) == 31 ? 0 : 25 - (e3 >>> 1) | 0);
                   while (1) {
-                    d4 = a3 + 16 + (e2 >>> 31 << 2) | 0;
+                    d4 = a3 + 16 + (e3 >>> 31 << 2) | 0;
                     c4 = b2[d4 >> 2] | 0;
                     if (!c4) {
                       break;
@@ -37983,7 +46048,7 @@ var YasguiGeoTg = (() => {
                       a3 = c4;
                       break b;
                     } else {
-                      e2 = e2 << 1;
+                      e3 = e3 << 1;
                       a3 = c4;
                     }
                   }
@@ -38062,19 +46127,19 @@ var YasguiGeoTg = (() => {
           a3 = a3 | 0;
           return (a3 ? 31 - (E3(a3 ^ a3 - 1) | 0) | 0 : 32) | 0;
         }
-        function Md(a3, c4, d4, e2, f4) {
+        function Md(a3, c4, d4, e3, f4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           f4 = f4 | 0;
-          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n = 0, o = 0, p2 = 0;
+          var g3 = 0, h2 = 0, i = 0, j = 0, k = 0, l2 = 0, m3 = 0, n2 = 0, o2 = 0, p2 = 0;
           l2 = a3;
           j = c4;
           k = j;
           h2 = d4;
-          n = e2;
-          i = n;
+          n2 = e3;
+          i = n2;
           if (!k) {
             g3 = (f4 | 0) != 0;
             if (!i) {
@@ -38082,20 +46147,20 @@ var YasguiGeoTg = (() => {
                 b2[f4 >> 2] = (l2 >>> 0) % (h2 >>> 0);
                 b2[f4 + 4 >> 2] = 0;
               }
-              n = 0;
+              n2 = 0;
               f4 = (l2 >>> 0) / (h2 >>> 0) >>> 0;
-              return (G3(n | 0), f4) | 0;
+              return (G3(n2 | 0), f4) | 0;
             } else {
               if (!g3) {
-                n = 0;
+                n2 = 0;
                 f4 = 0;
-                return (G3(n | 0), f4) | 0;
+                return (G3(n2 | 0), f4) | 0;
               }
               b2[f4 >> 2] = a3 | 0;
               b2[f4 + 4 >> 2] = c4 & 0;
-              n = 0;
+              n2 = 0;
               f4 = 0;
-              return (G3(n | 0), f4) | 0;
+              return (G3(n2 | 0), f4) | 0;
             }
           }
           g3 = (i | 0) == 0;
@@ -38115,15 +46180,15 @@ var YasguiGeoTg = (() => {
                   break;
                 }
                 if (!f4) {
-                  n = 0;
+                  n2 = 0;
                   f4 = 0;
-                  return (G3(n | 0), f4) | 0;
+                  return (G3(n2 | 0), f4) | 0;
                 }
                 b2[f4 >> 2] = a3 | 0;
                 b2[f4 + 4 >> 2] = j | c4 & 0;
-                n = 0;
+                n2 = 0;
                 f4 = 0;
-                return (G3(n | 0), f4) | 0;
+                return (G3(n2 | 0), f4) | 0;
               }
               g3 = h2 - 1 | 0;
               if (g3 & h2 | 0) {
@@ -38131,13 +46196,13 @@ var YasguiGeoTg = (() => {
                 p2 = 64 - i | 0;
                 m3 = 32 - i | 0;
                 j = m3 >> 31;
-                o = i - 32 | 0;
-                c4 = o >> 31;
+                o2 = i - 32 | 0;
+                c4 = o2 >> 31;
                 h2 = i;
-                a3 = m3 - 1 >> 31 & k >>> (o >>> 0) | (k << m3 | l2 >>> (i >>> 0)) & c4;
+                a3 = m3 - 1 >> 31 & k >>> (o2 >>> 0) | (k << m3 | l2 >>> (i >>> 0)) & c4;
                 c4 = c4 & k >>> (i >>> 0);
                 g3 = l2 << p2 & j;
-                i = (k << p2 | l2 >>> (o >>> 0)) & j | l2 << m3 & i - 33 >> 31;
+                i = (k << p2 | l2 >>> (o2 >>> 0)) & j | l2 << m3 & i - 33 >> 31;
                 break;
               }
               if (f4 | 0) {
@@ -38145,14 +46210,14 @@ var YasguiGeoTg = (() => {
                 b2[f4 + 4 >> 2] = 0;
               }
               if ((h2 | 0) == 1) {
-                o = j | c4 & 0;
+                o2 = j | c4 & 0;
                 p2 = a3 | 0 | 0;
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               } else {
                 p2 = Ld(h2 | 0) | 0;
-                o = k >>> (p2 >>> 0) | 0;
+                o2 = k >>> (p2 >>> 0) | 0;
                 p2 = k << 32 - p2 | l2 >>> (p2 >>> 0) | 0;
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               }
             } else {
               if (g3) {
@@ -38160,18 +46225,18 @@ var YasguiGeoTg = (() => {
                   b2[f4 >> 2] = (k >>> 0) % (h2 >>> 0);
                   b2[f4 + 4 >> 2] = 0;
                 }
-                o = 0;
+                o2 = 0;
                 p2 = (k >>> 0) / (h2 >>> 0) >>> 0;
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               }
               if (!l2) {
                 if (f4 | 0) {
                   b2[f4 >> 2] = 0;
                   b2[f4 + 4 >> 2] = (k >>> 0) % (i >>> 0);
                 }
-                o = 0;
+                o2 = 0;
                 p2 = (k >>> 0) / (i >>> 0) >>> 0;
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               }
               g3 = i - 1 | 0;
               if (!(g3 & i)) {
@@ -38179,9 +46244,9 @@ var YasguiGeoTg = (() => {
                   b2[f4 >> 2] = a3 | 0;
                   b2[f4 + 4 >> 2] = g3 & k | c4 & 0;
                 }
-                o = 0;
+                o2 = 0;
                 p2 = k >>> ((Ld(i | 0) | 0) >>> 0);
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               }
               g3 = (E3(i | 0) | 0) - (E3(k | 0) | 0) | 0;
               if (g3 >>> 0 <= 30) {
@@ -38195,15 +46260,15 @@ var YasguiGeoTg = (() => {
                 break;
               }
               if (!f4) {
-                o = 0;
+                o2 = 0;
                 p2 = 0;
-                return (G3(o | 0), p2) | 0;
+                return (G3(o2 | 0), p2) | 0;
               }
               b2[f4 >> 2] = a3 | 0;
               b2[f4 + 4 >> 2] = j | c4 & 0;
-              o = 0;
+              o2 = 0;
               p2 = 0;
-              return (G3(o | 0), p2) | 0;
+              return (G3(o2 | 0), p2) | 0;
             }
           } while (0);
           if (!h2) {
@@ -38212,22 +46277,22 @@ var YasguiGeoTg = (() => {
             i = 0;
           } else {
             m3 = d4 | 0 | 0;
-            l2 = n | e2 & 0;
+            l2 = n2 | e3 & 0;
             k = Jd(m3 | 0, l2 | 0, -1, -1) | 0;
             d4 = H() | 0;
             j = i;
             i = 0;
             do {
-              e2 = j;
+              e3 = j;
               j = g3 >>> 31 | j << 1;
               g3 = i | g3 << 1;
-              e2 = a3 << 1 | e2 >>> 31 | 0;
-              n = a3 >>> 31 | c4 << 1 | 0;
-              Kd(k | 0, d4 | 0, e2 | 0, n | 0) | 0;
+              e3 = a3 << 1 | e3 >>> 31 | 0;
+              n2 = a3 >>> 31 | c4 << 1 | 0;
+              Kd(k | 0, d4 | 0, e3 | 0, n2 | 0) | 0;
               p2 = H() | 0;
-              o = p2 >> 31 | ((p2 | 0) < 0 ? -1 : 0) << 1;
-              i = o & 1;
-              a3 = Kd(e2 | 0, n | 0, o & m3 | 0, (((p2 | 0) < 0 ? -1 : 0) >> 31 | ((p2 | 0) < 0 ? -1 : 0) << 1) & l2 | 0) | 0;
+              o2 = p2 >> 31 | ((p2 | 0) < 0 ? -1 : 0) << 1;
+              i = o2 & 1;
+              a3 = Kd(e3 | 0, n2 | 0, o2 & m3 | 0, (((p2 | 0) < 0 ? -1 : 0) >> 31 | ((p2 | 0) < 0 ? -1 : 0) << 1) & l2 | 0) | 0;
               c4 = H() | 0;
               h2 = h2 - 1 | 0;
             } while ((h2 | 0) != 0);
@@ -38239,82 +46304,82 @@ var YasguiGeoTg = (() => {
             b2[f4 >> 2] = a3;
             b2[f4 + 4 >> 2] = c4;
           }
-          o = (g3 | 0) >>> 31 | (k | h2) << 1 | (h2 << 1 | g3 >>> 31) & 0 | j;
+          o2 = (g3 | 0) >>> 31 | (k | h2) << 1 | (h2 << 1 | g3 >>> 31) & 0 | j;
           p2 = (g3 << 1 | 0 >>> 31) & -2 | i;
-          return (G3(o | 0), p2) | 0;
+          return (G3(o2 | 0), p2) | 0;
         }
         function Nd(a3, b3, c4, d4) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
+          var e3 = 0, f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0;
           j = b3 >> 31 | ((b3 | 0) < 0 ? -1 : 0) << 1;
           i = ((b3 | 0) < 0 ? -1 : 0) >> 31 | ((b3 | 0) < 0 ? -1 : 0) << 1;
           f4 = d4 >> 31 | ((d4 | 0) < 0 ? -1 : 0) << 1;
-          e2 = ((d4 | 0) < 0 ? -1 : 0) >> 31 | ((d4 | 0) < 0 ? -1 : 0) << 1;
+          e3 = ((d4 | 0) < 0 ? -1 : 0) >> 31 | ((d4 | 0) < 0 ? -1 : 0) << 1;
           h2 = Kd(j ^ a3 | 0, i ^ b3 | 0, j | 0, i | 0) | 0;
           g3 = H() | 0;
           a3 = f4 ^ j;
-          b3 = e2 ^ i;
-          return Kd((Md(h2, g3, Kd(f4 ^ c4 | 0, e2 ^ d4 | 0, f4 | 0, e2 | 0) | 0, H() | 0, 0) | 0) ^ a3 | 0, (H() | 0) ^ b3 | 0, a3 | 0, b3 | 0) | 0;
+          b3 = e3 ^ i;
+          return Kd((Md(h2, g3, Kd(f4 ^ c4 | 0, e3 ^ d4 | 0, f4 | 0, e3 | 0) | 0, H() | 0, 0) | 0) ^ a3 | 0, (H() | 0) ^ b3 | 0, a3 | 0, b3 | 0) | 0;
         }
         function Od(a3, b3) {
           a3 = a3 | 0;
           b3 = b3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0, f4 = 0;
+          var c4 = 0, d4 = 0, e3 = 0, f4 = 0;
           f4 = a3 & 65535;
-          e2 = b3 & 65535;
-          c4 = B2(e2, f4) | 0;
+          e3 = b3 & 65535;
+          c4 = B2(e3, f4) | 0;
           d4 = a3 >>> 16;
-          a3 = (c4 >>> 16) + (B2(e2, d4) | 0) | 0;
-          e2 = b3 >>> 16;
-          b3 = B2(e2, f4) | 0;
-          return (G3((a3 >>> 16) + (B2(e2, d4) | 0) + (((a3 & 65535) + b3 | 0) >>> 16) | 0), a3 + b3 << 16 | c4 & 65535 | 0) | 0;
+          a3 = (c4 >>> 16) + (B2(e3, d4) | 0) | 0;
+          e3 = b3 >>> 16;
+          b3 = B2(e3, f4) | 0;
+          return (G3((a3 >>> 16) + (B2(e3, d4) | 0) + (((a3 & 65535) + b3 | 0) >>> 16) | 0), a3 + b3 << 16 | c4 & 65535 | 0) | 0;
         }
         function Pd(a3, b3, c4, d4) {
           a3 = a3 | 0;
           b3 = b3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          var e2 = 0, f4 = 0;
-          e2 = a3;
+          var e3 = 0, f4 = 0;
+          e3 = a3;
           f4 = c4;
-          c4 = Od(e2, f4) | 0;
+          c4 = Od(e3, f4) | 0;
           a3 = H() | 0;
-          return (G3((B2(b3, f4) | 0) + (B2(d4, e2) | 0) + a3 | a3 & 0 | 0), c4 | 0 | 0) | 0;
+          return (G3((B2(b3, f4) | 0) + (B2(d4, e3) | 0) + a3 | a3 & 0 | 0), c4 | 0 | 0) | 0;
         }
-        function Qd(a3, c4, d4, e2) {
+        function Qd(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0, j = 0, k = 0;
           f4 = T2;
           T2 = T2 + 16 | 0;
           i = f4 | 0;
           h2 = c4 >> 31 | ((c4 | 0) < 0 ? -1 : 0) << 1;
           g3 = ((c4 | 0) < 0 ? -1 : 0) >> 31 | ((c4 | 0) < 0 ? -1 : 0) << 1;
-          k = e2 >> 31 | ((e2 | 0) < 0 ? -1 : 0) << 1;
-          j = ((e2 | 0) < 0 ? -1 : 0) >> 31 | ((e2 | 0) < 0 ? -1 : 0) << 1;
+          k = e3 >> 31 | ((e3 | 0) < 0 ? -1 : 0) << 1;
+          j = ((e3 | 0) < 0 ? -1 : 0) >> 31 | ((e3 | 0) < 0 ? -1 : 0) << 1;
           a3 = Kd(h2 ^ a3 | 0, g3 ^ c4 | 0, h2 | 0, g3 | 0) | 0;
           c4 = H() | 0;
-          Md(a3, c4, Kd(k ^ d4 | 0, j ^ e2 | 0, k | 0, j | 0) | 0, H() | 0, i) | 0;
-          e2 = Kd(b2[i >> 2] ^ h2 | 0, b2[i + 4 >> 2] ^ g3 | 0, h2 | 0, g3 | 0) | 0;
+          Md(a3, c4, Kd(k ^ d4 | 0, j ^ e3 | 0, k | 0, j | 0) | 0, H() | 0, i) | 0;
+          e3 = Kd(b2[i >> 2] ^ h2 | 0, b2[i + 4 >> 2] ^ g3 | 0, h2 | 0, g3 | 0) | 0;
           d4 = H() | 0;
           T2 = f4;
-          return (G3(d4 | 0), e2) | 0;
+          return (G3(d4 | 0), e3) | 0;
         }
-        function Rd(a3, c4, d4, e2) {
+        function Rd(a3, c4, d4, e3) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0;
           g3 = T2;
           T2 = T2 + 16 | 0;
           f4 = g3 | 0;
-          Md(a3, c4, d4, e2, f4) | 0;
+          Md(a3, c4, d4, e3, f4) | 0;
           T2 = g3;
           return (G3(b2[f4 + 4 >> 2] | 0), b2[f4 >> 2] | 0) | 0;
         }
@@ -38388,29 +46453,29 @@ var YasguiGeoTg = (() => {
           a3 = +a3;
           return a3 >= 0 ? +p(a3 + 0.5) : +A6(a3 - 0.5);
         }
-        function Zd(c4, d4, e2) {
+        function Zd(c4, d4, e3) {
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0;
-          if ((e2 | 0) >= 8192) {
-            L3(c4 | 0, d4 | 0, e2 | 0) | 0;
+          if ((e3 | 0) >= 8192) {
+            L3(c4 | 0, d4 | 0, e3 | 0) | 0;
             return c4 | 0;
           }
           h2 = c4 | 0;
-          g3 = c4 + e2 | 0;
+          g3 = c4 + e3 | 0;
           if ((c4 & 3) == (d4 & 3)) {
             while (c4 & 3) {
-              if (!e2) {
+              if (!e3) {
                 return h2 | 0;
               }
               a2[c4 >> 0] = a2[d4 >> 0] | 0;
               c4 = c4 + 1 | 0;
               d4 = d4 + 1 | 0;
-              e2 = e2 - 1 | 0;
+              e3 = e3 - 1 | 0;
             }
-            e2 = g3 & -4 | 0;
-            f4 = e2 - 64 | 0;
+            e3 = g3 & -4 | 0;
+            f4 = e3 - 64 | 0;
             while ((c4 | 0) <= (f4 | 0)) {
               b2[c4 >> 2] = b2[d4 >> 2];
               b2[c4 + 4 >> 2] = b2[d4 + 4 >> 2];
@@ -38431,14 +46496,14 @@ var YasguiGeoTg = (() => {
               c4 = c4 + 64 | 0;
               d4 = d4 + 64 | 0;
             }
-            while ((c4 | 0) < (e2 | 0)) {
+            while ((c4 | 0) < (e3 | 0)) {
               b2[c4 >> 2] = b2[d4 >> 2];
               c4 = c4 + 4 | 0;
               d4 = d4 + 4 | 0;
             }
           } else {
-            e2 = g3 - 4 | 0;
-            while ((c4 | 0) < (e2 | 0)) {
+            e3 = g3 - 4 | 0;
+            while ((c4 | 0) < (e3 | 0)) {
               a2[c4 >> 0] = a2[d4 >> 0] | 0;
               a2[c4 + 1 >> 0] = a2[d4 + 1 >> 0] | 0;
               a2[c4 + 2 >> 0] = a2[d4 + 2 >> 0] | 0;
@@ -38454,14 +46519,14 @@ var YasguiGeoTg = (() => {
           }
           return h2 | 0;
         }
-        function _d(c4, d4, e2) {
+        function _d(c4, d4, e3) {
           c4 = c4 | 0;
           d4 = d4 | 0;
-          e2 = e2 | 0;
+          e3 = e3 | 0;
           var f4 = 0, g3 = 0, h2 = 0, i = 0;
-          h2 = c4 + e2 | 0;
+          h2 = c4 + e3 | 0;
           d4 = d4 & 255;
-          if ((e2 | 0) >= 67) {
+          if ((e3 | 0) >= 67) {
             while (c4 & 3) {
               a2[c4 >> 0] = d4;
               c4 = c4 + 1 | 0;
@@ -38497,7 +46562,7 @@ var YasguiGeoTg = (() => {
             a2[c4 >> 0] = d4;
             c4 = c4 + 1 | 0;
           }
-          return h2 - e2 | 0;
+          return h2 - e3 | 0;
         }
         function $d(a3) {
           a3 = +a3;
@@ -38505,8 +46570,8 @@ var YasguiGeoTg = (() => {
         }
         function ae(a3) {
           a3 = a3 | 0;
-          var c4 = 0, d4 = 0, e2 = 0;
-          e2 = K() | 0;
+          var c4 = 0, d4 = 0, e3 = 0;
+          e3 = K() | 0;
           d4 = b2[g2 >> 2] | 0;
           c4 = d4 + a3 | 0;
           if ((a3 | 0) > 0 & (c4 | 0) < (d4 | 0) | (c4 | 0) < 0) {
@@ -38514,7 +46579,7 @@ var YasguiGeoTg = (() => {
             J(12);
             return -1;
           }
-          if ((c4 | 0) > (e2 | 0)) {
+          if ((c4 | 0) > (e3 | 0)) {
             if (!(M3(c4 | 0) | 0)) {
               J(12);
               return -1;
@@ -43933,12 +51998,10 @@ var YasguiGeoTg = (() => {
       }
     )
   };
-  var parseGML2 = async (gml) => {
+  var parseGML = async (gml) => {
     gml = gml.replaceAll(/^\s+|\s+$/gu, "");
-    console.log(gml);
-    let gmlresult = parseGML(gml);
-    console.log(gmlresult);
-    return gmlresult;
+    const geojson = await new GmlParser2().parse(gml);
+    return geojson;
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
@@ -44023,7 +52086,7 @@ var YasguiGeoTg = (() => {
   };
   var conversions = {
     "http://www.opengis.net/ont/geosparql#wktLiteral": parseWKT,
-    "http://www.opengis.net/ont/geosparql#gmlLiteral": parseGML2,
+    "http://www.opengis.net/ont/geosparql#gmlLiteral": parseGML,
     "http://www.opengis.net/ont/geosparql#kmlLiteral": parseKML,
     "http://www.opengis.net/ont/geosparql#dggsLiteral": parseDGGS,
     "http://www.opengis.net/ont/geosparql#geoCodeLiteral": parseGeoCode,
@@ -44188,4 +52251,20 @@ leaflet/dist/leaflet-src.js:
    * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
    * (c) 2010-2023 Vladimir Agafonkin, (c) 2010-2011 CloudMade
    *)
+
+@npm9912/s-gml/dist/index.browser.js:
+  (*! *****************************************************************************
+  Copyright (c) Microsoft Corporation.
+  
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+  
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** *)
 */
