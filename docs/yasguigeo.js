@@ -1468,7 +1468,7 @@ var YasguiGeoTg = (() => {
           ["webkitTransition", "transition", "OTransition", "MozTransition", "msTransition"]
         );
         var TRANSITION_END = TRANSITION === "webkitTransition" || TRANSITION === "OTransition" ? TRANSITION + "End" : "transitionend";
-        function get2(id) {
+        function get3(id) {
           return typeof id === "string" ? document.getElementById(id) : id;
         }
         function getStyle(el, style2) {
@@ -1673,7 +1673,7 @@ var YasguiGeoTg = (() => {
           TRANSFORM,
           TRANSITION,
           TRANSITION_END,
-          get: get2,
+          get: get3,
           getStyle,
           create: create$1,
           remove,
@@ -2762,7 +2762,7 @@ var YasguiGeoTg = (() => {
           },
           // map initialization methods
           _initContainer: function(id) {
-            var container = this._container = get2(id);
+            var container = this._container = get3(id);
             if (!container) {
               throw new Error("Map container not found.");
             } else if (container._leaflet_id) {
@@ -17417,7 +17417,7 @@ var YasguiGeoTg = (() => {
       item
     );
   }
-  function proj4(fromProjOrToProj, toProjOrCoord, coord) {
+  function proj4(fromProjOrToProj, toProjOrCoord, coord2) {
     var fromProj;
     var toProj;
     var single = false;
@@ -17428,7 +17428,7 @@ var YasguiGeoTg = (() => {
       single = true;
     } else if (typeof /** @type {?} */
     toProjOrCoord.x !== "undefined" || Array.isArray(toProjOrCoord)) {
-      coord = /** @type {T} */
+      coord2 = /** @type {T} */
       /** @type {?} */
       toProjOrCoord;
       toProj = checkProj(fromProjOrToProj);
@@ -17444,8 +17444,8 @@ var YasguiGeoTg = (() => {
         toProjOrCoord
       );
     }
-    if (coord) {
-      return transformer(fromProj, toProj, coord);
+    if (coord2) {
+      return transformer(fromProj, toProj, coord2);
     } else {
       obj = {
         /**
@@ -22090,7 +22090,7 @@ var YasguiGeoTg = (() => {
       let N = d2, w = B;
       i = Math.min(t.length, m2);
       for (let L3 = u2; L3 < i; L3++) {
-        let $ = s.indexOf(t.charAt(L3)), Q = Math.floor($ / f2), q = $ % f2;
+        let $2 = s.indexOf(t.charAt(L3)), Q = Math.floor($2 / f2), q = $2 % f2;
         e += Q * N, o += q * w, L3 < i - 1 && (N /= b, w /= f2);
       }
       _ = N / x2, I2 = w / h;
@@ -22319,6 +22319,677 @@ var YasguiGeoTg = (() => {
   var Rule = import_postcss.default.Rule;
   var Root = import_postcss.default.Root;
   var Node = import_postcss.default.Node;
+
+  // node_modules/@tmcw/togeojson/dist/togeojson.es.mjs
+  function $(element, tagName) {
+    return Array.from(element.getElementsByTagName(tagName));
+  }
+  function normalizeId(id) {
+    return id[0] === "#" ? id : `#${id}`;
+  }
+  function $ns(element, tagName, ns) {
+    return Array.from(element.getElementsByTagNameNS(ns, tagName));
+  }
+  function nodeVal(node) {
+    node?.normalize();
+    return node?.textContent || "";
+  }
+  function get1(node, tagName, callback) {
+    const n = node.getElementsByTagName(tagName);
+    const result = n.length ? n[0] : null;
+    if (result && callback)
+      callback(result);
+    return result;
+  }
+  function get2(node, tagName, callback) {
+    const properties = {};
+    if (!node)
+      return properties;
+    const n = node.getElementsByTagName(tagName);
+    const result = n.length ? n[0] : null;
+    if (result && callback) {
+      return callback(result, properties);
+    }
+    return properties;
+  }
+  function val1(node, tagName, callback) {
+    const val = nodeVal(get1(node, tagName));
+    if (val && callback)
+      return callback(val) || {};
+    return {};
+  }
+  function num1(node, tagName, callback) {
+    const val = Number.parseFloat(nodeVal(get1(node, tagName)));
+    if (Number.isNaN(val))
+      return void 0;
+    if (callback)
+      callback(val);
+    return val;
+  }
+  function getMulti(node, propertyNames) {
+    const properties = {};
+    for (const property of propertyNames) {
+      val1(node, property, (val) => {
+        properties[property] = val;
+      });
+    }
+    return properties;
+  }
+  function isElement(node) {
+    return node?.nodeType === 1;
+  }
+  function fixColor(v, prefix) {
+    const properties = {};
+    const colorProp = prefix === "stroke" || prefix === "fill" ? prefix : `${prefix}-color`;
+    if (v[0] === "#") {
+      v = v.substring(1);
+    }
+    if (v.length === 6 || v.length === 3) {
+      properties[colorProp] = `#${v}`;
+    } else if (v.length === 8) {
+      properties[`${prefix}-opacity`] = Number.parseInt(v.substring(0, 2), 16) / 255;
+      properties[colorProp] = `#${v.substring(6, 8)}${v.substring(4, 6)}${v.substring(2, 4)}`;
+    }
+    return properties;
+  }
+  function numericProperty(node, source, target) {
+    const properties = {};
+    num1(node, source, (val) => {
+      properties[target] = val;
+    });
+    return properties;
+  }
+  function getColor(node, output) {
+    return get2(node, "color", (elem) => fixColor(nodeVal(elem), output));
+  }
+  function extractIconHref(node) {
+    return get2(node, "Icon", (icon, properties) => {
+      val1(icon, "href", (href) => {
+        properties.icon = href;
+      });
+      return properties;
+    });
+  }
+  function extractIcon(node) {
+    return get2(node, "IconStyle", (iconStyle) => {
+      return Object.assign(getColor(iconStyle, "icon"), numericProperty(iconStyle, "scale", "icon-scale"), numericProperty(iconStyle, "heading", "icon-heading"), get2(iconStyle, "hotSpot", (hotspot) => {
+        const left = Number.parseFloat(hotspot.getAttribute("x") || "");
+        const top = Number.parseFloat(hotspot.getAttribute("y") || "");
+        const xunits = hotspot.getAttribute("xunits") || "";
+        const yunits = hotspot.getAttribute("yunits") || "";
+        if (!Number.isNaN(left) && !Number.isNaN(top))
+          return {
+            "icon-offset": [left, top],
+            "icon-offset-units": [xunits, yunits]
+          };
+        return {};
+      }), extractIconHref(iconStyle));
+    });
+  }
+  function extractLabel(node) {
+    return get2(node, "LabelStyle", (labelStyle) => {
+      return Object.assign(getColor(labelStyle, "label"), numericProperty(labelStyle, "scale", "label-scale"));
+    });
+  }
+  function extractLine(node) {
+    return get2(node, "LineStyle", (lineStyle) => {
+      return Object.assign(getColor(lineStyle, "stroke"), numericProperty(lineStyle, "width", "stroke-width"));
+    });
+  }
+  function extractPoly(node) {
+    return get2(node, "PolyStyle", (polyStyle, properties) => {
+      return Object.assign(properties, get2(polyStyle, "color", (elem) => fixColor(nodeVal(elem), "fill")), val1(polyStyle, "fill", (fill) => {
+        if (fill === "0")
+          return { "fill-opacity": 0 };
+      }), val1(polyStyle, "outline", (outline) => {
+        if (outline === "0")
+          return { "stroke-opacity": 0 };
+      }));
+    });
+  }
+  function extractStyle(node) {
+    return Object.assign({}, extractPoly(node), extractLine(node), extractLabel(node), extractIcon(node));
+  }
+  var removeSpace = /\s*/g;
+  var trimSpace = /^\s*|\s*$/g;
+  var splitSpace = /\s+/;
+  function coord1(value) {
+    return value.replace(removeSpace, "").split(",").map(Number.parseFloat).filter((num) => !Number.isNaN(num)).slice(0, 3);
+  }
+  function coord(value) {
+    return value.replace(trimSpace, "").split(splitSpace).map(coord1).filter((coord2) => {
+      return coord2.length >= 2;
+    });
+  }
+  function gxCoords(node) {
+    let elems = $(node, "coord");
+    if (elems.length === 0) {
+      elems = $ns(node, "coord", "*");
+    }
+    const coordinates = elems.map((elem) => {
+      return nodeVal(elem).split(" ").map(Number.parseFloat);
+    });
+    if (coordinates.length === 0) {
+      return null;
+    }
+    return {
+      geometry: coordinates.length > 2 ? {
+        type: "LineString",
+        coordinates
+      } : {
+        type: "Point",
+        coordinates: coordinates[0]
+      },
+      times: $(node, "when").map((elem) => nodeVal(elem))
+    };
+  }
+  function fixRing(ring) {
+    if (ring.length === 0)
+      return ring;
+    const first = ring[0];
+    const last = ring[ring.length - 1];
+    let equal = true;
+    for (let i = 0; i < Math.max(first.length, last.length); i++) {
+      if (first[i] !== last[i]) {
+        equal = false;
+        break;
+      }
+    }
+    if (!equal) {
+      return ring.concat([ring[0]]);
+    }
+    return ring;
+  }
+  function getCoordinates(node) {
+    return nodeVal(get1(node, "coordinates"));
+  }
+  function getGeometry(node) {
+    let geometries = [];
+    let coordTimes = [];
+    for (let i = 0; i < node.childNodes.length; i++) {
+      const child = node.childNodes.item(i);
+      if (isElement(child)) {
+        switch (child.tagName) {
+          case "MultiGeometry":
+          case "MultiTrack":
+          case "gx:MultiTrack": {
+            const childGeometries = getGeometry(child);
+            geometries = geometries.concat(childGeometries.geometries);
+            coordTimes = coordTimes.concat(childGeometries.coordTimes);
+            break;
+          }
+          case "Point": {
+            const coordinates = coord1(getCoordinates(child));
+            if (coordinates.length >= 2) {
+              geometries.push({
+                type: "Point",
+                coordinates
+              });
+            }
+            break;
+          }
+          case "LinearRing":
+          case "LineString": {
+            const coordinates = coord(getCoordinates(child));
+            if (coordinates.length >= 2) {
+              geometries.push({
+                type: "LineString",
+                coordinates
+              });
+            }
+            break;
+          }
+          case "Polygon": {
+            const coords = [];
+            for (const linearRing of $(child, "LinearRing")) {
+              const ring = fixRing(coord(getCoordinates(linearRing)));
+              if (ring.length >= 4) {
+                coords.push(ring);
+              }
+            }
+            if (coords.length) {
+              geometries.push({
+                type: "Polygon",
+                coordinates: coords
+              });
+            }
+            break;
+          }
+          case "Track":
+          case "gx:Track": {
+            const gx = gxCoords(child);
+            if (!gx)
+              break;
+            const { times, geometry } = gx;
+            geometries.push(geometry);
+            if (times.length)
+              coordTimes.push(times);
+            break;
+          }
+        }
+      }
+    }
+    return {
+      geometries,
+      coordTimes
+    };
+  }
+  var toNumber = (x3) => Number(x3);
+  var typeConverters = {
+    string: (x3) => x3,
+    int: toNumber,
+    uint: toNumber,
+    short: toNumber,
+    ushort: toNumber,
+    float: toNumber,
+    double: toNumber,
+    bool: (x3) => Boolean(x3)
+  };
+  function extractExtendedData(node, schema) {
+    return get2(node, "ExtendedData", (extendedData, properties) => {
+      for (const data of $(extendedData, "Data")) {
+        properties[data.getAttribute("name") || ""] = nodeVal(get1(data, "value"));
+      }
+      for (const simpleData of $(extendedData, "SimpleData")) {
+        const name = simpleData.getAttribute("name") || "";
+        const typeConverter = schema[name] || typeConverters.string;
+        properties[name] = typeConverter(nodeVal(simpleData));
+      }
+      return properties;
+    });
+  }
+  function getMaybeHTMLDescription(node) {
+    const descriptionNode = get1(node, "description");
+    for (const c3 of Array.from(descriptionNode?.childNodes || [])) {
+      if (c3.nodeType === 4) {
+        return {
+          description: {
+            "@type": "html",
+            value: nodeVal(c3)
+          }
+        };
+      }
+    }
+    return {};
+  }
+  function extractTimeSpan(node) {
+    return get2(node, "TimeSpan", (timeSpan) => {
+      return {
+        timespan: {
+          begin: nodeVal(get1(timeSpan, "begin")),
+          end: nodeVal(get1(timeSpan, "end"))
+        }
+      };
+    });
+  }
+  function extractTimeStamp(node) {
+    return get2(node, "TimeStamp", (timeStamp) => {
+      return { timestamp: nodeVal(get1(timeStamp, "when")) };
+    });
+  }
+  function extractCascadedStyle(node, styleMap) {
+    return val1(node, "styleUrl", (styleUrl) => {
+      styleUrl = normalizeId(styleUrl);
+      if (styleMap[styleUrl]) {
+        return Object.assign({ styleUrl }, styleMap[styleUrl]);
+      }
+      return { styleUrl };
+    });
+  }
+  var AltitudeMode;
+  (function(AltitudeMode2) {
+    AltitudeMode2["ABSOLUTE"] = "absolute";
+    AltitudeMode2["RELATIVE_TO_GROUND"] = "relativeToGround";
+    AltitudeMode2["CLAMP_TO_GROUND"] = "clampToGround";
+    AltitudeMode2["CLAMP_TO_SEAFLOOR"] = "clampToSeaFloor";
+    AltitudeMode2["RELATIVE_TO_SEAFLOOR"] = "relativeToSeaFloor";
+  })(AltitudeMode || (AltitudeMode = {}));
+  function processAltitudeMode(mode2) {
+    switch (mode2?.textContent) {
+      case AltitudeMode.ABSOLUTE:
+        return AltitudeMode.ABSOLUTE;
+      case AltitudeMode.CLAMP_TO_GROUND:
+        return AltitudeMode.CLAMP_TO_GROUND;
+      case AltitudeMode.CLAMP_TO_SEAFLOOR:
+        return AltitudeMode.CLAMP_TO_SEAFLOOR;
+      case AltitudeMode.RELATIVE_TO_GROUND:
+        return AltitudeMode.RELATIVE_TO_GROUND;
+      case AltitudeMode.RELATIVE_TO_SEAFLOOR:
+        return AltitudeMode.RELATIVE_TO_SEAFLOOR;
+    }
+    return null;
+  }
+  function getGroundOverlayBox(node) {
+    const latLonQuad = get1(node, "gx:LatLonQuad");
+    if (latLonQuad) {
+      const ring = fixRing(coord(getCoordinates(node)));
+      return {
+        geometry: {
+          type: "Polygon",
+          coordinates: [ring]
+        }
+      };
+    }
+    return getLatLonBox(node);
+  }
+  var DEGREES_TO_RADIANS = Math.PI / 180;
+  function rotateBox(bbox, coordinates, rotation) {
+    const center = [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2];
+    return [
+      coordinates[0].map((coordinate) => {
+        const dy = coordinate[1] - center[1];
+        const dx = coordinate[0] - center[0];
+        const distance = Math.sqrt(dy ** 2 + dx ** 2);
+        const angle = Math.atan2(dy, dx) + rotation * DEGREES_TO_RADIANS;
+        return [
+          center[0] + Math.cos(angle) * distance,
+          center[1] + Math.sin(angle) * distance
+        ];
+      })
+    ];
+  }
+  function getLatLonBox(node) {
+    const latLonBox = get1(node, "LatLonBox");
+    if (latLonBox) {
+      const north = num1(latLonBox, "north");
+      const west = num1(latLonBox, "west");
+      const east = num1(latLonBox, "east");
+      const south = num1(latLonBox, "south");
+      const rotation = num1(latLonBox, "rotation");
+      if (typeof north === "number" && typeof south === "number" && typeof west === "number" && typeof east === "number") {
+        const bbox = [west, south, east, north];
+        let coordinates = [
+          [
+            [west, north],
+            // top left
+            [east, north],
+            // top right
+            [east, south],
+            // top right
+            [west, south],
+            // bottom left
+            [west, north]
+            // top left (again)
+          ]
+        ];
+        if (typeof rotation === "number") {
+          coordinates = rotateBox(bbox, coordinates, rotation);
+        }
+        return {
+          bbox,
+          geometry: {
+            type: "Polygon",
+            coordinates
+          }
+        };
+      }
+    }
+    return null;
+  }
+  function getGroundOverlay(node, styleMap, schema, options) {
+    const box = getGroundOverlayBox(node);
+    const geometry = box?.geometry || null;
+    if (!geometry && options.skipNullGeometry) {
+      return null;
+    }
+    const feature = {
+      type: "Feature",
+      geometry,
+      properties: Object.assign(
+        /**
+         * Related to
+         * https://gist.github.com/tmcw/037a1cb6660d74a392e9da7446540f46
+         */
+        { "@geometry-type": "groundoverlay" },
+        getMulti(node, [
+          "name",
+          "address",
+          "visibility",
+          "open",
+          "phoneNumber",
+          "description"
+        ]),
+        getMaybeHTMLDescription(node),
+        extractCascadedStyle(node, styleMap),
+        extractStyle(node),
+        extractIconHref(node),
+        extractExtendedData(node, schema),
+        extractTimeSpan(node),
+        extractTimeStamp(node)
+      )
+    };
+    if (box?.bbox) {
+      feature.bbox = box.bbox;
+    }
+    if (feature.properties?.visibility !== void 0) {
+      feature.properties.visibility = feature.properties.visibility !== "0";
+    }
+    const id = node.getAttribute("id");
+    if (id !== null && id !== "")
+      feature.id = id;
+    return feature;
+  }
+  function getNetworkLinkRegion(node) {
+    const region = get1(node, "Region");
+    if (region) {
+      return {
+        coordinateBox: getLatLonAltBox(region),
+        lod: getLod(node)
+      };
+    }
+    return null;
+  }
+  function getLod(node) {
+    const lod = get1(node, "Lod");
+    if (lod) {
+      return [
+        num1(lod, "minLodPixels") ?? -1,
+        num1(lod, "maxLodPixels") ?? -1,
+        num1(lod, "minFadeExtent") ?? null,
+        num1(lod, "maxFadeExtent") ?? null
+      ];
+    }
+    return null;
+  }
+  function getLatLonAltBox(node) {
+    const latLonAltBox = get1(node, "LatLonAltBox");
+    if (latLonAltBox) {
+      const north = num1(latLonAltBox, "north");
+      const west = num1(latLonAltBox, "west");
+      const east = num1(latLonAltBox, "east");
+      const south = num1(latLonAltBox, "south");
+      const altitudeMode = processAltitudeMode(get1(latLonAltBox, "altitudeMode") || get1(latLonAltBox, "gx:altitudeMode"));
+      if (altitudeMode) {
+        console.debug("Encountered an unsupported feature of KML for togeojson: please contact developers for support of altitude mode.");
+      }
+      if (typeof north === "number" && typeof south === "number" && typeof west === "number" && typeof east === "number") {
+        const bbox = [west, south, east, north];
+        const coordinates = [
+          [
+            [west, north],
+            // top left
+            [east, north],
+            // top right
+            [east, south],
+            // top right
+            [west, south],
+            // bottom left
+            [west, north]
+            // top left (again)
+          ]
+        ];
+        return {
+          bbox,
+          geometry: {
+            type: "Polygon",
+            coordinates
+          }
+        };
+      }
+    }
+    return null;
+  }
+  function getLinkObject(node) {
+    const linkObj = get1(node, "Link");
+    if (linkObj) {
+      return getMulti(linkObj, [
+        "href",
+        "refreshMode",
+        "refreshInterval",
+        "viewRefreshMode",
+        "viewRefreshTime",
+        "viewBoundScale",
+        "viewFormat",
+        "httpQuery"
+      ]);
+    }
+    return {};
+  }
+  function getNetworkLink(node, styleMap, schema, options) {
+    const box = getNetworkLinkRegion(node);
+    const geometry = box?.coordinateBox?.geometry || null;
+    if (!geometry && options.skipNullGeometry) {
+      return null;
+    }
+    const feature = {
+      type: "Feature",
+      geometry,
+      properties: Object.assign(
+        /**
+         * Related to
+         * https://gist.github.com/tmcw/037a1cb6660d74a392e9da7446540f46
+         */
+        { "@geometry-type": "networklink" },
+        getMulti(node, [
+          "name",
+          "address",
+          "visibility",
+          "open",
+          "phoneNumber",
+          "styleUrl",
+          "refreshVisibility",
+          "flyToView",
+          "description"
+        ]),
+        getMaybeHTMLDescription(node),
+        extractCascadedStyle(node, styleMap),
+        extractStyle(node),
+        extractIconHref(node),
+        extractExtendedData(node, schema),
+        extractTimeSpan(node),
+        extractTimeStamp(node),
+        getLinkObject(node),
+        box?.lod ? { lod: box.lod } : {}
+      )
+    };
+    if (box?.coordinateBox?.bbox) {
+      feature.bbox = box.coordinateBox.bbox;
+    }
+    if (feature.properties?.visibility !== void 0) {
+      feature.properties.visibility = feature.properties.visibility !== "0";
+    }
+    const id = node.getAttribute("id");
+    if (id !== null && id !== "")
+      feature.id = id;
+    return feature;
+  }
+  function geometryListToGeometry(geometries) {
+    return geometries.length === 0 ? null : geometries.length === 1 ? geometries[0] : {
+      type: "GeometryCollection",
+      geometries
+    };
+  }
+  function getPlacemark(node, styleMap, schema, options) {
+    const { coordTimes, geometries } = getGeometry(node);
+    const geometry = geometryListToGeometry(geometries);
+    if (!geometry && options.skipNullGeometry) {
+      return null;
+    }
+    const feature = {
+      type: "Feature",
+      geometry,
+      properties: Object.assign(getMulti(node, [
+        "name",
+        "address",
+        "visibility",
+        "open",
+        "phoneNumber",
+        "description"
+      ]), getMaybeHTMLDescription(node), extractCascadedStyle(node, styleMap), extractStyle(node), extractExtendedData(node, schema), extractTimeSpan(node), extractTimeStamp(node), coordTimes.length ? {
+        coordinateProperties: {
+          times: coordTimes.length === 1 ? coordTimes[0] : coordTimes
+        }
+      } : {})
+    };
+    if (feature.properties?.visibility !== void 0) {
+      feature.properties.visibility = feature.properties.visibility !== "0";
+    }
+    const id = node.getAttribute("id");
+    if (id !== null && id !== "")
+      feature.id = id;
+    return feature;
+  }
+  function getStyleId(style) {
+    let id = style.getAttribute("id");
+    const parentNode = style.parentNode;
+    if (!id && isElement(parentNode) && parentNode.localName === "CascadingStyle") {
+      id = parentNode.getAttribute("kml:id") || parentNode.getAttribute("id");
+    }
+    return normalizeId(id || "");
+  }
+  function buildStyleMap(node) {
+    const styleMap = {};
+    for (const style of $(node, "Style")) {
+      styleMap[getStyleId(style)] = extractStyle(style);
+    }
+    for (const map of $(node, "StyleMap")) {
+      const id = normalizeId(map.getAttribute("id") || "");
+      val1(map, "styleUrl", (styleUrl) => {
+        styleUrl = normalizeId(styleUrl);
+        if (styleMap[styleUrl]) {
+          styleMap[id] = styleMap[styleUrl];
+        }
+      });
+    }
+    return styleMap;
+  }
+  function buildSchema(node) {
+    const schema = {};
+    for (const field of $(node, "SimpleField")) {
+      schema[field.getAttribute("name") || ""] = typeConverters[field.getAttribute("type") || ""] || typeConverters.string;
+    }
+    return schema;
+  }
+  function* kmlGen(node, options = {
+    skipNullGeometry: false
+  }) {
+    const n = node;
+    const styleMap = buildStyleMap(n);
+    const schema = buildSchema(n);
+    for (const placemark of $(n, "Placemark")) {
+      const feature = getPlacemark(placemark, styleMap, schema, options);
+      if (feature)
+        yield feature;
+    }
+    for (const groundOverlay of $(n, "GroundOverlay")) {
+      const feature = getGroundOverlay(groundOverlay, styleMap, schema, options);
+      if (feature)
+        yield feature;
+    }
+    for (const networkLink of $(n, "NetworkLink")) {
+      const feature = getNetworkLink(networkLink, styleMap, schema, options);
+      if (feature)
+        yield feature;
+    }
+  }
+  function kml(node, options = {
+    skipNullGeometry: false
+  }) {
+    return {
+      type: "FeatureCollection",
+      features: Array.from(kmlGen(node, options))
+    };
+  }
 
   // node_modules/h3-js/dist/browser/h3-js.es.js
   var libh3 = function(libh32) {
@@ -22921,7 +23592,7 @@ var YasguiGeoTg = (() => {
           b3 = b3 | 0;
           T2 = a3;
         }
-        function $(a3, c4) {
+        function $2(a3, c4) {
           a3 = a3 | 0;
           c4 = c4 | 0;
           var d4 = 0, e2 = 0, f4 = 0;
@@ -35817,7 +36488,7 @@ var YasguiGeoTg = (() => {
           _localIjToCell: Nc,
           _malloc: Gd,
           _maxFaceCount: cc,
-          _maxGridDiskSize: $,
+          _maxGridDiskSize: $2,
           _maxPolygonToCellsSize: ja,
           _maxPolygonToCellsSizeExperimental: Xc,
           _memcpy: Zd,
@@ -36276,16 +36947,16 @@ var YasguiGeoTg = (() => {
     var loops;
     var loop;
     var coords;
-    var coord;
+    var coord2;
     while (polygon) {
       output.push(loops = []);
       loop = libh3.getValue(polygon, "i8*");
       while (loop) {
         loops.push(coords = []);
-        coord = libh3.getValue(loop, "i8*");
-        while (coord) {
-          coords.push(readCoord(coord));
-          coord = libh3.getValue(coord + SZ_DBL * 2, "i8*");
+        coord2 = libh3.getValue(loop, "i8*");
+        while (coord2) {
+          coords.push(readCoord(coord2));
+          coord2 = libh3.getValue(coord2 + SZ_DBL * 2, "i8*");
         }
         if (formatAsGeoJson) {
           coords.push(coords[0]);
@@ -41155,9 +41826,9 @@ var YasguiGeoTg = (() => {
     gml = gml.replaceAll(/^\s+|\s+$/gu, "");
     return parseGML(gml);
   };
-  var parseKML = async (kml2) => {
-    kml2 = kml2.replaceAll(/^\s+|\s+$/gu, "");
-    const { folders, geojson } = parse2(kml2);
+  var parseKML = async (thekml) => {
+    thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
+    const { folders, geojson } = kml(new DomParser().parseFromString(thekml, "text/xml"));
     return geojson.geometry;
   };
   var parseDGGS = async (dggs) => {
