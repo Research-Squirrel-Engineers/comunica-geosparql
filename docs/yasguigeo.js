@@ -50262,10 +50262,10 @@ ${dataLines}`;
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
-    console.log(thekml);
-    const geojson = toGeoJSON(thekml);
-    console.log(geojson);
-    return geojson;
+    if (!thekml.startsWith("<kml")) {
+      thekml = "<kml><Document><Placemark>" + thekml + "</Placemark></Document></kml>";
+    }
+    return toGeoJSON(thekml);
   };
   var parseDGGS = async (dggs) => {
     dggs = dggs.replaceAll(/^\s+|\s+$/gu, "");
@@ -50282,17 +50282,11 @@ ${dataLines}`;
       }
       dggs = dggs.replaceAll("CELLLIST", "").replaceAll("CELL", "").replaceAll("(", "[").replaceAll(")", "]").replaceAll("'", '"');
       let dggsdict = JSON.parse(dggs);
-      console.log(dggsdict);
-      console.log(ispoint);
       if (ispoint) {
-        console.log("DGGS Is point");
         let decoded = cellToLatLng(dggsdict[0]);
-        console.log(decoded);
         return { "type": "Point", "coordinates": [decoded[0], decoded[1]] };
       } else {
         let result = cellsToMultiPolygon(dggsdict);
-        console.log(result);
-        console.log({ "type": "MultiPolygon", "coordinates": result });
         return { "type": "MultiPolygon", "coordinates": result };
       }
     }
