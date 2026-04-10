@@ -41828,7 +41828,7 @@ var YasguiGeoTg = (() => {
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
-    const { folders, geojson } = kml(new DomParser().parseFromString(thekml, "text/xml"));
+    const { folders, geojson } = kml(new DOMParser().parseFromString(thekml, "text/xml"));
     return geojson.geometry;
   };
   var parseDGGS = async (dggs) => {
