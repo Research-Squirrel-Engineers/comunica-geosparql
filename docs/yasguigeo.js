@@ -41185,8 +41185,8 @@ var YasguiGeoTg = (() => {
       } else {
         let result = cellsToMultiPolygon(dggsdict);
         console.log(result);
-        console.log({ "type": "Polygon", "coordinates": result });
-        return { "type": "Polygon", "coordinates": result };
+        console.log({ "type": "Polygon", "coordinates": result[0] });
+        return { "type": "Polygon", "coordinates": result[0] };
       }
     }
     return {};
