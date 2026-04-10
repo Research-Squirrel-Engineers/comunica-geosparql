@@ -50262,7 +50262,9 @@ ${dataLines}`;
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
-    return toGeoJSON(thekml);
+    console.log(thekml);
+    const geojson = toGeoJSON(thekml);
+    return geojson;
   };
   var parseDGGS = async (dggs) => {
     dggs = dggs.replaceAll(/^\s+|\s+$/gu, "");
