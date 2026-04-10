@@ -43935,7 +43935,9 @@ var YasguiGeoTg = (() => {
   };
   var parseGML2 = async (gml) => {
     gml = gml.replaceAll(/^\s+|\s+$/gu, "");
-    return parseGML(gml);
+    let gmlresult = parseGML(gml);
+    console.log(gmlresult);
+    return gmlresult;
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
