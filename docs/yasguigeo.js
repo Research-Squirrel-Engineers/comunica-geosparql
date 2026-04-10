@@ -43935,12 +43935,14 @@ var YasguiGeoTg = (() => {
   };
   var parseGML2 = async (gml) => {
     gml = gml.replaceAll(/^\s+|\s+$/gu, "");
+    console.log(gml);
     let gmlresult = parseGML(gml);
     console.log(gmlresult);
     return gmlresult;
   };
   var parseKML = async (thekml) => {
     thekml = thekml.replaceAll(/^\s+|\s+$/gu, "");
+    console.log(thekml);
     const { folders, geojson } = kml(new import_xmldom.default.DOMParser().parseFromString(thekml, "text/xml"));
     console.log(geojson);
     console.log(folders);
