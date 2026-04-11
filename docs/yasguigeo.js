@@ -11,8 +11,8 @@ var YasguiGeoTg = (() => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x3 + '" is not supported');
   });
-  var __commonJS = (cb, mod) => function __require2() {
-    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  var __commonJS = (cb, mod2) => function __require2() {
+    return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
   };
   var __export = (target, all) => {
     for (var name in all)
@@ -26,15 +26,15 @@ var YasguiGeoTg = (() => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(
     // If the importer is in node compatibility mode or this is not an ESM
     // file that has been converted to a CommonJS file using a Babel-
     // compatible transform (i.e. "__esModule" has not been set), then set
     // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
+    isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
+    mod2
   ));
-  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+  var __toCommonJS = (mod2) => __copyProps(__defProp({}, "__esModule", { value: true }), mod2);
 
   // node_modules/leaflet/dist/leaflet-src.js
   var require_leaflet_src = __commonJS({
@@ -16143,6 +16143,842 @@ var YasguiGeoTg = (() => {
       exports2.XMLSerializer = require_dom().XMLSerializer;
       exports2.DOMParser = DOMParser2;
       exports2.__DOMHandler = DOMHandler;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/variables.js
+  var require_variables = __commonJS({
+    "node_modules/@geonet/geohash/src/variables.js"(exports2, module) {
+      "use strict";
+      var BASE322 = "0123456789bcdefghjkmnpqrstuvwxyz";
+      var BASE32_DICT2 = {
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        6: 6,
+        7: 7,
+        8: 8,
+        9: 9,
+        b: 10,
+        c: 11,
+        d: 12,
+        e: 13,
+        f: 14,
+        g: 15,
+        h: 16,
+        j: 17,
+        k: 18,
+        m: 19,
+        n: 20,
+        p: 21,
+        q: 22,
+        r: 23,
+        s: 24,
+        t: 25,
+        u: 26,
+        v: 27,
+        w: 28,
+        x: 29,
+        y: 30,
+        z: 31
+      };
+      var PRECISION_AREA2 = {
+        1: { width: 5e6, height: 5e6 },
+        2: { width: 125e4, height: 625e3 },
+        3: { width: 156e3, height: 156e3 },
+        4: { width: 39100, height: 19500 },
+        5: { width: 4890, height: 4890 },
+        6: { width: 1220, height: 610 },
+        7: { width: 153, height: 153 },
+        8: { width: 38.2, height: 19.1 },
+        9: { width: 4.77, height: 4.77 },
+        10: { width: 1.19, height: 0.596 },
+        11: { width: 0.149, height: 0.149 },
+        12: { width: 0.0372, height: 0.0186 }
+      };
+      var NEIGHBOR_CODEX2 = {
+        n: ["p0r21436x8zb9dcf5h7kjnmqesgutwvy", "bc01fg45238967deuvhjyznpkmstqrwx"],
+        s: ["14365h7k9dcfesgujnmqp0r2twvyx8zb", "238967debc01fg45kmstqrwxuvhjyznp"],
+        e: ["bc01fg45238967deuvhjyznpkmstqrwx", "p0r21436x8zb9dcf5h7kjnmqesgutwvy"],
+        w: ["238967debc01fg45kmstqrwxuvhjyznp", "14365h7k9dcfesgujnmqp0r2twvyx8zb"]
+      };
+      var BORDER_CODEX2 = {
+        n: ["prxz", "bcfguvyz"],
+        s: ["028b", "0145hjnp"],
+        e: ["bcfguvyz", "prxz"],
+        w: ["0145hjnp", "028b"]
+      };
+      var ENCODE_AUTO2 = -1;
+      var MIN_LNG2 = -180;
+      var MIN_LAT2 = -90;
+      var MAX_LNG2 = 180;
+      var MAX_LAT2 = 90;
+      var SIGFIG_HASH_LENGTH2 = [0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18];
+      module.exports = {
+        BASE32: BASE322,
+        BASE32_DICT: BASE32_DICT2,
+        PRECISION_AREA: PRECISION_AREA2,
+        NEIGHBOR_CODEX: NEIGHBOR_CODEX2,
+        BORDER_CODEX: BORDER_CODEX2,
+        ENCODE_AUTO: ENCODE_AUTO2,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2,
+        SIGFIG_HASH_LENGTH: SIGFIG_HASH_LENGTH2
+      };
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/utils.js
+  var require_utils = __commonJS({
+    "node_modules/@geonet/geohash/src/utils.js"(exports2, module) {
+      "use strict";
+      var {
+        ENCODE_AUTO: ENCODE_AUTO2,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2
+      } = require_variables();
+      function isNumber(n2) {
+        return n2 === n2 && n2 === +n2;
+      }
+      function clamp(n2, min, max) {
+        return Math.min(Math.max(min, n2), max);
+      }
+      function longitudeClamp2(lng) {
+        if (!isNumber(lng)) {
+          throw new Error("number required for `lng`");
+        }
+        return clamp(lng, MIN_LNG2, MAX_LNG2);
+      }
+      function latitudeClamp2(lat) {
+        if (!isNumber(lat)) {
+          throw new Error("number required for `lat`");
+        }
+        return clamp(lat, MIN_LAT2, MAX_LAT2);
+      }
+      function clampRelative(n2, min, max) {
+        return isNumber(n2) ? n2 > max ? min + n2 % max : n2 < min ? max + n2 % max : n2 : n2;
+      }
+      function longitudeClampRelative2(lng) {
+        if (!isNumber(lng)) {
+          throw new Error("number required for `lng`");
+        }
+        return clampRelative(lng, MIN_LNG2, MAX_LNG2);
+      }
+      function latitudeClampRelative2(lat) {
+        if (!isNumber(lat)) {
+          throw new Error("number required for `lat`");
+        }
+        return clampRelative(lat, MIN_LAT2, MAX_LAT2);
+      }
+      function determinePrecision2(lng, lat, precision = ENCODE_AUTO2) {
+        if (!isNumber(precision)) {
+          throw new Error("number required for `precision`");
+        }
+        if (precision === ENCODE_AUTO2) {
+          if (!isNumber(lng)) {
+            throw new Error("number required for `lng`");
+          } else if (!isNumber(lat)) {
+            throw new Error("number required for `lat`");
+          }
+          lng = longitudeClampRelative2(lng);
+          lat = latitudeClampRelative2(lat);
+          if (~~lat === lat && ~~lng === lng) {
+            precision = 0;
+          } else {
+            const latLen = +lat.toString(10).length, lngLen = +lng.toString(10).length, average = (latLen + lngLen) / 2;
+            precision = average >= 12 ? 12 : average;
+          }
+        }
+        return ~~precision;
+      }
+      function determineDirection2([x3, y3]) {
+        if (!isNumber(x3)) {
+          throw new Error("number required for `x`");
+        } else if (!isNumber(y3)) {
+          throw new Error("number required for `y`");
+        } else if (x3 === 0 && y3 === 0) {
+          return "c";
+        } else if (!(x3 ^ y3)) {
+          return (x3 & y3) === 1 ? "ne" : "sw";
+        } else if (!!(x3 & y3)) {
+          return x3 === 1 ? "se" : "nw";
+        } else if ((x3 | y3) > 0) {
+          return !!x3 ? "e" : "n";
+        } else {
+          return !!x3 ? "w" : "s";
+        }
+      }
+      module.exports = {
+        isNumber,
+        clampRelative,
+        longitudeClamp: longitudeClamp2,
+        latitudeClamp: latitudeClamp2,
+        longitudeClampRelative: longitudeClampRelative2,
+        latitudeClampRelative: latitudeClampRelative2,
+        determinePrecision: determinePrecision2,
+        determineDirection: determineDirection2
+      };
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/geohashToBBox.js
+  var require_geohashToBBox = __commonJS({
+    "node_modules/@geonet/geohash/src/geohashToBBox.js"(exports2, module) {
+      "use strict";
+      var {
+        BASE32: BASE322,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2
+      } = require_variables();
+      function geohashToBBox2(hash) {
+        if (hash.length === 0) {
+          throw new Error("Invalid geohash");
+        }
+        let evenBit = true, lngMin = MIN_LNG2, latMin = MIN_LAT2, lngMax = MAX_LNG2, latMax = MAX_LAT2;
+        for (let i = 0; i < hash.length; i++) {
+          const chr = hash.charAt(i), hashChar = BASE322.indexOf(chr);
+          if (hashChar === -1) {
+            throw new Error("Invalid geohash");
+          }
+          for (let n2 = 4; n2 >= 0; n2--) {
+            const bitN = hashChar >> n2 & 1;
+            if (evenBit) {
+              const lngMid = (lngMin + lngMax) / 2;
+              bitN === 1 ? lngMin = lngMid : lngMax = lngMid;
+            } else {
+              const latMid = (latMin + latMax) / 2;
+              bitN === 1 ? latMin = latMid : latMax = latMid;
+            }
+            evenBit = !evenBit;
+          }
+        }
+        return [lngMin, latMin, lngMax, latMax];
+      }
+      module.exports = geohashToBBox2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/decode.js
+  var require_decode = __commonJS({
+    "node_modules/@geonet/geohash/src/decode.js"(exports2, module) {
+      "use strict";
+      var geohashToBBox2 = require_geohashToBBox();
+      function decode3(geohash, calculateErrorOffset = false) {
+        const bbox = geohashToBBox2(geohash);
+        let lng = (bbox[0] + bbox[2]) / 2, lat = (bbox[1] + bbox[3]) / 2;
+        if (calculateErrorOffset) {
+          return {
+            lng,
+            lat,
+            error: {
+              lng: bbox[2] - lng,
+              lat: bbox[3] - lat
+            }
+          };
+        } else {
+          lng = +lng.toFixed(~~(2 - Math.log(bbox[2] - bbox[0]) / Math.LN10));
+          lat = +lat.toFixed(~~(2 - Math.log(bbox[3] - bbox[1]) / Math.LN10));
+          return { lng, lat };
+        }
+      }
+      module.exports = decode3;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/encode.js
+  var require_encode = __commonJS({
+    "node_modules/@geonet/geohash/src/encode.js"(exports2, module) {
+      "use strict";
+      var {
+        BASE32: BASE322,
+        ENCODE_AUTO: ENCODE_AUTO2,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2
+      } = require_variables();
+      var {
+        determinePrecision: determinePrecision2,
+        isNumber
+      } = require_utils();
+      function encode3(lng, lat, precision = ENCODE_AUTO2) {
+        lng = +lng;
+        lat = +lat;
+        precision = +precision;
+        if (!isNumber(lng)) {
+          throw new Error("Invalid value for `lng`");
+        } else if (!isNumber(lat)) {
+          throw new Error("Invalid value for `lat`");
+        } else if (!isNumber(precision)) {
+          throw new Error("Invalid value for `precision`");
+        }
+        precision = determinePrecision2(lng, lat, precision);
+        let geohash = "", hash = 0, bit = 0, evenBit = true, lngMin = MIN_LNG2, latMin = MIN_LAT2, lngMax = MAX_LNG2, latMax = MAX_LAT2, mid = 0;
+        while (geohash.length < precision) {
+          if (evenBit) {
+            mid = (lngMin + lngMax) / 2;
+            if (lng >= mid) {
+              hash = (hash << 1) + 1;
+              lngMin = mid;
+            } else {
+              hash = hash << 1;
+              lngMax = mid;
+            }
+          } else {
+            mid = (latMin + latMax) / 2;
+            if (lat >= mid) {
+              hash = (hash << 1) + 1;
+              latMin = mid;
+            } else {
+              hash = hash << 1;
+              latMax = mid;
+            }
+          }
+          evenBit = !evenBit;
+          if (++bit === 5) {
+            geohash += BASE322[hash];
+            bit = 0;
+            hash = 0;
+          }
+        }
+        return geohash;
+      }
+      module.exports = encode3;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/getBBoxStartingPoint.js
+  var require_getBBoxStartingPoint = __commonJS({
+    "node_modules/@geonet/geohash/src/getBBoxStartingPoint.js"(exports2, module) {
+      "use strict";
+      var decode3 = require_decode();
+      var encode3 = require_encode();
+      var geohashToBBox2 = require_geohashToBBox();
+      var { ENCODE_AUTO: ENCODE_AUTO2 } = require_variables();
+      function getBBoxStartingPoint2(minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO2) {
+        const hashSouthWest = encode3(minLng, minLat, precision), hashNorthEast = encode3(maxLng, maxLat, precision), latLng = decode3(hashSouthWest, true), perLng = latLng.error.lng * 2, perLat = latLng.error.lat * 2, boxSouthWest = geohashToBBox2(hashSouthWest), boxNorthEast = geohashToBBox2(hashNorthEast), lngStep = Math.round((boxNorthEast[0] - boxSouthWest[0]) / perLng), latStep = Math.round((boxNorthEast[1] - boxSouthWest[1]) / perLat);
+        return {
+          latStep,
+          lngStep,
+          hashSouthWest
+        };
+      }
+      module.exports = getBBoxStartingPoint2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/neighbor.js
+  var require_neighbor = __commonJS({
+    "node_modules/@geonet/geohash/src/neighbor.js"(exports2, module) {
+      "use strict";
+      var {
+        BASE32: BASE322,
+        NEIGHBOR_CODEX: NEIGHBOR_CODEX2,
+        BORDER_CODEX: BORDER_CODEX2
+      } = require_variables();
+      function neighbor2(geohash, direction) {
+        if (geohash.length === 0) {
+          throw new Error("Invalid geohash");
+        } else if ("nsew".indexOf(direction) === -1) {
+          throw new Error("Invalid direction");
+        }
+        const lastCh = geohash.slice(-1), type = geohash.length % 2;
+        let parent = geohash.slice(0, -1);
+        if (BORDER_CODEX2[direction][type].indexOf(lastCh) !== -1 && parent !== "") {
+          parent = neighbor2(parent, direction);
+        }
+        return parent + BASE322.charAt(NEIGHBOR_CODEX2[direction][type].indexOf(lastCh));
+      }
+      module.exports = neighbor2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/geohashesWithinBBox.js
+  var require_geohashesWithinBBox = __commonJS({
+    "node_modules/@geonet/geohash/src/geohashesWithinBBox.js"(exports2, module) {
+      "use strict";
+      var getBBoxStartingPoint2 = require_getBBoxStartingPoint();
+      var neighbor2 = require_neighbor();
+      var { ENCODE_AUTO: ENCODE_AUTO2 } = require_variables();
+      function geohashesWithinBBox2(minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO2) {
+        const hashBBox = getBBoxStartingPoint2(minLng, minLat, maxLng, maxLat, precision), hashList = [];
+        const originalHash = hashBBox.hashSouthWest;
+        hashList.push(originalHash);
+        for (let lng = 0, lat = 0; lng <= hashBBox.lngStep; lng++) {
+          for (; lat < hashBBox.latStep; lat++) {
+            const northHash = neighbor2(hashList[hashList.length - 1], "n");
+            hashList.push(northHash);
+          }
+          if (lng + lat !== hashBBox.lngStep + hashBBox.latStep) {
+            const eastHash = neighbor2(hashList[hashList.length - 1 - lat], "e");
+            lat = 0;
+            hashList.push(eastHash);
+          }
+        }
+        return hashList;
+      }
+      module.exports = geohashesWithinBBox2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/toGeoJSON.js
+  var require_toGeoJSON = __commonJS({
+    "node_modules/@geonet/geohash/src/toGeoJSON.js"(exports2, module) {
+      "use strict";
+      var geohashToBBox2 = require_geohashToBBox();
+      function toGeoJSON3(hash, opts = {
+        includeGeohashAsProperty: false,
+        includeFeatureBBox: false
+      }) {
+        const bbox = geohashToBBox2(hash);
+        const data = {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [bbox[0], bbox[1]],
+                [bbox[2], bbox[1]],
+                [bbox[2], bbox[3]],
+                [bbox[0], bbox[3]],
+                [bbox[0], bbox[1]]
+              ]
+            ]
+          }
+        };
+        if (opts.includeGeohashAsProperty) {
+          data.properties.geohash = hash;
+        }
+        if (opts.includeFeatureBBox) {
+          data.bbox = bbox;
+        }
+        return data;
+      }
+      module.exports = toGeoJSON3;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/geohashesWithinBBoxToGeoJSON.js
+  var require_geohashesWithinBBoxToGeoJSON = __commonJS({
+    "node_modules/@geonet/geohash/src/geohashesWithinBBoxToGeoJSON.js"(exports2, module) {
+      "use strict";
+      var geohashesWithinBBox2 = require_geohashesWithinBBox();
+      var toGeoJSON3 = require_toGeoJSON();
+      var { ENCODE_AUTO: ENCODE_AUTO2 } = require_variables();
+      function geohashesWithinBBoxToGeoJSON2(minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO2) {
+        return {
+          type: "FeatureCollection",
+          features: geohashesWithinBBox2(minLng, minLat, maxLng, maxLat, precision).map(toGeoJSON3)
+        };
+      }
+      module.exports = geohashesWithinBBoxToGeoJSON2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/neighbors.js
+  var require_neighbors = __commonJS({
+    "node_modules/@geonet/geohash/src/neighbors.js"(exports2, module) {
+      "use strict";
+      var neighbor2 = require_neighbor();
+      function neighbors2(geohash, asObject = false) {
+        const [n2, ne, e2, se, s2, sw, w, nw] = [
+          neighbor2(geohash, "n"),
+          neighbor2(neighbor2(geohash, "n"), "e"),
+          neighbor2(geohash, "e"),
+          neighbor2(neighbor2(geohash, "s"), "e"),
+          neighbor2(geohash, "s"),
+          neighbor2(neighbor2(geohash, "s"), "w"),
+          neighbor2(geohash, "w"),
+          neighbor2(neighbor2(geohash, "n"), "w")
+        ];
+        if (asObject) {
+          return { c: geohash, n: n2, ne, e: e2, se, s: s2, sw, w, nw };
+        } else {
+          return [n2, ne, e2, se, s2, sw, w, nw];
+        }
+      }
+      module.exports = neighbors2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/sizeOf.js
+  var require_sizeOf = __commonJS({
+    "node_modules/@geonet/geohash/src/sizeOf.js"(exports2, module) {
+      "use strict";
+      var { PRECISION_AREA: PRECISION_AREA2 } = require_variables();
+      function sizeOf2(geohash) {
+        if (geohash.length === 0) {
+          throw new Error("Invalid geohash");
+        }
+        const precision = geohash.length, { width, height } = PRECISION_AREA2[precision], area = width * height;
+        return { geohash, precision, width, height, area };
+      }
+      module.exports = sizeOf2;
+    }
+  });
+
+  // node_modules/component-emitter/index.js
+  var require_component_emitter = __commonJS({
+    "node_modules/component-emitter/index.js"(exports2, module) {
+      function Emitter(object) {
+        if (object) {
+          return mixin(object);
+        }
+        this._callbacks = /* @__PURE__ */ new Map();
+      }
+      function mixin(object) {
+        Object.assign(object, Emitter.prototype);
+        object._callbacks = /* @__PURE__ */ new Map();
+        return object;
+      }
+      Emitter.prototype.on = function(event, listener) {
+        const callbacks = this._callbacks.get(event) ?? [];
+        callbacks.push(listener);
+        this._callbacks.set(event, callbacks);
+        return this;
+      };
+      Emitter.prototype.once = function(event, listener) {
+        const on = (...arguments_) => {
+          this.off(event, on);
+          listener.apply(this, arguments_);
+        };
+        on.fn = listener;
+        this.on(event, on);
+        return this;
+      };
+      Emitter.prototype.off = function(event, listener) {
+        if (event === void 0 && listener === void 0) {
+          this._callbacks.clear();
+          return this;
+        }
+        if (listener === void 0) {
+          this._callbacks.delete(event);
+          return this;
+        }
+        const callbacks = this._callbacks.get(event);
+        if (callbacks) {
+          for (const [index, callback] of callbacks.entries()) {
+            if (callback === listener || callback.fn === listener) {
+              callbacks.splice(index, 1);
+              break;
+            }
+          }
+          if (callbacks.length === 0) {
+            this._callbacks.delete(event);
+          } else {
+            this._callbacks.set(event, callbacks);
+          }
+        }
+        return this;
+      };
+      Emitter.prototype.emit = function(event, ...arguments_) {
+        const callbacks = this._callbacks.get(event);
+        if (callbacks) {
+          const callbacksCopy = [...callbacks];
+          for (const callback of callbacksCopy) {
+            callback.apply(this, arguments_);
+          }
+        }
+        return this;
+      };
+      Emitter.prototype.listeners = function(event) {
+        return this._callbacks.get(event) ?? [];
+      };
+      Emitter.prototype.listenerCount = function(event) {
+        if (event) {
+          return this.listeners(event).length;
+        }
+        let totalCount = 0;
+        for (const callbacks of this._callbacks.values()) {
+          totalCount += callbacks.length;
+        }
+        return totalCount;
+      };
+      Emitter.prototype.hasListeners = function(event) {
+        return this.listenerCount(event) > 0;
+      };
+      Emitter.prototype.addEventListener = Emitter.prototype.on;
+      Emitter.prototype.removeListener = Emitter.prototype.off;
+      Emitter.prototype.removeEventListener = Emitter.prototype.off;
+      Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+      if (typeof module !== "undefined") {
+        module.exports = Emitter;
+      }
+    }
+  });
+
+  // node_modules/stream/index.js
+  var require_stream = __commonJS({
+    "node_modules/stream/index.js"(exports2, module) {
+      var Emitter = require_component_emitter();
+      function Stream() {
+        Emitter.call(this);
+      }
+      Stream.prototype = new Emitter();
+      module.exports = Stream;
+      Stream.Stream = Stream;
+      Stream.prototype.pipe = function(dest, options) {
+        var source = this;
+        function ondata(chunk) {
+          if (dest.writable) {
+            if (false === dest.write(chunk) && source.pause) {
+              source.pause();
+            }
+          }
+        }
+        source.on("data", ondata);
+        function ondrain() {
+          if (source.readable && source.resume) {
+            source.resume();
+          }
+        }
+        dest.on("drain", ondrain);
+        if (!dest._isStdio && (!options || options.end !== false)) {
+          source.on("end", onend);
+          source.on("close", onclose);
+        }
+        var didOnEnd = false;
+        function onend() {
+          if (didOnEnd) return;
+          didOnEnd = true;
+          dest.end();
+        }
+        function onclose() {
+          if (didOnEnd) return;
+          didOnEnd = true;
+          if (typeof dest.destroy === "function") dest.destroy();
+        }
+        function onerror(er) {
+          cleanup();
+          if (!this.hasListeners("error")) {
+            throw er;
+          }
+        }
+        source.on("error", onerror);
+        dest.on("error", onerror);
+        function cleanup() {
+          source.off("data", ondata);
+          dest.off("drain", ondrain);
+          source.off("end", onend);
+          source.off("close", onclose);
+          source.off("error", onerror);
+          dest.off("error", onerror);
+          source.off("end", cleanup);
+          source.off("close", cleanup);
+          dest.off("end", cleanup);
+          dest.off("close", cleanup);
+        }
+        source.on("end", cleanup);
+        source.on("close", cleanup);
+        dest.on("end", cleanup);
+        dest.on("close", cleanup);
+        dest.emit("pipe", source);
+        return dest;
+      };
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/GeohashStream.js
+  var require_GeohashStream = __commonJS({
+    "node_modules/@geonet/geohash/src/GeohashStream.js"(exports2, module) {
+      "use strict";
+      var { Readable } = require_stream();
+      var getBBoxStartingPoint2 = require_getBBoxStartingPoint();
+      var neighbor2 = require_neighbor();
+      var {
+        isNumber
+      } = require_utils();
+      var GeohashStream2 = class extends Readable {
+        /**
+         * GeohashStream
+         *
+         * extends Readable stream
+         *
+         * @param {object} opts - configuration object
+         * @param {number} opts.minLng - bbox min longitude
+         * @param {number} opts.minLat - bbox min latitude
+         * @param {number} opts.maxLng - bbox max longitude
+         * @param {number} opts.maxLat - bbox max latitude
+         * @param {number} opts.precision - geohash precision
+         */
+        constructor(opts) {
+          super();
+          if (!opts) {
+            throw new Error(
+              "[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision"
+            );
+          } else if (!isNumber(opts.minLng) || !isNumber(opts.minLat) || !isNumber(opts.maxLng) || !isNumber(opts.maxLat)) {
+            throw new Error("[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers");
+          } else if (!isNumber(opts.precision)) {
+            throw new Error("[GeohashStream] precision must be a number");
+          }
+          this.startingBBox = getBBoxStartingPoint2(
+            opts.minLng,
+            opts.minLat,
+            opts.maxLng,
+            opts.maxLat,
+            opts.precision
+          );
+          this._x = -1;
+          this._y = -1;
+          this.x = this.startingBBox.lngStep;
+          this.y = this.startingBBox.latStep;
+          this._nextChunk = null;
+        }
+        nextChunk() {
+          if (this._x === -1 && this._y === -1) {
+            this._nextChunk = this.startingBBox.hashSouthWest;
+            this.lastNorth = this._nextChunk;
+            this.lastEast = this._nextChunk;
+            this._x++;
+            this._y++;
+            return this._nextChunk;
+          } else if (this._x < this.x) {
+            this._nextChunk = neighbor2(this.lastEast, "e");
+            this.lastEast = this._nextChunk;
+            this._x++;
+            return this._nextChunk;
+          } else if (this._y < this.y) {
+            this._x = 0;
+            this._nextChunk = neighbor2(this.lastNorth, "n");
+            this.lastNorth = this._nextChunk;
+            this.lastEast = this._nextChunk;
+            this._y++;
+            return this._nextChunk;
+          }
+          return null;
+        }
+        _read() {
+          let chunk;
+          while ((chunk = this.nextChunk()) !== null) {
+            this.push(chunk);
+          }
+          this.push(null);
+        }
+      };
+      module.exports = GeohashStream2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/GeohashStreamGeoJSON.js
+  var require_GeohashStreamGeoJSON = __commonJS({
+    "node_modules/@geonet/geohash/src/GeohashStreamGeoJSON.js"(exports2, module) {
+      "use strict";
+      var GeohashStream2 = require_GeohashStream();
+      var toGeoJSON3 = require_toGeoJSON();
+      var GeohashStreamGeoJSON2 = class extends GeohashStream2 {
+        /**
+         * GeohashStreamGeoJSON
+         *
+         * extends GeohashStream
+         *
+         * @param {object} opts - configuration object
+         * @param {number} opts.minLng - bbox min longitude
+         * @param {number} opts.minLat - bbox min latitude
+         * @param {number} opts.maxLng - bbox max longitude
+         * @param {number} opts.maxLat - bbox max latitude
+         * @param {number} opts.precision - geohash precision
+         * @param {boolean} [opts.includeGeohashAsProperty=false]
+         * include geohash string as a property in the GeoJSON
+         * @param {boolean} [opts.includeFeatureBBox=false]
+         * include bbox as a property in the GeoJSON
+         */
+        constructor(opts) {
+          super(opts);
+          this.opts = opts;
+          this.opts.includeGeohashAsProperty = this.opts.includeGeohashAsProperty || false;
+          this.opts.includeFeatureBBox = this.opts.includeFeatureBBox || false;
+        }
+        _read() {
+          let chunk;
+          while ((chunk = super.nextChunk()) !== null) {
+            this.push(JSON.stringify(toGeoJSON3(chunk, this.opts)));
+          }
+          this.push(null);
+        }
+      };
+      module.exports = GeohashStreamGeoJSON2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/src/validGeohash.js
+  var require_validGeohash = __commonJS({
+    "node_modules/@geonet/geohash/src/validGeohash.js"(exports2, module) {
+      "use strict";
+      function validGeohash2(geohash) {
+        return /^[0-9b-hj-km-np-z]{1,12}$/.test(geohash);
+      }
+      module.exports = validGeohash2;
+    }
+  });
+
+  // node_modules/@geonet/geohash/index.js
+  var require_geohash = __commonJS({
+    "node_modules/@geonet/geohash/index.js"(exports2, module) {
+      "use strict";
+      var {
+        BASE32: BASE322,
+        BASE32_DICT: BASE32_DICT2,
+        PRECISION_AREA: PRECISION_AREA2,
+        NEIGHBOR_CODEX: NEIGHBOR_CODEX2,
+        BORDER_CODEX: BORDER_CODEX2,
+        ENCODE_AUTO: ENCODE_AUTO2,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2,
+        SIGFIG_HASH_LENGTH: SIGFIG_HASH_LENGTH2
+      } = require_variables();
+      var {
+        longitudeClamp: longitudeClamp2,
+        latitudeClamp: latitudeClamp2,
+        longitudeClampRelative: longitudeClampRelative2,
+        latitudeClampRelative: latitudeClampRelative2,
+        determinePrecision: determinePrecision2,
+        determineDirection: determineDirection2
+      } = require_utils();
+      module.exports = {
+        BASE32: BASE322,
+        BASE32_DICT: BASE32_DICT2,
+        PRECISION_AREA: PRECISION_AREA2,
+        NEIGHBOR_CODEX: NEIGHBOR_CODEX2,
+        BORDER_CODEX: BORDER_CODEX2,
+        SIGFIG_HASH_LENGTH: SIGFIG_HASH_LENGTH2,
+        ENCODE_AUTO: ENCODE_AUTO2,
+        MIN_LNG: MIN_LNG2,
+        MIN_LAT: MIN_LAT2,
+        MAX_LNG: MAX_LNG2,
+        MAX_LAT: MAX_LAT2,
+        longitudeClamp: longitudeClamp2,
+        latitudeClamp: latitudeClamp2,
+        longitudeClampRelative: longitudeClampRelative2,
+        latitudeClampRelative: latitudeClampRelative2,
+        determinePrecision: determinePrecision2,
+        determineDirection: determineDirection2,
+        decode: require_decode(),
+        encode: require_encode(),
+        geohashesWithinBBox: require_geohashesWithinBBox(),
+        geohashesWithinBBoxToGeoJSON: require_geohashesWithinBBoxToGeoJSON(),
+        geohashToBBox: require_geohashToBBox(),
+        getBBoxStartingPoint: require_getBBoxStartingPoint(),
+        neighbor: require_neighbor(),
+        neighbors: require_neighbors(),
+        sizeOf: require_sizeOf(),
+        toGeoJSON: require_toGeoJSON(),
+        GeohashStream: require_GeohashStream(),
+        GeohashStreamGeoJSON: require_GeohashStreamGeoJSON(),
+        validGeohash: require_validGeohash()
+      };
     }
   });
 
@@ -45434,6 +46270,40 @@ ${dataLines}`;
     return rad * 180 / Math.PI;
   }
 
+  // node_modules/@geonet/geohash/esm/index.mjs
+  var import__ = __toESM(require_geohash(), 1);
+  var esm_default = import__.default;
+  var BASE32 = import__.default.BASE32;
+  var BASE32_DICT = import__.default.BASE32_DICT;
+  var PRECISION_AREA = import__.default.PRECISION_AREA;
+  var NEIGHBOR_CODEX = import__.default.NEIGHBOR_CODEX;
+  var BORDER_CODEX = import__.default.BORDER_CODEX;
+  var SIGFIG_HASH_LENGTH = import__.default.SIGFIG_HASH_LENGTH;
+  var ENCODE_AUTO = import__.default.ENCODE_AUTO;
+  var MIN_LNG = import__.default.MIN_LNG;
+  var MIN_LAT = import__.default.MIN_LAT;
+  var MAX_LNG = import__.default.MAX_LNG;
+  var MAX_LAT = import__.default.MAX_LAT;
+  var longitudeClamp = import__.default.longitudeClamp;
+  var latitudeClamp = import__.default.latitudeClamp;
+  var longitudeClampRelative = import__.default.longitudeClampRelative;
+  var latitudeClampRelative = import__.default.latitudeClampRelative;
+  var determinePrecision = import__.default.determinePrecision;
+  var determineDirection = import__.default.determineDirection;
+  var decode2 = import__.default.decode;
+  var encode2 = import__.default.encode;
+  var geohashesWithinBBox = import__.default.geohashesWithinBBox;
+  var geohashesWithinBBoxToGeoJSON = import__.default.geohashesWithinBBoxToGeoJSON;
+  var geohashToBBox = import__.default.geohashToBBox;
+  var getBBoxStartingPoint = import__.default.getBBoxStartingPoint;
+  var neighbor = import__.default.neighbor;
+  var neighbors = import__.default.neighbors;
+  var sizeOf = import__.default.sizeOf;
+  var toGeoJSON2 = import__.default.toGeoJSON;
+  var GeohashStream = import__.default.GeohashStream;
+  var GeohashStreamGeoJSON = import__.default.GeohashStreamGeoJSON;
+  var validGeohash = import__.default.validGeohash;
+
   // index.js
   var SRID_PROJ = {
     "2000": "+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +units=m +no_defs",
@@ -50267,6 +51137,10 @@ ${dataLines}`;
     }
     return toGeoJSON(thekml);
   };
+  var parseWKB = async (thewkb) => {
+    console.log("Not yet implemented");
+    return {};
+  };
   var parseDGGS = async (dggs) => {
     dggs = dggs.replaceAll(/^\s+|\s+$/gu, "");
     let dggsuri = "";
@@ -50305,6 +51179,18 @@ ${dataLines}`;
       let decoded = U(geocode);
       return { "type": "Point", "coordinates": [decoded.latitudeCenter, decoded.longitudeCenter] };
     }
+    if (geocodeuri === "http://opengis.net/ont/geocode/GeoURI") {
+      let splitted = geocode.split(",");
+      if (splitted.length === 2) {
+        return { "type": "Point", "coordinates": [parseFloat(splitted[0]), parseFloat(splitted[1])] };
+      } else if (splitted.length === 3) {
+        return { "type": "Point", "coordinates": [parseFloat(splitted[0]), parseFloat(splitted[1]), parseFloat(splitted[2])] };
+      }
+    }
+    if (geocodeuri === "http://opengis.net/ont/geocode/GeoHash" || geocodeuri === "http://opengis.net/ont/geocode/GeoHash-36") {
+      let decoded = esm_default.decode(geocode);
+      return { "type": "Point", "coordinates": [decoded.lat, decoded.lng] };
+    }
     return {};
   };
   var parseWKT = async (wkt) => {
@@ -50336,6 +51222,7 @@ ${dataLines}`;
   };
   var conversions = {
     "http://www.opengis.net/ont/geosparql#wktLiteral": parseWKT,
+    "http://www.opengis.net/ont/geosparql#wkbLiteral": parseWKB,
     "http://www.opengis.net/ont/geosparql#gmlLiteral": parseGML,
     "http://www.opengis.net/ont/geosparql#kmlLiteral": parseKML,
     "http://www.opengis.net/ont/geosparql#dggsLiteral": parseDGGS,
