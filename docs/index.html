@@ -95,13 +95,13 @@
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?abovee) as ?above) (xsd:boolean(?nabovee) as ?notabove)
+SELECT ?geom1 ?geom2 (xsd:boolean(?abovee) as ?above) (xsd:boolean(?nabovee) as ?notabove)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
-  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?dLiteral)
-  BIND (geof:above(?aLiteral, ?dLiteral) as ?nabovee)
-  BIND (geof:above(?dLiteral, ?aLiteral) as ?abovee)
+  ?aGeom geo:asWKT ?geom1 .
+  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?geom2)
+  BIND (geof:above(?geom1, ?geom2) as ?nabovee)
+  BIND (geof:above(?geom2, ?geom1) as ?abovee)
 }`,
 "http://www.opengis.net/def/function/geosparql/area":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -160,10 +160,10 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?beloww) as ?below) (xsd:boolean(?nbeloww) as ?notbelow)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
-  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?dLiteral)
-  BIND (geof:below(?aLiteral, ?dLiteral) as ?nbeloww)
-  BIND (geof:below(?dLiteral, ?aLiteral) as ?beloww)
+  ?aGeom geo:asWKT ?geom1 .
+  BIND("Polygon((-83.3 33.0, -83.1 33.0, -83.1 33.2, -83.3 33.2, -83.3 33.0))"^^geo:wktLiteral AS ?geom2)
+  BIND (geof:below(?geom1, ?geom2) as ?nbeloww)
+  BIND (geof:below(?geom2, ?geom1) as ?beloww)
 }`,
 "http://www.opengis.net/def/function/geosparql/buffer":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -429,37 +429,37 @@ SELECT ?isValid ?isNotValid {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?leftt) as ?left) (xsd:boolean(?nleftt) as ?notleft)
+SELECT ?geom1 ?geom2 (xsd:boolean(?leftt) as ?left) (xsd:boolean(?nleftt) as ?notleft)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
-  BIND (geof:leftOf(?aLiteral, ?dLiteral) as ?leftt)
-  BIND (geof:leftOf(?dLiteral, ?aLiteral) as ?nleftt)
+  BIND (geof:leftOf(?geom1, ?geom2) as ?leftt)
+  BIND (geof:leftOf(?geom2, ?geom1) as ?nleftt)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/longestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
-SELECT ?longestLine
+SELECT ?geom1 ?geom2 ?longestLine
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:D geo:hasDefaultGeometry ?dGeom .
-  ?dGeom geo:asWKT ?dLiteral .
-  BIND (geof:longestLine(?aLiteral, ?dLiteral) as ?longestLine)
+  ?dGeom geo:asWKT ?geom2 .
+  BIND (geof:longestLine(?geom1, ?geom2) as ?longestLine)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/maxDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?maxDistance
+SELECT ?geom1 ?geom2 ?maxDistance
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:D geo:hasDefaultGeometry ?dGeom .
-  ?dGeom geo:asWKT ?dLiteral .
-  BIND (geof:maxDistance(?aLiteral, ?dLiteral) as ?maxDistance)
+  ?dGeom geo:asWKT ?geom2 .
+  BIND (geof:maxDistance(?geom1, ?geom2) as ?maxDistance)
 }`,		            
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -630,19 +630,19 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?rightt) as ?right) (xsd:boolean(?nrightt) as ?notright)
+SELECT ?geom1 ?geom2 (xsd:boolean(?rightt) as ?right) (xsd:boolean(?nrightt) as ?notright)
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
-  BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
-  BIND (geof:rightOf(?aLiteral, ?dLiteral) as ?nrightt)
-  BIND (geof:rightOf(?dLiteral, ?aLiteral) as ?rightt)
+  ?aGeom geo:asWKT ?geom1 .
+  BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?geom2)
+  BIND (geof:rightOf(?geom1, ?geom2) as ?nrightt)
+  BIND (geof:rightOf(?geom2, ?geom1) as ?rightt)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
-SELECT ?geom1 ?geom 2?sline
+SELECT ?geom1 ?geom2 ?sline
 WHERE {
   my:AExactGeom geo:asWKT ?geom1 .
   my:OExactGeom geo:asWKT ?geom2 .
@@ -749,7 +749,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?spatialDimension
+SELECT ?literal ?spatialDimension
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:spatialDimension(?literal) AS ?spatialDimension)
@@ -758,7 +758,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?startPoint
+SELECT ?literal ?startPoint
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:startPoint(?literal) AS ?startPoint)
@@ -767,19 +767,19 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?sdifference
+SELECT ?geom1 ?geom2 ?sdifference
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:D geo:hasDefaultGeometry ?dGeom .
-  ?dGeom geo:asWKT ?dLiteral .
-  BIND (geof:symDifference(?aLiteral, ?dLiteral) as ?sdifference)
+  ?dGeom geo:asWKT ?geom2 .
+  BIND (geof:symDifference(?geom1, ?geom2) as ?sdifference)
 }`,
 "http://www.opengis.net/def/function/geosparql/transform":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?transformed
+SELECT ?literal ?transformed
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:transform(?literal,"http://www.opengis.net/def/crs/EPSG/0/4326") AS ?transformed)
@@ -788,7 +788,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?transformed
+SELECT ?literal ?transformed
 WHERE {
   my:LExactGeom geo:asWKT ?literal .
   BIND(geof:transformCRS84(?literal) AS ?transformed)
@@ -796,13 +796,13 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/union":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
-SELECT ?union
+SELECT ?geom1 ?geom2 ?union
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
+  ?aGeom geo:asWKT ?geom1 .
   my:D geo:hasDefaultGeometry ?dGeom .
-  ?dGeom geo:asWKT ?dLiteral .
-  BIND (geof:union(?aLiteral, ?dLiteral) as ?union)
+  ?dGeom geo:asWKT ?geom2 .
+  BIND (geof:union(?geom1, ?geom2) as ?union)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/X":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
