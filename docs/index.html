@@ -238,16 +238,16 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?distance
 WHERE {
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom geo:asWKT ?cLiteral .
+  ?cGeom geo:asWKT ?geom1 .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom geo:asWKT ?fLiteral .
-  BIND (geof:distance(?cLiteral, ?fLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
+  ?fGeom geo:asWKT ?geom2 .
+  BIND (geof:distance(?geom1, ?geom2,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?distance)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/endPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?endPoint
+SELECT ?literal ?endPoint
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:endPoint(?literal) AS ?endPoint)
@@ -356,7 +356,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/envelope":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
-SELECT ?envelope
+SELECT ?literal ?envelope
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:envelope(?literal) AS ?envelope)
@@ -364,7 +364,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/geometryType":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
-SELECT ?gtype
+SELECT ?literal ?gtype
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:geometryType(?literal) AS ?gtype)
@@ -372,7 +372,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/getSRID":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
-SELECT ?srid
+SELECT ?literal ?srid
 WHERE {
   my:A geo:hasDefaultGeometry ?geom .
   ?geom geo:asWKT ?literal .
@@ -621,7 +621,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?reverse
+SELECT ?literal ?reverse
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:reverse(?literal) AS ?reverse)
