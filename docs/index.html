@@ -613,9 +613,10 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?rep
+SELECT ?geom ?nonrepgeom
 WHERE {
-  BIND(geof:removeRepeatedPoints("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral) AS ?rep)
+  BIND("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral AS ?geom)
+  BIND(geof:removeRepeatedPoints(?geom) AS ?nonrepgeom)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/reverse":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
