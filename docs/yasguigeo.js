@@ -50718,6 +50718,57 @@ ${dataLines}`;
       this.updateColumns();
       await this.updateMap();
     }
+    generateLeafletPopup(feature, layer) {
+      var popup = "<b>";
+      if ("name" in feature && feature.name !== "") {
+        if (feature.name.startsWith("http")) {
+          popup += '<a href="' + feature.id + '" class="footeruri" target="_blank">' + feature.name + "</a></b><br/><ul>";
+        } else {
+          popup += feature.name + "</b><br/><ul>";
+        }
+      } else {
+        if (feature.id.startsWith("http")) {
+          popup += '<a href="' + feature.id + '" class="footeruri" target="_blank">' + feature.id + "</a></b><br/><ul>";
+        } else {
+          popup += feature.id + "</b><br/><ul>";
+        }
+      }
+      for (const prop in feature.properties) {
+        popup += "<li>";
+        if (prop.startsWith("http")) {
+          popup += '<a href="' + prop + '" target="_blank">' + prop.substring(prop.lastIndexOf("/") + 1) + "</a>";
+        } else {
+          popup += prop;
+        }
+        popup += " : ";
+        if (Array.isArray(feature.properties[prop]) && feature.properties[prop].length > 1) {
+          popup += "<ul>";
+          for (const item of feature.properties[prop]) {
+            popup += "<li>";
+            if ((item + "").startsWith("http")) {
+              popup += '<a href="' + item + '" target="_blank">' + item.substring(item.lastIndexOf("/") + 1) + "</a>";
+            } else {
+              popup += item;
+            }
+            popup += "</li>";
+          }
+          popup += "</ul>";
+        } else if (Array.isArray(feature.properties[prop]) && (feature.properties[prop][0] + "").startsWith("http")) {
+          popup += '<a href="' + feature.properties[prop][0] + '" target="_blank">' + feature.properties[prop][0].substring(feature.properties[prop][0].lastIndexOf("/") + 1) + "</a>";
+        } else if ("value" in feature.properties[prop]) {
+          if ("datatype" in feature.properties[prop]) {
+            popup += '<a href="' + feature.properties[prop]["datatype"] + '">' + feature.properties[prop]["value"] + "</a>";
+          } else {
+            popup += feature.properties[prop]["value"] + "";
+          }
+        } else {
+          popup += feature.properties[prop] + "";
+        }
+        popup += "</li>";
+      }
+      popup += "</ul>";
+      return popup;
+    }
     /**
      * Build or update the Leaflet map with the current results.
      * @returns {Promise<void>}
@@ -50763,14 +50814,14 @@ ${dataLines}`;
           },
           onEachFeature: (feature, layer) => {
             const p = feature.properties;
-            const DEFAULT_CONTENT_FN = () => Object.keys(p).map(
-              (k) => `<b>${k}:</b> ${p[k].value.length > 120 ? p[k].value.substring(0, 120) + "..." : p[k].value}`
-            ).join("<br/>");
-            const popupContent = p.wktLabel?.value || DEFAULT_CONTENT_FN();
-            layer.bindPopup(popupContent);
-            if (p.wktTooltip?.value) {
-              layer.bindTooltip(p.wktTooltip.value);
+            const colnameLabel = colName + "Label";
+            if (colnameLabel in p) {
+              feature.name = p[colnameLabel];
             }
+            feature.id = colName;
+            const popupval = this.generateLeafletPopup(feature, layer);
+            layer.bindPopup(popupval);
+            layer.bindTooltip(popupval);
           },
           style: (feature) => {
             const color = feature.properties?.wktColor?.value || DEFAULT_COLOR;
