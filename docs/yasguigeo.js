@@ -50696,6 +50696,7 @@ ${dataLines}`;
       this.label = "Geo";
       this.geometryColumns = [];
       this.updateColumns();
+      this.originaldownload = [];
     }
     /**
      * Update detected geometry columns based on current YASR results.
@@ -50746,6 +50747,8 @@ ${dataLines}`;
           colName
         );
         const DEFAULT_COLOR = "#3388ff";
+        this.originaldownload.push(geojson);
+        this.downloadData = geojson;
         const newLayers = import_leaflet2.default.geoJson(geojson, {
           pointToLayer: (feature, latlng) => {
             const color = feature.properties?.wktColor?.value || DEFAULT_COLOR;
@@ -50817,6 +50820,15 @@ ${dataLines}`;
     canHandleResults() {
       this.updateColumns();
       return this.geometryColumns && this.geometryColumns.length > 0;
+    }
+    download(filename = "result.geojson") {
+      console.log(this.downloadData);
+      return {
+        getData: () => this.downloadData || "",
+        contentType: "text/geojson",
+        title: "Download geo query result",
+        filename: `${filename || "queryResults"}.geojson`
+      };
     }
   };
   var yasgui_geo_tg_default = GeoPlugin;
