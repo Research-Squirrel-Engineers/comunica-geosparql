@@ -50820,7 +50820,6 @@ ${dataLines}`;
             }
             feature.id = colName;
             const popupval = this.generateLeafletPopup(feature, layer);
-            layer.bindPopup(popupval);
             layer.bindTooltip(popupval);
           },
           style: (feature) => {
