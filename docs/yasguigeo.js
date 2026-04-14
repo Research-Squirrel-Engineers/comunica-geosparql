@@ -50824,7 +50824,7 @@ ${dataLines}`;
     download(filename = "result.geojson") {
       console.log(this.downloadData);
       return {
-        getData: () => this.downloadData || "",
+        getData: () => JSON.stringify(this.downloadData) || "",
         contentType: "text/geojson",
         title: "Download geo query result",
         filename: `${filename || "queryResults"}.geojson`
