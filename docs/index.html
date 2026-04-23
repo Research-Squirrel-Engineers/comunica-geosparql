@@ -13,6 +13,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@zazuko/yasgui@4.6.1/build/yasgui.min.js"></script>
 <script src="yasguigeo.js"></script>	
+<script src="yasgui3d.js"></script>	
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integGrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 	<script src="comunica-browser.js"></script>
@@ -23,15 +24,16 @@
 		"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
-        "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
+    "http://www.opengis.net/def/function/geosparql/asPLY":"geof:asPLY",
+    "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
 		"http://www.opengis.net/def/function/geosparql/ext/below":"geofext:below",
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
-        "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
-        "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
+    "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
+    "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
 		"http://www.opengis.net/def/function/geosparql/coordinateDimension":"geof:coordinateDimension",
 		"http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
-        "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
+    "http://www.opengis.net/def/function/geosparql/distance":"geof:distance",
 		"http://www.opengis.net/def/function/geosparql/ehContains":"geof:ehContains",
 		"http://www.opengis.net/def/function/geosparql/ehCoveredBy":"geof:ehCoveredBy",
 		"http://www.opengis.net/def/function/geosparql/ehCovers":"geof:ehCovers",
@@ -56,11 +58,11 @@
 		"http://www.opengis.net/def/function/geosparql/ext/longestLine":"geofext:longestLine",
 		"http://www.opengis.net/def/function/geosparql/ext/maxDistance":"geofext:maxDistance",
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
-        "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
-        "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
-        "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
-        "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
-        "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
+    "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
+    "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
+    "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
+    "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
+    "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
 		"http://www.opengis.net/def/function/geosparql/ext/reverse":"geofext:reverse",
 		"http://www.opengis.net/def/function/geosparql/rcc8dc":"geof:rcc8dc",
 		"http://www.opengis.net/def/function/geosparql/rcc8ec":"geof:rcc8ec",
@@ -81,9 +83,9 @@
 		"http://www.opengis.net/def/function/geosparql/sfWithin":"geof:sfWithin",
 		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/ext/simplify":"geofext:simplify",
-        "http://www.opengis.net/def/function/geosparql/spatialDimension":"geof:spatialDimension",
+    "http://www.opengis.net/def/function/geosparql/spatialDimension":"geof:spatialDimension",
 		"http://www.opengis.net/def/function/geosparql/ext/startPoint":"geofext:startPoint",
-        "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
+    "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
 		"http://www.opengis.net/def/function/geosparql/transform":"geof:transform",
 		"http://www.opengis.net/def/function/geosparql/transformCRS84":"geofext:transformCRS84",
 		"http://www.opengis.net/def/function/geosparql/ext/X":"geofext:X",
@@ -142,6 +144,84 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asKML(?aLiteral) as ?asKML)
+}`,
+"http://www.opengis.net/def/function/geosparql/asPLY":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal ?literal2
+WHERE {
+  BIND("""ply
+format ascii 1.0
+comment Created in Blender version 4.0.2
+element vertex 14
+property float x
+property float y
+property float z
+property float nx
+property float ny
+property float nz
+property float s
+property float t
+element face 6
+property list uchar uint vertex_indices
+end_header
+1 1 1 0.5773503 0.5773503 0.5773503 0.625 0.5
+-1 1 1 -0.5773503 0.5773503 0.5773503 0.875 0.5
+-1 -1 1 -0.5773503 -0.5773503 0.5773503 0.875 0.75
+1 -1 1 0.5773503 -0.5773503 0.5773503 0.625 0.75
+1 -1 -1 0.5773503 -0.5773503 -0.5773503 0.375 0.75
+-1 -1 1 -0.5773503 -0.5773503 0.5773503 0.625 1
+-1 -1 -1 -0.5773503 -0.5773503 -0.5773503 0.375 1
+-1 -1 -1 -0.5773503 -0.5773503 -0.5773503 0.375 0
+-1 -1 1 -0.5773503 -0.5773503 0.5773503 0.625 0
+-1 1 1 -0.5773503 0.5773503 0.5773503 0.625 0.25
+-1 1 -1 -0.5773503 0.5773503 -0.5773503 0.375 0.25
+-1 1 -1 -0.5773503 0.5773503 -0.5773503 0.125 0.5
+1 1 -1 0.5773503 0.5773503 -0.5773503 0.375 0.5
+-1 -1 -1 -0.5773503 -0.5773503 -0.5773503 0.125 0.75
+4 0 1 2 3
+4 4 3 5 6
+4 7 8 9 10
+4 11 12 4 13
+4 12 0 3 4
+4 10 9 0 12"""^^geo:plyLiteral AS ?literal)
+  
+  BIND("""ply
+format ascii 1.0
+comment Created in Blender version 4.0.2
+element vertex 14
+property float x
+property float y
+property float z
+property float nx
+property float ny
+property float nz
+property float s
+property float t
+element face 6
+property list uchar uint vertex_indices
+end_header
+3 3 3 0.5773503 0.5773503 0.5773503 0.625 0.5
+1 3 3 -0.5773503 0.5773503 0.5773503 0.875 0.5
+1 1 3 -0.5773503 -0.5773503 0.5773503 0.875 0.75
+3 1 3 0.5773503 -0.5773503 0.5773503 0.625 0.75
+3 1 1 0.5773503 -0.5773503 -0.5773503 0.375 0.75
+1 1 3 -0.5773503 -0.5773503 0.5773503 0.625 1
+1 1 1 -0.5773503 -0.5773503 -0.5773503 0.375 1
+1 1 1 -0.5773503 -0.5773503 -0.5773503 0.375 0
+1 1 3 -0.5773503 -0.5773503 0.5773503 0.625 0
+1 3 3 -0.5773503 0.5773503 0.5773503 0.625 0.25
+1 3 1 -0.5773503 0.5773503 -0.5773503 0.375 0.25
+1 3 1 -0.5773503 0.5773503 -0.5773503 0.125 0.5
+3 3 1 0.5773503 0.5773503 -0.5773503 0.375 0.5
+1 1 1 -0.5773503 -0.5773503 -0.5773503 0.125 0.75
+4 0 1 2 3
+4 4 3 5 6
+4 7 8 9 10
+4 11 12 4 13
+4 12 0 3 4
+4 10 9 0 12"""^^geo:plyLiteral AS ?literal2)
 }`,
 "http://www.opengis.net/def/function/geosparql/asWKT":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -949,12 +1029,17 @@ document.getElementById("functions").innerHTML=options
 const GeoPlugin = window.YasguiGeoTg && (window.YasguiGeoTg.default || window.YasguiGeoTg);
 
 console.log(GeoPlugin)
+
+const Plugin3D = window.Yasgui3D && (window.Yasgui3D.default || window.Yasgui3D);
+
+console.log(Plugin3D)
 	
 // Register the plugin with YASR before creating Yasgui
 Yasgui.Yasr.registerPlugin('geo', GeoPlugin);
+Yasgui.Yasr.registerPlugin('3d', Plugin3D);
 
 const yasgui = new Yasgui(document.getElementById("yasgui"),{
-	"yasr":{"pluginOrder": ["table","response","geo"],"defaultPlugin":"geo"},
+	"yasr":{"pluginOrder": ["table","response","geo","3d"],"defaultPlugin":"geo"},
 	"yasqe":{"showQueryButton": false},
 	"requestConfig": { "endpoint": endpoint},  
 	"copyEndpointOnNewTab": false}
