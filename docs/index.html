@@ -750,14 +750,13 @@ WHERE {
   BIND(geof:shortestLine(?geom1,?geom2) AS ?sline)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/simplify":`PREFIX my: <http://example.org/ApplicationSchema#>
-  PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-  PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
-  SELECT ?simple
-  WHERE {
-    my:AExactGeom geo:asWKT ?literal .
-    BIND(geof:simplify(?literal,"1.5"^^xsd:double) AS ?simple)
-  }
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+SELECT ?simple
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:simplify(?literal,"1.5"^^xsd:double) AS ?simple)
 }`,
 "http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
