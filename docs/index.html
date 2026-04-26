@@ -30,6 +30,7 @@
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
     "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
     "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
+    "http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":"geofext:compactnessRatio",
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
 		"http://www.opengis.net/def/function/geosparql/coordinateDimension":"geof:coordinateDimension",
 		"http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
@@ -272,6 +273,14 @@ SELECT ?literal ?centroid
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:centroid(?literal) AS ?centroid)
+}`,
+"http://www.opengis.net/def/function/geosparql/compactnessRatio":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?cratio
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:compactnessRatio(?literal) AS ?cratio)
 }`,
 "http://www.opengis.net/def/function/geosparql/convexHull":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
