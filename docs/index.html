@@ -61,6 +61,7 @@
 		"http://www.opengis.net/def/function/geosparql/maxX":"geof:maxX",
     "http://www.opengis.net/def/function/geosparql/maxY":"geof:maxY",
     "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
+    "http://www.opengis.net/def/function/geosparql/metricArea":"geof:metricArea",
     "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
     "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
     "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
@@ -574,6 +575,16 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:maxZ(?literal) AS ?maxZ)
 }`,
+"http://www.opengis.net/def/function/geosparql/metricArea":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aGeom ?area
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:metricArea(?aLiteral) as ?area)
+}`,
 "http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -737,6 +748,16 @@ WHERE {
   my:AExactGeom geo:asWKT ?geom1 .
   my:OExactGeom geo:asWKT ?geom2 .
   BIND(geof:shortestLine(?geom1,?geom2) AS ?sline)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/simplify":`PREFIX my: <http://example.org/ApplicationSchema#>
+  PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+  PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+  SELECT ?simple
+  WHERE {
+    my:AExactGeom geo:asWKT ?literal .
+    BIND(geof:simplify(?literal,"1.5"^^xsd:double) AS ?simple)
+  }
 }`,
 "http://www.opengis.net/def/function/geosparql/sfContains":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
