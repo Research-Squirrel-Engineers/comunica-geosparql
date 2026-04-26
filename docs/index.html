@@ -274,9 +274,9 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:centroid(?literal) AS ?centroid)
 }`,
-"http://www.opengis.net/def/function/geosparql/compactnessRatio":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 SELECT ?literal ?cratio
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
