@@ -474,7 +474,7 @@ WHERE {
 "http://www.opengis.net/def/function/geosparql/is3D":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
-SELECT ?isN3D ?isK3D {
+SELECT ?n_wkt ?isN3D ?k_wkt ?isK3D {
 	<http://example.org/ApplicationSchema#NExactGeom> geo:asWKT ?n_wkt .
 	BIND(geof:is3D(?n_wkt) AS ?isN3D)
 	<http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
@@ -484,7 +484,7 @@ SELECT ?isN3D ?isK3D {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?isAClosed ?isEClosed {
+SELECT ?a_wkt ?isAClosed ?e_wkt ?isEClosed {
 	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isClosed(?a_wkt) AS ?isAClosed)
 	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
