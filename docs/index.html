@@ -134,7 +134,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?asGeoJSON
+SELECT ?aLiteral ?asGeoJSON
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
@@ -144,7 +144,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?asKML
+SELECT ?aLiteral ?asKML
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
