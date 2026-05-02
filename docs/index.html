@@ -31,6 +31,7 @@
     "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
     "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
     "http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":"geofext:compactnessRatio",
+		"http://www.opengis.net/def/function/geosparql/concaveHull":"geof:concaveHull",
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
 		"http://www.opengis.net/def/function/geosparql/coordinateDimension":"geof:coordinateDimension",
 		"http://www.opengis.net/def/function/geosparql/difference":"geof:difference",
@@ -285,6 +286,17 @@ SELECT ?literal ?cratio
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:compactnessRatio(?literal) AS ?cratio)
+}`,
+"http://www.opengis.net/def/function/geosparql/concaveHull":`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?chull
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:concaveHull(?aLiteral) as ?chull)
 }`,
 "http://www.opengis.net/def/function/geosparql/convexHull":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
