@@ -54,6 +54,7 @@
 		"http://www.opengis.net/def/function/geosparql/ext/isCW":"geofext:isCW",
 		"http://www.opengis.net/def/function/geosparql/isEmpty":"geof:isEmpty",
 		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
+		"http://www.opengis.net/def/function/geosparql/length":"geof:length",
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
 		"http://www.opengis.net/def/function/geosparql/ext/isValid":"geofext:isValid",
 		"http://www.opengis.net/def/function/geosparql/ext/leftOf":"geofext:leftOf",
@@ -560,6 +561,16 @@ WHERE {
   BIND("Polygon((-82.3 34.0, -82.1 34.0, -82.1 34.2, -82.3 34.2, -82.3 34.0))"^^geo:wktLiteral AS ?dLiteral)
   BIND (geof:leftOf(?geom1, ?geom2) as ?leftt)
   BIND (geof:leftOf(?geom2, ?geom1) as ?nleftt)
+}`,
+"http://www.opengis.net/def/function/geosparql/length":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?length
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:length(?aLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?length)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/longestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
