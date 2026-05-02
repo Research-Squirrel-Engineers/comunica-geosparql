@@ -638,9 +638,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?geom1 ?geom2 ?mdistance
 WHERE {
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel1%% ?geom1 .
+  ?cGeom geo:asWKT ?geom1 .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel2%% ?geom2 .
+  ?fGeom geo:asWKT ?geom2 .
   BIND (geof:metricDistance(?geom1, ?geom2) as ?mdistance)
 }`,
 "http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
