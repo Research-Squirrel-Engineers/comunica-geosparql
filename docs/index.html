@@ -1107,7 +1107,7 @@ async function queryFile(){
 This homepage allows testing GeoSPARQL queries for the Comunica Query engine.<br/>
 Officially standardized GeoSPARQL functions are presented in the geof namespace.<br/>
 Unofficial functions use the geofext namespace.<br/>
-Sample Queries: <select id="functions" onchange="showQuery()">
+<span id="querycount"></span> Sample Queries: <select id="functions" onchange="showQuery()">
 </select><br/>
 <button id="query" onclick="queryFile()" class="yasqe_queryButton query_valid">
   <div class="svgImg queryIcon">
@@ -1122,6 +1122,9 @@ for(fun in geof){
     options+="<option value=\""+fun+"\">"+geof[fun]+"</option>"
 }
 document.getElementById("functions").innerHTML=options
+const optionssel =  document.getElementById("cars").options;
+const count = [...optionssel].filter(option => option.selected).length;
+document.getElementById("querycount").innerHTML=count
 const GeoPlugin = window.YasguiGeoTg && (window.YasguiGeoTg.default || window.YasguiGeoTg);
 
 console.log(GeoPlugin)
