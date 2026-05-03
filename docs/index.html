@@ -66,6 +66,8 @@
         "http://www.opengis.net/def/function/geosparql/maxZ":"geof:maxZ",
         "http://www.opengis.net/def/function/geosparql/metricArea":"geof:metricArea",
 		"http://www.opengis.net/def/function/geosparql/metricDistance":"geof:metricDistance",
+		"http://www.opengis.net/def/function/geosparql/metricLength":"geof:metricLength",
+		"http://www.opengis.net/def/function/geosparql/metricPerimeter":"geof:metricPerimeter",
 		"http://www.opengis.net/def/function/geosparql/metricWithinDistance":"geof:metricWithinDistance",
         "http://www.opengis.net/def/function/geosparql/minX":"geof:minX",
         "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
@@ -635,18 +637,6 @@ WHERE {
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:metricArea(?aLiteral) as ?area)
 }`,
-"http://www.opengis.net/def/function/geosparql/metricWithinDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT (xsd:boolean(?wdistance) as ?wddistance)
-WHERE {
-  my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel1%% ?cLiteral .
-  my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel2%% ?fLiteral .
-  BIND (geof:metricWithinDistance(?cLiteral, ?fLiteral,"5.0"^^xsd:double) as ?wdistance)
-}`,
 "http://www.opengis.net/def/function/geosparql/metricDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -658,6 +648,37 @@ WHERE {
   my:F geo:hasDefaultGeometry ?fGeom .
   ?fGeom geo:asWKT ?geom2 .
   BIND (geof:metricDistance(?geom1, ?geom2) as ?mdistance)
+}`,
+"http://www.opengis.net/def/function/geosparql/metricLength":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?mlength
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:metricLength(?aLiteral) as ?mlength)
+}`,
+"http://www.opengis.net/def/function/geosparql/metricPerimeter":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal ?mperimeter
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:metricPerimeter(?literal) AS ?mperimeter)
+}`,
+"http://www.opengis.net/def/function/geosparql/metricWithinDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?wdistance) as ?wddistance)
+WHERE {
+  my:C geo:hasDefaultGeometry ?cGeom .
+  ?cGeom %%literalrel1%% ?cLiteral .
+  my:F geo:hasDefaultGeometry ?fGeom .
+  ?fGeom %%literalrel2%% ?fLiteral .
+  BIND (geof:metricWithinDistance(?cLiteral, ?fLiteral,"5.0"^^xsd:double) as ?wdistance)
 }`,
 "http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
