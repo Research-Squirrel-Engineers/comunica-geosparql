@@ -51,7 +51,7 @@
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
 		"http://www.opengis.net/def/function/geosparql/is3D":"geof:is3D",
 		"http://www.opengis.net/def/function/geosparql/isClosed":"geof:isClosed",
-		"http://www.opengis.net/def/function/geosparql/isCollection":"geof:isCollection",
+		"http://www.opengis.net/def/function/geosparql/ext/isCollection":"geofext:isCollection",
 		"http://www.opengis.net/def/function/geosparql/ext/isCW":"geofext:isCW",
 		"http://www.opengis.net/def/function/geosparql/isEmpty":"geof:isEmpty",
 		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
@@ -508,9 +508,9 @@ SELECT ?a_wkt ?isAClosed ?e_wkt ?isEClosed {
 	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
 	BIND(geof:isClosed(?e_wkt) AS ?isEClosed)
 }`,
-"http://www.opengis.net/def/function/geosparql/isCollection":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/isCollection":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?isC1 ?isC2 ?isC3 {
 	BIND(geof:isCollection("GEOMETRYCOLLECTION (MULTIPOINT((0 0), (1 1)), POINT(3 4), LINESTRING(2 3, 3 4))"^^geo:wktLiteral) AS ?isC1)
