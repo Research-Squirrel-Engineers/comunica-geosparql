@@ -500,6 +500,15 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:envelope(?literal) AS ?envelope)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/force2D":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+SELECT ?force2D
+WHERE {
+  my:NExactGeom geo:asWKT ?literal .
+  BIND(geof:force2D(?literal) AS ?force2D)
+}`,
 "http://www.opengis.net/def/function/geosparql/geometryType":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
