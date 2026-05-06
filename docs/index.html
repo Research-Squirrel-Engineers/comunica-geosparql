@@ -249,6 +249,16 @@ WHERE {
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asWKT(?aLiteral) as ?asWKT)
 }`,
+"http://www.opengis.net/def/function/geosparql/azimuth":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?azimuth
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:azimuth(?aLiteral) as ?azimuth)
+}`,		
 "http://www.opengis.net/def/function/geosparql/ext/below":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -687,9 +697,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT (xsd:boolean(?wdistance) as ?wddistance)
 WHERE {
   my:C geo:hasDefaultGeometry ?cGeom .
-  ?cGeom %%literalrel1%% ?cLiteral .
+  ?cGeom geo:asWKT ?cLiteral .
   my:F geo:hasDefaultGeometry ?fGeom .
-  ?fGeom %%literalrel2%% ?fLiteral .
+  ?fGeom geo:asWKT ?fLiteral .
   BIND (geof:metricWithinDistance(?cLiteral, ?fLiteral,"5.0"^^xsd:double) as ?wdistance)
 }`,
 "http://www.opengis.net/def/function/geosparql/minX":`PREFIX my: <http://example.org/ApplicationSchema#>
