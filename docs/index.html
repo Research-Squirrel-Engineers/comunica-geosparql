@@ -30,6 +30,7 @@
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
+		"http://www.opengis.net/def/function/geosparql/ext/closestPoint":"geofext:closestPoint",
         "http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":"geofext:compactnessRatio",
 		"http://www.opengis.net/def/function/geosparql/concaveHull":"geof:concaveHull",
 		"http://www.opengis.net/def/function/geosparql/convexHull":"geof:convexHull",
@@ -298,6 +299,19 @@ SELECT ?literal ?centroid
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:centroid(?literal) AS ?centroid)
+}`,
+"http://www.opengis.net/def/function/geosparql/closestPoint":`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <"""+str(GEO)+""">
+PREFIX geof: <"""+str(GEOF)+""">
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?cPoint
+WHERE {
+  my:A my:hasPointGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:closestPoint(?aLiteral, ?dLiteral) as ?cPoint)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
