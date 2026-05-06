@@ -300,10 +300,10 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:centroid(?literal) AS ?centroid)
 }`,
-"http://www.opengis.net/def/function/geosparql/closestPoint":`
+"http://www.opengis.net/def/function/geosparql/ext/closestPoint":`
 PREFIX my: <http://example.org/ApplicationSchema#>
-PREFIX geo: <"""+str(GEO)+""">
-PREFIX geof: <"""+str(GEOF)+""">
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?cPoint
 WHERE {
