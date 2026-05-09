@@ -666,12 +666,22 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aGeom ?area
+SELECT ?aLiteral ?area
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:metricArea(?aLiteral) as ?area)
 }`,
+"http://www.opengis.net/def/function/geosparql/metricBuffer":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?buffer
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:metricBuffer(?aLiteral,"5.0"^^xsd:double) as ?buffer)
+}`,	
 "http://www.opengis.net/def/function/geosparql/metricDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -683,17 +693,7 @@ WHERE {
   my:F geo:hasDefaultGeometry ?fGeom .
   ?fGeom geo:asWKT ?geom2 .
   BIND (geof:metricDistance(?geom1, ?geom2) as ?mdistance)
-}`,
-"http://www.opengis.net/def/function/geosparql/metricBuffer":`PREFIX my: <http://example.org/ApplicationSchema#>
-PREFIX geo: <http://www.opengis.net/ont/geosparql#>
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aLiteral ?buffer
-WHERE {
-  my:A geo:hasDefaultGeometry ?aGeom .
-  ?aGeom geo:asWKT ?aLiteral .
-  BIND (geof:metricBuffer(?aLiteral,"5.0"^^xsd:double) as ?buffer)
-}`,		
+}`,	
 "http://www.opengis.net/def/function/geosparql/metricLength":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
