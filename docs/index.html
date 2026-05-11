@@ -305,7 +305,7 @@ PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?cPoint
+SELECT ?aLiteral ?dLiteral ?cPoint
 WHERE {
   my:A my:hasPointGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
