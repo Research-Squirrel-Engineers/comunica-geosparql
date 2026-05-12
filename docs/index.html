@@ -51,6 +51,7 @@
 		"http://www.opengis.net/def/function/geosparql/geometryType":"geof:geometryType",
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
 		"http://www.opengis.net/def/function/geosparql/is3D":"geof:is3D",
+		"http://www.opengis.net/def/function/geosparql/ext/isConcave":"geofext:isConcave",
 		"http://www.opengis.net/def/function/geosparql/isClosed":"geof:isClosed",
 		"http://www.opengis.net/def/function/geosparql/ext/isCollection":"geofext:isCollection",
 		"http://www.opengis.net/def/function/geosparql/ext/isCW":"geofext:isCW",
@@ -75,6 +76,7 @@
         "http://www.opengis.net/def/function/geosparql/minY":"geof:minY",
         "http://www.opengis.net/def/function/geosparql/minZ":"geof:minZ",
 		"http://www.opengis.net/def/function/geosparql/numGeometries":"geof:numGeometries",
+		"http://www.opengis.net/def/function/geosparql/ext/offsetCurve":"geofext:offsetCurve",
 		"http://www.opengis.net/def/function/geosparql/ext/pointN":"geofext:pointN",
 		"http://www.opengis.net/def/function/geosparql/ext/pointOnSurface":"geofext:pointOnSurface",
 		"http://www.opengis.net/def/function/geosparql/ext/reverse":"geofext:reverse",
@@ -545,6 +547,13 @@ SELECT ?a_wkt ?isAClosed ?e_wkt ?isEClosed {
 	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
 	BIND(geof:isClosed(?e_wkt) AS ?isEClosed)
 }`,
+"http://www.opengis.net/def/function/geosparql/isConcave":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
+SELECT ?a_wkt ?isAConcave {
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
+	BIND(geof:isConcave(?a_wkt) AS ?isAConcave)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/isCollection":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -757,6 +766,16 @@ SELECT ?numGeoms
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:numGeometries(?literal) AS ?numGeoms)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/offsetCurve":`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+SELECT ?offsetCurve
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:offsetCurve(?literal,10) AS ?offsetCurve)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/pointN":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
