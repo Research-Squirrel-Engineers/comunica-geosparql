@@ -50,6 +50,7 @@
 		"http://www.opengis.net/def/function/geosparql/ext/force2D":"geofext:force2D",
 		"http://www.opengis.net/def/function/geosparql/geometryType":"geof:geometryType",
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
+		"http://www.opengis.net/def/function/geosparql/intersection":"geof:intersection",
 		"http://www.opengis.net/def/function/geosparql/is3D":"geof:is3D",
 		"http://www.opengis.net/def/function/geosparql/ext/isConcave":"geofext:isConcave",
 		"http://www.opengis.net/def/function/geosparql/isClosed":"geof:isClosed",
@@ -246,7 +247,7 @@ end_header
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?asWKT
+SELECT ?aLiteral ?asWKT
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
@@ -355,7 +356,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aGeom ?dGeom ?difference
+SELECT ?aLiteral ?dLiteral ?difference
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
@@ -527,7 +528,20 @@ WHERE {
   my:A geo:hasDefaultGeometry ?geom .
   ?geom geo:asWKT ?literal .
   BIND (geof:getSRID(?literal) as ?srid)
-}`,	            
+}`,
+"http://www.opengis.net/def/function/geosparql/intersection":`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?dLiteral ?intersection
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  my:D geo:hasDefaultGeometry ?dGeom .
+  ?dGeom geo:asWKT ?dLiteral .
+  BIND (geof:intersection(?aLiteral, ?dLiteral) as ?intersection)
+}`,	    		        
 "http://www.opengis.net/def/function/geosparql/is3D":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>                
