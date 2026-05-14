@@ -1113,6 +1113,15 @@ WHERE {
   ?dGeom geo:asWKT ?geom2 .
   BIND (geof:symDifference(?geom1, ?geom2) as ?sdifference)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/translate":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal ?translated
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:translate(?literal,10,10) AS ?translated)
+}`,
 "http://www.opengis.net/def/function/geosparql/transform":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
