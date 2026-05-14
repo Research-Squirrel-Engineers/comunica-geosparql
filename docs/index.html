@@ -777,7 +777,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?numGeoms
+SELECT ?literal ?numGeoms
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:numGeometries(?literal) AS ?numGeoms)
@@ -786,7 +786,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
-SELECT ?numPoints
+SELECT ?literal ?numPoints
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:numPoints(?literal) AS ?numPoints)
@@ -796,7 +796,7 @@ PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
-SELECT ?offsetCurve
+SELECT ?literal ?offsetCurve
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:offsetCurve(?literal,10) AS ?offsetCurve)
