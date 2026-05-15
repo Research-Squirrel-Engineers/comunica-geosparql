@@ -5,9 +5,8 @@ import type {
   ITimeRepresentation,
   ITimeZoneRepresentation,
 } from '@comunica/types';
-import {
-  encode,
-} from '@erikmichelson/open-location-code-ts';
+
+import { encode } from '@erikmichelson/open-location-code-ts';
 import tokml from '@jlandrum/tokml';
 import * as turf from '@turf/turf';
 import * as WK from 'betterknown';
@@ -41,21 +40,32 @@ export function serializeDate(date: IDateRepresentation): string {
   return `${numSerializer(date.year, 4)}-${numSerializer(date.month)}-${numSerializer(date.day)}${serializeTimeZone(date)}`;
 }
 
-export function serializeGeometry(thegeom: GJ.Geometry | GJ.Polygon | GJ.Point, literaltype: string): StringLiteral {
-  const centcoords = turf.centroid(thegeom).geometry.coordinates;
-  switch (literaltype) {
-    case 'http://www.opengis.net/ont/geosparql#wktLiteral':
-      return new StringLiteral(WK.geoJSONToWkt(thegeom), 'http://www.opengis.net/ont/geosparql#wktLiteral');
-    case 'http://www.opengis.net/ont/geosparql#geoJSONLiteral':
-      return new StringLiteral(JSON.stringify(thegeom), 'http://www.opengis.net/ont/geosparql#geoJSONLiteral');
-    case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
-      return new StringLiteral(tokml(thegeom), 'http://www.opengis.net/ont/geosparql#kmlLiteral');
-    case 'http://opengis.net/ont/geocode/OpenLocationCode':
-      return new StringLiteral(`<http://opengis.net/ont/geocode/OpenLocationCode> ${encode(centcoords[0], centcoords[1]).toString()}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
-    case 'http://opengis.net/ont/geocode/GeoURI':
-      return new StringLiteral(`<http://opengis.net/ont/geocode/GeoURI> geo:${centcoords[0]},${centcoords[1]}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
+// eslint-disable-next-line max-len
+export function serializeGeometry(thegeom: GJ.Geometry | GJ.Polygon | GJ.Point | undefined, literaltype: string, crsuri = 'http://www.opengis.net/def/crs/OGC/1.3/CRS84'): StringLiteral {
+  if (typeof (thegeom) !== 'undefined') {
+    const centcoords = turf.centroid(thegeom).geometry.coordinates;
+    switch (literaltype) {
+      case 'http://www.opengis.net/ont/geosparql#wktLiteral':
+        if (crsuri !== 'http://www.opengis.net/def/crs/OGC/1.3/CRS84') {
+          return new StringLiteral(`<${crsuri}> ${WK.geoJSONToWkt(thegeom)}`, 'http://www.opengis.net/ont/geosparql#wktLiteral');
+        }
+        return new StringLiteral(`${WK.geoJSONToWkt(thegeom)}`, 'http://www.opengis.net/ont/geosparql#wktLiteral');
+      case 'http://www.opengis.net/ont/geosparql#geoJSONLiteral':
+        return new StringLiteral(JSON.stringify(thegeom), 'http://www.opengis.net/ont/geosparql#geoJSONLiteral');
+      case 'http://www.opengis.net/ont/geosparql#kmlLiteral':
+        if (crsuri !== 'http://www.opengis.net/def/crs/OGC/1.3/CRS84') {
+          return new StringLiteral(tokml(thegeom), 'http://www.opengis.net/ont/geosparql#kmlLiteral');
+        }
+        return new StringLiteral(tokml(thegeom), 'http://www.opengis.net/ont/geosparql#kmlLiteral');
+      case 'http://opengis.net/ont/geocode/OpenLocationCode':
+        return new StringLiteral(`<http://opengis.net/ont/geocode/OpenLocationCode> ${encode(centcoords[0], centcoords[1]).toString()}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
+      case 'http://opengis.net/ont/geocode/GeoURI':
+        return new StringLiteral(`<http://opengis.net/ont/geocode/GeoURI> geo:${centcoords[0]},${centcoords[1]}`, 'http://www.opengis.net/ont/geosparql#geoCodeLiteral');
+    }
+    // eslint-disable-next-line ts/no-base-to-string
+    return new StringLiteral(`Could not serialize geometry of type ${literaltype} ${thegeom.toString()}`);
   }
-  return new StringLiteral('');
+  return new StringLiteral(`Could not serialize undefined geometry`);
 }
 
 export function serializeTime(time: ITimeRepresentation): string {

@@ -12,7 +12,7 @@ export class TermFunctionEHDisjoint extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.EHDISJOINT,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.EHDISJOINT).geometryTest(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.EHDISJOINT).geometryTestNormalizedCRS(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
     });
   }
 }

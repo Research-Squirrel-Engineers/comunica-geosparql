@@ -18,7 +18,7 @@ export class ActorFunctionFactoryTermNumPoints extends ActorFunctionFactoryDedic
   public constructor(args: IActorFunctionFactoryArgs) {
     super({
       ...args,
-      functionNames: [ GeoSparqlOperator.MINX ],
+      functionNames: [ GeoSparqlOperator.NUMPOINTS ],
       termFunction: true,
     });
   }

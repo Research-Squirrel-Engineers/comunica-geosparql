@@ -18,7 +18,7 @@ export class ActorFunctionFactoryTermBuffer extends ActorFunctionFactoryDedicate
   public constructor(args: IActorFunctionFactoryArgs) {
     super({
       ...args,
-      functionNames: [ GeoSparqlOperator.CENTROID ],
+      functionNames: [ GeoSparqlOperator.BUFFER ],
       termFunction: true,
     });
   }

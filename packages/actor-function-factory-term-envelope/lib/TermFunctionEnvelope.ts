@@ -1,7 +1,6 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import { declare, GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 
@@ -14,7 +13,7 @@ export class TermFunctionEnvelope extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.ENVELOPE,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.ENVELOPE).onLiteral1(() => term => serializeGeometry(turf.envelope(parseGeometry(term)[0]).geometry, term.dataType)).collect(),
+      overloads: declare(GeoSparqlOperator.ENVELOPE).onGeometryTup1(() => term => serializeGeometry(turf.envelope(term[0]).geometry, term[2])).collect(),
     });
   }
 }

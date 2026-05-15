@@ -4,7 +4,6 @@ import {
   GeoSparqlExtOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 
@@ -16,10 +15,8 @@ export class TermFunctionStartPoint extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.STARTPOINT,
-      overloads: declare(GeoSparqlExtOperator.STARTPOINT).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
-        return serializeGeometry(turf.findPoint(thegeom).geometry, term.dataType);
-      }).collect(),
+      // eslint-disable-next-line max-len
+      overloads: declare(GeoSparqlExtOperator.STARTPOINT).onGeometryTup1(() => thegeom => serializeGeometry(turf.findPoint(thegeom[0]).geometry, thegeom[2])).collect(),
     });
   }
 }

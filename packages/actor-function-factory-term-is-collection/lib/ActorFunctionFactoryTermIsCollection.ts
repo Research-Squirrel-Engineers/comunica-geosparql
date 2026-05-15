@@ -8,7 +8,7 @@ import {
   ActorFunctionFactoryDedicated,
 } from '@comunica/bus-function-factory';
 
-import { GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
+import { GeoSparqlExtOperator } from '@comunica/utils-expression-evaluator';
 import { TermFunctionIsCollection } from './TermFunctionIsCollection';
 
 /**
@@ -18,7 +18,7 @@ export class ActorFunctionFactoryTermIsCollection extends ActorFunctionFactoryDe
   public constructor(args: IActorFunctionFactoryArgs) {
     super({
       ...args,
-      functionNames: [ GeoSparqlOperator.IS3D ],
+      functionNames: [ GeoSparqlExtOperator.ISCOLLECTION ],
       termFunction: true,
     });
   }

@@ -14,12 +14,13 @@ export class TermFunctionReverse extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.REVERSE,
-      overloads: declare(GeoSparqlExtOperator.REVERSE).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      overloads: declare(GeoSparqlExtOperator.REVERSE).onGeometryTup1(() => (term) => {
+        const thegeom = term[0];
+        const datatype = term[2];
         if (thegeom.type === 'Point') {
-          return serializeGeometry(thegeom, term.dataType);
+          return serializeGeometry(thegeom, datatype);
         }
-        return serializeGeometry(<GJ.Geometry>turf.rewind(thegeom), term.dataType);
+        return serializeGeometry(<GJ.Geometry>turf.rewind(thegeom), datatype);
       }).collect(),
     });
   }

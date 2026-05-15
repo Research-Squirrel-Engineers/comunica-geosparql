@@ -6,7 +6,7 @@ import { bool } from '@comunica/utils-expression-evaluator/test/util/Aliases';
 import { Notation } from '@comunica/utils-expression-evaluator/test/util/TestTable';
 import { ActorFunctionFactoryTermSFWithin } from '../lib';
 
-describe('like \'within\' receiving', () => {
+describe('like \'sfWithin\' receiving', () => {
   runFuncTestTable({
     registeredActors: [
       args => new ActorFunctionFactoryTermSFWithin(args),
@@ -15,7 +15,7 @@ describe('like \'within\' receiving', () => {
     arity: 1,
     aliases: bool,
     notation: Notation.Function,
-    operation: 'within',
+    operation: 'sfWithin',
     testTable: `
         "POINT(1.0 1.0)"^^<http://www.opengis.net/ont/geosparql#wktLiteral> = 1.0
       `,

@@ -12,7 +12,7 @@ export class TermFunctionSFDisjoint extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFDISJOINT,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFDISJOINT).geometryTest(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFDISJOINT).geometryTestNormalizedCRS(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
     });
   }
 }

@@ -13,18 +13,27 @@ import type {
   VariableExpression,
 } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
+import * as turf from '@turf/turf';
 import type * as GJ from 'geojson';
-import type { BooleanLiteral, ISerializable, Literal, Quad, StringLiteral } from '../expressions';
+import type {
+  BooleanLiteral,
+  DoubleLiteral,
+  IntegerLiteral,
+  ISerializable,
+  Literal,
+  Quad,
+  StringLiteral,
+} from '../expressions';
 import * as E from '../expressions';
 import { NonLexicalLiteral } from '../expressions';
 import * as C from '../util/Consts';
 import { TypeURL } from '../util/Consts';
-import { convertGeometry, epsgdefs } from '../util/EPSGDefs';
+import { alignGeometryCRS, convertGeometry } from '../util/EPSGDefs';
 import * as Err from '../util/Errors';
-import { parseGeometry } from '../util/Parsing';
+import { parseGeometry, parseGeometryFeature } from '../util/Parsing';
+import { serializeGeometry } from '../util/Serialization';
 import type { ArgumentType } from './OverloadTree';
 import { OverloadTree } from './OverloadTree';
-import {serializeGeometry} from "../util/Serialization";
 
 type Term = TermExpression;
 
@@ -49,7 +58,6 @@ export class Builder {
     this.collected = true;
     return this.overloadTree;
   }
-
 
   private static wrapInvalidLexicalProtected(func: ImplementationFunction): ImplementationFunction {
     return (expressionEvaluator: IInternalEvaluator) => (args: TermExpression[]) => {
@@ -99,7 +107,6 @@ export class Builder {
     this.overloadTree.addOverload(argTypes, addInvalidHandling ? Builder.wrapInvalidLexicalProtected(func) : func);
     return this;
   }
-
 
   public copy({ from, to }: { from: ArgumentType[]; to: ArgumentType[] }): Builder {
     const impl = this.overloadTree.getImplementationExact(from);
@@ -198,6 +205,14 @@ addInvalidHandling = false,
     );
   }
 
+  public onTerm2(op: (expressionEvaluator: IInternalEvaluator) => (t1: Term, t2: Term) => Term):
+  Builder {
+    return this.set(
+      [ 'term', 'term' ],
+      expressionEvaluator => ([ t1, t2 ]: [Term, Term]) => op(expressionEvaluator)(t1, t2),
+    );
+  }
+
   public onTerm3(op: (expressionEvaluator: IInternalEvaluator) => (t1: Term, t2: Term, t3: Term) => Term):
   Builder {
     return this.set(
@@ -208,6 +223,93 @@ addInvalidHandling = false,
 
   public onQuad1(op: (expressionEvaluator: IInternalEvaluator) => (term: Term & Quad) => Term): Builder {
     return this.set([ 'quad' ], expressionEvaluator => ([ term ]: [Term & Quad]) => op(expressionEvaluator)(term));
+  }
+
+  public onFeature1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    (geom: GJ.Feature) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal' ],
+      expressionEvaluator => ([ geom ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometryFeature(geom)[0]),
+      addInvalidHandling,
+    );
+  }
+
+  public onFeatureTup1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    (geom: [GJ.Feature, string, string]) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal' ],
+      expressionEvaluator => ([ geom ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometryFeature(geom)),
+      addInvalidHandling,
+    );
+  }
+
+  public onGeometry1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    (geom: GJ.Geometry) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal' ],
+      expressionEvaluator => ([ geom ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometry(geom)[0]),
+      addInvalidHandling,
+    );
+  }
+
+  public onGeometry1Literal1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    (geom: GJ.Geometry, lit: E.Literal<T>) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal', 'literal' ],
+      expressionEvaluator => ([ geom, lit ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometry(geom)[0], lit),
+      addInvalidHandling,
+    );
+  }
+
+  public onGeometryTup1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    (geom: [GJ.Geometry, string, string]) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal' ],
+      expressionEvaluator => ([ geom ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometry(geom)),
+      addInvalidHandling,
+    );
+  }
+
+  public onGeometryTup1Literal1<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    // eslint-disable-next-line max-len
+    (geom: [GJ.Geometry, string, string], lit: E.Literal<T>) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal', 'literal' ],
+      expressionEvaluator => ([ geom, lit ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometry(geom), lit),
+      addInvalidHandling,
+    );
+  }
+
+  public onGeometryTup1Literal2<T extends ISerializable>(
+    op: (expressionEvaluator: IInternalEvaluator) =>
+    // eslint-disable-next-line max-len
+    (geom: [GJ.Geometry, string, string], lit: E.Literal<T>, lit2: E.Literal<T>) => StringLiteral | DoubleLiteral | IntegerLiteral | BooleanLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal', 'literal', 'literal' ],
+      // eslint-disable-next-line max-len
+      expressionEvaluator => ([ geom, lit, lit2 ]: E.Literal<T>[]) => op(expressionEvaluator)(parseGeometry(geom), lit, lit2),
+      addInvalidHandling,
+    );
   }
 
   public onLiteral1<T extends ISerializable>(
@@ -229,6 +331,18 @@ addInvalidHandling = true,
     return this.set(
       [ 'literal', 'literal' ],
       expressionEvaluator => ([ term1, term2 ]: E.Literal<T>[]) => op(expressionEvaluator)(term1, term2),
+      addInvalidHandling,
+    );
+  }
+
+  public onLiteral3<T extends ISerializable>(
+    // eslint-disable-next-line max-len
+    op: (expressionEvaluator: IInternalEvaluator) => (lit1: E.Literal<T>, lit2: E.Literal<T>, lit3: E.Literal<T>) => Term,
+      addInvalidHandling = true,
+  ): Builder {
+    return this.set(
+      [ 'literal', 'literal', 'literal' ],
+      expressionEvaluator => ([ term1, term2, term3 ]: E.Literal<T>[]) => op(expressionEvaluator)(term1, term2, term3),
       addInvalidHandling,
     );
   }
@@ -419,27 +533,54 @@ addInvalidHandling = true,
       );
   }
 
-  public geometryFunc(
+  public geometryTestNormalizedCRS<T extends ISerializable>(
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => boolean,
+      addInvalidHandling = true,
+  ): Builder {
+    return this
+      .set(
+        [ C.TypeURL.WKT_LITERAL, C.TypeURL.WKT_LITERAL ],
+        expressionEvaluator => ([ left, right ]: E.Literal<T>[]) => {
+          const leftgeomtup = parseGeometry(left);
+          const rightgeomtup = parseGeometry(right);
+          const res = alignGeometryCRS(leftgeomtup[0], leftgeomtup[1], rightgeomtup[0], rightgeomtup[1]);
+          const result = test(expressionEvaluator)(res[0], res[1]);
+          return bool(result);
+        },
+        addInvalidHandling,
+      );
+  }
+
+  public geometryFuncNormalizedCRS<T extends ISerializable>(
     // eslint-disable-next-line max-len
-    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, leftdt: string, right: GJ.Geometry, rightdt: string) => StringLiteral,
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => StringLiteral | DoubleLiteral | IntegerLiteral,
+      addInvalidHandling = true,
+  ): Builder {
+    return this
+      .set(
+        [ C.TypeURL.WKT_LITERAL, C.TypeURL.WKT_LITERAL ],
+        expressionEvaluator => ([ left, right ]: E.Literal<T>[]) => {
+          const leftgeomtup = parseGeometry(left);
+          const rightgeomtup = parseGeometry(right);
+          const res = alignGeometryCRS(leftgeomtup[0], leftgeomtup[1], rightgeomtup[0], rightgeomtup[1]);
+          return test(expressionEvaluator)(res[0], res[1]);
+        },
+        addInvalidHandling,
+      );
+  }
+
+  public geometryFunc(
+    test: (expressionEvaluator: IInternalEvaluator) => (left: GJ.Geometry, right: GJ.Geometry) => StringLiteral,
       addInvalidHandling = true,
   ): Builder {
     return this
       .set(
         [ C.TypeURL.XSD_STRING, C.TypeURL.XSD_STRING ],
         // eslint-disable-next-line max-len
-        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => test(expressionEvaluator)(parseGeometry(left)[0], left.dataType, parseGeometry(right)[0], right.dataType),
+        expressionEvaluator => ([ left, right ]: E.StringLiteral[]) => test(expressionEvaluator)(parseGeometry(left)[0], parseGeometry(right)[0]),
         addInvalidHandling,
       );
   }
-
-  public normalizeGeometries(geomtup: [GJ.Geometry, string], tosrs = ''): [GJ.Geometry, string] {
-    if (geomtup[1] === tosrs) {
-      return geomtup;
-    }
-    return [ convertGeometry(geomtup[0], geomtup[1], tosrs), tosrs ];
-  }
-
 
   public stringTest(
     test: (expressionEvaluator: IInternalEvaluator) => (left: string, right: string) => boolean,
@@ -524,6 +665,10 @@ export function string(str: string): E.StringLiteral {
   return new E.StringLiteral(str);
 }
 
+export function typedString(str: any, ltype: string): E.StringLiteral {
+  return new E.StringLiteral(str.toString(), ltype);
+}
+
 export function langString(str: string, lang: string): E.LangStringLiteral {
   return new E.LangStringLiteral(str, lang);
 }
@@ -544,6 +689,29 @@ export function geometry(geom: GJ.Geometry, literaltype: string): E.StringLitera
   return serializeGeometry(geom, literaltype);
 }
 
+export function castGeometryTo(geom: GJ.Geometry, geomtype: string): GJ.LineString | GJ.Polygon | null {
+  if (geom.type === 'LineString' && geom.type === geomtype) {
+    return turf.lineString(geom.coordinates).geometry;
+  }
+  if (geom.type === 'Polygon' && geom.type === geomtype) {
+    return turf.polygon(geom.coordinates).geometry;
+  }
+  return null;
+}
+
+export function castGeometryToTurfType(geom: GJ.Geometry): GJ.Geometry | GJ.Point | GJ.LineString | GJ.Polygon | null {
+  if (geom.type === 'Point') {
+    return turf.point(geom.coordinates).geometry;
+  }
+  if (geom.type === 'LineString') {
+    return turf.lineString(geom.coordinates).geometry;
+  }
+  if (geom.type === 'Polygon') {
+    return turf.polygon(geom.coordinates).geometry;
+  }
+  return geom;
+}
+
 export function transformGeometry(geom: GJ.Geometry, source: string, dest: string): GJ.Geometry {
   if (source.startsWith('http')) {
     source = `EPSG:${source.replaceAll('http://www.opengis.net/def/crs/EPSG/0/', '')}`;
@@ -551,16 +719,43 @@ export function transformGeometry(geom: GJ.Geometry, source: string, dest: strin
   if (dest.startsWith('http')) {
     dest = `EPSG:${dest.replaceAll('http://www.opengis.net/def/crs/EPSG/0/', '')}`;
   }
-  if (source in epsgdefs) {
-    source = <string>epsgdefs[source];
-  }
-  if (dest in epsgdefs) {
-    dest = <string>epsgdefs[dest];
-  }
   if (source === dest) {
     return geom;
   }
   return convertGeometry(geom, source, dest, '');
+}
+
+export function unitURIToTurfString(uri: string): string {
+  const uriToTurfStr: Record<string, string> = {
+    'http://qudt.org/vocab/unit/M': 'meters',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/meter': 'meters',
+    'http://qudt.org/vocab/unit/KiloM': 'kilometers',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/kilometer': 'kilometers',
+    'http://qudt.org/vocab/unit/CentiM': 'centimeters',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/centimeter': 'centimeters',
+    'http://qudt.org/vocab/unit/M2': 'squaremeters',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/squaremeter': 'squaremeters',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/acre': 'acres',
+    'http://qudt.org/vocab/unit/AC': 'acres',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/foot': 'feet',
+    'http://qudt.org/vocab/unit/FT': 'feet',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/radian': 'radians',
+    'http://qudt.org/vocab/unit/RAD': 'radians',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/yard': 'yards',
+    'http://qudt.org/vocab/unit/YD': 'yards',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/inch': 'inches',
+    'http://qudt.org/vocab/unit/IN': 'inches',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/mile': 'miles',
+    'http://qudt.org/vocab/unit/MI': 'miles',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/nauticalmile': 'nauticalmiles',
+    'http://qudt.org/vocab/unit/MI_N': 'nauticalmiles',
+    'http://www.ontology-of-units-of-measure.org/resource/om-2/hectare': 'hectares',
+    'http://qudt.org/vocab/unit/HA': 'hectares',
+  };
+  if (uri in uriToTurfStr) {
+    return uriToTurfStr[uri];
+  }
+  return '';
 }
 
 export function transformGeometryLiteral(thegeom: Literal<ISerializable>, dest: string): GJ.Geometry {

@@ -5,7 +5,6 @@ import {
   GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
@@ -16,8 +15,7 @@ export class TermFunctionMinX extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.MINX,
-      overloads: declare(GeoSparqlOperator.MINX).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      overloads: declare(GeoSparqlOperator.MINX).onGeometry1(() => (thegeom) => {
         let minX = Number.MAX_VALUE;
         turf.coordEach(thegeom, (
           currentCoord,

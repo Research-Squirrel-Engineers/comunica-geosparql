@@ -1,8 +1,8 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import { declare, double, GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
+import {declare, double, GeoSparqlOperator, unitURIToTurfString} from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
+import type {AreaUnits} from '@turf/turf';
 
 /**
  * http://www.opengis.net/def/function/geosparql/centroid
@@ -10,10 +10,10 @@ import * as turf from '@turf/turf';
 export class TermFunctionArea extends TermFunctionBase {
   public constructor() {
     super({
-      arity: 1,
+      arity: 2,
       operator: GeoSparqlOperator.AREA,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.AREA).onLiteral1(() => term => double(turf.area(parseGeometry(term)[0]))).collect(),
+      overloads: declare(GeoSparqlOperator.AREA).onGeometry1Literal1(() => (term, unit) => double(turf.convertArea(turf.area(term), 'metres', <AreaUnits>unitURIToTurfString(unit.str())))).collect(),
     });
   }
 }

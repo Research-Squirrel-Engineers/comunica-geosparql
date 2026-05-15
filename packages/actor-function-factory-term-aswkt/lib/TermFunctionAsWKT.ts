@@ -4,7 +4,6 @@ import {
   GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 
 /**
@@ -15,7 +14,7 @@ export class TermFunctionAsWKT extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.ASWKT,
-      overloads: declare(GeoSparqlOperator.ASWKT).onLiteral1(() => term => serializeGeometry(parseGeometry(term)[0], 'http://www.opengis.net/ont/geosparql#wktLiteral')).collect(),
+      overloads: declare(GeoSparqlOperator.ASWKT).onGeometry1(() => term => serializeGeometry(term, 'http://www.opengis.net/ont/geosparql#wktLiteral')).collect(),
     });
   }
 }

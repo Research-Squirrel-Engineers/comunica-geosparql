@@ -15,7 +15,7 @@ export class TermFunctionLongestLine extends TermFunctionBase {
     super({
       arity: 2,
       operator: GeoSparqlExtOperator.LONGESTLINE,
-      overloads: declare(GeoSparqlExtOperator.LONGESTLINE).geometryFunc(() => (left, _leftCRS, right, _rightCRS) => {
+      overloads: declare(GeoSparqlExtOperator.LONGESTLINE).geometryFuncNormalizedCRS(() => (left, right) => {
         let maxDistance = Number.MIN_VALUE;
         let maxDistancePointPair: number[][] = [];
         turf.coordEach(left, (currentCoord, _coordIndex) => {
@@ -27,7 +27,7 @@ export class TermFunctionLongestLine extends TermFunctionBase {
             }
           });
         });
-        return serializeGeometry(turf.geometry('LineString', [ maxDistancePointPair[0], maxDistancePointPair[1] ]), 'http://www.opengis.net/ont/geosparql#wktLiteral');
+        return serializeGeometry(turf.lineString([ maxDistancePointPair[0], maxDistancePointPair[1] ]).geometry, 'http://www.opengis.net/ont/geosparql#wktLiteral');
       }).collect(),
     });
   }

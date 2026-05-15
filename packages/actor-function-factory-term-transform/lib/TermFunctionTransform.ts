@@ -13,7 +13,13 @@ export class TermFunctionTransform extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.TRANSFORM,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.TRANSFORM).onLiteral2(() => (term1, term2) => serializeGeometry(transformGeometryLiteral(term1, term2.str()), term1.dataType)).collect(),
+      overloads: declare(GeoSparqlOperator.TRANSFORM).onLiteral2(() => (term1, term2) => {
+        console.log(term1);
+        console.log(term2);
+        const res=transformGeometryLiteral(term1, term2.str());
+        console.log(res);
+        return serializeGeometry(res, term1.dataType)
+      }).collect(),
     });
   }
 }

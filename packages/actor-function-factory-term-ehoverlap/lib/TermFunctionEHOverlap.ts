@@ -12,7 +12,7 @@ export class TermFunctionEHOverlap extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.EHOVERLAP,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.EHOVERLAP).geometryTest(() => (left, right) => turf.booleanOverlap(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.EHOVERLAP).geometryTestNormalizedCRS(() => (left, right) => turf.booleanOverlap(left, right)).collect(),
     });
   }
 }

@@ -12,7 +12,7 @@ export class TermFunctionRCC8DC extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.RCC8DC,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.RCC8DC).geometryTest(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.RCC8DC).geometryTestNormalizedCRS(() => (left, right) => turf.booleanDisjoint(left, right)).collect(),
     });
   }
 }

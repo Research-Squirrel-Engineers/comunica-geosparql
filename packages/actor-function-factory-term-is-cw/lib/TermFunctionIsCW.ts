@@ -5,7 +5,6 @@ import {
   bool,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 import type * as GJ from 'geojson';
 
@@ -17,8 +16,8 @@ export class TermFunctionIsCW extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.ISCW,
-      overloads: declare(GeoSparqlExtOperator.ISCW).onLiteral1(
-        () => term => bool(turf.booleanClockwise(<GJ.LineString>parseGeometry(term)[0])),
+      overloads: declare(GeoSparqlExtOperator.ISCW).onGeometry1(
+        () => term => bool(turf.booleanClockwise(<GJ.LineString>term)),
       ).collect(),
     });
   }

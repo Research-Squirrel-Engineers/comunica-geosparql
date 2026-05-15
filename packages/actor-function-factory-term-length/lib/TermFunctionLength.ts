@@ -1,10 +1,6 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import { declare, GeoSparqlOperator } from '@comunica/utils-expression-evaluator';
-
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
-import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
+import { declare, double, GeoSparqlOperator, parseGeometryFeature } from '@comunica/utils-expression-evaluator';
 import * as turf from '@turf/turf';
-
 
 /**
  * http://www.opengis.net/def/function/geosparql/centroid
@@ -15,7 +11,7 @@ export class TermFunctionLength extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.LENGTH,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.LENGTH).onLiteral1(() => term => serializeGeometry(turf.centroid(parseGeometry(term)[0]).geometry, term.dataType)).collect(),
+      overloads: declare(GeoSparqlOperator.LENGTH).onFeature1(() => term => double(turf.length(term))).collect(),
     });
   }
 }

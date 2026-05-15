@@ -1,25 +1,23 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {
   declare,
-  GeoSparqlOperator,
+  GeoSparqlExtOperator,
   bool,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
- * http://www.opengis.net/def/function/geosparql/is3D
+ * http://www.opengis.net/def/function/geosparql/isCollection
  */
 export class TermFunctionIsCollection extends TermFunctionBase {
   public constructor() {
     super({
       arity: 1,
-      operator: GeoSparqlOperator.IS3D,
-      overloads: declare(GeoSparqlOperator.IS3D).onLiteral1(
-        () => (term) => {
-          const thegeom = parseGeometry(term)[0];
-          if (thegeom.type === 'GeometryCollection') {
+      operator: GeoSparqlExtOperator.ISCOLLECTION,
+      overloads: declare(GeoSparqlExtOperator.ISCOLLECTION).onGeometry1(
+        () => (thegeom) => {
+          if (turf.getType(thegeom) === 'GeometryCollection') {
             return bool(true);
           }
           return bool(false);

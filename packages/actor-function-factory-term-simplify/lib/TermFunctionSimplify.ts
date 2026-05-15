@@ -4,9 +4,8 @@ import {
   GeoSparqlExtOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
+import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
-import {serializeGeometry} from "@comunica/utils-expression-evaluator/lib/util/Serialization";
 
 /**
  * http://www.opengis.net/def/function/geosparql/maxZ
@@ -14,12 +13,10 @@ import {serializeGeometry} from "@comunica/utils-expression-evaluator/lib/util/S
 export class TermFunctionSimplify extends TermFunctionBase {
   public constructor() {
     super({
-      arity: 1,
+      arity: 2,
       operator: GeoSparqlExtOperator.SIMPLIFY,
-      overloads: declare(GeoSparqlExtOperator.SIMPLIFY).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
-        return serializeGeometry(turf.simplify(thegeom), term.dataType);
-      }).collect(),
+      // eslint-disable-next-line max-len
+      overloads: declare(GeoSparqlExtOperator.SIMPLIFY).onGeometryTup1Literal1(() => (geomtup, toleranceLiteral) => serializeGeometry(turf.simplify(geomtup[0], { tolerance: Number.parseFloat(toleranceLiteral.str()) }), geomtup[2])).collect(),
     });
   }
 }

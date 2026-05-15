@@ -16,7 +16,7 @@ export class TermFunctionSFOverlaps extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFOVERLAPS,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFOVERLAPS).geometryTest(() => (left, right) => turf.booleanOverlap(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFOVERLAPS).geometryTestNormalizedCRS(() => (left, right) => turf.booleanOverlap(left, right)).collect(),
     });
   }
 }

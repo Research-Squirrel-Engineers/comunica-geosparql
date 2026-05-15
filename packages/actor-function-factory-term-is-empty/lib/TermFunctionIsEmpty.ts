@@ -20,7 +20,10 @@ export class TermFunctionIsEmpty extends TermFunctionBase {
         // eslint-disable-next-line max-len
       overloads: declare(GeoSparqlOperator.ISEMPTY).onLiteral1(() => (term) => {
         return bool(false);
-        //return bool(parseGeometry(term)coordinates.length === 0)
+        /*return bool(turf.getCoords(parseGeometry(term)[0]).length===0);
+        thegeom..forEach({
+
+        });coordinates.length === 0)*/
         }).collect(),
     });
   }

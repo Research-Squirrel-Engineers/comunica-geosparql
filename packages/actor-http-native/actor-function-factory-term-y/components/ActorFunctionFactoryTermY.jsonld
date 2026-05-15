@@ -13,7 +13,7 @@
       "extends": [
         "cbff:components/ActorFunctionFactoryDedicated.jsonld#ActorFunctionFactoryDedicated"
       ],
-      "comment": "A comunica TermFunctionWithin Function Factory Actor.",
+      "comment": "A comunica TermFunctionSFWithin Function Factory Actor.",
       "parameters": [
         {
           "@id": "caffty:components/ActorFunctionFactoryTermY.jsonld#ActorFunctionFactoryTermY_args_name",

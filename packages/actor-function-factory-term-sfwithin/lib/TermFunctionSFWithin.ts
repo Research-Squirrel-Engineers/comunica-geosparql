@@ -16,7 +16,7 @@ export class TermFunctionSFWithin extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFWITHIN,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFWITHIN).geometryTest(() => (left, right) => turf.booleanWithin(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFWITHIN).geometryTestNormalizedCRS(() => (left, right) => turf.booleanWithin(left, right)).collect(),
     });
   }
 }

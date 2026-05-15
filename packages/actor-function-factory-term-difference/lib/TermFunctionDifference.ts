@@ -1,10 +1,10 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {
   declare,
-  GeoSparqlOperator, StringLiteral,
+  GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import {serializeGeometry} from "@comunica/utils-expression-evaluator/lib/util/Serialization";
+import {serializeGeometry} from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 import type * as GJ from 'geojson';
 
@@ -17,9 +17,9 @@ export class TermFunctionDifference extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.DIFFERENCE,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.DIFFERENCE).geometryFunc(() => (left, lefttype, right, _righttype) => {
-        // serializeGeometry(turf.difference(turf.featureCollection([<GJ.Polygon>left,<GJ.Polygon>right])),lefttype)
-        return new StringLiteral('false');
+      overloads: declare(GeoSparqlOperator.DIFFERENCE).geometryFuncNormalizedCRS(() => (left, right) => {
+        // @ts-ignore
+        return serializeGeometry(turf.difference(turf.featureCollection([ turf.feature(<GJ.Polygon>left), turf.feature(<GJ.Polygon>right) ])).geometry, 'http://www.opengis.net/ont/geosparql#wktLiteral');
       }).collect(),
     });
   }

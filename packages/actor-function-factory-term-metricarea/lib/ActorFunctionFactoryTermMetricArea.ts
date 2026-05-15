@@ -18,7 +18,7 @@ export class ActorFunctionFactoryTermMetricArea extends ActorFunctionFactoryDedi
   public constructor(args: IActorFunctionFactoryArgs) {
     super({
       ...args,
-      functionNames: [ GeoSparqlOperator.CENTROID ],
+      functionNames: [ GeoSparqlOperator.METRICAREA ],
       termFunction: true,
     });
   }

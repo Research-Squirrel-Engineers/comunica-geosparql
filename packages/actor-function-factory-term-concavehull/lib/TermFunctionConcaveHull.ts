@@ -18,11 +18,13 @@ export class TermFunctionConcaveHull extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlOperator.CONCAVEHULL,
       overloads: declare(GeoSparqlOperator.CONCAVEHULL).onLiteral1(() => (term) => {
-        /*const thegeom = parseGeometry(term)[0];
+        const thegeom = parseGeometry(term)[0];
+        /*
         const pointcoll: Feature<Point, GeoJsonProperties>[] | number[][] = [];
         turf.coordEach(thegeom, (currentCoord) => {
           pointcoll.push(turf.point([currentCoord[0].toFixed(), currentCoord[1].toFixed()]));
         });
+        turf.near
         turf.concave(turf.points(pointcoll));
         const chull = turf.concave()?.geometry;
         if (chull !== undefined) {

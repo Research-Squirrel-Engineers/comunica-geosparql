@@ -12,7 +12,7 @@ export class TermFunctionAbove extends TermFunctionBase {
     super({
       arity: 2,
       operator: GeoSparqlExtOperator.ABOVE,
-      overloads: declare(GeoSparqlExtOperator.ABOVE).geometryTest(() => (left, right) => {
+      overloads: declare(GeoSparqlExtOperator.ABOVE).geometryTestNormalizedCRS(() => (left, right) => {
         const leftbbox = turf.bbox(left);
         const rightbbox = turf.bbox(right);
         // eslint-disable-next-line max-len

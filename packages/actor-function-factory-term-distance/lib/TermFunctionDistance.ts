@@ -1,7 +1,6 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {
   declare,
-  double,
   GeoSparqlOperator, StringLiteral,
 } from '@comunica/utils-expression-evaluator';
 
@@ -15,7 +14,7 @@ export class TermFunctionDistance extends TermFunctionBase {
     super({
       arity: 2,
       operator: GeoSparqlOperator.DISTANCE,
-      overloads: declare(GeoSparqlOperator.DISTANCE).geometryFunc(() => (left, _leftType, right, _rightType) => {
+      overloads: declare(GeoSparqlOperator.DISTANCE).geometryFuncNormalizedCRS(() => (left, right) => {
         if (left.type === 'Point' && right.type === 'Point') {
           return new StringLiteral(turf.distance(left, right).toString(), 'http://www.w3.org/2001/XMLSchema#double');
         }

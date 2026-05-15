@@ -15,9 +15,8 @@ export class TermFunctionMinZ extends TermFunctionBase {
   public constructor() {
     super({
       arity: 1,
-      operator: GeoSparqlOperator.MINX,
-      overloads: declare(GeoSparqlOperator.MINX).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      operator: GeoSparqlOperator.MINZ,
+      overloads: declare(GeoSparqlOperator.MINZ).onGeometry1(() => (thegeom) => {
         let minZ = Number.MAX_VALUE;
         turf.coordEach(thegeom, (
           currentCoord,

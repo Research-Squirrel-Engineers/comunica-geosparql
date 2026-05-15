@@ -15,7 +15,7 @@ export class TermFunctionShortestLine extends TermFunctionBase {
     super({
       arity: 2,
       operator: GeoSparqlExtOperator.SHORTESTLINE,
-      overloads: declare(GeoSparqlExtOperator.SHORTESTLINE).geometryFunc(() => (left, _leftCRS, right, _rightCRS) => {
+      overloads: declare(GeoSparqlExtOperator.SHORTESTLINE).geometryFuncNormalizedCRS(() => (left, right) => {
         let minDistance = Number.MAX_VALUE;
         let minDistancePointPair: number[][] = [];
         turf.coordEach(left, (currentCoord, _coordIndex) => {
@@ -27,7 +27,7 @@ export class TermFunctionShortestLine extends TermFunctionBase {
             }
           });
         });
-        return serializeGeometry(turf.geometry('LineString', [ minDistancePointPair[0], minDistancePointPair[1] ]), 'http://www.opengis.net/ont/geosparql#wktLiteral');
+        return serializeGeometry(turf.lineString([ minDistancePointPair[0], minDistancePointPair[1] ]).geometry, 'http://www.opengis.net/ont/geosparql#wktLiteral');
       }).collect(),
     });
   }

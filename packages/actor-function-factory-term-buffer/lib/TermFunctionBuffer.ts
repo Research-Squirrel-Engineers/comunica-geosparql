@@ -1,7 +1,6 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import {declare, GeoSparqlOperator, StringLiteral} from '@comunica/utils-expression-evaluator';
+import {declare, GeoSparqlOperator, string, StringLiteral} from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 
@@ -12,14 +11,23 @@ import * as turf from '@turf/turf';
 export class TermFunctionBuffer extends TermFunctionBase {
   public constructor() {
     super({
-      arity: 1,
+      arity: 3,
       operator: GeoSparqlOperator.BUFFER,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.BUFFER).onLiteral1(() => term => {
-        const _thegeom = parseGeometry(term)[0];
-        //turf.buffer(turf.geojsonType(thegeom,thegeom.type,"thegeom"));
-        return new StringLiteral('test');
-        //serializeGeometry(turf.buffer(parseGeometry(term)), term.dataType)
+      overloads: declare(GeoSparqlOperator.BUFFER).onGeometryTup1Literal1(() => (thegeomtup, radius) => {
+        if (thegeomtup[0].type === 'Point') {
+          // @ts-ignore
+          return serializeGeometry(turf.buffer(thegeomtup[0], Number.parseFloat(radius.str())).geometry, thegeomtup[2]);
+        }
+        if (thegeomtup[0].type === 'Polygon') {
+          // @ts-ignore
+          return serializeGeometry(turf.buffer(thegeomtup[0], Number.parseFloat(radius.str())).geometry, thegeomtup[2]);
+        }
+        if (thegeomtup[0].type === 'LineString') {
+          // @ts-ignore
+          return serializeGeometry(turf.buffer(thegeomtup[0], Number.parseFloat(radius.str())).geometry, thegeomtup[2]);
+        }
+        return string('');
       }).collect(),
     });
   }

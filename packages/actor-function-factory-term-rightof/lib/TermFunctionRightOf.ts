@@ -12,7 +12,7 @@ export class TermFunctionRightOf extends TermFunctionBase {
     super({
       arity: 2,
       operator: GeoSparqlExtOperator.RIGHTOF,
-      overloads: declare(GeoSparqlExtOperator.RIGHTOF).geometryTest(() => (left, right) => {
+      overloads: declare(GeoSparqlExtOperator.RIGHTOF).geometryTestNormalizedCRS(() => (left, right) => {
         const leftbbox = turf.bbox(left);
         const rightbbox = turf.bbox(right);
         // eslint-disable-next-line max-len

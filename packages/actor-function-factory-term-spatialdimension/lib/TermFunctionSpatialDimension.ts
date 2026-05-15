@@ -5,7 +5,6 @@ import {
   integer,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
@@ -16,8 +15,7 @@ export class TermFunctionSpatialDimension extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.SPATIALDIMENSION,
-      overloads: declare(GeoSparqlOperator.SPATIALDIMENSION).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      overloads: declare(GeoSparqlOperator.SPATIALDIMENSION).onGeometry1(() => (thegeom) => {
         let coordinator = 0;
         turf.coordEach(thegeom, (currentCoord) => {
           if (currentCoord.length > coordinator) {

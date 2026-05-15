@@ -8,7 +8,7 @@ import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Par
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 
 /**
- * http://www.opengis.net/def/function/geosparql/asGeoJSON
+ * http://www.opengis.net/def/function/geosparql/asGeoCode
  */
 export class TermFunctionAsGeoCode extends TermFunctionBase {
   public constructor() {

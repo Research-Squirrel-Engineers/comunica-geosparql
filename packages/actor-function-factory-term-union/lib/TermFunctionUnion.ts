@@ -17,9 +17,9 @@ export class TermFunctionUnion extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.GEO_UNION,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.GEO_UNION).geometryFunc(() => (left, lefttype, right, _righttype) => {
+      overloads: declare(GeoSparqlOperator.GEO_UNION).geometryFuncNormalizedCRS(() => (left, right) => {
         return new StringLiteral('false');
-        // serializeGeometry(turf.union(turf.featureCollection([<GJ.Polygon>left,<GJ.Polygon>right])),lefttype)
+        //return serializeGeometry(turf.union(turf.featureCollection([<GJ.Polygon>left,<GJ.Polygon>right])),lefttype)
       }).collect(),
     });
   }

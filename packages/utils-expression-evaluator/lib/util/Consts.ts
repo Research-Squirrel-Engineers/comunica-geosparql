@@ -99,6 +99,7 @@ export type KnownOperator = SparqlOperator | GeoSparqlOperator | NamedOperator;
 
 export enum GeoSparqlExtOperator {
   ABOVE = 'http://www.opengis.net/def/function/geosparql/ext/above',
+  ADDPOINT = 'http://www.opengis.net/def/function/geosparql/ext/addpoint',
   ASGEOCODE = 'http://www.opengis.net/def/function/geosparql/ext/asGeoCode',
   ASOBJ = 'http://www.opengis.net/def/function/geosparql/ext/asOBJ',
   ASPLY = 'http://www.opengis.net/def/function/geosparql/ext/asPLY',
@@ -111,11 +112,14 @@ export enum GeoSparqlExtOperator {
   COMPACTNESSRATIO = 'http://www.opengis.net/def/function/geosparql/ext/compactnessRatio',
   FARTHESTCOORDINATE = 'http://www.opengis.net/def/function/geosparql/ext/farthestCoordinate',
   ENDPOINT = 'http://www.opengis.net/def/function/geosparql/ext/endPoint',
+  EXPLODE = 'http://www.opengis.net/def/function/geosparql/ext/explode',
   FORCE2D = 'http://www.opengis.net/def/function/geosparql/ext/force2D',
   FORCE3D = 'http://www.opengis.net/def/function/geosparql/ext/force3D',
   FRECHETDISTANCE = 'http://www.opengis.net/def/function/geosparql/ext/frechetDistance',
   ISCW = 'http://www.opengis.net/def/function/geosparql/ext/isCW',
   ISCCW = 'http://www.opengis.net/def/function/geosparql/ext/isCCW',
+  ISCOLLECTION = 'http://www.opengis.net/def/function/geosparql/ext/isCollection',
+  ISCONCAVE = 'http://www.opengis.net/def/function/geosparql/ext/isConcave',
   ISRECTANGLE = 'http://www.opengis.net/def/function/geosparql/ext/isRectangle',
   ISTRIANGLE = 'http://www.opengis.net/def/function/geosparql/ext/isTriangle',
   ISVALID = 'http://www.opengis.net/def/function/geosparql/ext/isValid',
@@ -137,6 +141,7 @@ export enum GeoSparqlExtOperator {
   SHORTESTLINE = 'http://www.opengis.net/def/function/geosparql/ext/shortestLine',
   SIMPLIFY = 'http://www.opengis.net/def/function/geosparql/ext/simplify',
   SKEW = 'http://www.opengis.net/def/function/geosparql/ext/skew',
+  SMOOTH = 'http://www.opengis.net/def/function/geosparql/ext/smooth',
   TRANSLATE = 'http://www.opengis.net/def/function/geosparql/ext/translate',
   TRANSFORMCRS84 = 'http://www.opengis.net/def/function/geosparql/ext/transformCRS84',
   WITHINDISTANCE = 'http://www.opengis.net/def/function/geosparql/ext/withinDistance',
@@ -156,6 +161,7 @@ export const _supported_DGGS = [
 
 export enum GeoSparqlOperator {
   AREA = 'http://www.opengis.net/def/function/geosparql/area',
+  ASDGGS = 'http://www.opengis.net/def/function/geosparql/asDGGS',
   ASGEOJSON = 'http://www.opengis.net/def/function/geosparql/asGeoJSON',
   ASGML = 'http://www.opengis.net/def/function/geosparql/asGML',
   ASKML = 'http://www.opengis.net/def/function/geosparql/asKML',

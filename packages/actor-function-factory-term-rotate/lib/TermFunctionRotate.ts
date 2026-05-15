@@ -1,5 +1,7 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import {declare, GeoSparqlExtOperator, StringLiteral} from '@comunica/utils-expression-evaluator';
+import { declare, GeoSparqlExtOperator } from '@comunica/utils-expression-evaluator';
+import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
+import * as turf from '@turf/turf';
 
 /**
  * http://www.opengis.net/def/function/geosparql/scale
@@ -10,10 +12,7 @@ export class TermFunctionRotate extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlExtOperator.ROTATE,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlExtOperator.ROTATE).onTerm3(() => (_term1, _term2, _term3) => {
-        return new StringLiteral('');
-        //return serializeGeometry(turf.transformRotate(parseGeometry(<StringLiteral>term1)[0], Number.parseFloat(<StringLiteral>term2.str().toString()), Number.parseFloat(<StringLiteral>term3.toString())), term1.termType);
-      }).collect(),
+      overloads: declare(GeoSparqlExtOperator.ROTATE).onGeometryTup1Literal1(() => (term1, term2) => serializeGeometry(turf.transformRotate(term1[0], Number.parseFloat(term2.str())), term1[2])).collect(),
     });
   }
 }

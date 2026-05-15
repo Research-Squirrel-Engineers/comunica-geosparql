@@ -12,7 +12,7 @@ export class TermFunctionSFCrosses extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFCROSSES,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFCROSSES).geometryTest(() => (left, right) => turf.booleanCrosses(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFCROSSES).geometryTestNormalizedCRS(() => (left, right) => turf.booleanCrosses(left, right)).collect(),
     });
   }
 }

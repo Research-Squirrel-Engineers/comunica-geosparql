@@ -1,8 +1,8 @@
 import * as turf from '@turf/turf';
 import type * as GJ from 'geojson';
-import * as proj4 from 'proj4';
+import proj4 from 'proj4';
 
-export const epsgdefs: {[id:string]:string} = {
+export const epsgdefs: Record<string, string> = {
   'EPSG:2000': '+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +units=m +no_defs',
   'EPSG:2001': '+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +towgs84=-255,-15,71,0,0,0,0 +units=m +no_defs',
   'EPSG:2002': '+proj=tmerc +lat_0=0 +lon_0=-62 +k=0.9995000000000001 +x_0=400000 +y_0=0 +ellps=clrk80 +towgs84=725,685,536,0,0,0,0 +units=m +no_defs',
@@ -4764,18 +4764,31 @@ export function convertGeoJSON(geojson: any, from: string, to: string, styles: s
     for (const feature of geojson.features) {
       const coords = feature.geometry.coordinates;
       feature.geometry = exportConvert(coords, from, to, feature.geometry.type, false);
-      if (typeof (styles) !== 'undefined' && styles !== null ) { //&& feature.geometry.type.replace('Multi', '') in styles
+      if (typeof (styles) !== 'undefined' && styles !== null) {// && feature.geometry.type.replace('Multi', '') in styles
         feature.style = styles[feature.geometry.type.replace('Multi', '')];
       }
     }
   } else {
     const coords = geojson.geometry.coordinates;
     geojson.geometry = exportConvert(coords, from, to, geojson.geometry.type, false);
-    if (typeof (styles) !== 'undefined' && styles !== null) {  // && geojson.geometry.type.replace('Multi', '') in styles
+    if (typeof (styles) !== 'undefined' && styles !== null) {// && geojson.geometry.type.replace('Multi', '') in styles
       geojson.style = styles[geojson.geometry.type.replace('Multi', '')];
     }
   }
   return geojson;
+}
+
+// eslint-disable-next-line max-len
+export function alignGeometryCRS(thegeom: GJ.Geometry, geom1crs: string, thegeom2: GJ.Geometry, geom2crs: string, alignWithfirstCRS = true): [GJ.Point | GJ.MultiPoint | GJ.LineString | GJ.MultiLineString | GJ.Polygon | GJ.MultiPolygon | GJ.GeometryCollection<GJ.Geometry>, GJ.Point | GJ.MultiPoint | GJ.LineString | GJ.MultiLineString | GJ.Polygon | GJ.MultiPolygon | GJ.GeometryCollection<GJ.Geometry>] {
+  if (geom1crs === geom2crs) {
+    return [ thegeom, thegeom2 ];
+  }
+  if (alignWithfirstCRS) {
+    const newthegeom = convertGeometry(thegeom2, geom1crs, geom2crs);
+    return [ thegeom, newthegeom ];
+  }
+  const newthegeom = convertGeometry(thegeom, geom1crs, geom2crs);
+  return [ newthegeom, thegeom2 ];
 }
 
 export function convertGeometry(thegeom: GJ.Geometry, from: string, to: string, _styles = ''): GJ.Geometry {
@@ -4805,9 +4818,10 @@ export function convertGeometry(thegeom: GJ.Geometry, from: string, to: string, 
 // }
 //
 
+// eslint-disable-next-line max-len
 export function exportConvert(coordinates: number[], from: string, to: string, geomtype: string, switchlatlong: boolean): GJ.Geometry {
   if (to === null) {
-    return geometryToGeoJSON(geomtype, convertit(coordinates, from, epsgdefs['EPSG:4326'], switchlatlong));
+    return geometryToGeoJSON(geomtype, convertit(coordinates, from, 'EPSG:4326', switchlatlong));
   }
   return geometryToGeoJSON(geomtype, convertit(coordinates, from, to, switchlatlong));
 }
@@ -4845,19 +4859,34 @@ export function geometryToGeoJSON(geomtype: string, coordinates: number[]): GJ.G
   if (geomtype === 'linearring' || geomtype === 'polygon') {
     coordstring += ']]';
   }
-  return turf.getGeom(JSON.parse(`{ "type": "${geomtype}", "coordinates": ${coordstring} }`));
+  return turf.getGeom(JSON.parse(`{ "type": "${res.geometry.type}", "coordinates": ${coordstring} }`));
 }
 
 export function convertit(coordinates: number[], source: string, dest: string, switchlatlong: boolean): number[] {
-  // Console.log("Coordinates: "+coordinates)
+  console.log(`Coordinates: ${coordinates}`);
   if (source === dest && !switchlatlong) {
     return coordinates;
   }
   const resultarray: number[] = [];
-  // Console.log(coordinates.length)
   let i;
   i = 0;
   const splitted = coordinates.toString().split(',');
+  if (source.includes('http://www.opengis.net/def/crs/OGC/1.3/CRS84')) {
+    source = 'EPSG:4326';
+  }
+  if (dest.includes('http://www.opengis.net/def/crs/OGC/1.3/CRS84')) {
+    dest = 'EPSG:4326';
+  }
+  console.log(`Source: ${source}`);
+  console.log(`Dest: ${dest}`);
+  if (source.startsWith('EPSG')) {
+    source = epsgdefs[source];
+  }
+  if (dest.startsWith('EPSG')) {
+    dest = epsgdefs[dest];
+  }
+  console.log(`Source: ${source}`);
+  console.log(`Dest: ${dest}`);
   while (i < splitted.length) {
     const p = [ Number.parseFloat(splitted[i]), Number.parseFloat(splitted[i + 1]) ];
     let res;
@@ -4865,6 +4894,7 @@ export function convertit(coordinates: number[], source: string, dest: string, s
       res = p;
     } else {
       res = proj4(source, dest, p);
+      // Res = p;
     }
     if (switchlatlong) {
       resultarray.push(res[1]);

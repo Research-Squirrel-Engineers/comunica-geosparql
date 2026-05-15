@@ -1,7 +1,6 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import {declare, double, GeoSparqlOperator} from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 
@@ -12,9 +11,8 @@ export class TermFunctionMetricArea extends TermFunctionBase {
   public constructor() {
     super({
       arity: 1,
-      operator: GeoSparqlOperator.CENTROID,
-      // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.CENTROID).onLiteral1(() => term => double(turf.area(parseGeometry(term)[0]))).collect(),
+      operator: GeoSparqlOperator.METRICAREA,
+      overloads: declare(GeoSparqlOperator.METRICAREA).onGeometry1(() => term => double(turf.area(term))).collect(),
     });
   }
 }

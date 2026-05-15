@@ -5,7 +5,6 @@ import {
   GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
@@ -16,8 +15,7 @@ export class TermFunctionMaxZ extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.MAXZ,
-      overloads: declare(GeoSparqlOperator.MAXZ).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      overloads: declare(GeoSparqlOperator.MAXZ).onGeometry1(() => (thegeom) => {
         let maxZ = Number.MIN_VALUE;
         turf.coordEach(thegeom, (
           currentCoord,

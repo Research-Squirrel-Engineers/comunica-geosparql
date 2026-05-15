@@ -4,7 +4,6 @@ import {
   GeoSparqlOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 
 /**
@@ -15,7 +14,7 @@ export class TermFunctionAsGeoJSON extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlOperator.ASGEOJSON,
-      overloads: declare(GeoSparqlOperator.ASGEOJSON).onLiteral1(() => term => serializeGeometry(parseGeometry(term)[0], 'http://www.opengis.net/ont/geosparql#geoJSONLiteral')).collect(),
+      overloads: declare(GeoSparqlOperator.ASGEOJSON).onGeometry1(() => term => serializeGeometry(term, 'http://www.opengis.net/ont/geosparql#geoJSONLiteral')).collect(),
     });
   }
 }

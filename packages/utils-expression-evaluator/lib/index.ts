@@ -6,6 +6,7 @@ export { prepareEvaluatorActionContext } from './util/Context';
 export {
   declare,
   bool,
+  castGeometryTo,
   string,
   double,
   integer,
@@ -15,6 +16,7 @@ export {
   float,
   expressionToVar,
   rangeOverlaps,
+  unitURIToTurfString,
   Builder,
 } from './functions/Helpers';
 export {
@@ -47,6 +49,11 @@ export {
   KnownLiteralTypes,
 } from './util/Consts';
 export { isSubTypeOf } from './util/TypeHandling';
+export {
+  alignGeometryCRS,
+  convertGeometry,
+  convertGeoJSON,
+} from './util/EPSGDefs';
 export {
   dayTimeDurationsToSeconds,
   defaultedDateTimeRepresentation,
@@ -93,6 +100,8 @@ export {
   parseDayTimeDuration,
   parseDuration,
   parseTime,
+  parseGeometry,
+  parseGeometryFeature,
   parseYearMonthDuration,
   parseXSDDecimal,
   parseXSDFloat,

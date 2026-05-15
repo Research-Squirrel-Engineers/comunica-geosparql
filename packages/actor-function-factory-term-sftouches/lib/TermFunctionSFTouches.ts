@@ -16,7 +16,7 @@ export class TermFunctionSFTouches extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFTOUCHES,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFTOUCHES).geometryTest(() => (left, right) => turf.booleanTouches(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFTOUCHES).geometryTestNormalizedCRS(() => (left, right) => turf.booleanTouches(left, right)).collect(),
     });
   }
 }

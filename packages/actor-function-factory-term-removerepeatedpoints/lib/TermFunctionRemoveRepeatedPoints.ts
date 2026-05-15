@@ -4,7 +4,6 @@ import {
   GeoSparqlExtOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import { serializeGeometry } from '@comunica/utils-expression-evaluator/lib/util/Serialization';
 import * as turf from '@turf/turf';
 
@@ -17,7 +16,7 @@ export class TermFunctionRemoveRepeatedPoints extends TermFunctionBase {
       arity: 1,
       operator: GeoSparqlExtOperator.REMOVEREPEATEDPOINTS,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlExtOperator.REMOVEREPEATEDPOINTS).onLiteral1(() => term => serializeGeometry(turf.cleanCoords(parseGeometry(term)[0]), term.dataType)).collect(),
+      overloads: declare(GeoSparqlExtOperator.REMOVEREPEATEDPOINTS).onGeometryTup1(() => term => serializeGeometry(turf.cleanCoords(term[0]), term[2])).collect(),
     });
   }
 }

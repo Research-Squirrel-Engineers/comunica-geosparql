@@ -12,7 +12,7 @@ export class TermFunctionEHInside extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.EHINSIDE,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.EHINSIDE).geometryTest(() => (left, right) => turf.booleanContains(right, left)).collect(),
+      overloads: declare(GeoSparqlOperator.EHINSIDE).geometryTestNormalizedCRS(() => (left, right) => turf.booleanContains(right, left)).collect(),
     });
   }
 }

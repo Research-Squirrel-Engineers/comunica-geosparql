@@ -5,7 +5,6 @@ import {
   GeoSparqlExtOperator,
 } from '@comunica/utils-expression-evaluator';
 
-import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
 
 /**
@@ -16,8 +15,7 @@ export class TermFunctionZ extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.Z,
-      overloads: declare(GeoSparqlExtOperator.Z).onLiteral1(() => (term) => {
-        const thegeom = parseGeometry(term)[0];
+      overloads: declare(GeoSparqlExtOperator.Z).onGeometry1(() => (thegeom) => {
         if (thegeom.type === 'Point') {
           return double(turf.getCoord(thegeom)[2]);
         }

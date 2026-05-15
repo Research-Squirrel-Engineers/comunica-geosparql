@@ -7,6 +7,7 @@ import {
 
 import { parseGeometry } from '@comunica/utils-expression-evaluator/lib/util/Parsing';
 import * as turf from '@turf/turf';
+import type * as GJ from 'geojson';
 
 /**
  * http://www.opengis.net/def/function/geosparql/isTriangle
@@ -16,11 +17,11 @@ export class TermFunctionIsTriangle extends TermFunctionBase {
     super({
       arity: 1,
       operator: GeoSparqlExtOperator.ISTRIANGLE,
-      overloads: declare(GeoSparqlExtOperator.ISTRIANGLE).onLiteral1(
-        () => (term) => {
-          const thegeom = parseGeometry(term)[0];
-          if (thegeom.type === 'Polygon') {
-            const thecoords = turf.getCoords(thegeom);
+      overloads: declare(GeoSparqlExtOperator.ISTRIANGLE).onGeometry1(
+        () => (thegeom) => {
+          const thetype = turf.getType(thegeom);
+          if (thetype === 'Polygon') {
+            const thecoords = turf.getCoords(<GJ.Polygon>thegeom);
             return bool(thecoords.length === 4 && thecoords.at(0) === thecoords.at(-1));
           }
           return bool(false);

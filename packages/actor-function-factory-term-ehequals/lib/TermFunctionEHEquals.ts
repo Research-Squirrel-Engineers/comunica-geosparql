@@ -12,7 +12,7 @@ export class TermFunctionEHEquals extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.EHEQUALS,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.EHEQUALS).geometryTest(() => (left, right) => turf.booleanEqual(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.EHEQUALS).geometryTestNormalizedCRS(() => (left, right) => turf.booleanEqual(left, right)).collect(),
     });
   }
 }

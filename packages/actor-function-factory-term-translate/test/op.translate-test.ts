@@ -6,7 +6,7 @@ import { bool } from '@comunica/utils-expression-evaluator/test/util/Aliases';
 import { Notation } from '@comunica/utils-expression-evaluator/test/util/TestTable';
 import { ActorFunctionFactoryTermTranslate } from '../lib';
 
-describe('like \'disjoint\' receiving', () => {
+describe('like \'translate\' receiving', () => {
   runFuncTestTable({
     registeredActors: [
       args => new ActorFunctionFactoryTermTranslate(args),
@@ -15,7 +15,7 @@ describe('like \'disjoint\' receiving', () => {
     arity: 1,
     aliases: bool,
     notation: Notation.Function,
-    operation: 'disjoint',
+    operation: 'translate',
     testTable: `
         "POINT(1.0 1.0)"^^<http://www.opengis.net/ont/geosparql#wktLiteral> = 1.0
       `,

@@ -16,7 +16,7 @@ export class TermFunctionSFIntersects extends TermFunctionBase {
       arity: 2,
       operator: GeoSparqlOperator.SFINTERSECTS,
       // eslint-disable-next-line max-len
-      overloads: declare(GeoSparqlOperator.SFINTERSECTS).geometryTest(() => (left, right) => turf.booleanIntersects(left, right)).collect(),
+      overloads: declare(GeoSparqlOperator.SFINTERSECTS).geometryTestNormalizedCRS(() => (left, right) => turf.booleanIntersects(left, right)).collect(),
     });
   }
 }
