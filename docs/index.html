@@ -557,16 +557,16 @@ SELECT ?n_wkt ?isN3D ?k_wkt ?isK3D {
 "http://www.opengis.net/def/function/geosparql/ext/isCCW":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>  
-SELECT ?isACW ?isECW {
+SELECT ?a_wkt ?e_wkt ?isACCW ?isECCW {
 	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
-	BIND(geof:isCCW(?a_wkt) AS ?isACW)
+	BIND(geof:isCCW(?a_wkt) AS ?isACCW)
 	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
-	BIND(geof:isCCW(?e_wkt) AS ?isECW)
+	BIND(geof:isCCW(?e_wkt) AS ?isECCW)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/isCW":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>  
-SELECT ?isACW ?isECW {
+SELECT ?a_wkt ?e_wkt ?isACW ?isECW {
 	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
 	BIND(geof:isCW(?a_wkt) AS ?isACW)
 	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
