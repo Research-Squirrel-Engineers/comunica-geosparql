@@ -799,7 +799,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 SELECT ?literal ?offsetCurve
 WHERE {
-  my:AExactGeom geo:asWKT ?literal .
+  my:EExactGeom geo:asWKT ?literal .
   BIND(geof:offsetCurve(?literal,10) AS ?offsetCurve)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/pointN":`PREFIX my: <http://example.org/ApplicationSchema#>
