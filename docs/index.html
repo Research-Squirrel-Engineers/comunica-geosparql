@@ -52,6 +52,7 @@
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
 		"http://www.opengis.net/def/function/geosparql/intersection":"geof:intersection",
 		"http://www.opengis.net/def/function/geosparql/is3D":"geof:is3D",
+		"http://www.opengis.net/def/function/geosparql/ext/isCCW":"geofext:isCCW",
 		"http://www.opengis.net/def/function/geosparql/ext/isConcave":"geofext:isConcave",
 		"http://www.opengis.net/def/function/geosparql/isClosed":"geof:isClosed",
 		"http://www.opengis.net/def/function/geosparql/ext/isCollection":"geofext:isCollection",
@@ -553,6 +554,15 @@ SELECT ?n_wkt ?isN3D ?k_wkt ?isK3D {
 	<http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
 	BIND(geof:is3D(?k_wkt) AS ?isK3D)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/isCW":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>  
+SELECT ?isACW ?isECW {
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
+	BIND(geof:isCW(?a_wkt) AS ?isACW)
+	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
+	BIND(geof:isCW(?e_wkt) AS ?isECW)
+}`,
 "http://www.opengis.net/def/function/geosparql/isClosed":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
@@ -973,7 +983,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
-SELECT ?simple
+SELECT ?literal ?simple
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:simplify(?literal,"1.5"^^xsd:double) AS ?simple)
