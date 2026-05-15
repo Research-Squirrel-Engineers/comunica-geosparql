@@ -554,6 +554,15 @@ SELECT ?n_wkt ?isN3D ?k_wkt ?isK3D {
 	<http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
 	BIND(geof:is3D(?k_wkt) AS ?isK3D)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/isCCW":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>  
+SELECT ?isACW ?isECW {
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
+	BIND(geof:isCCW(?a_wkt) AS ?isACW)
+	<http://example.org/ApplicationSchema#EExactGeom> geo:asWKT ?e_wkt .
+	BIND(geof:isCCW(?e_wkt) AS ?isECW)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/isCW":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>  
@@ -964,10 +973,10 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?literal ?Z
+SELECT ?literal ?rotated
 WHERE {
-  my:APointGeom geo:asWKT ?literal .
-  BIND(geof:rotate(?literal,"90"^^xsd:double) AS ?Z)
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:rotate(?literal,"90"^^xsd:double) AS ?rotated)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
