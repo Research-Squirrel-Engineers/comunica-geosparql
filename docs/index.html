@@ -503,7 +503,7 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?literal ?envelope
 WHERE {
-  my:AExactGeom geo:asWKT ?literal .
+  my:EExactGeom geo:asWKT ?literal .
   BIND(geof:envelope(?literal) AS ?envelope)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/force2D":`PREFIX my: <http://example.org/ApplicationSchema#>
