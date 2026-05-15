@@ -103,6 +103,7 @@
 		"http://www.opengis.net/def/function/geosparql/sfWithin":"geof:sfWithin",
 		"http://www.opengis.net/def/function/geosparql/ext/shortestLine":"geofext:shortestLine",
 		"http://www.opengis.net/def/function/geosparql/ext/simplify":"geofext:simplify",
+		"http://www.opengis.net/def/function/geosparql/ext/smooth":"geofext:smooth",
         "http://www.opengis.net/def/function/geosparql/spatialDimension":"geof:spatialDimension",
 		"http://www.opengis.net/def/function/geosparql/ext/startPoint":"geofext:startPoint",
         "http://www.opengis.net/def/function/geosparql/symDifference":"geof:symDifference",
@@ -1074,7 +1075,7 @@ WHERE {
   ?aGeom geo:asWKT ?geom2 .
   BIND (geof:sfWithin(?geom2, ?geom1) as ?sfWithin)
 }`,
-"http://www.opengis.net/def/function/geosparql/smooth":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/smooth":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
