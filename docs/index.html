@@ -758,7 +758,7 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:metricPerimeter(?literal) AS ?mperimeter)
 }`,
-"http://www.opengis.net/def/function/geosparql/metricWithinDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/metricWithinDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -1171,6 +1171,18 @@ WHERE {
   my:D geo:hasDefaultGeometry ?dGeom .
   ?dGeom geo:asWKT ?geom2 .
   BIND (geof:union(?geom1, ?geom2) as ?union)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/withinDistance":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT (xsd:boolean(?wdistance) as ?wddistance)
+WHERE {
+  my:C geo:hasDefaultGeometry ?cGeom .
+  ?cGeom geo:asWKT ?cLiteral .
+  my:F geo:hasDefaultGeometry ?fGeom .
+  ?fGeom geo:asWKT ?fLiteral .
+  BIND (geof:withinDistance(?cLiteral, ?fLiteral,"5.0"^^xsd:double,"http://www.ontology-of-units-of-measure.org/resource/om-2/mile"^^xsd:anyURI) as ?wdistance)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/X":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
