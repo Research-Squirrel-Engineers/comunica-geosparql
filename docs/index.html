@@ -21,11 +21,14 @@
     geof={
 		"http://www.opengis.net/def/function/geosparql/ext/above":"geofext:above",
 		"http://www.opengis.net/def/function/geosparql/area":"geof:area",
+		"http://www.opengis.net/def/function/geosparql/asDGGS":"geof:asDGGS",
 		"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
+		"http://www.opengis.net/def/function/geosparql/asGML":"geof:asGML",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/asPLY":"geof:asPLY",
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
+		"http://www.opengis.net/def/function/geosparql/ext/asWKB":"geofext:asWKB",
 		"http://www.opengis.net/def/function/geosparql/ext/below":"geofext:below",
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
@@ -139,6 +142,16 @@ WHERE {
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:area(?aLiteral,"http://qudt.org/vocab/unit/AC"^^xsd:anyURI) as ?area)
 }`,
+"http://www.opengis.net/def/function/geosparql/asDGGS":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?asDGGS
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asDGGS(?aLiteral,"https://h3geo.org/res/7") as ?asDGGS)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/asGeoCode":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -158,6 +171,16 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asGeoJSON(?aLiteral) as ?asGeoJSON)
+}`,
+"http://www.opengis.net/def/function/geosparql/asGML":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?asGML
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asGML(?aLiteral) as ?asGML)
 }`,
 "http://www.opengis.net/def/function/geosparql/asKML":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -246,6 +269,16 @@ end_header
 4 11 12 4 13
 4 12 0 3 4
 4 10 9 0 12"""^^geo:plyLiteral AS ?literal2)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/asWKB":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?asWKB
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asWKB(?aLiteral) as ?asWKB)
 }`,
 "http://www.opengis.net/def/function/geosparql/asWKT":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
