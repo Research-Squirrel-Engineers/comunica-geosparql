@@ -156,11 +156,13 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aLiteral ?asGeoCode
+SELECT ?aLiteral ?asOLC ?asGeoURI ?asGeoHash
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
-  BIND (geof:asGeoCode(?aLiteral,"http://opengis.net/ont/geocode/OpenLocationCode") as ?asGeoCode)
+  BIND (geof:asGeoCode(?aLiteral,"http://opengis.net/ont/geocode/OpenLocationCode") as ?asOLC)
+  BIND (geof:asGeoCode(?aLiteral,"http://opengis.net/ont/geocode/GeoURI") as ?asGeoURI)
+  BIND (geof:asGeoCode(?aLiteral,"http://opengis.net/ont/geocode/GeoHash") as ?asGeoHash)
 }`,
 "http://www.opengis.net/def/function/geosparql/asGeoJSON":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
