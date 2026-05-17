@@ -24,6 +24,7 @@
 		"http://www.opengis.net/def/function/geosparql/asDGGS":"geof:asDGGS",
 		"http://www.opengis.net/def/function/geosparql/ext/asGeoCode":"geofext:asGeoCode",
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
+		"http://www.opengis.net/def/function/geosparql/ext/asGLTF":"geofext:asGLTF",
 		"http://www.opengis.net/def/function/geosparql/asGML":"geof:asGML",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/asOBJ":"geof:asOBJ",
@@ -174,6 +175,16 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asGeoJSON(?aLiteral) as ?asGeoJSON)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/asGLTF":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?asGLTF
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asGLTF(?aLiteral) as ?asGLTF)
 }`,
 "http://www.opengis.net/def/function/geosparql/asGML":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
