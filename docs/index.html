@@ -27,8 +27,9 @@
 		"http://www.opengis.net/def/function/geosparql/ext/asGLTF":"geofext:asGLTF",
 		"http://www.opengis.net/def/function/geosparql/asGML":"geof:asGML",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
-        "http://www.opengis.net/def/function/geosparql/asOBJ":"geof:asOBJ",
-		"http://www.opengis.net/def/function/geosparql/asPLY":"geof:asPLY",
+        "http://www.opengis.net/def/function/geosparql/ext/asOBJ":"geofext:asOBJ",
+		"http://www.opengis.net/def/function/geosparql/ext/asPLY":"geofext:asPLY",
+		"http://www.opengis.net/def/function/geosparql/ext/asSTL":"geofext:asSTL",
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
 		"http://www.opengis.net/def/function/geosparql/ext/asWKB":"geofext:asWKB",
 		"http://www.opengis.net/def/function/geosparql/ext/below":"geofext:below",
@@ -206,7 +207,7 @@ WHERE {
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asKML(?aLiteral) as ?asKML)
 }`,
-"http://www.opengis.net/def/function/geosparql/asOBJ":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/asOBJ":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -215,7 +216,7 @@ WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:asOBJ(?literal) AS ?obj)
 }`,
-"http://www.opengis.net/def/function/geosparql/asPLY":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/asPLY":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -223,6 +224,15 @@ SELECT ?literal ?ply
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:asPLY(?literal) AS ?ply)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/asSTL":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal ?stl
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:asSTL(?literal) AS ?stl)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/asWKB":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
