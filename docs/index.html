@@ -26,6 +26,7 @@
 		"http://www.opengis.net/def/function/geosparql/asGeoJSON":"geof:asGeoJSON",
 		"http://www.opengis.net/def/function/geosparql/ext/asGLTF":"geofext:asGLTF",
 		"http://www.opengis.net/def/function/geosparql/asGML":"geof:asGML",
+		"http://www.opengis.net/def/function/geosparql/ext/asJSONFG":"geofext:asJSONFG",
 		"http://www.opengis.net/def/function/geosparql/asKML":"geof:asKML",
         "http://www.opengis.net/def/function/geosparql/ext/asOBJ":"geofext:asOBJ",
 		"http://www.opengis.net/def/function/geosparql/ext/asPLY":"geofext:asPLY",
@@ -196,6 +197,16 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:asGML(?aLiteral) as ?asGML)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/JSONFG":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aLiteral ?asJSONFG
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:asJSONFG(?aLiteral) as ?asJSONFG)
 }`,
 "http://www.opengis.net/def/function/geosparql/asKML":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
