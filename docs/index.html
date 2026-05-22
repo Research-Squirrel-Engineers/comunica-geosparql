@@ -302,7 +302,7 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aGeom ?boundingDiagonal
+SELECT ?aLiteral ?boundingDiagonal
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
