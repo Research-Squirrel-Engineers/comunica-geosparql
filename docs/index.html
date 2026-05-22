@@ -34,6 +34,7 @@
         "http://www.opengis.net/def/function/geosparql/asWKT":"geof:asWKT",
 		"http://www.opengis.net/def/function/geosparql/ext/asWKB":"geofext:asWKB",
 		"http://www.opengis.net/def/function/geosparql/ext/below":"geofext:below",
+		"http://www.opengis.net/def/function/geosparql/ext/boundingDiagonal":"geofext:boundingDiagonal",
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
@@ -296,6 +297,16 @@ WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:buffer(?aLiteral,"5.0"^^xsd:double,<http://www.ontology-of-units-of-measure.org/resource/om-2/meter>) as ?buffer)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/boundingDiagonal":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?aGeom ?boundingDiagonal
+WHERE {
+  my:A geo:hasDefaultGeometry ?aGeom .
+  ?aGeom geo:asWKT ?aLiteral .
+  BIND (geof:boundingDiagonal(?aLiteral) as ?boundingDiagonal)
 }`,
 "http://www.opengis.net/def/function/geosparql/boundary":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
