@@ -100,10 +100,12 @@
 		"http://www.opengis.net/def/function/geosparql/rcc8po":"geof:rcc8po",
 		"http://www.opengis.net/def/function/geosparql/rcc8tpp":"geof:rcc8tpp",
 		"http://www.opengis.net/def/function/geosparql/rcc8tppi":"geof:rcc8tppi",
+		"http://www.opengis.net/def/function/geosparql/ext/removePoint":"geofext:removePoint",
 		"http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":"geofext:removeRepeatedPoints",
 		"http://www.opengis.net/def/function/geosparql/ext/rightOf":"geofext:rightOf",
         "http://www.opengis.net/def/function/geosparql/ext/rotate":"geofext:rotate",
         "http://www.opengis.net/def/function/geosparql/ext/scale":"geofext:scale",
+		"http://www.opengis.net/def/function/geosparql/ext/setPoint":"geofext:setPoint",
 		"http://www.opengis.net/def/function/geosparql/sfContains":"geof:sfContains",
 		"http://www.opengis.net/def/function/geosparql/sfCrosses":"geof:sfCrosses",
 		"http://www.opengis.net/def/function/geosparql/sfDisjoint":"geof:sfDisjoint",
@@ -969,6 +971,15 @@ WHERE {
   ?bGeom geo:asWKT ?geom2 .
   BIND (geof:rcc8tppi(?geom1, ?geom2) as ?rcc8tppir)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/removePoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?geom ?nonrepgeom
+WHERE {
+  BIND("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral AS ?geom)
+  BIND(geof:removePoint(?geom,"1"^^xsd:integer) AS ?nonrepgeom)
+}`,
 "http://www.opengis.net/def/function/geosparql/ext/removeRepeatedPoints":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -1007,6 +1018,15 @@ SELECT ?literal ?rotated
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:rotate(?literal,"90"^^xsd:double) AS ?rotated)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/setPoint":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?geom ?nonrepgeom
+WHERE {
+  BIND("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral AS ?geom)
+  BIND(geof:setPoint(?geom,"1"^^xsd:integer,"POINT(22.0, 22.0)"^^geo:wktLiteral) AS ?nonrepgeom)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
