@@ -68,6 +68,7 @@
 		"http://www.opengis.net/def/function/geosparql/ext/isCollection":"geofext:isCollection",
 		"http://www.opengis.net/def/function/geosparql/ext/isCW":"geofext:isCW",
 		"http://www.opengis.net/def/function/geosparql/isEmpty":"geof:isEmpty",
+		"http://www.opengis.net/def/function/geosparql/ext/isRing":"geofext:isRing",
 		"http://www.opengis.net/def/function/geosparql/isSimple":"geof:isSimple",
 		"http://www.opengis.net/def/function/geosparql/length":"geof:length",
 		"http://www.opengis.net/def/function/geosparql/ext/isTriangle":"geofext:isTriangle",
@@ -649,6 +650,15 @@ SELECT ?i_wkt (xsd:boolean(?isIEmptyr) as ?isIEmpty) ?k_wkt (xsd:boolean(?isKEmp
 	BIND(geof:isEmpty(?i_wkt) AS ?isIEmptyr)
 	 <http://example.org/ApplicationSchema#KExactGeom> geo:asWKT ?k_wkt .
 	BIND(geof:isEmpty(?k_wkt) AS ?isKEmptyr)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/isRing":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>                
+SELECT ?a_wkt ?isARing ?o_wkt ?isORing {
+	<http://example.org/ApplicationSchema#AExactGeom> geo:asWKT ?a_wkt .
+	BIND(geof:isRing(?a_wkt) AS ?isARing)
+	<http://example.org/ApplicationSchema#OExactGeom> geo:asWKT ?o_wkt .
+	BIND(geof:isRing(?o_wkt) AS ?isORing)
 }`,
 "http://www.opengis.net/def/function/geosparql/isSimple":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
