@@ -554,8 +554,7 @@ PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 SELECT ?literal ?geomN
 WHERE {
-  my:A geo:hasDefaultGeometry ?geom .
-  ?geom geo:asWKT ?literal .
+  BIND("MULTIPOLYGON (((1 1, 1 3, 3 3, 3 1, 1 1)), ((4 3, 6 3, 6 1, 4 1, 4 3)))"^^geo:wktLiteral AS ?literal)
   BIND (geof:geometryN(?literal,"1"^^xsd:integer) as ?geomN)
 }`,
 "http://www.opengis.net/def/function/geosparql/geometryType":`PREFIX my: <http://example.org/ApplicationSchema#>
