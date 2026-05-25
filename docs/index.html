@@ -1026,7 +1026,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?geom ?nonrepgeom
 WHERE {
   BIND("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral AS ?geom)
-  BIND(geof:setPoint(?geom,"1"^^xsd:integer,"POINT(22.0, 22.0)"^^geo:wktLiteral) AS ?nonrepgeom)
+  BIND(geof:setPoint(?geom,"1"^^xsd:integer,"POINT(22.0 22.0)"^^geo:wktLiteral) AS ?nonrepgeom)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/shortestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
