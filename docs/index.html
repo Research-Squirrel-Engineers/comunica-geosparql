@@ -858,10 +858,12 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?literal ?pointInsideCircle
+SELECT ?literal ?pointInsideCircle ?geom ?pointInsideCircle2
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
-  BIND(geof:pointInsideCircle(?literal,"POINT(80 80)"^^geo:wktLiteral,"100.5"^^xsd:double) AS ?pointInsideCircle)
+  BIND("POLYGON Z ((-83.6 34.1 5.0, -83.6 34.5 5.0, -83.6 34.5 5.0, -83.2 34.5 5.0, -83.2 34.1 5.0, -83.6 34.1 5.0))"^^geo:wktLiteral AS ?geom)
+  BIND(geof:pointInsideCircle(?literal,"POINT Z (80 80)"^^geo:wktLiteral,"100.5"^^xsd:double) AS ?pointInsideCircle)
+  BIND(geof:pointInsideCircle(?geom,"POINT Z (83.6 34.1 5.0)"^^geo:wktLiteral,"100.5"^^xsd:double) AS ?pointInsideCircle2)
 }`,	
 "http://www.opengis.net/def/function/geosparql/ext/pointN":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
