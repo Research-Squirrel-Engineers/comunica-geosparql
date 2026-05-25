@@ -57,6 +57,7 @@
 		"http://www.opengis.net/def/function/geosparql/envelope":"geof:envelope",
 		"http://www.opengis.net/def/function/geosparql/ext/force2D":"geofext:force2D",
 		"http://www.opengis.net/def/function/geosparql/ext/force3D":"geofext:force3D",
+		"http://www.opengis.net/def/function/geosparql/geometryN":"geof:geometryN",
 		"http://www.opengis.net/def/function/geosparql/geometryType":"geof:geometryType",
 		"http://www.opengis.net/def/function/geosparql/getSRID":"geof:getSRID",
 		"http://www.opengis.net/def/function/geosparql/intersection":"geof:intersection",
@@ -547,6 +548,15 @@ SELECT ?literal ?force3D
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:force3D(?literal,"5.0"^^xsd:double) AS ?force3D)
+}`,
+"http://www.opengis.net/def/function/geosparql/geometryN":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?literal ?geomN
+WHERE {
+  my:A geo:hasDefaultGeometry ?geom .
+  ?geom geo:asWKT ?literal .
+  BIND (geof:geometryN(?literal,"1"^^xsd:integer) as ?geomN)
 }`,
 "http://www.opengis.net/def/function/geosparql/geometryType":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
