@@ -89,6 +89,7 @@
 		"http://www.opengis.net/def/function/geosparql/numGeometries":"geof:numGeometries",
 		"http://www.opengis.net/def/function/geosparql/numPoints":"geof:numPoints",
 		"http://www.opengis.net/def/function/geosparql/ext/offsetCurve":"geofext:offsetCurve",
+		"http://www.opengis.net/def/function/geosparql/ext/pointInsideCircle":"geofext:pointInsideCircle",
 		"http://www.opengis.net/def/function/geosparql/ext/pointN":"geofext:pointN",
 		"http://www.opengis.net/def/function/geosparql/ext/pointOnSurface":"geofext:pointOnSurface",
 		"http://www.opengis.net/def/function/geosparql/ext/reverse":"geofext:reverse",
@@ -853,6 +854,15 @@ WHERE {
   my:EExactGeom geo:asWKT ?literal .
   BIND(geof:offsetCurve(?literal,10) AS ?offsetCurve)
 }`,
+"http://www.opengis.net/def/function/geosparql/ext/pointInsideCircle":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal ?pointInsideCircle
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND(geof:pointInsideCircle(?literal,"POINT(80 80)"^^geo:wktLiteral,"100.5"^^xsd:double) AS ?pointInsideCircle)
+}`,	
 "http://www.opengis.net/def/function/geosparql/ext/pointN":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
