@@ -38,6 +38,7 @@
 		"http://www.opengis.net/def/function/geosparql/boundary":"geof:boundary",
         "http://www.opengis.net/def/function/geosparql/buffer":"geof:buffer",
         "http://www.opengis.net/def/function/geosparql/centroid":"geof:centroid",
+		"http://www.opengis.net/def/function/geosparql/ext/clipByRect":"geofext:clipByRect",
 		"http://www.opengis.net/def/function/geosparql/ext/closestPoint":"geofext:closestPoint",
         "http://www.opengis.net/def/function/geosparql/ext/compactnessRatio":"geofext:compactnessRatio",
 		"http://www.opengis.net/def/function/geosparql/concaveHull":"geof:concaveHull",
@@ -331,6 +332,15 @@ SELECT ?literal ?centroid
 WHERE {
   my:AExactGeom geo:asWKT ?literal .
   BIND(geof:centroid(?literal) AS ?centroid)
+}`,
+"http://www.opengis.net/def/function/geosparql/ext/clipByRect":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+SELECT ?literal ?clipped ?bbox
+WHERE {
+  my:AExactGeom geo:asWKT ?literal .
+  BIND("POLYGON(-83.2 34.1, -83.2 34.5, -83.4 34.3 -83.2 34.1)"^^geo:wktLiteral AS ?bbox)
+  BIND(geof:clipByRect(?literal,?bbox) AS ?clipped)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/closestPoint":`
 PREFIX my: <http://example.org/ApplicationSchema#>
