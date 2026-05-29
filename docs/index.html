@@ -714,11 +714,12 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?aLiteral ?length
+SELECT ?aLiteral ?length ?length3D
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?aLiteral .
   BIND (geof:length(?aLiteral,"http://www.opengis.net/def/uom/OGC/1.0/meter"^^xsd:anyURI) as ?length)
+  BIND (geof:length(geof:force3D(?aLiteral,5)) as ?length3D)
 }`,
 "http://www.opengis.net/def/function/geosparql/ext/longestLine":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -736,13 +737,14 @@ WHERE {
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?geom1 ?geom2 ?maxDistance
+SELECT ?geom1 ?geom2 ?maxDistance ?maxDistance3D
 WHERE {
   my:A geo:hasDefaultGeometry ?aGeom .
   ?aGeom geo:asWKT ?geom1 .
   my:D geo:hasDefaultGeometry ?dGeom .
   ?dGeom geo:asWKT ?geom2 .
   BIND (geof:maxDistance(?geom1, ?geom2) as ?maxDistance)
+  BIND (geof:maxDistance(geof:force3D(?geom1,5), geof:force3D(?geom2,5)) as ?maxDistance3D)
 }`,		            
 "http://www.opengis.net/def/function/geosparql/maxX":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
