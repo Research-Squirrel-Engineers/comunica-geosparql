@@ -1073,7 +1073,7 @@ WHERE {
   BIND("POLYGON ((-83.6 34.1, -83.6 34.5, -83.6 34.5, -83.2 34.5, -83.2 34.1, -83.6 34.1))"^^geo:wktLiteral AS ?geom)
   BIND(geof:setPoint(?geom,"1"^^xsd:integer,"POINT(22.0 22.0)"^^geo:wktLiteral) AS ?nonrepgeom)
 }`,
-"http://www.opengis.net/def/function/geosparql/ext/selfIntersesctions":`PREFIX my: <http://example.org/ApplicationSchema#>
+"http://www.opengis.net/def/function/geosparql/ext/selfIntersections":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
