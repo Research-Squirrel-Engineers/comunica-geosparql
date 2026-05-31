@@ -7,6 +7,13 @@ import type {
   ITimeZoneRepresentation,
   IYearMonthDurationRepresentation,
 } from '@comunica/types';
+import type { Literal } from '@comunica/utils-expression-evaluator';
+import { decode } from '@erikmichelson/open-location-code-ts';
+import * as turf from '@turf/turf';
+import * as WK from 'betterknown';
+import type * as GJ from 'geojson';
+import type { ISerializable } from '../expressions';
+import { supported_Geocodes } from './Consts';
 import { simplifyDurationRepresentation } from './DateTimeHelpers';
 import { ParseError } from './Errors';
 import { maximumDayInMonthFor } from './SpecAlgos';
@@ -178,4 +185,68 @@ export function parseDayTimeDuration(durationStr: string): Partial<IDayTimeDurat
     throw new ParseError(durationStr, 'dayTimeDuration');
   }
   return res;
+}
+
+export function parseGeometryFeature(geomlit: Literal<ISerializable>): [GJ.Feature, string, string] {
+  const geomresult = parseGeometry(geomlit);
+  return [ turf.feature(geomresult[0]), geomresult[1], geomresult[2] ];
+}
+
+export function extrudeGeometry(){
+
+}
+
+export function parseGeometry(geomlit: Literal<ISerializable>): [GJ.Geometry, string, string] {
+  let thestr = geomlit.str().replaceAll(/^\s+|\s+$/gu, '');
+  let crsuri = '<http://www.opengis.net/def/crs/OGC/1.3/CRS84>';
+  try {
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#wktLiteral') {
+      if (thestr.startsWith('<')) {
+        const spl = thestr.split('>');
+        crsuri = spl[0].slice(1);
+        thestr = spl[1].trim();
+      }
+      return [ turf.getGeom(<GJ.Geometry>WK.wktToGeoJSON(thestr)), crsuri, geomlit.dataType ];
+    }
+    // I if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#gmlLiteral') {
+    // const parser = new GmlParser();
+    // const geojson = await parser.parse(thestr);
+    // return [ <GJ.Geometry>geojson, '' ];
+    // }
+    // if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#kmlLiteral') {
+    // if (!thestr.startsWith('<kml')) {
+    //     thestr = `<kml><Document><Placemark>${thestr}</Placemark></Document></kml>`;
+    // }
+    // return [ turf.getGeom(JSON.parse(toGeoJSON(thestr))), crsuri ];
+    // }
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#geoJSONLiteral') {
+      return [ turf.getGeom(JSON.parse(thestr)), crsuri, geomlit.dataType ];
+    }
+    if (geomlit.dataType === 'http://www.opengis.net/ont/geosparql#geoCodeLiteral') {
+      if (thestr.startsWith('<')) {
+        const spl = thestr.split('>');
+        crsuri = spl[0].slice(1);
+        thestr = spl[1].trim();
+      }
+      if (crsuri in supported_Geocodes) {
+        if (crsuri === 'http://opengis.net/ont/geocode/OpenLocationCode') {
+          const decoded = decode(thestr);
+          // eslint-disable-next-line max-len
+          return [ turf.geometry('Point', [ decoded.latitudeCenter, decoded.longitudeCenter ]), crsuri, geomlit.dataType ];
+        }
+        if (crsuri === 'http://opengis.net/ont/geocode/GeoURI') {
+          const decoded = thestr.replaceAll('geo:', '').split(',');
+          return [ turf.geometry('Point', [ decoded[0], decoded[1] ]), crsuri, geomlit.dataType ];
+        }
+        // Iif (crsuri === 'http://opengis.net/ont/geocode/GeoHash' || crsuri === 'http://opengis.net/ont/geocode/GeoHash-36') {
+        // const decoded = geohash.decode(thestr);
+        // return [ turf.geometry('Point', [ decoded.longitude, decoded.latitude ]), crsuri ];
+        // }
+      }
+      return [ turf.getGeom(JSON.parse(thestr)), crsuri, geomlit.dataType ];
+    }
+  } catch {
+    throw new ParseError(`Geometry literal with type ${geomlit.dataType} could not be parsed.\nContent: ${geomlit.str()}`, 'geometry');
+  }
+  return [ turf.getGeom({ type: 'Point', coordinates: []}), crsuri, geomlit.dataType ];
 }

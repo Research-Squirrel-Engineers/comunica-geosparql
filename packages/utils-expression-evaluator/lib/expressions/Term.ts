@@ -11,10 +11,17 @@ import type {
 } from '@comunica/types';
 import { ExpressionType } from '@comunica/types';
 import type * as RDF from '@rdfjs/types';
+import type * as GJ from 'geojson';
 import * as C from '../util/Consts';
 import { TypeURL } from '../util/Consts';
 import * as Err from '../util/Errors';
-import { serializeDate, serializeDateTime, serializeDuration, serializeTime } from '../util/Serialization';
+import {
+  serializeDate,
+  serializeDateTime,
+  serializeDuration,
+  serializeGeometry,
+  serializeTime,
+} from '../util/Serialization';
 
 export abstract class Term implements TermExpression {
   public expressionType: ExpressionType.Term = ExpressionType.Term;
@@ -376,6 +383,20 @@ export class DayTimeDurationLiteral extends DurationLiteral {
     dataType?: string,
   ) {
     super(typedValue, strValue, dataType ?? TypeURL.XSD_DAY_TIME_DURATION);
+  }
+}
+
+export class WKTLiteral extends Literal<GJ.Geometry> {
+  public constructor(
+    public override typedValue: GJ.Geometry,
+    public override strValue?: string,
+    dataType?: string,
+  ) {
+    super(typedValue, dataType ?? TypeURL.WKT_LITERAL);
+  }
+
+  public override str(): string {
+    return serializeGeometry(this.typedValue, TypeURL.WKT_LITERAL).str();
   }
 }
 
